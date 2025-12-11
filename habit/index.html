@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- Google Material Symbols -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="header-top">
+                <div class="date-display">
+                    <span id="current-day">Monday</span>
+                    <span id="current-date">October 24</span>
+                </div>
+                <div class="view-toggles">
+                    <button class="toggle-btn active" id="view-list-btn" title="List View">
+                        <span class="material-symbols-rounded">view_agenda</span>
+                    </button>
+                    <button class="toggle-btn" id="view-grid-btn" title="Month View">
+                        <span class="material-symbols-rounded">calendar_view_month</span>
+                    </button>
+                </div>
+            </div>
+            <h1>My Habits</h1>
+        </header>
+
+        <div class="habit-list" id="habit-list">
+            <!-- Habits will be injected here -->
+            <div class="empty-state" id="empty-state">
+                <span class="material-symbols-rounded icon">check_circle</span>
+                <p>No habits yet. Start by adding one!</p>
+            </div>
+        </div>
+
+        <div class="habit-grid" id="habit-grid" style="display: none;">
+            <!-- Grid will be injected here -->
+        </div>
+
+        <button class="fab" id="add-habit-btn" aria-label="Add Habit">
+            <span class="material-symbols-rounded">add</span>
+            <span class="label">New Habit</span>
+        </button>
+    </div>
+
+    <!-- Add Habit Dialog -->
+    <dialog id="add-habit-dialog">
+        <form method="dialog" id="add-habit-form">
+            <h2>New Habit</h2>
+            <div class="input-group">
+                <label for="habit-name">Habit Name</label>
+                <input type="text" id="habit-name" placeholder="e.g., Drink Water" required>
+            </div>
+            <div class="dialog-actions">
+                <button type="button" class="btn-text" id="cancel-btn">Cancel</button>
+                <button type="submit" class="btn-filled">Save</button>
+            </div>
+        </form>
+    </dialog>
+
+    <!-- Calendar Dialog -->
+    <dialog id="calendar-dialog">
+        <div class="calendar-header">
+            <h2 id="calendar-habit-name">Habit Name</h2>
+            <button class="btn-icon" id="close-calendar-btn">
+                <span class="material-symbols-rounded">close</span>
+            </button>
+        </div>
+
+        <div class="calendar-controls">
+            <button class="btn-icon" id="prev-month">
+                <span class="material-symbols-rounded">chevron_left</span>
+            </button>
+            <span id="calendar-month-year">October 2023</span>
+            <button class="btn-icon" id="next-month">
+                <span class="material-symbols-rounded">chevron_right</span>
+            </button>
+        </div>
+
+        <div class="calendar-grid">
+            <div class="weekday">S</div>
+            <div class="weekday">M</div>
+            <div class="weekday">T</div>
+            <div class="weekday">W</div>
+            <div class="weekday">T</div>
+            <div class="weekday">F</div>
+            <div class="weekday">S</div>
+            <!-- Days will be injected here -->
+            <div id="calendar-days" class="calendar-days"></div>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-value" id="stat-completed">0</span>
+                <span class="stat-label">Days Done</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value" id="stat-streak">0</span>
+                <span class="stat-label">Current Streak</span>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
