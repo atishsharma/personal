@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atish Ak Sharma - Portfolio</title>
-    
+    <title>Atish Ak Sharma Blog - Just What's On My Mind</title>
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <!-- Tailwind CSS (via CDN for instant styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -29,7 +29,7 @@
         .animate-slide-up { animation: slideUp 0.6s ease-out forwards; }
         
         /* Utility to hide sections */
-        .hidden-section { display: none; }
+        .hidden-section { display: none !important; }
         
         /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
@@ -55,16 +55,16 @@
     <!-- NAVIGATION -->
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-6">
         <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
-            <div onclick="navigateTo('home')" class="text-2xl font-bold text-white cursor-pointer tracking-tighter">
+            <a href="#home" class="text-2xl font-bold text-white cursor-pointer tracking-tighter hover:opacity-80 transition-opacity">
                 ATISH<span class="text-blue-500">.</span>
-            </div>
+            </a>
 
             <!-- Desktop Menu -->
             <div class="hidden md:flex items-center gap-2 bg-slate-900/50 p-1 rounded-full border border-white/5 backdrop-blur-sm">
-                <button onclick="navigateTo('home')" class="nav-btn px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="home">Home</button>
-                <button onclick="navigateTo('blog')" class="nav-btn px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="blog">Journal</button>
-                <button onclick="navigateTo('about')" class="nav-btn px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="about">About</button>
-                <button onclick="navigateTo('contact')" class="nav-btn px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="contact">Contact</button>
+                <a href="#home" class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="home">Home</a>
+                <a href="#blog" class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="blog">Journal</a>
+                <a href="#about" class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="about">About</a>
+                <a href="#contact" class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="contact">Contact</a>
             </div>
 
             <!-- Mobile Menu Toggle -->
@@ -77,10 +77,10 @@
     <!-- Mobile Menu Overlay -->
     <div id="mobile-menu" class="hidden fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl pt-24 px-6 md:hidden animate-fade-in">
         <div class="flex flex-col gap-6 text-center text-2xl font-medium">
-            <button onclick="navigateTo('home')" class="py-4 hover:text-blue-400">Home</button>
-            <button onclick="navigateTo('blog')" class="py-4 hover:text-blue-400">Journal</button>
-            <button onclick="navigateTo('about')" class="py-4 hover:text-blue-400">About</button>
-            <button onclick="navigateTo('contact')" class="py-4 hover:text-blue-400">Contact</button>
+            <a href="#home" onclick="toggleMobileMenu()" class="py-4 hover:text-blue-400">Home</a>
+            <a href="#blog" onclick="toggleMobileMenu()" class="py-4 hover:text-blue-400">Journal</a>
+            <a href="#about" onclick="toggleMobileMenu()" class="py-4 hover:text-blue-400">About</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="py-4 hover:text-blue-400">Contact</a>
         </div>
     </div>
 
@@ -105,11 +105,11 @@
                         <!-- Socials injected by JS -->
                     </div>
 
-                    <button onclick="navigateTo('blog')" class="group relative px-8 py-3 bg-blue-600 text-white font-medium rounded-full overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:bg-blue-500">
+                    <a href="#blog" class="inline-block group relative px-8 py-3 bg-blue-600 text-white font-medium rounded-full overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:bg-blue-500">
                         <span class="relative z-10 flex items-center gap-2">
                             Explore My Blog <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </span>
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -121,9 +121,9 @@
                             <h3 class="text-3xl font-bold text-white mb-2">Latest Adventures</h3>
                             <p class="text-slate-400">Snippets from my recent travels and thoughts.</p>
                         </div>
-                        <button onclick="navigateTo('blog')" class="hidden md:flex items-center text-blue-400 hover:text-blue-300 transition-colors">
+                        <a href="#blog" class="hidden md:flex items-center text-blue-400 hover:text-blue-300 transition-colors">
                             View all <i data-lucide="arrow-left" class="w-4 h-4 rotate-180 ml-2"></i>
-                        </button>
+                        </a>
                     </div>
                     <div id="featured-posts" class="grid md:grid-cols-3 gap-8">
                         <!-- Posts injected by JS -->
@@ -148,12 +148,12 @@
 
                 <!-- Single Post View -->
                 <div id="blog-single-view" class="hidden-section max-w-3xl mx-auto animate-slide-up">
-                    <button onclick="showBlogList()" class="flex items-center text-slate-400 hover:text-white mb-8 transition-colors group">
+                    <a href="#blog" class="inline-flex items-center text-slate-400 hover:text-white mb-8 transition-colors group">
                         <div class="p-2 rounded-full bg-slate-900 group-hover:bg-slate-800 mr-2 transition-colors">
                             <i data-lucide="arrow-left" class="w-5 h-5"></i>
                         </div>
                         Back to posts
-                    </button>
+                    </a>
                     <div id="single-post-content">
                         <!-- Single post content injected here -->
                     </div>
@@ -167,7 +167,7 @@
                 <div class="flex flex-col md:flex-row gap-12 items-start">
                     <div class="w-full md:w-1/3 sticky top-32">
                         <div class="aspect-square rounded-3xl overflow-hidden mb-6 border-2 border-slate-800">
-                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800" alt="Profile" class="w-full h-full object-cover"/>
+                            <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg?auto=format&fit=crop&q=80&w=800" alt="Profile" class="w-full h-full object-cover"/>
                         </div>
                         <div class="flex gap-4 justify-center" id="about-socials">
                             <!-- Socials injected -->
@@ -369,7 +369,7 @@
             // Render Featured Posts (First 3)
             const featuredContainer = document.getElementById('featured-posts');
             featuredContainer.innerHTML = BLOG_POSTS.slice(0, 3).map(post => `
-                <div onclick="openPost(${post.id})" class="group cursor-pointer bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10">
+                <a href="#article-${post.id}" class="group block cursor-pointer bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 transition-all hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-900/10">
                     <div class="h-48 overflow-hidden">
                         <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"/>
                     </div>
@@ -382,13 +382,13 @@
                         <h4 class="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">${post.title}</h4>
                         <p class="text-slate-400 text-sm line-clamp-2">${post.excerpt}</p>
                     </div>
-                </div>
+                </a>
             `).join('');
 
             // Render Blog Grid
             const blogGrid = document.getElementById('blog-grid');
             blogGrid.innerHTML = BLOG_POSTS.map(post => `
-                <article onclick="openPost(${post.id})" class="group cursor-pointer flex flex-col h-full bg-slate-900/50 hover:bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden transition-all hover:border-slate-700">
+                <a href="#article-${post.id}" class="group block cursor-pointer flex flex-col h-full bg-slate-900/50 hover:bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden transition-all hover:border-slate-700">
                     <div class="h-64 overflow-hidden relative">
                         <img src="${post.image}" alt="${post.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"/>
                         <div class="absolute top-4 left-4">
@@ -408,41 +408,63 @@
                             Read Article <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
                         </div>
                     </div>
-                </article>
+                </a>
             `).join('');
             
             // Re-initialize icons for new content
             lucide.createIcons();
         }
 
-        // --- INTERACTION FUNCTIONS ---
+        // --- INTERACTION FUNCTIONS (UPDATED FOR HASH ROUTING) ---
 
-        function navigateTo(tabId) {
-            // Hide all sections
-            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden-section'));
+        function handleRouting() {
+            // Get current hash or default to home
+            const hash = window.location.hash || '#home';
             
-            // Show target section
-            document.getElementById(tabId).classList.remove('hidden-section');
+            // Check if it is a specific blog post (format: #article-ID)
+            if (hash.startsWith('#article-')) {
+                const id = parseInt(hash.replace('#article-', ''));
+                openPost(id);
+                return;
+            }
             
-            // Reset blog view if navigating to blog
-            if (tabId === 'blog') showBlogList();
+            // Map simple hashes to view IDs
+            const targetId = hash.replace('#', '');
+            const validViews = ['home', 'blog', 'about', 'contact'];
             
-            // Update active nav state
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                if (btn.dataset.target === tabId) {
-                    btn.classList.add('bg-white', 'text-black', 'font-medium', 'shadow-lg');
-                    btn.classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-white/10');
+            if (validViews.includes(targetId)) {
+                // Hide all sections
+                document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden-section'));
+                
+                // Show target section
+                const targetEl = document.getElementById(targetId);
+                if (targetEl) targetEl.classList.remove('hidden-section');
+                
+                // Special case for blog: show list view if just #blog
+                if (targetId === 'blog') {
+                    document.getElementById('blog-list-view').classList.remove('hidden-section');
+                    document.getElementById('blog-single-view').classList.add('hidden-section');
+                }
+                
+                // Update Nav State
+                updateNavState(targetId);
+                
+                // Scroll to top
+                window.scrollTo(0,0);
+            }
+        }
+        
+        function updateNavState(activeId) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const linkTarget = link.dataset.target;
+                if (linkTarget === activeId || (activeId === 'blog' && linkTarget === 'blog')) {
+                    link.classList.add('bg-white', 'text-black', 'font-medium', 'shadow-lg');
+                    link.classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-white/10');
                 } else {
-                    btn.classList.remove('bg-white', 'text-black', 'font-medium', 'shadow-lg');
-                    btn.classList.add('text-slate-300', 'hover:text-white', 'hover:bg-white/10');
+                    link.classList.remove('bg-white', 'text-black', 'font-medium', 'shadow-lg');
+                    link.classList.add('text-slate-300', 'hover:text-white', 'hover:bg-white/10');
                 }
             });
-            
-            // Close mobile menu
-            document.getElementById('mobile-menu').classList.add('hidden');
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function toggleMobileMenu() {
@@ -454,10 +476,12 @@
             const post = BLOG_POSTS.find(p => p.id === id);
             if (!post) return;
             
-            // Ensure we are in blog view
-            navigateTo('blog');
+            // Ensure we are in the blog main section
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden-section'));
+            document.getElementById('blog').classList.remove('hidden-section');
+            updateNavState('blog');
             
-            // Toggle Views
+            // Toggle Views inside Blog
             document.getElementById('blog-list-view').classList.add('hidden-section');
             document.getElementById('blog-single-view').classList.remove('hidden-section');
             
@@ -493,13 +517,7 @@
             `;
             
             lucide.createIcons();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showBlogList() {
-            document.getElementById('blog-single-view').classList.add('hidden-section');
-            document.getElementById('blog-list-view').classList.remove('hidden-section');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo(0,0);
         }
 
         // Scroll Effect for Navbar
@@ -514,15 +532,14 @@
             }
         });
 
-        // Initialize
+        // Initialize and Listen for URL changes
         window.addEventListener('DOMContentLoaded', () => {
             renderContent();
             lucide.createIcons();
-            
-            // Set initial active state for nav
-            document.querySelector('[data-target="home"]').classList.add('bg-white', 'text-black', 'font-medium', 'shadow-lg');
-            document.querySelector('[data-target="home"]').classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-white/10');
+            handleRouting(); // Handle initial load URL
         });
+        
+        window.addEventListener('hashchange', handleRouting); // Handle forward/back buttons
 
     </script>
 </body>
