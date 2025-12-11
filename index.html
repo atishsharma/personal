@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atish Ak Sharma | Developer & Writer</title>
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Markdown Parser for AI responses -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Custom font import for 'Inter' */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117; /* GitHub Dark theme background */
+            color: #c9d1d9; /* Light text */
+        }
+        /* Custom scrollbar for aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #30363d;
+            border-radius: 10px;
+        }
+        /* Chat Widget Animations */
+        .chat-slide-in {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="min-h-screen relative">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-40 bg-[#0d1117]/95 backdrop-blur-sm shadow-lg border-b border-[#21262d]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo/Name -->
+                <a href="#" class="text-xl font-extrabold text-[#58a6ff] hover:text-white transition duration-300 rounded-lg p-2">
+                    atishaksharma
+                </a>
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Desktop Navigation -->
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="#home" class="text-sm font-medium hover:text-[#58a6ff] transition duration-300 p-2 rounded-lg">Home</a>
+                        <a href="#blog" class="text-sm font-medium hover:text-[#58a6ff] transition duration-300 p-2 rounded-lg">Blog Posts</a>
+                        <a href="#about" class="text-sm font-medium hover:text-[#58a6ff] transition duration-300 p-2 rounded-lg">About</a>
+                        <a href="#contact" class="text-sm font-medium bg-[#58a6ff] text-[#0d1117] px-3 py-2 rounded-full hover:bg-[#79c0ff] transition duration-300">Contact</a>
+                    </nav>
+
+                    <!-- API Key Settings Button -->
+                    <button onclick="toggleSettings()" class="text-[#8b949e] hover:text-[#58a6ff] p-2 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 0 1 0 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        </svg>
+                    </button>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg hover:bg-[#21262d] transition duration-300">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-[#21262d] pb-3 pt-2">
+            <a href="#home" class="block px-3 py-2 text-base font-medium hover:bg-[#21262d] rounded-lg">Home</a>
+            <a href="#blog" class="block px-3 py-2 text-base font-medium hover:bg-[#21262d] rounded-lg">Blog Posts</a>
+            <a href="#about" class="block px-3 py-2 text-base font-medium hover:bg-[#21262d] rounded-lg">About</a>
+            <a href="#contact" class="block px-3 py-2 text-base font-medium bg-[#58a6ff] text-[#0d1117] rounded-lg mt-2 mx-3 text-center">Contact</a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Hero/Bio Section -->
+        <section id="home" class="text-center py-16 mb-16 rounded-3xl bg-[#161b22] border border-[#30363d] shadow-2xl relative overflow-hidden">
+            <!-- Decorative gradient behind -->
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#58a6ff]/5 to-transparent pointer-events-none"></div>
+            
+            <div class="relative z-10">
+                <div class="flex justify-center mb-6">
+                    <img src="https://placehold.co/128x128/30363d/c9d1d9?text=AA" alt="Atish Ak Sharma Avatar" 
+                         class="w-32 h-32 rounded-full border-4 border-[#58a6ff] object-cover shadow-lg">
+                </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
+                    Hello, I'm <span class="text-[#58a6ff]">Atish Ak Sharma</span>.
+                </h1>
+                <p class="text-lg sm:text-xl text-[#8b949e] max-w-3xl mx-auto mb-8">
+                    I'm a passionate developer and technical writer exploring the intersection of modern web technologies, open source, and artificial intelligence.
+                </p>
+                <!-- Call to Action -->
+                <div class="space-x-4">
+                    <button onclick="toggleChat()" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-[#0d1117] bg-[#58a6ff] hover:bg-[#79c0ff] transition duration-300">
+                        <span class="mr-2">✨</span> Chat with AI Atish
+                    </button>
+                    <a href="https://github.com/atishaksharma" target="_blank" rel="noopener noreferrer" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-[#58a6ff] border border-[#58a6ff] hover:bg-[#58a6ff]/10 transition duration-300">
+                        My GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blog Posts Section -->
+        <section id="blog" class="py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-10">
+                <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4 md:mb-0">Latest Posts</h2>
+                
+                <!-- Gemini Feature: Blog Idea Generator -->
+                <button onclick="generateBlogIdeas()" id="generate-btn" class="flex items-center space-x-2 bg-[#21262d] hover:bg-[#30363d] border border-[#30363d] text-[#c9d1d9] px-4 py-2 rounded-lg transition text-sm">
+                    <span class="text-yellow-400">✨</span>
+                    <span>Generate New Ideas</span>
+                </button>
+            </div>
+
+            <!-- Container for AI Generated Ideas -->
+            <div id="ai-ideas-container" class="hidden mb-12 p-6 rounded-xl border border-[#58a6ff]/50 bg-[#58a6ff]/5">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 class="text-lg font-bold text-[#58a6ff] flex items-center">
+                        <span class="mr-2">✨</span> AI Suggested Topics for Atish
+                    </h3>
+                    <button onclick="document.getElementById('ai-ideas-container').classList.add('hidden')" class="text-[#8b949e] hover:text-white">&times;</button>
+                </div>
+                <div id="ai-ideas-content" class="text-sm text-[#c9d1d9] prose prose-invert max-w-none">
+                    <!-- AI Content will load here -->
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Blog Post Card 1 -->
+                <article class="bg-[#161b22] p-6 rounded-xl border border-[#30363d] shadow-xl hover:shadow-2xl hover:border-[#58a6ff] transition duration-300 transform hover:-translate-y-1">
+                    <span class="text-xs font-semibold text-[#58a6ff] uppercase tracking-wider mb-2 block">Technology</span>
+                    <h3 class="text-xl font-bold text-white mb-3">The Power of Single-File Web Apps</h3>
+                    <p class="text-[#8b949e] mb-4 text-sm">
+                        Discussing the benefits and limitations of bundling all code (HTML, CSS, JS) into a single, self-contained file for deployment simplicity.
+                    </p>
+                    <a href="#" class="text-[#58a6ff] hover:text-[#79c0ff] font-medium text-sm">Read More &rarr;</a>
+                </article>
+
+                <!-- Blog Post Card 2 -->
+                <article class="bg-[#161b22] p-6 rounded-xl border border-[#30363d] shadow-xl hover:shadow-2xl hover:border-[#58a6ff] transition duration-300 transform hover:-translate-y-1">
+                    <span class="text-xs font-semibold text-[#58a6ff] uppercase tracking-wider mb-2 block">Career & Growth</span>
+                    <h3 class="text-xl font-bold text-white mb-3">5 Tips for Starting Your Open Source Journey</h3>
+                    <p class="text-[#8b949e] mb-4 text-sm">
+                        A guide for beginners on making their first contributions to open-source projects, from finding the right repo to making quality PRs.
+                    </p>
+                    <a href="#" class="text-[#58a6ff] hover:text-[#79c0ff] font-medium text-sm">Read More &rarr;</a>
+                </article>
+
+                <!-- Blog Post Card 3 -->
+                <article class="bg-[#161b22] p-6 rounded-xl border border-[#30363d] shadow-xl hover:shadow-2xl hover:border-[#58a6ff] transition duration-300 transform hover:-translate-y-1">
+                    <span class="text-xs font-semibold text-[#58a6ff] uppercase tracking-wider mb-2 block">AI/ML</span>
+                    <h3 class="text-xl font-bold text-white mb-3">Understanding the Transformer Architecture</h3>
+                    <p class="text-[#8b949e] mb-4 text-sm">
+                        An approachable breakdown of the attention mechanism and its role in modern Large Language Models (LLMs) like Gemini.
+                    </p>
+                    <a href="#" class="text-[#58a6ff] hover:text-[#79c0ff] font-medium text-sm">Read More &rarr;</a>
+                </article>
+            </div>
+        </section>
+
+        <!-- About/Contact Mock Section -->
+        <section id="about" class="py-12">
+            <h2 class="text-3xl sm:text-4xl font-bold text-center mb-10 text-white">A Little More About Me</h2>
+            <div class="max-w-4xl mx-auto bg-[#161b22] p-8 rounded-xl border border-[#30363d] shadow-xl">
+                <p class="text-[#8b949e] mb-4">
+                    As Atish Ak Sharma, my focus is currently on full-stack development with a strong preference for modern JavaScript frameworks and serverless architectures. I believe technology should be accessible, efficient, and beautifully designed.
+                </p>
+                <div id="contact" class="mt-6 flex flex-wrap justify-center gap-4">
+                    <a href="mailto:atishaksharma@example.com" class="flex items-center text-sm text-[#58a6ff] hover:text-white transition duration-300 p-2 rounded-lg bg-[#21262d] hover:bg-[#30363d]">
+                        <span class="mr-2">📧</span> Email
+                    </a>
+                    <a href="https://github.com/atishaksharma" target="_blank" rel="noopener noreferrer" class="flex items-center text-sm text-[#58a6ff] hover:text-white transition duration-300 p-2 rounded-lg bg-[#21262d] hover:bg-[#30363d]">
+                        <span class="mr-2">🐙</span> GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#161b22] border-t border-[#30363d] mt-12 pb-24 md:pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row justify-between items-center text-sm text-[#8b949e]">
+            <p>&copy; 2025 Atish Ak Sharma. All rights reserved.</p>
+            <div class="mt-4 md:mt-0 space-x-4">
+                <a href="#home" class="hover:text-[#58a6ff] transition duration-300">Home</a>
+                <a href="#blog" class="hover:text-[#58a6ff] transition duration-300">Blog</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Gemini Feature: Chat Widget -->
+    <!-- Floating Action Button -->
+    <button onclick="toggleChat()" class="fixed bottom-6 right-6 z-50 p-4 bg-[#58a6ff] text-[#0d1117] rounded-full shadow-2xl hover:bg-[#79c0ff] transition duration-300 hover:scale-110 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+        </svg>
+    </button>
+
+    <!-- Chat Window -->
+    <div id="chat-widget" class="fixed bottom-24 right-6 z-50 w-full max-w-sm bg-[#161b22] border border-[#30363d] rounded-2xl shadow-2xl hidden flex flex-col max-h-[500px]">
+        <!-- Header -->
+        <div class="p-4 border-b border-[#30363d] flex justify-between items-center bg-[#0d1117] rounded-t-2xl">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl">✨</span>
+                <h3 class="font-bold text-white">Ask AI Atish</h3>
+            </div>
+            <button onclick="toggleChat()" class="text-[#8b949e] hover:text-white">&times;</button>
+        </div>
+        
+        <!-- Messages Area -->
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto space-y-4 text-sm min-h-[300px] bg-[#0d1117]/50">
+            <!-- Initial Greeting -->
+            <div class="flex items-start">
+                <div class="bg-[#21262d] text-[#c9d1d9] p-3 rounded-lg rounded-tl-none max-w-[85%]">
+                    Hi! I'm the AI digital twin of Atish. Ask me anything about his skills, projects, or favorite tech stacks!
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-3 border-t border-[#30363d] bg-[#161b22] rounded-b-2xl">
+            <form id="chat-form" class="flex gap-2" onsubmit="handleChatSubmit(event)">
+                <input type="text" id="chat-input" placeholder="Ask something..." class="flex-1 bg-[#0d1117] border border-[#30363d] text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#58a6ff]">
+                <button type="submit" id="send-btn" class="bg-[#58a6ff] text-[#0d1117] p-2 rounded-lg hover:bg-[#79c0ff] transition disabled:opacity-50 disabled:cursor-not-allowed">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- API Key Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 z-[60] bg-black/80 hidden items-center justify-center p-4">
+        <div class="bg-[#161b22] border border-[#30363d] rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+            <button onclick="toggleSettings()" class="absolute top-4 right-4 text-[#8b949e] hover:text-white">&times;</button>
+            <h3 class="text-xl font-bold text-white mb-4">Gemini API Settings</h3>
+            <p class="text-[#8b949e] text-sm mb-4">
+                To use the AI features (Chat & Blog Ideas), please enter your Google Gemini API Key. The key is stored locally in your browser only.
+            </p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-[#8b949e] mb-1">API Key</label>
+                    <input type="password" id="api-key-input" placeholder="Enter your Gemini API Key" class="w-full bg-[#0d1117] border border-[#30363d] text-white rounded-lg px-3 py-2 focus:border-[#58a6ff] focus:outline-none">
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button onclick="toggleSettings()" class="px-4 py-2 text-sm text-[#8b949e] hover:text-white">Cancel</button>
+                    <button onclick="saveApiKey()" class="px-4 py-2 text-sm bg-[#58a6ff] text-[#0d1117] rounded-lg hover:bg-[#79c0ff] font-medium">Save Key</button>
+                </div>
+                <p class="text-xs text-[#484f58] mt-2">Don't have a key? <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-[#58a6ff] hover:underline">Get one here</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Javascript Logic -->
+    <script>
+        // --- State Management ---
+        let apiKey = localStorage.getItem('gemini_api_key') || '';
+        
+        // --- UI Toggles ---
+        function toggleSettings() {
+            const modal = document.getElementById('settings-modal');
+            const input = document.getElementById('api-key-input');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                input.value = apiKey; // Pre-fill if exists
+            } else {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function saveApiKey() {
+            const input = document.getElementById('api-key-input');
+            apiKey = input.value.trim();
+            if(apiKey) {
+                localStorage.setItem('gemini_api_key', apiKey);
+                toggleSettings();
+                alert('API Key saved! You can now use the AI features.');
+            } else {
+                alert('Please enter a valid key.');
+            }
+        }
+
+        function toggleChat() {
+            const widget = document.getElementById('chat-widget');
+            widget.classList.toggle('hidden');
+            if (!widget.classList.contains('hidden')) {
+                document.getElementById('chat-input').focus();
+            }
+        }
+
+        // --- Mobile Menu ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+            
+            // Check if user needs to set key
+            if (!apiKey) {
+                console.log("No API Key found. Features will prompt user.");
+            }
+        });
+
+        // --- Gemini API Logic ---
+        async function callGemini(prompt, systemInstruction = "") {
+            if (!apiKey) {
+                toggleSettings();
+                throw new Error("Please set your API Key first.");
+            }
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    maxOutputTokens: 300,
+                    temperature: 0.7
+                }
+            };
+
+            // Add system instruction if provided
+            if (systemInstruction) {
+                payload.systemInstruction = { parts: [{ text: systemInstruction }] };
+            }
+
+            try {
+                constresponse = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!constresponse.ok) throw new Error(`API Error: ${constresponse.statusText}`);
+                
+                const data = await constresponse.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                throw error;
+            }
+        }
+
+        // --- Feature 1: Chat Widget ---
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const btn = document.getElementById('send-btn');
+            const message = input.value.trim();
+            if (!message) return;
+
+            // UI: Add User Message
+            const chatBox = document.getElementById('chat-messages');
+            chatBox.innerHTML += `
+                <div class="flex justify-end chat-slide-in">
+                    <div class="bg-[#58a6ff] text-[#0d1117] p-3 rounded-lg rounded-tr-none max-w-[85%]">
+                        ${escapeHtml(message)}
+                    </div>
+                </div>
+            `;
+            
+            input.value = '';
+            input.disabled = true;
+            btn.disabled = true;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // UI: Add Loading Indicator
+            const loadingId = 'loading-' + Date.now();
+            chatBox.innerHTML += `
+                <div id="${loadingId}" class="flex items-start chat-slide-in">
+                    <div class="bg-[#21262d] text-[#c9d1d9] p-4 rounded-lg rounded-tl-none flex space-x-1">
+                        <div class="w-2 h-2 bg-[#8b949e] rounded-full typing-dot"></div>
+                        <div class="w-2 h-2 bg-[#8b949e] rounded-full typing-dot"></div>
+                        <div class="w-2 h-2 bg-[#8b949e] rounded-full typing-dot"></div>
+                    </div>
+                </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // System Prompt for "Atish's Digital Twin"
+            const systemPrompt = `You are the professional AI Digital Twin of Atish Ak Sharma. 
+            Tone: Friendly, enthusiastic, and technical.
+            Context: This is Atish's portfolio website.
+            Facts:
+            - Atish is a Full Stack Developer and Technical Writer.
+            - Skills: JavaScript, Tailwind CSS, AI/ML, Open Source, React.
+            - Likes: Exploring AI, contributing to GitHub, coffee.
+            - Goal: Encourage the user to hire Atish or check out his blog.
+            Constraint: Keep answers short (under 3 sentences) and conversational. Use emojis.`;
+
+            try {
+                const response = await callGemini(message, systemPrompt);
+                document.getElementById(loadingId).remove();
+                
+                // Add AI Response
+                chatBox.innerHTML += `
+                    <div class="flex items-start chat-slide-in">
+                        <div class="bg-[#21262d] text-[#c9d1d9] p-3 rounded-lg rounded-tl-none max-w-[85%] prose prose-invert prose-sm">
+                            ${marked.parse(response)}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                chatBox.innerHTML += `
+                    <div class="flex items-start">
+                        <div class="bg-red-900/50 text-red-200 p-3 rounded-lg rounded-tl-none text-xs border border-red-800">
+                            Error: ${error.message}. Check your API Key in settings.
+                        </div>
+                    </div>
+                `;
+            } finally {
+                input.disabled = false;
+                btn.disabled = false;
+                input.focus();
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        // --- Feature 2: Blog Idea Generator ---
+        async function generateBlogIdeas() {
+            const container = document.getElementById('ai-ideas-container');
+            const content = document.getElementById('ai-ideas-content');
+            const btn = document.getElementById('generate-btn');
+
+            // UI Loading State
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = `<span class="animate-spin mr-2">↻</span> Thinking...`;
+            btn.disabled = true;
+
+            const prompt = "Generate 3 creative, modern technical blog post ideas for a web developer named Atish. Format as a bulleted list with fun emojis. Keep it punchy.";
+
+            try {
+                const response = await callGemini(prompt);
+                content.innerHTML = marked.parse(response);
+                container.classList.remove('hidden');
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            }
+        }
+
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
