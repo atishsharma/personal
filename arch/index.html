@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sørensen | Modern Architecture</title>
+    <meta name="description"
+        content="Portfolio of Sørensen, exploring the intersection of brutalism and sustainable modern living.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;1,400&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursor-dot"></div>
+    <div class="cursor-outline" id="cursor-outline"></div>
+
+    <nav class="navbar">
+        <a href="#" class="logo">SØRENSEN</a>
+        <div class="nav-links">
+            <a href="#work" data-link>Selected Work</a>
+            <a href="#philosophy" data-link>Philosophy</a>
+            <a href="#contact" data-link>Contact</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="fade-in-up">Structure <br> <span class="italic-serif">defined by</span> <br> Void.</h1>
+            <p class="hero-sub fade-in-up delay-1">Exploring the silence between walls.</p>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="line"></div>
+        </div>
+    </header>
+
+    <main>
+        <section id="work" class="work-section">
+            <div class="section-header">
+                <h2>Selected Projects</h2>
+                <div class="line-horizontal"></div>
+            </div>
+
+            <div class="project-grid">
+                <!-- Project 1 -->
+                <article class="project-card">
+                    <div class="image-container">
+                        <img src="project_concrete_house.png" alt="The Concrete House, a brutalist residential project"
+                            loading="lazy">
+                        <div class="overlay">
+                            <a href="project-concrete-house.html" class="view-project">View Case Study</a>
+                        </div>
+                    </div>
+                    <a href="project-concrete-house.html" style="text-decoration:none; color:inherit;">
+                        <div class="project-info">
+                            <h3>The Concrete House</h3>
+                            <p>Residential / 2024</p>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Project 2 -->
+                <article class="project-card offset-down">
+                    <div class="image-container">
+                        <img src="project_glass_pavilion.png" alt="Glass Pavilion, a structure interacting with nature"
+                            loading="lazy">
+                        <div class="overlay">
+                            <a href="project-glass-pavilion.html" class="view-project">View Case Study</a>
+                        </div>
+                    </div>
+                    <a href="project-glass-pavilion.html" style="text-decoration:none; color:inherit;">
+                        <div class="project-info">
+                            <h3>Glass Pavilion</h3>
+                            <p>Public / 2023</p>
+                        </div>
+                    </a>
+                </article>
+
+                <!-- Project 3 -->
+                <article class="project-card">
+                    <div class="image-container">
+                        <img src="project_urban_void.png" alt="Urban Void, a city park concept" loading="lazy">
+                        <div class="overlay">
+                            <a href="project-urban-void.html" class="view-project">View Case Study</a>
+                        </div>
+                    </div>
+                    <a href="project-urban-void.html" style="text-decoration:none; color:inherit;">
+                        <div class="project-info">
+                            <h3>Urban Void</h3>
+                            <p>Landscape / 2023</p>
+                        </div>
+                    </a>
+                </article>
+            </div>
+        </section>
+
+        <section id="philosophy" class="philosophy-section">
+            <div class="content-wrapper">
+                <div class="text-block">
+                    <h2>Philosophy</h2>
+                    <p>Architecture is not about filling space; it is about creating it. We believe in the honesty of
+                        materials—raw concrete, unpolished steel, clear glass. Our work strives to frame the natural
+                        world, not conquer it.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <h3>Inquiries</h3>
+                    <a href="mailto:hello@sorensen.arch">hello@sorensen.arch</a>
+                </div>
+                <div class="contact-item">
+                    <h3>Studio</h3>
+                    <address>
+                        1024 Void Avenue<br>
+                        Copenhagen, DK
+                    </address>
+                </div>
+                <div class="contact-item">
+                    <h3>Social</h3>
+                    <a href="#">Instagram</a>
+                    <a href="#">LinkedIn</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Sørensen Architecture. All rights reserved.</p>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
