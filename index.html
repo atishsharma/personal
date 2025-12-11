@@ -1,43 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atish Ak Sharma Blog - Just What's On My Mind</title>
-    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <!-- Tailwind CSS (via CDN for instant styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- Custom Styles for Animations -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body { font-family: 'Inter', sans-serif; }
-        
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
+
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
-        .animate-slide-up { animation: slideUp 0.6s ease-out forwards; }
-        
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+        }
+
         /* Utility to hide sections */
-        .hidden-section { display: none !important; }
-        
+        .hidden-section {
+            display: none !important;
+        }
+
         /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
     </style>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -50,27 +87,42 @@
         }
     </script>
 </head>
+
 <body class="bg-slate-950 text-slate-200 selection:bg-blue-500/30">
 
     <!-- NAVIGATION -->
     <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-6">
         <div class="max-w-7xl mx-auto px-6 flex items-center justify-between">
-            <a href="#home" class="text-2xl font-bold text-white cursor-pointer tracking-tighter hover:opacity-80 transition-opacity">
+            <a href="#home"
+                class="text-2xl font-bold text-white cursor-pointer tracking-tighter hover:opacity-80 transition-opacity">
                 ATISH<span class="text-blue-500">.</span>
             </a>
 
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center gap-2 bg-slate-900/50 p-1 rounded-full border border-white/5 backdrop-blur-sm">
-                <a href="#home" class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="home">Home</a>
-                <a href="#blog" class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="blog">Journal</a>
-                <a href="#about" class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="about">About</a>
-                <a href="#contact" class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="contact">Contact</a>
+            <div
+                class="hidden md:flex items-center gap-2 bg-slate-900/50 p-1 rounded-full border border-white/5 backdrop-blur-sm">
+                <a href="#home"
+                    class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10"
+                    data-target="home">Home</a>
+                <a href="#blog"
+                    class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10"
+                    data-target="blog">Journal</a>
+                <a href="#about"
+                    class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10"
+                    data-target="about">About</a>
+                <a href="#contact"
+                    class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10"
+                    data-target="contact">Contact</a>
                 <div class="relative group">
-        <button class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10">Beta</button>
-        <div class="absolute left-0 top-full mt-2 hidden group-hover:block bg-slate-800/90 border border-white/10 rounded-xl backdrop-blur-md shadow-lg">
-            <a href="beta1.html" class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10" data-target="Blog1">Beta 1</a>
-        </div>
-    </div>
+                    <button
+                        class="nav-link px-4 py-2 rounded-full transition-all duration-300 text-slate-300 hover:text-white hover:bg-white/10">Beta</button>
+                    <div
+                        class="absolute left-0 top-full mt-2 hidden group-hover:block bg-slate-800/90 border border-white/10 rounded-xl backdrop-blur-md shadow-lg">
+                        <a href="beta1.html"
+                            class="block whitespace-nowrap px-4 py-2 text-slate-300 hover:bg-white/10 hover:text-white rounded-xl">Beta
+                            1</a>
+                    </div>
+                </div>
             </div>
 
             <!-- Mobile Menu Toggle -->
@@ -81,7 +133,8 @@
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="hidden fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl pt-24 px-6 md:hidden animate-fade-in">
+    <div id="mobile-menu"
+        class="hidden fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl pt-24 px-6 md:hidden animate-fade-in">
         <div class="flex flex-col gap-6 text-center text-2xl font-medium">
             <a href="#home" onclick="toggleMobileMenu()" class="py-4 hover:text-blue-400">Home</a>
             <a href="#blog" onclick="toggleMobileMenu()" class="py-4 hover:text-blue-400">Journal</a>
@@ -92,28 +145,33 @@
 
     <!-- MAIN CONTENT -->
     <main id="main-content">
-        
+
         <!-- HOME SECTION -->
         <div id="home" class="view-section animate-fade-in flex flex-col">
             <div class="relative h-screen min-h-[600px] flex items-center justify-center overflow-hidden">
                 <div class="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat transition-transform duration-[10s] hover:scale-105"
-                     style="background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80&w=2000');">
+                    style="background-image: url('https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&q=80&w=2000');">
                     <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
                 </div>
 
                 <div class="relative z-10 text-center px-6 max-w-4xl mx-auto mt-16">
-                    <h2 id="hero-title" class="text-xl md:text-2xl font-light text-blue-300 mb-4 tracking-widest uppercase"></h2>
-                    <h1 id="hero-name" class="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight leading-tight"></h1>
-                    <p id="hero-bio" class="text-lg md:text-xl text-slate-200 mb-10 max-w-2xl mx-auto leading-relaxed"></p>
-                    
+                    <h2 id="hero-title"
+                        class="text-xl md:text-2xl font-light text-blue-300 mb-4 tracking-widest uppercase"></h2>
+                    <h1 id="hero-name"
+                        class="text-5xl md:text-7xl font-bold text-white mb-8 tracking-tight leading-tight"></h1>
+                    <p id="hero-bio" class="text-lg md:text-xl text-slate-200 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    </p>
+
                     <div id="hero-socials" class="flex justify-center gap-4 mb-12">
                         <!-- Socials injected by JS -->
                     </div>
 
-                    <a href="#blog" class="inline-block group relative px-8 py-3 bg-blue-600 text-white font-medium rounded-full overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:bg-blue-500">
+                    <a href="#blog"
+                        class="inline-block group relative px-8 py-3 bg-blue-600 text-white font-medium rounded-full overflow-hidden transition-all hover:shadow-[0_0_20px_rgba(37,99,235,0.5)] hover:bg-blue-500">
                         <span class="relative z-10 flex items-center gap-2">
-                            Explore My Blog <i data-lucide="chevron-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                            Explore My Blog <i data-lucide="chevron-right"
+                                class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
                         </span>
                     </a>
                 </div>
@@ -127,7 +185,8 @@
                             <h3 class="text-3xl font-bold text-white mb-2">Latest Adventures</h3>
                             <p class="text-slate-400">Snippets from my recent travels and thoughts.</p>
                         </div>
-                        <a href="#blog" class="hidden md:flex items-center text-blue-400 hover:text-blue-300 transition-colors">
+                        <a href="#blog"
+                            class="hidden md:flex items-center text-blue-400 hover:text-blue-300 transition-colors">
                             View all <i data-lucide="arrow-left" class="w-4 h-4 rotate-180 ml-2"></i>
                         </a>
                     </div>
@@ -154,7 +213,8 @@
 
                 <!-- Single Post View -->
                 <div id="blog-single-view" class="hidden-section max-w-3xl mx-auto animate-slide-up">
-                    <a href="#blog" class="inline-flex items-center text-slate-400 hover:text-white mb-8 transition-colors group">
+                    <a href="#blog"
+                        class="inline-flex items-center text-slate-400 hover:text-white mb-8 transition-colors group">
                         <div class="p-2 rounded-full bg-slate-900 group-hover:bg-slate-800 mr-2 transition-colors">
                             <i data-lucide="arrow-left" class="w-5 h-5"></i>
                         </div>
@@ -171,9 +231,10 @@
         <div id="about" class="view-section hidden-section min-h-screen bg-slate-950 pt-24 pb-20 px-6 animate-fade-in">
             <div class="max-w-4xl mx-auto">
                 <div class="flex flex-col md:flex-row gap-12 items-start">
-                        <div class="w-full md:w-1/3 md:sticky md:top-32">
+                    <div class="w-full md:w-1/3 md:sticky md:top-32">
                         <div class="aspect-square rounded-3xl overflow-hidden mb-6 border-2 border-slate-800">
-                            <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Profile" class="w-full h-full object-cover"/>
+                            <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg"
+                                alt="Profile" class="w-full h-full object-cover" />
                         </div>
                         <div class="flex gap-4 justify-center" id="about-socials">
                             <!-- Socials injected -->
@@ -181,8 +242,8 @@
                     </div>
                     <div class="w-full md:w-2/3">
                         <h1 class="text-4xl md:text-5xl font-bold text-white mb-8">
-                            Explorer. <br/>
-                            <span class="text-blue-500">Developer.</span> <br/>
+                            Explorer. <br />
+                            <span class="text-blue-500">Developer.</span> <br />
                             Storyteller.
                         </h1>
                         <div class="space-y-6 text-lg text-slate-300 leading-relaxed" id="about-text">
@@ -197,7 +258,8 @@
                             <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800">
                                 <i data-lucide="map-pin" class="text-green-400 mb-4 w-8 h-8"></i>
                                 <h3 class="text-xl font-bold text-white mb-2">My Travels</h3>
-                                <p class="text-slate-400">10+ States visited In India and counting. Always seeking new horizons.</p>
+                                <p class="text-slate-400">10+ States visited In India and counting. Always seeking new
+                                    horizons.</p>
                             </div>
                         </div>
                     </div>
@@ -206,18 +268,22 @@
         </div>
 
         <!-- CONTACT SECTION -->
-        <div id="contact" class="view-section hidden-section min-h-screen bg-slate-950 flex items-center justify-center px-6 animate-fade-in py-24">
+        <div id="contact"
+            class="view-section hidden-section min-h-screen bg-slate-950 flex items-center justify-center px-6 animate-fade-in py-24">
             <div class="max-w-4xl w-full">
-                <div class="grid md:grid-cols-2 gap-12 bg-slate-900/50 border border-slate-800 rounded-3xl overflow-hidden">
+                <div
+                    class="grid md:grid-cols-2 gap-12 bg-slate-900/50 border border-slate-800 rounded-3xl overflow-hidden">
                     <div class="p-10 flex flex-col justify-center">
                         <h2 class="text-3xl font-bold text-white mb-6">Let's Connect</h2>
-                        <p class="text-slate-400 mb-8">Have a project in mind or just want to say hi? I'm always open to new opportunities and interesting conversations.</p>
+                        <p class="text-slate-400 mb-8">Have a project in mind or just want to say hi? I'm always open to
+                            new opportunities and interesting conversations.</p>
                         <div class="space-y-6" id="contact-links">
                             <!-- Links injected -->
                         </div>
                     </div>
                     <div class="relative h-64 md:h-auto">
-                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1000" alt="Contact" class="absolute inset-0 w-full h-full object-cover"/>
+                        <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1000"
+                            alt="Contact" class="absolute inset-0 w-full h-full object-cover" />
                         <div class="absolute inset-0 bg-blue-900/20 mix-blend-multiply"></div>
                     </div>
                 </div>
@@ -253,7 +319,7 @@
                 twitter: "https://twitter.com/atishaksharma",
                 facebook: "https://facebook.com/atishaksharma",
                 instagram: "https://instagram.com/atishaksharma",
-            
+
             }
         };
 
@@ -308,25 +374,25 @@
             else if (type === 'twitter') icon = 'twitter';
             else if (type === 'facebook') icon = 'facebook';
             else if (type === 'instagram') icon = 'instagram';
-        
+
             else icon = 'link';
-            
+
             return `<a href="${url}" target="_blank" class="p-3 bg-white/5 hover:bg-white/20 rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-110 border border-white/10 text-white"><i data-lucide="${icon}" class="w-5 h-5"></i></a>`;
         }
-        
+
         function getFooterSocialLink(type, url) {
             let icon = '';
             if (type === 'github') icon = 'github';
             else if (type === 'twitter') icon = 'twitter';
             else if (type === 'facebook') icon = 'facebook';
             else if (type === 'instagram') icon = 'instagram';
-            
-            
+
+
             return `<a href="${url}" target="_blank" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="${icon}" class="w-5 h-5"></i></a>`;
         }
 
         // --- RENDER FUNCTIONS ---
-        
+
         function renderContent() {
             // Fill Personal Info
             document.getElementById('hero-title').textContent = PERSONAL_INFO.title;
@@ -334,7 +400,7 @@
             document.getElementById('hero-bio').textContent = PERSONAL_INFO.bio;
             document.getElementById('year').textContent = new Date().getFullYear();
             document.getElementById('footer-name').textContent = PERSONAL_INFO.name;
-            
+
             // Render Socials
             const socialHtml = `
                 ${getSocialLink('github', PERSONAL_INFO.socials.github)}
@@ -351,7 +417,7 @@
                 ${getSocialLink('facebook', PERSONAL_INFO.socials.facebook)}
                 ${getSocialLink('instagram', PERSONAL_INFO.socials.instagram)}
             `;
-            
+
             document.getElementById('footer-socials').innerHTML = `
                 ${getFooterSocialLink('github', PERSONAL_INFO.socials.github)}
                 ${getFooterSocialLink('twitter', PERSONAL_INFO.socials.twitter)}
@@ -428,7 +494,7 @@
                     </div>
                 </a>
             `).join('');
-            
+
             // Re-initialize icons for new content
             lucide.createIcons();
         }
@@ -438,40 +504,40 @@
         function handleRouting() {
             // Get current hash or default to home
             const hash = window.location.hash || '#home';
-            
+
             // Check if it is a specific blog post (format: #article-ID)
             if (hash.startsWith('#article-')) {
                 const id = parseInt(hash.replace('#article-', ''));
                 openPost(id);
                 return;
             }
-            
+
             // Map simple hashes to view IDs
             const targetId = hash.replace('#', '');
             const validViews = ['home', 'blog', 'about', 'contact'];
-            
+
             if (validViews.includes(targetId)) {
                 // Hide all sections
                 document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden-section'));
-                
+
                 // Show target section
                 const targetEl = document.getElementById(targetId);
                 if (targetEl) targetEl.classList.remove('hidden-section');
-                
+
                 // Special case for blog: show list view if just #blog
                 if (targetId === 'blog') {
                     document.getElementById('blog-list-view').classList.remove('hidden-section');
                     document.getElementById('blog-single-view').classList.add('hidden-section');
                 }
-                
+
                 // Update Nav State
                 updateNavState(targetId);
-                
+
                 // Scroll to top
-                window.scrollTo(0,0);
+                window.scrollTo(0, 0);
             }
         }
-        
+
         function updateNavState(activeId) {
             document.querySelectorAll('.nav-link').forEach(link => {
                 const linkTarget = link.dataset.target;
@@ -493,16 +559,16 @@
         function openPost(id) {
             const post = BLOG_POSTS.find(p => p.id === id);
             if (!post) return;
-            
+
             // Ensure we are in the blog main section
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden-section'));
             document.getElementById('blog').classList.remove('hidden-section');
             updateNavState('blog');
-            
+
             // Toggle Views inside Blog
             document.getElementById('blog-list-view').classList.add('hidden-section');
             document.getElementById('blog-single-view').classList.remove('hidden-section');
-            
+
             // Render content
             const content = document.getElementById('single-post-content');
             content.innerHTML = `
@@ -533,9 +599,9 @@
                     </div>
                 </div>
             `;
-            
+
             lucide.createIcons();
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         }
 
         // Scroll Effect for Navbar
@@ -556,9 +622,10 @@
             lucide.createIcons();
             handleRouting(); // Handle initial load URL
         });
-        
+
         window.addEventListener('hashchange', handleRouting); // Handle forward/back buttons
 
     </script>
 </body>
+
 </html>
