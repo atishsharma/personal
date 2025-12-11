@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atishak Sharma | Portfolio</title>
-    
+    <title>Atish Ak Sharma | Beta Site</title>
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- Google Fonts: Inter (Close to Apple's San Francisco) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter (Close to Apple's San Francisco) & Playfair Display (for Blog) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -20,6 +20,7 @@
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
                     },
                     colors: {
                         'ios-blue': '#007AFF',
@@ -39,6 +40,135 @@
                 }
             }
         }
+
+        // Blog Data (6 Articles)
+        const blogPosts = {
+            'post1': {
+                title: "The Digital Nomad's Guide to Tokyo",
+                date: "Oct 24, 2024",
+                category: "Travel",
+                image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+                readTime: "5 min read",
+                content: `
+                    <p class="lead text-xl text-gray-600 font-serif italic border-l-4 border-ios-blue pl-6 mb-12">
+                        "Tokyo is not just a city; it's a living, breathing organism of neon lights, ancient traditions, and cutting-edge technology. For a developer, it's paradise."
+                    </p>
+                    <h3>Finding the Perfect Workspace</h3>
+                    <p>
+                        When I first landed in Narita, my biggest concern wasn't the language barrier—it was finding reliable Wi-Fi and good coffee. Fortunately, Tokyo has exploded with co-working spaces.
+                    </p>
+                    <p>
+                        My personal favorite? The <em>Tsutaya Book Apartment</em> in Shinjuku. It’s open 24/7, has lightning-fast internet, and you are surrounded by walls of design books.
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1554797589-7241bb691973?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Cafe in Tokyo" class="w-full rounded-2xl my-8 shadow-xl">
+                    <h3>Top 3 Spots for Remote Work</h3>
+                    <ul>
+                        <li><strong>Shibuya Scramble Square:</strong> High energy, great views.</li>
+                        <li><strong>Daikanyama T-Site:</strong> Peaceful, design-focused.</li>
+                        <li><strong>Blue Bottle Nakameguro:</strong> Best espresso, minimal aesthetic.</li>
+                    </ul>
+                `
+            },
+            'post2': {
+                title: "Migrating from Create React App to Vite",
+                date: "Nov 12, 2024",
+                category: "DevOps",
+                image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+                readTime: "8 min read",
+                content: `
+                    <p class="lead text-xl text-gray-600 font-serif italic border-l-4 border-ios-pink pl-6 mb-12">
+                        "Speed is a feature. In 2024, waiting 30 seconds for a dev server to start is unacceptable."
+                    </p>
+                    <h3>Why we switched</h3>
+                    <p>
+                        Create React App (CRA) served us well for years. But as our codebase grew, our start times crept up to 45 seconds. Vite changed everything by serving code via native ES modules.
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Code Screen" class="w-full rounded-2xl my-8 shadow-xl">
+                    <h3>The Results</h3>
+                    <ul>
+                        <li><strong>Cold Start:</strong> 45s -> 300ms</li>
+                        <li><strong>HMR:</strong> 2s -> Instant</li>
+                        <li><strong>Build Time:</strong> Reduced by 40%</li>
+                    </ul>
+                `
+            },
+            'post3': {
+                title: "Minimalism in UI: Less is More",
+                date: "Dec 05, 2024",
+                category: "Design",
+                image: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+                readTime: "4 min read",
+                content: `
+                    <p class="lead text-xl text-gray-600 font-serif italic border-l-4 border-ios-indigo pl-6 mb-12">
+                        "Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away."
+                    </p>
+                    <h3>The Apple Philosophy</h3>
+                    <p>
+                        True minimalism isn't about white space; it's about clarity. It's about guiding the user's eye to the one thing that matters most at that moment.
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Minimal Desk" class="w-full rounded-2xl my-8 shadow-xl">
+                    <h3>Practical Tips</h3>
+                    <ul>
+                        <li>Use one primary color.</li>
+                        <li>Typography IS the UI.</li>
+                    </ul>
+                `
+            },
+            'post4': {
+                title: "The Future of AI in Web Development",
+                date: "Dec 18, 2024",
+                category: "Technology",
+                image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+                readTime: "6 min read",
+                content: `
+                    <p class="lead text-xl text-gray-600 font-serif italic border-l-4 border-ios-teal pl-6 mb-12">
+                        "AI isn't going to replace developers. Developers who use AI will replace those who don't."
+                    </p>
+                    <h3>Beyond Code Generation</h3>
+                    <p>
+                        We've all seen what Copilot and ChatGPT can do. But the real revolution isn't just writing boilerplate functions. It's about testing, automated accessibility audits, and real-time performance optimization.
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="AI Abstract" class="w-full rounded-2xl my-8 shadow-xl">
+                    <p>
+                        The developer of 2025 is a conductor, orchestrating AI agents to build robust systems.
+                    </p>
+                `
+            },
+            'post5': {
+                title: "Mastering CSS Grid in 2025",
+                date: "Jan 03, 2025",
+                category: "Frontend",
+                image: "https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+                readTime: "10 min read",
+                content: `
+                    <p class="lead text-xl text-gray-600 font-serif italic border-l-4 border-ios-orange pl-6 mb-12">
+                        "Flexbox is for one dimension. Grid is for the big picture."
+                    </p>
+                    <h3>Subgrid is a Game Changer</h3>
+                    <p>
+                        For years, nested grids were a pain. With widespread support for <code>subgrid</code>, we can finally align child elements to the parent's grid tracks. This enables complex layouts that remain perfectly aligned across different components.
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Cyberpunk Grid" class="w-full rounded-2xl my-8 shadow-xl">
+                `
+            },
+            'post6': {
+                title: "Why I Switched to Linux for Dev",
+                date: "Jan 15, 2025",
+                category: "OS",
+                image: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+                readTime: "7 min read",
+                content: `
+                    <p class="lead text-xl text-gray-600 font-serif italic border-l-4 border-gray-800 pl-6 mb-12">
+                        "Control over your environment is the ultimate productivity hack."
+                    </p>
+                    <h3>The Docker Performance Boost</h3>
+                    <p>
+                        Running Docker on macOS has always been ...heavy. The file system layer adds overhead. On Linux? It's native. My container startup times dropped significantly, and my laptop fan finally stopped spinning like a jet engine.
+                    </p>
+                    <img src="https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Linux Terminal" class="w-full rounded-2xl my-8 shadow-xl">
+                `
+            }
+        };
         
         function copyEmail() {
             navigator.clipboard.writeText('mail@atishaksharma.com');
@@ -50,6 +180,44 @@
                 btn.innerHTML = originalIcon;
                 btn.classList.remove('bg-green-500', 'text-white');
             }, 2000);
+        }
+
+        function openBlog(articleId) {
+            const post = blogPosts[articleId];
+            if (!post) return;
+
+            // Populate Modal
+            document.getElementById('modal-img').src = post.image;
+            document.getElementById('modal-category').innerText = post.category;
+            document.getElementById('modal-title').innerText = post.title;
+            document.getElementById('modal-date').innerText = post.date;
+            document.getElementById('modal-content').innerHTML = post.content;
+
+            const modal = document.getElementById('blog-modal');
+            modal.showModal();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBlog() {
+            const modal = document.getElementById('blog-modal');
+            modal.close();
+            document.body.style.overflow = 'auto';
+        }
+
+        function showMoreArticles() {
+            const extraPosts = document.getElementById('extra-posts');
+            const loadBtn = document.getElementById('load-more-btn');
+            const articleCount = document.getElementById('article-count');
+            
+            // Remove hidden class and add fade-in animation
+            extraPosts.classList.remove('hidden');
+            extraPosts.classList.add('animate-[fadeIn_0.5s_ease-out]');
+            
+            // Update counter
+            articleCount.innerText = "6 ARTICLES";
+            
+            // Hide button
+            loadBtn.style.display = 'none';
         }
     </script>
 
@@ -103,6 +271,12 @@
             -webkit-text-fill-color: transparent;
             background-image: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
         }
+        
+        /* Typography for Article */
+        .prose p { margin-bottom: 1.5em; line-height: 1.8; color: #374151; }
+        .prose h3 { font-size: 1.5rem; font-weight: 700; margin-top: 2em; margin-bottom: 0.5em; color: #111827; }
+        .prose ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1.5em; }
+        .prose li { margin-bottom: 0.5em; }
     </style>
 </head>
 <body class="bg-[#f2f2f7] text-gray-800 antialiased min-h-screen selection:bg-ios-blue selection:text-white overflow-x-hidden relative">
@@ -123,17 +297,16 @@
         <!-- Bento Grid Layout -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-auto">
 
-            <!-- 1. Profile Card (Large, spans 2 cols, 2 rows on desktop) -->
+            <!-- 1. Profile Card (Large, spans 2 cols, 2 rows) -->
             <div class="glass-panel rounded-[2.5rem] p-8 col-span-1 md:col-span-2 row-span-2 flex flex-col justify-between hover-card relative overflow-hidden group">
                 <div class="relative z-10">
                     <div class="w-24 h-24 rounded-full bg-gradient-to-br from-ios-blue to-ios-indigo p-[2px] mb-6 shadow-xl">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Atishak&backgroundColor=cfeafa" alt="Profile" class="w-full h-full rounded-full bg-white object-cover">
+                        <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Profile" class="w-full h-full rounded-full bg-white object-cover">
                     </div>
-                    <h1 class="text-4xl font-extrabold tracking-tight mb-2 text-gray-900">Atishak Sharma</h1>
-                    <p class="text-lg text-ios-blue font-semibold mb-6">Senior Full Stack Engineer</p>
+                    <h1 class="text-4xl font-extrabold tracking-tight mb-2 text-gray-900">Atish Ak Sharma</h1>
+                    <p class="text-lg text-ios-blue font-semibold mb-6">Full Stack Backend Engineer</p>
                     <p class="text-gray-600 leading-relaxed max-w-md font-medium">
-                        Architecting scalable digital solutions. I specialize in building high-performance web applications with a focus on intuitive user experience and clean, maintainable code.
-                    </p>
+                        I am a passionate creator who loves building interactive experiences and exploring the world. Welcome to my digital garden where I share my thoughts on tech, travel, and life.
                 </div>
                 
                 <div class="mt-8 flex gap-3 relative z-10">
@@ -156,7 +329,7 @@
                 <div class="w-16 h-16 rounded-full bg-white/80 backdrop-blur-md flex items-center justify-center text-2xl mb-2 shadow-lg z-10 animate-[bounce_2s_infinite]">
                     <i class="fas fa-map-pin text-ios-pink drop-shadow-md"></i>
                 </div>
-                <h3 class="font-bold text-gray-900 z-10 text-lg">New Delhi</h3>
+                <h3 class="font-bold text-gray-900 z-10 text-lg">Chandigarh</h3>
                 <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide z-10">India</p>
             </div>
 
@@ -177,7 +350,7 @@
             </a>
 
             <!-- 4. Social: GitHub (Small, Square) -->
-            <a href="https://github.com/atishaksharma" target="_blank" class="glass-panel rounded-[2.5rem] p-6 col-span-1 flex flex-col justify-between hover-card group bg-gray-900/5 hover:bg-gray-900/10 transition-colors h-full min-h-[200px]">
+            <a href="https://github.com/atishsharma" target="_blank" class="glass-panel rounded-[2.5rem] p-6 col-span-1 flex flex-col justify-between hover-card group bg-gray-900/5 hover:bg-gray-900/10 transition-colors h-full min-h-[200px]">
                 <div class="flex justify-between items-start">
                     <div class="w-14 h-14 rounded-2xl bg-gray-900 flex items-center justify-center text-white text-3xl shadow-lg shadow-gray-900/20">
                         <i class="fab fa-github"></i>
@@ -206,90 +379,142 @@
                 </div>
             </div>
 
-            <!-- 6. Projects Showcase (Wide) -->
-            <div class="glass-panel rounded-[2.5rem] p-8 col-span-1 md:col-span-2 hover-card relative overflow-hidden">
-                <div class="flex justify-between items-center mb-6 relative z-10">
-                    <h3 class="text-2xl font-bold text-gray-900">Featured Projects</h3>
-                    <a href="https://github.com/atishaksharma" class="text-sm font-bold text-ios-blue hover:text-blue-700 transition-colors bg-blue-50 px-3 py-1 rounded-full">View All</a>
-                </div>
-                
-                <div class="space-y-4 relative z-10">
-                    <!-- Project Item 1 -->
-                    <div class="flex items-center gap-5 p-4 rounded-3xl bg-white/50 border border-white/60 hover:bg-white/80 transition-all cursor-pointer group shadow-sm hover:shadow-md">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md text-2xl group-hover:scale-110 transition-transform">
-                            <i class="fas fa-wallet"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="text-lg font-bold text-gray-900">Nebula Finance</h4>
-                            <p class="text-sm text-gray-500 font-medium">FinTech Dashboard • React & TypeScript</p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-ios-blue shadow-sm">
-                            <i class="fas fa-arrow-right -rotate-45"></i>
-                        </div>
-                    </div>
-
-                    <!-- Project Item 2 -->
-                    <div class="flex items-center gap-5 p-4 rounded-3xl bg-white/50 border border-white/60 hover:bg-white/80 transition-all cursor-pointer group shadow-sm hover:shadow-md">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-ios-teal to-blue-500 flex items-center justify-center text-white shadow-md text-2xl group-hover:scale-110 transition-transform">
-                            <i class="fas fa-heartbeat"></i>
-                        </div>
-                        <div class="flex-1">
-                            <h4 class="text-lg font-bold text-gray-900">Vital Health</h4>
-                            <p class="text-sm text-gray-500 font-medium">Medical SaaS Platform • Next.js</p>
-                        </div>
-                        <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-ios-blue shadow-sm">
-                            <i class="fas fa-arrow-right -rotate-45"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 7. Music/Hobby Widget (Spotify Embed) -->
-            <div class="glass-panel rounded-[2.5rem] p-0 col-span-1 md:col-span-2 flex items-center hover-card relative overflow-hidden h-[240px] md:h-auto">
-                <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgRdKQ?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" class="absolute inset-0 w-full h-full"></iframe>
-                <div class="absolute inset-0 border-[1rem] border-white/20 rounded-[2.5rem] pointer-events-none z-20"></div>
-            </div>
-
-            <!-- 8. BLOG SECTION (New, Large 2x2) -->
-            <div class="glass-panel rounded-[2.5rem] p-8 col-span-1 md:col-span-2 row-span-2 hover-card relative overflow-hidden group">
-                <div class="flex justify-between items-center mb-6 relative z-10">
+            <!-- 6. BLOG SECTION (Scrollable Feed) -->
+            <div class="glass-panel rounded-[2.5rem] col-span-1 md:col-span-2 row-span-2 relative overflow-hidden flex flex-col">
+                <!-- Static Header for Blog Section -->
+                <div class="px-8 pt-8 pb-4 bg-white/10 backdrop-blur-md z-10 flex justify-between items-center border-b border-white/20">
                      <h3 class="text-2xl font-bold text-gray-900 flex items-center gap-3">
                         <span class="w-10 h-10 rounded-full bg-ios-yellow flex items-center justify-center text-white text-lg shadow-sm"><i class="fas fa-feather-alt"></i></span>
-                        Adventures & Code
+                        Stories
                     </h3>
-                    <a href="#" class="text-sm font-bold text-ios-blue hover:underline">Read Blog</a>
+                    <span id="article-count" class="text-xs font-bold text-gray-500 uppercase transition-all">3 Articles</span>
                 </div>
 
-                <div class="space-y-6 relative z-10">
-                    <!-- Blog Post 1: Travel -->
-                    <a href="#" class="block group/item">
-                        <div class="relative h-48 rounded-3xl overflow-hidden mb-3 shadow-md">
-                            <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Japan Travel" class="w-full h-full object-cover transform group-hover/item:scale-105 transition-transform duration-700">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6">
-                                <span class="text-xs font-bold text-white bg-ios-blue px-2 py-1 rounded-md w-fit mb-2">Travel</span>
-                                <h4 class="text-white font-bold text-lg leading-tight">Backpacking through the Streets of Tokyo</h4>
-                                <p class="text-gray-200 text-sm mt-1 line-clamp-1">Discovering hidden gems in Shibuya and Kyoto's ancient temples.</p>
+                <!-- Scrollable Container -->
+                <div class="flex-1 overflow-y-auto custom-scroll p-6">
+                    <div class="space-y-4">
+                        <!-- Post 1 -->
+                        <div onclick="openBlog('post1')" class="group relative bg-white/40 rounded-3xl p-4 cursor-pointer hover:bg-white/70 transition-all duration-300 border border-white/50 shadow-sm hover:shadow-md flex gap-4 items-center">
+                            <div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+                                <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-[10px] font-bold bg-ios-blue/10 text-ios-blue px-2 py-0.5 rounded-full uppercase">Travel</span>
+                                    <span class="text-xs text-gray-500">Oct 24</span>
+                                </div>
+                                <h4 class="font-bold text-gray-900 leading-tight mb-1 group-hover:text-ios-blue transition-colors">The Digital Nomad's Guide to Tokyo</h4>
+                                <p class="text-xs text-gray-500 line-clamp-2">Tokyo is not just a city; it's a living, breathing organism of neon lights...</p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-ios-blue transition-colors shadow-sm">
+                                <i class="fas fa-chevron-right text-xs"></i>
                             </div>
                         </div>
-                    </a>
 
-                    <!-- Blog Post 2: Tech -->
-                    <a href="#" class="block group/item">
-                        <div class="flex items-center gap-4 p-4 rounded-3xl bg-white/50 border border-white/50 hover:bg-white/80 transition-colors">
-                            <div class="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0 shadow-sm">
-                                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Coding" class="w-full h-full object-cover">
+                        <!-- Post 2 -->
+                        <div onclick="openBlog('post2')" class="group relative bg-white/40 rounded-3xl p-4 cursor-pointer hover:bg-white/70 transition-all duration-300 border border-white/50 shadow-sm hover:shadow-md flex gap-4 items-center">
+                            <div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+                                <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             </div>
-                            <div>
-                                <span class="text-xs font-bold text-ios-indigo uppercase tracking-wide">Development</span>
-                                <h4 class="text-gray-900 font-bold leading-tight mt-1">Migrating from Create React App to Vite</h4>
-                                <p class="text-gray-500 text-xs mt-1">Why the switch improved our build times by 40%.</p>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-[10px] font-bold bg-ios-pink/10 text-ios-pink px-2 py-0.5 rounded-full uppercase">DevOps</span>
+                                    <span class="text-xs text-gray-500">Nov 12</span>
+                                </div>
+                                <h4 class="font-bold text-gray-900 leading-tight mb-1 group-hover:text-ios-blue transition-colors">Migrating from Create React App to Vite</h4>
+                                <p class="text-xs text-gray-500 line-clamp-2">Speed is a feature. Waiting 30 seconds for a dev server is unacceptable...</p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-ios-blue transition-colors shadow-sm">
+                                <i class="fas fa-chevron-right text-xs"></i>
                             </div>
                         </div>
-                    </a>
+
+                        <!-- Post 3 -->
+                        <div onclick="openBlog('post3')" class="group relative bg-white/40 rounded-3xl p-4 cursor-pointer hover:bg-white/70 transition-all duration-300 border border-white/50 shadow-sm hover:shadow-md flex gap-4 items-center">
+                            <div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+                                <img src="https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="text-[10px] font-bold bg-ios-indigo/10 text-ios-indigo px-2 py-0.5 rounded-full uppercase">Design</span>
+                                    <span class="text-xs text-gray-500">Dec 05</span>
+                                </div>
+                                <h4 class="font-bold text-gray-900 leading-tight mb-1 group-hover:text-ios-blue transition-colors">Minimalism in UI: Less is More</h4>
+                                <p class="text-xs text-gray-500 line-clamp-2">True minimalism isn't about white space; it's about clarity...</p>
+                            </div>
+                            <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-ios-blue transition-colors shadow-sm">
+                                <i class="fas fa-chevron-right text-xs"></i>
+                            </div>
+                        </div>
+
+                        <!-- Hidden Posts (4, 5, 6) -->
+                        <div id="extra-posts" class="hidden space-y-4">
+                            <!-- Post 4 -->
+                            <div onclick="openBlog('post4')" class="group relative bg-white/40 rounded-3xl p-4 cursor-pointer hover:bg-white/70 transition-all duration-300 border border-white/50 shadow-sm hover:shadow-md flex gap-4 items-center">
+                                <div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-[10px] font-bold bg-ios-teal/10 text-ios-teal px-2 py-0.5 rounded-full uppercase">Technology</span>
+                                        <span class="text-xs text-gray-500">Dec 18</span>
+                                    </div>
+                                    <h4 class="font-bold text-gray-900 leading-tight mb-1 group-hover:text-ios-blue transition-colors">The Future of AI in Web Development</h4>
+                                    <p class="text-xs text-gray-500 line-clamp-2">AI isn't going to replace developers. Developers who use AI will...</p>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-ios-blue transition-colors shadow-sm">
+                                    <i class="fas fa-chevron-right text-xs"></i>
+                                </div>
+                            </div>
+
+                            <!-- Post 5 -->
+                            <div onclick="openBlog('post5')" class="group relative bg-white/40 rounded-3xl p-4 cursor-pointer hover:bg-white/70 transition-all duration-300 border border-white/50 shadow-sm hover:shadow-md flex gap-4 items-center">
+                                <div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1507721999472-8ed4421c4af2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-[10px] font-bold bg-ios-orange/10 text-ios-orange px-2 py-0.5 rounded-full uppercase">Frontend</span>
+                                        <span class="text-xs text-gray-500">Jan 03</span>
+                                    </div>
+                                    <h4 class="font-bold text-gray-900 leading-tight mb-1 group-hover:text-ios-blue transition-colors">Mastering CSS Grid in 2025</h4>
+                                    <p class="text-xs text-gray-500 line-clamp-2">Flexbox is for one dimension. Grid is for the big picture...</p>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-ios-blue transition-colors shadow-sm">
+                                    <i class="fas fa-chevron-right text-xs"></i>
+                                </div>
+                            </div>
+
+                            <!-- Post 6 -->
+                            <div onclick="openBlog('post6')" class="group relative bg-white/40 rounded-3xl p-4 cursor-pointer hover:bg-white/70 transition-all duration-300 border border-white/50 shadow-sm hover:shadow-md flex gap-4 items-center">
+                                <div class="w-24 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-[10px] font-bold bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full uppercase">OS</span>
+                                        <span class="text-xs text-gray-500">Jan 15</span>
+                                    </div>
+                                    <h4 class="font-bold text-gray-900 leading-tight mb-1 group-hover:text-ios-blue transition-colors">Why I Switched to Linux for Dev</h4>
+                                    <p class="text-xs text-gray-500 line-clamp-2">Control over your environment is the ultimate productivity hack...</p>
+                                </div>
+                                <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-ios-blue transition-colors shadow-sm">
+                                    <i class="fas fa-chevron-right text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Load More Button -->
+                        <div class="pt-2">
+                             <button id="load-more-btn" onclick="showMoreArticles()" class="w-full py-3 rounded-2xl bg-white/50 hover:bg-white/80 border border-white/50 text-gray-600 font-bold text-sm transition-all shadow-sm">
+                                Read More Articles <i class="fas fa-chevron-down ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- 9. NEW Email Card (Replaces Contact Form) -->
+            <!-- 7. Email Card (Moved to balance grid) -->
             <div class="glass-panel rounded-[2.5rem] p-8 col-span-1 md:col-span-2 flex flex-col justify-center items-start hover-card relative overflow-hidden bg-gradient-to-br from-white/40 to-white/10">
                 <div class="absolute right-0 top-0 w-48 h-48 bg-ios-blue/10 rounded-full blur-2xl -mr-12 -mt-12"></div>
                 
@@ -308,7 +533,7 @@
                 </div>
             </div>
 
-             <!-- 10. Twitter/X (Square) -->
+             <!-- 8. Twitter/X (Square) -->
              <a href="https://twitter.com/atishaksharma" target="_blank" class="glass-panel rounded-[2.5rem] p-6 col-span-1 flex flex-col justify-between hover-card group bg-black/5 hover:bg-black/10 transition-colors min-h-[180px]">
                 <div class="flex justify-between items-start">
                     <div class="w-12 h-12 rounded-2xl bg-black flex items-center justify-center text-white text-2xl shadow-lg shadow-black/20">
@@ -324,7 +549,7 @@
                 </div>
             </a>
             
-             <!-- 11. Instagram (Square) -->
+             <!-- 9. Instagram (Square) -->
              <a href="https://instagram.com/atishaksharma" target="_blank" class="glass-panel rounded-[2.5rem] p-6 col-span-1 flex flex-col justify-between hover-card group relative overflow-hidden min-h-[180px]">
                 <div class="absolute inset-0 bg-gradient-to-tr from-yellow-400/20 via-red-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 <div class="flex justify-between items-start relative z-10">
@@ -344,11 +569,11 @@
         </div>
 
         <footer class="mt-16 text-center text-gray-500 text-sm font-medium pb-8">
-            <p>&copy; 2025 Atishak Sharma. Designed with <i class="fas fa-heart text-ios-red animate-pulse"></i> in New Delhi.</p>
+            <p>&copy; 2025 Atish Ak Sharma. Designed with <i class="fas fa-heart text-ios-red animate-pulse"></i> in Chandigarh.</p>
         </footer>
     </main>
 
-    <!-- Improved Dialog Modal for CV with Better Scrolling -->
+    <!-- RESUME MODAL -->
     <dialog id="cv-modal" class="glass-panel rounded-[2rem] p-0 backdrop:backdrop-blur-md backdrop:bg-black/50 w-full max-w-2xl shadow-2xl m-auto overflow-hidden">
         <div class="flex flex-col max-h-[85vh]">
             <!-- Sticky Header -->
@@ -361,13 +586,13 @@
             <!-- Scrollable Content -->
             <div class="px-8 pb-8 -mt-10 overflow-y-auto custom-scroll bg-white/80 backdrop-blur-md">
                 <div class="w-20 h-20 rounded-2xl bg-white p-1 shadow-xl mb-4 relative z-10">
-                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Atishak&backgroundColor=cfeafa" alt="Profile" class="w-full h-full rounded-xl object-cover bg-gray-100">
+                     <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Profile" class="w-full h-full rounded-xl object-cover bg-gray-100">
                 </div>
                 
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
                     <div>
-                        <h2 class="text-3xl font-bold text-gray-900">Atishak Sharma</h2>
-                        <p class="text-ios-blue font-semibold">Senior Full Stack Engineer</p>
+                        <h2 class="text-3xl font-bold text-gray-900">Atish Ak Sharma</h2>
+                        <p class="text-ios-blue font-semibold">Full Stack Backend Engineer</p>
                     </div>
                     <button class="px-5 py-2.5 rounded-full bg-gray-900 text-white text-sm font-bold hover:bg-gray-800 transition-colors shadow-lg flex items-center gap-2">
                         <i class="fas fa-download"></i> Download PDF
@@ -384,8 +609,8 @@
                         <div class="relative pl-6 border-l-2 border-gray-200 space-y-8">
                             <div class="relative group">
                                 <span class="absolute -left-[1.65rem] top-1 w-3.5 h-3.5 rounded-full bg-ios-blue ring-4 ring-white group-hover:scale-110 transition-transform"></span>
-                                <h4 class="text-lg font-bold text-gray-900">Senior Full Stack Engineer</h4>
-                                <p class="text-sm font-semibold text-gray-500">TechFlow Systems • 2022 - Present</p>
+                                <h4 class="text-lg font-bold text-gray-900">Full Stack Backend Engineer</h4>
+                                <p class="text-sm font-semibold text-gray-500">Aks Systems • 2022 - Present</p>
                                 <p class="text-gray-600 mt-2 text-sm leading-relaxed">
                                     Leading a team of 5 developers to build scalable microservices. Reduced server costs by 30% through optimization and migrated legacy codebase to React/Next.js.
                                 </p>
@@ -408,29 +633,55 @@
                             <i class="fas fa-graduation-cap"></i> Education
                         </h3>
                         <div class="bg-white/60 rounded-2xl p-5 border border-white/60 shadow-sm">
-                            <h4 class="text-base font-bold text-gray-900">Bachelor of Computer Applications</h4>
-                            <p class="text-sm text-gray-500">University of Technology • 2016 - 2019</p>
-                            <p class="text-xs text-gray-400 mt-1">Graduated with Honors • 3.8 GPA</p>
+                            <h4 class="text-base font-bold text-gray-900">B.Tech Computer Science</h4>
+                            <p class="text-sm text-gray-500">Shoolini University • 2011 - 2015</p>
+                            <p class="text-xs text-gray-400 mt-1">Graduated with Honors • 79% </p>
                         </div>
-                    </section>
-                    
-                    <!-- Skills Section -->
-                    <section>
-                         <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-5 flex items-center gap-2">
-                            <i class="fas fa-tools"></i> Skills
-                        </h3>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="px-3 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-bold">React</span>
-                            <span class="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-bold">Node.js</span>
-                            <span class="px-3 py-1 bg-yellow-50 text-yellow-600 rounded-lg text-xs font-bold">JavaScript</span>
-                            <span class="px-3 py-1 bg-purple-50 text-purple-600 rounded-lg text-xs font-bold">TypeScript</span>
-                            <span class="px-3 py-1 bg-pink-50 text-pink-600 rounded-lg text-xs font-bold">GraphQL</span>
-                            <span class="px-3 py-1 bg-orange-50 text-orange-600 rounded-lg text-xs font-bold">AWS</span>
+                        <div class="bg-white/60 rounded-2xl p-5 border border-white/60 shadow-sm">
+                            <h4 class="text-base font-bold text-gray-900">M.Tech Computer Science</h4>
+                            <p class="text-sm text-gray-500">Shoolini University • 2016 - 2017</p>
+                            <p class="text-xs text-gray-400 mt-1">Graduated with Honors • 88% </p>
                         </div>
                     </section>
                 </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- BLOG ARTICLE MODAL (Dynamic Content) -->
+    <dialog id="blog-modal" class="p-0 backdrop:backdrop-blur-xl backdrop:bg-white/30 w-full h-full max-w-full max-h-full m-0 bg-transparent overflow-hidden">
+        <div class="w-full h-full bg-white/95 overflow-y-auto custom-scroll relative animate-[fadeIn_0.3s_ease-out]">
+            
+            <!-- Close Button -->
+            <button onclick="closeBlog()" class="fixed top-6 right-6 w-12 h-12 rounded-full bg-black/20 backdrop-blur-md hover:bg-black/40 flex items-center justify-center transition-colors text-white z-50 shadow-lg border border-white/20">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+
+            <!-- Hero Image -->
+            <div class="w-full h-[50vh] relative">
+                <img id="modal-img" src="" alt="Article Header" class="w-full h-full object-cover">
+                <!-- Darker overlay to fix text contrast issues -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10"></div>
                 
-                <div class="h-8"></div> <!-- Bottom spacer -->
+                <div class="absolute bottom-0 left-0 w-full p-8 md:p-16 max-w-4xl mx-auto">
+                    <span id="modal-category" class="bg-ios-blue text-white px-3 py-1 rounded-md text-sm font-bold uppercase tracking-wider mb-4 inline-block shadow-sm"></span>
+                    <h1 id="modal-title" class="text-4xl md:text-6xl font-serif font-bold text-white leading-tight mb-4 drop-shadow-md"></h1>
+                    <div class="flex items-center gap-4 text-gray-200 font-medium text-sm">
+                        <div class="w-10 h-10 rounded-full bg-gray-200 overflow-hidden ring-2 ring-white/50">
+                            <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" class="w-full h-full object-cover">
+                        </div>
+                        <span>By Atish Ak Sharma</span>
+                        <span class="w-1 h-1 rounded-full bg-gray-400"></span>
+                        <span id="modal-date"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Article Content -->
+            <div class="max-w-3xl mx-auto px-6 py-12 pb-32">
+                <article id="modal-content" class="prose prose-lg md:prose-xl mx-auto text-gray-700">
+                    <!-- Content injected via JS -->
+                </article>
             </div>
         </div>
     </dialog>
