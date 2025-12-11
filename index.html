@@ -247,7 +247,7 @@
                 twitter: "https://twitter.com/atishaksharma",
                 facebook: "https://facebook.com/atishaksharma",
                 instagram: "https://instagram.com/atishaksharma",
-                threads: "https://threads.net/atishaksharma",
+            
             }
         };
 
@@ -302,7 +302,7 @@
             else if (type === 'twitter') icon = 'twitter';
             else if (type === 'facebook') icon = 'facebook';
             else if (type === 'instagram') icon = 'instagram';
-            else if (type === 'threads') icon = 'threads';
+        
             else icon = 'link';
             
             return `<a href="${url}" target="_blank" class="p-3 bg-white/5 hover:bg-white/20 rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-110 border border-white/10 text-white"><i data-lucide="${icon}" class="w-5 h-5"></i></a>`;
@@ -314,7 +314,7 @@
             else if (type === 'twitter') icon = 'twitter';
             else if (type === 'facebook') icon = 'facebook';
             else if (type === 'instagram') icon = 'instagram';
-            else if (type === 'threads') icon = 'threads';
+            
             
             return `<a href="${url}" target="_blank" class="text-slate-400 hover:text-white transition-colors"><i data-lucide="${icon}" class="w-5 h-5"></i></a>`;
         }
@@ -334,7 +334,7 @@
                 ${getSocialLink('github', PERSONAL_INFO.socials.github)}
                 ${getSocialLink('twitter', PERSONAL_INFO.socials.twitter)}
                 ${getSocialLink('facebook', PERSONAL_INFO.socials.facebook)}
-                ${getSocialLink('threads', PERSONAL_INFO.socials.threads)}
+            
                 ${getSocialLink('instagram', PERSONAL_INFO.socials.instagram)}
                 <a href="mailto:${PERSONAL_INFO.email}" class="p-3 bg-white/5 hover:bg-white/20 rounded-full backdrop-blur-sm transition-all duration-300 hover:scale-110 border border-white/10 text-white"><i data-lucide="mail" class="w-5 h-5"></i></a>
             `;
@@ -350,7 +350,7 @@
                 ${getFooterSocialLink('github', PERSONAL_INFO.socials.github)}
                 ${getFooterSocialLink('twitter', PERSONAL_INFO.socials.twitter)}
                 ${getFooterSocialLink('facebook', PERSONAL_INFO.socials.facebook)}
-                ${getFooterSocialLink('threads', PERSONAL_INFO.socials.threads)}
+               
                 ${getFooterSocialLink('instagram', PERSONAL_INFO.socials.instagram)}
             `;
 
