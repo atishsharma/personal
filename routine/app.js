@@ -417,7 +417,6 @@ function closeModal(t) { els.modal[t].classList.remove('open'); }
 
 // Gestures
 setupGestures();
-}
 
 function setupGestures() {
     let tsX = 0;
