@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Routine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#fff0f5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="date-display">
+                <span id="current-day">Wed</span>
+                <span id="current-date">12</span>
+            </div>
+            <h1>Routine</h1>
+            <button class="icon-btn" id="settings-btn">
+                <span class="material-symbols-rounded">settings</span>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main id="main-content">
+
+            <!-- View: HOME -->
+            <section id="view-home" class="view-section active">
+                <!-- Stats Summary (Collapsible/Swipeable) -->
+                <div class="stats-card">
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-completed">0</span>
+                        <span class="stat-label">Done Today</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="current-streak">0</span>
+                        <span class="stat-label">Best Streak</span>
+                    </div>
+                    <div class="circular-progress">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle" stroke-dasharray="0, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <div class="percentage" id="daily-percentage">0%</div>
+                    </div>
+                </div>
+
+                <!-- Habits List -->
+                <div class="habits-list" id="habits-list">
+                    <!-- Empty State -->
+                    <div class="empty-state" id="empty-state">
+                        <span class="material-symbols-rounded">spa</span>
+                        <p>No habits yet. Start small!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- View: STATS (Matrix) -->
+            <section id="view-stats" class="view-section hidden">
+                <div class="section-header">
+                    <h2>Your Routine History</h2>
+                    <p>Track your consistency over time (scroll for past months)</p>
+                </div>
+
+                <div class="matrix-nav" id="matrix-nav">
+                    <button class="nav-arrow" id="matrix-prev"><span
+                            class="material-symbols-rounded">chevron_left</span></button>
+                    <span class="month-label" id="matrix-month-label">December 2025</span>
+                    <button class="nav-arrow" id="matrix-next"><span
+                            class="material-symbols-rounded">chevron_right</span></button>
+                </div>
+
+                <div class="calendar-matrix" id="calendar-matrix"></div>
+                <div class="matrix-legend">
+                    <div class="legend-item"><span class="dot lvl-0"></span>0%</div>
+                    <div class="legend-item"><span class="dot lvl-1"></span>1-49%</div>
+                    <div class="legend-item"><span class="dot lvl-2"></span>50-99%</div>
+                    <div class="legend-item"><span class="dot lvl-3"></span>100%</div>
+                </div>
+            </section>
+
+            <!-- View: PROFILE -->
+            <section id="view-profile" class="view-section hidden">
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profile-avatar-container">
+                        <span class="material-symbols-rounded">person</span>
+                        <!-- Hidden file input -->
+                        <input type="file" id="p-photo-input" accept="image/*" style="display: none;">
+                    </div>
+                    <button class="text-btn" id="change-photo-btn" style="border:none; color: var(--primary);">Change
+                        Photo</button>
+
+                    <h2 id="profile-name-display" style="margin-top: 12px;">Guest User</h2>
+                    <div class="bmi-badge hidden" id="bmi-display">
+                        BMI: <span id="bmi-value">--</span> <span id="bmi-status"
+                            style="opacity: 0.8; font-weight: normal; margin-left: 4px;"></span>
+                    </div>
+                </div>
+
+                <form id="profile-form" class="profile-form">
+                    <div class="input-group">
+                        <label>Display Name</label>
+                        <input type="text" id="p-name" placeholder="Your Name">
+                    </div>
+
+                    <div class="row-inputs">
+                        <div class="input-group" style="flex:1">
+                            <label>Age</label>
+                            <input type="number" id="p-age" placeholder="25">
+                        </div>
+                        <div class="input-group" style="flex:1">
+                            <label>Height <span class="unit-height" style="opacity:0.5">(cm)</span></label>
+                            <input type="number" id="p-height" placeholder="175">
+                        </div>
+                        <div class="input-group" style="flex:1">
+                            <label>Weight <span class="unit-weight" style="opacity:0.5">(kg)</span></label>
+                            <input type="number" id="p-weight" placeholder="70">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Main Goal</label>
+                        <input type="text" id="p-goal" placeholder="e.g. Run a Marathon">
+                    </div>
+
+                    <button type="button" class="btn-primary" id="save-profile-btn">Save Profile</button>
+
+                    <div class="data-management"
+                        style="margin-top: 32px; padding-top: 24px; border-top: 1px dashed var(--outline);">
+                        <label style="margin-bottom: 12px; display:block; text-align:center; opacity:0.6;">Data &
+                            Backup</label>
+                        <div class="row-inputs">
+                            <button type="button" class="text-btn" id="export-btn"
+                                style="border-color: var(--primary); color: var(--primary);">Export JSON</button>
+                            <button type="button" class="text-btn" id="import-btn-trigger">Import JSON</button>
+                            <input type="file" id="import-input" accept=".json" style="display: none;">
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+        </main>
+
+        <!-- FAB (Centered) -->
+        <button class="fab" id="add-habit-btn">
+            <span class="material-symbols-rounded">add</span>
+            <span>New Habit</span>
+        </button>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-page="home">
+                <span class="material-symbols-rounded">home</span>
+            </button>
+            <button class="nav-item" data-page="stats">
+                <span class="material-symbols-rounded">bar_chart</span>
+            </button>
+            <button class="nav-item" id="nav-profile-btn" data-page="profile">
+                <!-- Using a div for the image to make it easier to replace -->
+                <div class="nav-profile-icon"><span class="material-symbols-rounded">person</span></div>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Add Habit Modal -->
+    <div class="modal-overlay" id="add-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>New Habit</h2>
+                <button class="close-modal"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <div class="modal-body" style="overflow: visible;"> <!-- Allow dropdown overflow -->
+                <div class="input-group">
+                    <label>Habit Name</label>
+                    <input type="text" id="habit-name" placeholder="e.g., Read 10 pages" autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <label>Icon</label>
+                    <div class="custom-select-container">
+                        <div class="custom-select" id="custom-icon-select">
+                            <div class="select-trigger">
+                                <span class="select-value">
+                                    <span class="material-symbols-rounded" id="select-icon-preview">star</span>
+                                    <span id="select-text-preview">Select Icon...</span>
+                                </span>
+                                <span class="material-symbols-rounded">expand_more</span>
+                            </div>
+                            <div class="select-options" id="custom-select-options">
+                                <!-- JS Injected Options -->
+                            </div>
+                        </div>
+                        <button class="add-icon-btn" id="btn-add-custom-icon">
+                            <span class="material-symbols-rounded">add</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>ColorTheme</label>
+                    <div class="color-picker" id="color-picker">
+                        <!-- JS Injected 12 colors -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" id="save-habit-btn">Create Routine</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal (Only Units now) -->
+    <div class="modal-overlay" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close-modal" id="close-settings"><span
+                        class="material-symbols-rounded">close</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Global Theme</label>
+                    <div class="color-picker" id="global-theme-picker">
+                        <!-- JS Injected -->
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Measurement Units</label>
+                    <div class="toggle-group"
+                        style="display:flex; background:var(--surface-variant); padding:4px; border-radius:99px;">
+                        <button class="toggle-btn active" data-unit="metric"
+                            style="flex:1; padding:12px; border:none; border-radius:99px; font-weight:600; cursor:pointer;">Metric
+                            (kg/cm)</button>
+                        <button class="toggle-btn" data-unit="imperial"
+                            style="flex:1; padding:12px; border:none; border-radius:99px; font-weight:600; cursor:pointer;">Imperial
+                            (lbs/ft)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day Details Modal -->
+    <div class="modal-overlay" id="day-details-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="details-date">Date</h2>
+                <button class="close-modal" id="close-details"><span
+                        class="material-symbols-rounded">close</span></button>
+            </div>
+            <div class="modal-body">
+                <div class="habits-list" id="details-list">
+                    <!-- Injected Habit Cards -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

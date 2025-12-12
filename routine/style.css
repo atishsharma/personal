@@ -1,0 +1,729 @@
+/* CSS for Phase 9 - Pastel & Alignment Fixes */
+
+:root {
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+
+    /* Base Layout Colors (Light & Airy) */
+    --surface: #FFFBFF;
+    /* Almost white */
+    --surface-variant: #F4EFF4;
+    /* Very subtle grey/purple tint */
+    --on-surface: #1C1B1F;
+    /* Soft Black */
+    --outline: #79747E;
+
+    /* Global Dynamic Theme Default (Purple Pastel) */
+    --primary: #E8DEF8;
+    /* Pastel Purple Background */
+    --on-primary: #1D192B;
+    /* Dark Text on Pastel */
+    --primary-dim: #D0BCFF;
+    /* slightly darker for borders/active */
+
+    --card-bg: #FFFFFF;
+
+    --radius-s: 12px;
+    --radius-m: 16px;
+    --radius-l: 24px;
+    --radius-xl: 32px;
+    --radius-full: 999px;
+
+    --shadow-soft: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+    /* Softer shadow */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--surface);
+    color: var(--on-surface);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    line-height: 1.5;
+    /* Alignment fix: better spacing */
+}
+
+.app-container {
+    width: 100%;
+    max-width: 600px;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 20px;
+    overflow-y: auto;
+    overscroll-behavior-y: none;
+}
+
+/* Typography */
+h1 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 28px;
+    color: var(--on-surface);
+}
+
+h2 {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--on-surface);
+}
+
+h3 {
+    font-family: var(--font-heading);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--outline);
+}
+
+/* Header */
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+}
+
+.date-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--surface-variant);
+}
+
+#current-day {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--outline);
+    letter-spacing: 1px;
+}
+
+#current-date {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--on-surface);
+    line-height: 1.2;
+}
+
+/* Stats Card - Pastel Style */
+.stats-card {
+    background: var(--primary);
+    /* Pastel BG */
+    color: var(--on-primary);
+    padding: 24px;
+    border-radius: var(--radius-l);
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 32px;
+    box-shadow: none;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    /* Subtle border */
+}
+
+/* Unit Toggles */
+.toggle-group {
+    display: flex;
+    background: var(--surface-variant);
+    padding: 4px;
+    border-radius: 99px;
+    margin-top: 8px;
+}
+
+.toggle-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 99px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    background: transparent;
+    color: var(--outline);
+    transition: all 0.2s;
+}
+
+.toggle-btn.active {
+    background: #fff;
+    color: var(--on-surface);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-family: var(--font-heading);
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Circle Chart */
+.circular-progress {
+    width: 64px;
+    height: 64px;
+    position: relative;
+}
+
+.circular-chart {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.circle-bg {
+    fill: none;
+    stroke: rgba(0, 0, 0, 0.1);
+    stroke-width: 5;
+}
+
+.circle {
+    fill: none;
+    stroke: var(--on-primary);
+    stroke-width: 5;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.5s ease;
+}
+
+.percentage {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--on-primary);
+}
+
+/* Matrix Navigation (Pastel) */
+.matrix-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    background: #fff;
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid var(--surface-variant);
+}
+
+.month-label {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--on-surface);
+}
+
+.nav-arrow {
+    background: var(--surface-variant);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--on-surface);
+    transition: background 0.2s;
+}
+
+.nav-arrow:hover {
+    background: var(--primary);
+    color: var(--on-primary);
+}
+
+/* Habits List */
+.habits-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 140px;
+}
+
+.habit-card {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: var(--radius-l);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.habit-card:active {
+    transform: scale(0.98);
+}
+
+.habit-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.habit-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface-variant);
+    color: var(--on-surface);
+    font-size: 24px;
+}
+
+.habit-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* added center alignment */
+.habit-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--on-surface);
+    line-height: 1.3;
+}
+
+.habit-streak {
+    font-size: 13px;
+    color: var(--outline);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+.checkbox-visual {
+    width: 28px;
+    height: 28px;
+    /* Slightly smaller cleaner look */
+    border: 2px solid var(--outline);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--on-primary);
+    /* Checkmark color on Pastel BG */
+    opacity: 0.5;
+}
+
+.checkbox-visual span {
+    font-size: 18px;
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Completed State - Pastel */
+.habit-card.completed {
+    background: var(--primary);
+    /* Set via JS to specific pastel color */
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.habit-card.completed .habit-icon {
+    background: rgba(255, 255, 255, 0.4);
+    color: var(--on-surface);
+}
+
+.habit-card.completed .habit-name {
+    color: var(--on-surface);
+}
+
+/* Dark Text */
+.habit-card.completed .habit-streak {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.habit-card.completed .checkbox-visual {
+    border-color: transparent;
+    background: rgba(0, 0, 0, 0.1);
+    color: var(--on-surface);
+    opacity: 1;
+}
+
+.habit-card.completed .checkbox-visual span {
+    transform: scale(1);
+}
+
+/* Custom Dropdown (Fixed Alignment) */
+.input-group label {
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--on-surface);
+}
+
+.custom-select-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.custom-select {
+    flex: 1;
+    position: relative;
+    border: 1px solid var(--outline);
+    /* Thinner border */
+    border-radius: var(--radius-m);
+    background: #fff;
+    cursor: pointer;
+    height: 56px;
+    /* Explicit height for alignment */
+}
+
+.select-trigger {
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 500;
+    color: var(--on-surface);
+}
+
+.select-value {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.select-options {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-radius: var(--radius-m);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 200;
+    max-height: 250px;
+    overflow-y: auto;
+    display: none;
+    border: 1px solid var(--surface-variant);
+}
+
+.custom-select.open .select-options {
+    display: block;
+}
+
+.option {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.1s;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: var(--surface-variant);
+}
+
+.option.selected {
+    background: var(--primary);
+    color: var(--on-primary);
+}
+
+.add-icon-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-m);
+    background: var(--surface-variant);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--on-surface);
+    cursor: pointer;
+}
+
+.add-icon-btn:hover {
+    background: var(--primary);
+}
+
+/* FAB (Pastel Theme) */
+.fab {
+    position: fixed;
+    bottom: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: var(--on-primary);
+    border: none;
+    padding: 16px 24px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-family: var(--font-body);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    z-index: 90;
+    transition: all 0.2s ease;
+}
+
+.fab:active {
+    transform: translate(-50%, 0) scale(0.95);
+}
+
+.fab.hidden {
+    transform: translate(-50%, 100px) scale(0.8);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border: 1px solid var(--surface-variant);
+    padding: 8px 16px;
+    border-radius: var(--radius-full);
+    display: flex;
+    gap: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    /* Softer shadow */
+    z-index: 100;
+    align-items: center;
+    /* Alignment Fix */
+}
+
+.nav-item {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--outline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.nav-item.active {
+    background: var(--primary);
+    color: var(--on-primary);
+}
+
+.nav-profile-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: var(--surface-variant);
+}
+
+/* Modals & Inputs */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background: #fff;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 28px;
+    padding: 24px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    transform: scale(0.95);
+    transition: transform 0.2s ease;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal-overlay.open .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--outline);
+    font-family: var(--font-body);
+    font-size: 16px;
+    background: #fff;
+    color: var(--on-surface);
+    transition: border 0.2s;
+}
+
+input:focus {
+    border-color: var(--on-surface);
+    outline: none;
+    border-width: 2px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--primary);
+    color: var(--on-primary);
+    font-weight: 600;
+    font-family: var(--font-heading);
+    border: none;
+    cursor: pointer;
+    margin-top: 24px;
+    transition: opacity 0.2s;
+}
+
+.btn-primary:active {
+    opacity: 0.8;
+}
+
+/* Color Picker */
+.color-picker {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+.color-option {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.color-option.selected {
+    border-color: var(--on-surface);
+    transform: scale(1.1);
+}
+
+/* Matrix */
+.month-block {
+    background: #fff;
+    border-radius: var(--radius-l);
+    padding: 20px;
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+}
+
+.month-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+
+.day-cell {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: var(--surface-variant);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    /* Modern Font */
+    color: var(--on-surface);
+    cursor: pointer;
+}
+
+.day-cell.is-today {
+    border: 2px solid var(--on-surface);
+    background: transparent;
+}
+
+/* Profile, Etc */
+.data-management {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--outline);
+}
+
+.text-btn {
+    background: transparent;
+    border: 1px solid var(--outline);
+    padding: 10px;
+    border-radius: 99px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    color: var(--on-surface);
+    font-size: 14px;
+}
+
+.row-inputs {
+    display: flex;
+    gap: 12px;
+}
+
+@media (max-width: 450px) {
+    .row-inputs {
+        flex-direction: column;
+    }
+}
