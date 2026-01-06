@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cordyceps Lab Wireframe Design</title>
+  <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <style>
+        :root {
+            /* Dark Theme (Default) */
+            --bg-body: #0f172a;
+            --bg-canvas: #1e293b;
+            --grid-color: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #ff00ff; /* Neon Pink */
+            --rack-stroke: #64748b;
+            --rack-fill: rgba(100, 116, 139, 0.2);
+            --water-color: #3b82f6;
+            --hood-color: #a855f7;
+            --fan-color: #fcd34d;
+            --blackout-color: #d946ef;
+            --ac-color: #ef4444; 
+            --wall-stroke: #cbd5e1;
+            --humidifier-color: #006400; /* Dark Green */
+            --prep-outline-main: #000000; /* Black */
+        }
+
+        body.light-theme {
+            --bg-body: #f1f5f9;
+            --bg-canvas: #ffffff;
+            --grid-color: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --accent: #ff00ff; 
+            --rack-stroke: #94a3b8;
+            --rack-fill: rgba(241, 245, 249, 0.8);
+            --water-color: #2563eb;
+            --hood-color: #9333ea;
+            --fan-color: #d97706;
+            --blackout-color: #c026d3;
+            --ac-color: #dc2626; 
+            --wall-stroke: #1e293b;
+            --prep-outline-main: #000000;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .header p {
+            margin: 5px 0 0;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Toggle Switch Styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #334155;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .theme-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+        .canvas-wrapper {
+            background-color: var(--bg-canvas);
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 30px 30px; 
+            border: 2px solid var(--grid-color);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+            width: fit-content;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        svg {
+            display: block;
+            width: 660px; 
+            height: 300px; 
+            overflow: visible;
+        }
+
+        .wall { stroke: var(--wall-stroke); stroke-width: 8; fill: none; transition: stroke 0.3s ease; }
+        .rack { fill: var(--rack-fill); stroke: var(--rack-stroke); stroke-width: 1.5; cursor: help; }
+        .rack.top-row { stroke: var(--blackout-color); fill: rgba(217, 70, 239, 0.1); } 
+        
+        .equipment { fill: rgba(255,255,255,0.05); stroke: var(--text-secondary); stroke-width: 2; }
+        .hood { stroke: var(--hood-color); }
+        .water { stroke: var(--water-color); }
+        .fan-unit { stroke: var(--fan-color); fill: rgba(252, 211, 77, 0.1); }
+        .ac-unit-box { fill: var(--ac-color); stroke: rgba(0,0,0,0.3); stroke-width: 1; }
+        
+        .label-text { font-size: 9px; text-transform: uppercase; font-weight: 700; pointer-events: none; }
+        .rack-number { font-size: 14px; font-weight: 800; text-anchor: middle; dominant-baseline: middle; fill: var(--text-primary); pointer-events: none; }
+        .zone-title { font-size: 11px; fill: var(--blackout-color); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; }
+        
+        /* Color Coded Labels */
+        .label-clean { fill: var(--hood-color); }
+        .label-water { fill: var(--water-color); }
+        .label-fan { fill: var(--fan-color); }
+        .label-blackout { fill: var(--blackout-color); }
+        .label-standard { fill: var(--text-secondary); }
+        .label-prep { fill: var(--text-primary); }
+        .label-ac { fill: var(--ac-color); }
+
+        .btn {
+            padding: 8px 16px; 
+            background: #334155; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #475569; }
+
+        .tooltip {
+            position: fixed;
+            background: #000;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            pointer-events: none;
+            display: none;
+            z-index: 1000;
+            border: 1px solid var(--accent);
+        }
+
+        .specs-panel {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        body.light-theme .specs-panel { background: rgba(0,0,0,0.03); }
+
+        .spec-item { font-size: 0.85rem; line-height: 1.6; }
+        .spec-item strong { color: var(--accent); display: block; margin-bottom: 4px; text-transform: uppercase; font-size: 0.75rem; }
+        .spec-value { color: var(--text-secondary); }
+
+        @media print {
+            body { background: transparent !important; color: black !important; padding: 0; }
+            .canvas-wrapper { border: 1px solid #000; box-shadow: none; background: none; padding: 10px; }
+            .header, .specs-panel { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <h1>Cordyceps Lab Wireframe</h1>
+            <p>22' x 10' Internal Area Floor Plan</p>
+        </div>
+        <div class="controls">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="theme-label">Theme</span>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <button onclick="window.print()" class="btn">Export PDF</button>
+        </div>
+    </div>
+
+    <div class="canvas-wrapper">
+        <div id="tooltip" class="tooltip"></div>
+        <svg id="labMap" viewBox="0 0 660 300">
+            <!-- Outer Wall Shell -->
+            <rect x="0" y="0" width="660" height="300" class="wall" />
+
+            <!-- Main Door & Airtight Filter Fan Unit -->
+            <g transform="translate(100, 0)">
+                <rect x="0" y="-4" width="90" height="8" fill="#1e293b" />
+                <path d="M 0 0 Q 45 45 90 0" fill="none" stroke="var(--accent)" stroke-dasharray="4" />
+                <rect x="5" y="-14" width="80" height="14" class="fan-unit" data-info="Airtight HEPA Filter Fan Unit (Over Door)" />
+                <text x="5" y="-20" class="label-text label-fan">Airtight Filter Fan</text>
+            </g>
+
+            <!-- Clean Zone (Left Wall) -->
+            <g id="clean-zone">
+                <rect x="8" y="8" width="60" height="60" class="equipment" data-info="Refrigerator (2'x2')" />
+                <text x="38" y="38" class="label-text label-clean" text-anchor="middle" transform="rotate(-90 38 38)">Fridge</text>
+
+                <rect x="8" y="75" width="60" height="120" class="equipment hood" data-info="Inoculation Flow Hood (2'x4')" />
+                <text x="38" y="135" class="label-text label-clean" text-anchor="middle" transform="rotate(-90 38 135)" style="font-size: 10px;">Flow Hood Station</text>
+
+                <rect x="8" y="200" width="60" height="92" class="equipment" data-info="Dehydrator Station (2'x3')" />
+                <text x="38" y="246" class="label-text label-clean" text-anchor="middle" transform="rotate(-90 38 246)">Dehydrator</text>
+            </g>
+
+            <!-- Prep Station & Autoclave -->
+            <g transform="translate(250, 100)">
+                <circle cx="-35" cy="40" r="22" class="equipment" data-info="Autoclave Sterilizer (1.5' Rad)" />
+                <text x="-65" y="80" class="label-text label-clean">Autoclave</text>
+
+                <!-- Prep Table 4'x2.5' with Double Black Outline and No Fill -->
+                <g data-info="Main Prep Table (4' x 2.5')">
+                    <!-- Outer Line -->
+                    <rect x="0" y="0" width="120" height="75" fill="none" stroke="var(--prep-outline-main)" stroke-width="4" />
+                    <!-- Inner Line -->
+                    <rect x="0" y="0" width="120" height="75" fill="none" stroke="var(--prep-outline-main)" stroke-width="1.5" />
+                    <text x="60" y="42" class="label-text label-prep" text-anchor="middle">Prep Station</text>
+                </g>
+            </g>
+
+            <!-- Middle Island Racks: 4 joined (4'x2') [Racks 7-10] -->
+            <g id="middle-islands" transform="translate(375, 100)">
+                <rect x="0" y="0" width="120" height="60" class="rack" stroke-dasharray="0" data-info="Joined Island Racks (4' x 2')" />
+                <line x1="60" y1="0" x2="60" y2="60" stroke="var(--rack-stroke)" stroke-width="1" />
+                <line x1="0" y1="30" x2="120" y2="30" stroke="var(--rack-stroke)" stroke-width="1" />
+                <!-- Numbering -->
+                <text x="30" y="15" class="rack-number">7</text>
+                <text x="90" y="15" class="rack-number">8</text>
+                <text x="30" y="45" class="rack-number">9</text>
+                <text x="90" y="45" class="rack-number">10</text>
+                <text x="60" y="80" class="label-text label-standard" text-anchor="middle">Island Rack Block</text>
+            </g>
+
+            <!-- 6 Racks in Blackout Grow Zone [Racks 1-6] -->
+            <g id="blackout-zone">
+                <text x="320" y="55" class="zone-title">Blackout Grow Zone</text>
+                <g><rect x="280" y="8" width="60" height="30" class="rack top-row"/><text x="310" y="23" class="rack-number">1</text></g>
+                <g><rect x="342" y="8" width="60" height="30" class="rack top-row"/><text x="372" y="23" class="rack-number">2</text></g>
+                <g><rect x="404" y="8" width="60" height="30" class="rack top-row"/><text x="434" y="23" class="rack-number">3</text></g>
+                <g><rect x="466" y="8" width="60" height="30" class="rack top-row"/><text x="496" y="23" class="rack-number">4</text></g>
+                <g><rect x="528" y="8" width="60" height="30" class="rack top-row"/><text x="558" y="23" class="rack-number">5</text></g>
+                <g><rect x="590" y="8" width="60" height="30" class="rack top-row"/><text x="620" y="23" class="rack-number">6</text></g>
+            </g>
+
+            <!-- 6 Racks on Sink Wall [Racks 11-16] -->
+            <g id="sink-wall-zone">
+                <g transform="translate(130, 230)">
+                    <rect x="0" y="0" width="60" height="60" class="equipment water" data-info="Sanitization Sink (2'x2')" />
+                    <circle cx="30" cy="30" r="10" fill="none" stroke="var(--water-color)" />
+                    <text x="30" y="55" class="label-text label-water" text-anchor="middle">Sink</text>
+                </g>
+                <g><rect x="280" y="262" width="60" height="30" class="rack"/><text x="310" y="277" class="rack-number">11</text></g>
+                <g><rect x="342" y="262" width="60" height="30" class="rack"/><text x="372" y="277" class="rack-number">12</text></g>
+                <g><rect x="404" y="262" width="60" height="30" class="rack"/><text x="434" y="277" class="rack-number">13</text></g>
+                <g><rect x="466" y="262" width="60" height="30" class="rack"/><text x="496" y="277" class="rack-number">14</text></g>
+                <g><rect x="528" y="262" width="60" height="30" class="rack"/><text x="558" y="277" class="rack-number">15</text></g>
+                <g><rect x="590" y="262" width="60" height="30" class="rack"/><text x="620" y="277" class="rack-number">16</text></g>
+            </g>
+
+            <!-- Right Wall: Red AC unit [Racks 17-18] -->
+            <g transform="translate(620, 90)">
+                <rect x="32" y="0" width="8" height="125" class="ac-unit-box" data-info="Red Slim HVAC Unit (Wall Mounted)" />
+                <text x="52" y="62" class="label-text label-ac" text-anchor="middle" transform="rotate(90 52 62)" style="font-size: 8px;">Wall HVAC</text>
+                
+                <g><rect x="0" y="0" width="30" height="60" class="rack"/><text x="15" y="30" class="rack-number">17</text></g>
+                <g><rect x="0" y="65" width="30" height="60" class="rack"/><text x="15" y="95" class="rack-number">18</text></g>
+            </g>
+
+            <!-- Humidifier in center aisle lane (Double Green Outline, No Fill) -->
+            <g transform="translate(560, 130)" data-info="Humidifier (1' Radius)">
+                <!-- Outer Outline -->
+                <circle cx="0" cy="0" r="15" fill="none" stroke="var(--humidifier-color)" stroke-width="2" />
+                <!-- Inner Outline -->
+                <circle cx="0" cy="0" r="11" fill="none" stroke="var(--humidifier-color)" stroke-width="1" />
+                <text x="0" y="28" class="label-text" style="fill: var(--humidifier-color); font-weight: 800;" text-anchor="middle">Humidifier</text>
+            </g>
+
+        </svg>
+    </div>
+
+    <!-- Dimension Specifications Panel -->
+    <div class="specs-panel">
+        <div class="spec-item">
+            <strong>Grow Area Specs</strong>
+            <span class="spec-value">
+                Standard Rack: 2.0' x 1.0'<br>
+                Blackout Rack Row: 12.0' x 1.0'<br>
+                Island Block: 4.0' x 2.0'<br>
+                Sink Wall Racks: 12.0' x 1.0'
+            </span>
+        </div>
+        <div class="spec-item">
+            <strong>Equipment & Prep Specs</strong>
+            <span class="spec-value">
+                Prep Station: 4.0' x 2.5'<br>
+                Flow Hood: 4.0' x 2.0'<br>
+                Sink Unit: 2.0' x 2.0'<br>
+                Fridge/Dehydrator: 2.0' x 2.0'
+            </span>
+        </div>
+    </div>
+
+    <script>
+        const body = document.body;
+        const themeToggle = document.getElementById('themeToggle');
+        const tooltip = document.getElementById('tooltip');
+        const interactives = document.querySelectorAll('.rack, .equipment, circle, rect');
+
+        // Theme Switcher Toggle Logic
+        themeToggle.addEventListener('change', () => {
+            if (themeToggle.checked) {
+                body.classList.add('light-theme');
+            } else {
+                body.classList.remove('light-theme');
+            }
+        });
+
+        // Interactive Tooltips
+        interactives.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const info = el.getAttribute('data-info');
+                if (!info) return;
+                tooltip.style.display = 'block';
+                tooltip.textContent = info;
+                tooltip.style.left = (e.clientX + 15) + 'px';
+                tooltip.style.top = (e.clientY + 15) + 'px';
+            });
+
+            el.addEventListener('mouseleave', () => {
+                tooltip.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
