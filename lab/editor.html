@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cordyceps Lab Design Editor</title>
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <style>
+        :root {
+            /* Dark Theme Variables */
+            --bg-body: #0f172a;
+            --bg-canvas: #1e293b;
+            --bg-sidebar: #1e293b;
+            --grid-color: #334155;
+            --accent: #ff00ff;
+            /* Neon Pink */
+            --text-primary: var(--accent);
+            --text-secondary: #94a3b8;
+            --rack-stroke: #64748b;
+            --rack-fill: rgba(100, 116, 139, 0.1);
+            --water-color: #3b82f6;
+            --hood-color: #a855f7;
+            --fan-color: #ef4444;
+            --blackout-color: #d946ef;
+            --ac-color: #ef4444;
+            --wall-stroke: #cbd5e1;
+            --humidifier-color: #3b82f6;
+            /* Blue */
+            --prep-outline: #000000;
+            --sidebar-border: #334155;
+
+            --block-rack: #2563eb;
+            --block-prep: #000000;
+            --block-clean: #4a044e;
+            --block-water: #1e3a8a;
+            --dimension-line: #ff00ff;
+            --imprint-line: rgba(255, 0, 255, 0.4);
+        }
+
+        /* Light Theme (Default) */
+        body.light-theme {
+            --bg-body: #f1f5f9;
+            --bg-canvas: #ffffff;
+            --bg-sidebar: #ffffff;
+            --grid-color: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --sidebar-border: #e2e8f0;
+            --wall-stroke: #1e293b;
+            --rack-fill: rgba(241, 245, 249, 0.8);
+            --block-rack: #2563eb;
+            --dimension-line: #000000;
+            --imprint-line: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+
+        .header {
+            width: 95%;
+            max-width: 1200px;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 auto;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .app-container {
+            display: flex;
+            width: 95%;
+            max-width: 1200px;
+            gap: 20px;
+            padding: 0 0 20px 0;
+            box-sizing: border-box;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--bg-sidebar);
+            border: 1px solid var(--sidebar-border);
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .inventory-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .inventory-item {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--text-secondary);
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .inventory-item:hover {
+            border-color: var(--accent);
+            background: rgba(255, 0, 255, 0.05);
+            color: var(--accent);
+        }
+
+        .item-color-preview {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .canvas-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .canvas-wrapper {
+            background-color: var(--bg-canvas);
+            border-radius: 4px;
+            width: 740px;
+            height: 380px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        svg#labDesigner {
+            width: 740px;
+            height: 380px;
+            overflow: visible;
+            background: var(--bg-canvas);
+        }
+
+        .placed-element {
+            cursor: move;
+        }
+
+        .placed-element:hover .ui-controls {
+            opacity: 1;
+        }
+
+        .ui-controls {
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .btn-del {
+            fill: #ef4444;
+            cursor: pointer;
+        }
+
+        .btn-rot {
+            fill: var(--accent);
+            cursor: pointer;
+        }
+
+        .btn-resize {
+            fill: #facc15;
+            cursor: nwse-resize;
+        }
+
+        .rack {
+            fill: var(--rack-fill);
+            stroke: var(--rack-stroke);
+            stroke-width: 1.5;
+        }
+
+        .rack.blackout {
+            stroke: var(--blackout-color);
+        }
+
+        .label-text {
+            font-size: 7px;
+            text-transform: uppercase;
+            font-weight: 800;
+            pointer-events: none;
+            text-anchor: middle;
+            fill: white;
+        }
+
+        .name-block {
+            stroke: none;
+            rx: 3;
+            ry: 3;
+        }
+
+        .dim-line {
+            stroke: var(--dimension-line);
+            stroke-width: 1;
+            stroke-dasharray: 2, 2;
+        }
+
+        .dim-text {
+            font-size: 8px;
+            fill: var(--dimension-line);
+            font-weight: 700;
+        }
+
+        .imprint-line {
+            stroke: var(--imprint-line);
+            stroke-width: 0.75;
+            stroke-dasharray: 1, 2;
+        }
+
+        .imprint-text {
+            font-size: 6px;
+            fill: var(--imprint-line);
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .imprint-del {
+            fill: #ef4444;
+            cursor: pointer;
+            opacity: 0.4;
+        }
+
+        .imprint-del:hover {
+            opacity: 1;
+        }
+
+        .specs-panel {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.02);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        .spec-item strong {
+            color: var(--accent);
+            display: block;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+        }
+
+        .spec-value {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #cbd5e1;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--accent);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        .btn-undo {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--text-secondary);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-undo:hover:not(:disabled) {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-undo:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+
+            body {
+                background: white !important;
+                padding: 20px;
+                display: block;
+            }
+
+            .sidebar,
+            .controls,
+            .ui-controls,
+            .imprint-del {
+                display: none !important;
+            }
+
+            .app-container {
+                display: block;
+                width: 100%;
+            }
+
+            .canvas-wrapper {
+                margin: 0 auto;
+                border: none;
+                box-shadow: none;
+            }
+
+            .specs-panel {
+                max-width: 740px;
+                margin: 20px auto;
+                background: none !important;
+                border-color: #000 !important;
+            }
+
+            .print-footer {
+                display: block !important;
+                text-align: center;
+                margin-top: 20px;
+                font-weight: bold;
+                color: black;
+            }
+        }
+
+        .print-footer {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="light-theme">
+
+    <div class="header">
+        <div>
+            <h1>My Cordyceps Lab Designer</h1>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan Editor</p>
+        </div>
+        <div class="controls">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">Theme</span>
+                <label class="switch">
+                    <!-- Default checked for Day Theme -->
+                    <input type="checkbox" id="themeToggle" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <button onclick="window.print()"
+                style="padding: 6px 12px; background: #334155; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Export
+                PDF</button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <h3 style="font-size: 0.8rem; margin-top: 0; color: var(--accent); letter-spacing: 0.1em;">LIBRARY</h3>
+            <div id="inventory" class="inventory-list"></div>
+            <button id="undoBtn" class="btn-undo" disabled>Undo Last Action</button>
+        </aside>
+
+        <main class="canvas-area">
+            <div class="canvas-wrapper">
+                <svg id="labDesigner" viewBox="0 0 740 380">
+                    <defs>
+                        <pattern id="grid" width="5" height="5" patternUnits="userSpaceOnUse">
+                            <path d="M 5 0 L 0 0 0 5" fill="none" stroke="var(--grid-color)" stroke-width="0.2" />
+                        </pattern>
+                        <pattern id="grid-major" width="30" height="30" patternUnits="userSpaceOnUse">
+                            <path d="M 30 0 L 0 0 0 30" fill="none" stroke="var(--grid-color)" stroke-width="0.8" />
+                        </pattern>
+                    </defs>
+
+                    <!-- Structural Dimensions (Outside) -->
+                    <g id="structural-dims">
+                        <line x1="40" y1="20" x2="700" y2="20" stroke="var(--accent)" stroke-width="1"
+                            stroke-dasharray="2,2" />
+                        <text x="370" y="15" class="label-text" style="fill: var(--accent); font-size: 10px;">22.0 ft
+                            Internal</text>
+                        <line x1="20" y1="40" x2="20" y2="340" stroke="var(--accent)" stroke-width="1"
+                            stroke-dasharray="2,2" />
+                        <text x="15" y="190" class="label-text" style="fill: var(--accent); font-size: 10px;"
+                            transform="rotate(-90 15 190)">10.0 ft Internal</text>
+                    </g>
+
+                    <rect x="40" y="40" width="660" height="300" fill="url(#grid)" />
+                    <rect x="40" y="40" width="660" height="300" fill="url(#grid-major)" />
+                    <rect x="40" y="40" width="660" height="300" class="wall"
+                        style="stroke: var(--wall-stroke); stroke-width: 8; fill: none;" />
+
+                    <!-- Fixed Structural Elements -->
+                    <g id="fixed-layer">
+                        <g transform="translate(140, 40)">
+                            <rect x="0" y="-4" width="90" height="8" fill="rgba(0,0,0,0.1)" />
+                            <path d="M 0 0 Q 45 45 90 0" fill="none" stroke="var(--accent)" stroke-dasharray="4" />
+                            <rect x="5" y="-14" width="80" height="14" fill="rgba(239, 68, 68, 0.2)"
+                                stroke="var(--fan-color)" stroke-width="2" />
+                            <text x="45" y="-20" class="label-text"
+                                style="fill: var(--fan-color); font-size: 8px; text-anchor: middle;">Airtight Fan</text>
+                        </g>
+                        <g transform="translate(700, 130)">
+                            <rect x="0" y="0" width="8" height="125" fill="var(--ac-color)" />
+                            <text x="25" y="62" class="label-text" style="fill: var(--ac-color); font-size: 8px;"
+                                transform="rotate(90 25 62)">Wall HVAC</text>
+                        </g>
+                    </g>
+
+                    <g id="imprint-layer"></g>
+                    <g id="dim-lines-layer"></g>
+                    <g id="interactive-layer" transform="translate(40, 40)"></g>
+                </svg>
+            </div>
+
+            <div class="specs-panel" id="specs"></div>
+            <div class="print-footer">Property of Atish Ak Sharma</div>
+        </main>
+    </div>
+
+    <footer id="main-footer"
+        style="padding: 10px 0 20px; font-size: 0.7rem; opacity: 0.5; font-weight: 800; letter-spacing: 0.2em;">PROPERTY
+        OF ATISH AK SHARMA</footer>
+
+    <script>
+        const svg = document.getElementById('labDesigner');
+        const interactiveLayer = document.getElementById('interactive-layer');
+        const dimLinesLayer = document.getElementById('dim-lines-layer');
+        const imprintLayer = document.getElementById('imprint-layer');
+        const inventoryEl = document.getElementById('inventory');
+        const specsEl = document.getElementById('specs');
+        const themeToggle = document.getElementById('themeToggle');
+        const undoBtn = document.getElementById('undoBtn');
+
+        const GRID = 30;
+        const TWO_INCH_GRID = 5;
+        const OFFSET_X = 40;
+        const OFFSET_Y = 40;
+        const CANVAS_W = 660;
+        const CANVAS_H = 300;
+
+        let placedItems = [];
+        let hiddenImprints = new Set();
+        let history = [];
+        let activeAction = null;
+        let currentItem = null;
+        let startAngle = 0;
+        let startRotation = 0;
+
+        const library = [
+            { id: 'rack_std', label: 'Std Rack', w: 2, h: 1, type: 'rack', blockColor: '#2563eb' },
+            { id: 'rack_blk', label: 'Blackout Rack', w: 2, h: 1, type: 'rack', isBlackout: true, blockColor: '#2563eb' },
+            { id: 'prep', label: 'Prep Station', w: 4, h: 2.5, type: 'prep', blockColor: '#000000' },
+            { id: 'flow', label: 'Flow Hood', w: 2, h: 4, type: 'equip', blockColor: '#a855f7' },
+            { id: 'fridge', label: 'Fridge', w: 2, h: 2, type: 'equip', blockColor: '#4c1d95' },
+            { id: 'dehy', label: 'Dehydrator', w: 2, h: 3, type: 'equip', blockColor: '#701a75' },
+            { id: 'sink', label: 'Sink', w: 2, h: 2, type: 'water', blockColor: '#1e40af' },
+            { id: 'auto', label: 'Autoclave', r: 0.75, type: 'equip', blockColor: '#581c87' },
+            { id: 'humid', label: 'Humidifier', r: 0.5, type: 'humid', blockColor: '#3b82f6' },
+            { id: 'text', label: 'Text Block', w: 1, h: 0.5, type: 'text', isResizable: true, blockColor: '#ff00ff' }
+        ];
+
+        function pushHistory() {
+            history.push(JSON.stringify({ items: placedItems, hidden: Array.from(hiddenImprints) }));
+            if (history.length > 40) history.shift();
+            undoBtn.disabled = false;
+        }
+
+        function undo() {
+            if (history.length === 0) return;
+            const state = JSON.parse(history.pop());
+            placedItems = state.items;
+            hiddenImprints = new Set(state.hidden);
+            if (history.length === 0) undoBtn.disabled = true;
+            render();
+        }
+
+        undoBtn.onclick = undo;
+
+        function init() {
+            library.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'inventory-item';
+                div.innerHTML = `
+                    <span>${item.label}</span> 
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="opacity:0.6">${item.w || (item.r * 2)}'x${item.h || (item.r * 2)}'</span>
+                        <div class="item-color-preview" style="background:${item.blockColor || 'transparent'};"></div>
+                    </div>
+                `;
+                div.onclick = () => { pushHistory(); addItem(item); };
+                inventoryEl.appendChild(div);
+            });
+            render();
+        }
+
+        function addItem(def, x = 150, y = 100, rot = 0) {
+            const item = { ...def, uid: 'uid-' + Math.random().toString(36).substr(2, 9), x, y, rot, cw: def.w, ch: def.h };
+            placedItems.push(item);
+            render();
+        }
+
+        function removeItem(uid) {
+            pushHistory();
+            placedItems = placedItems.filter(i => i.uid !== uid);
+            render();
+        }
+
+        function toggleImprint(id) {
+            pushHistory();
+            if (hiddenImprints.has(id)) hiddenImprints.delete(id);
+            else hiddenImprints.add(id);
+            render();
+        }
+
+        function render() {
+            interactiveLayer.innerHTML = '';
+            let rackCount = 0;
+            placedItems.forEach(item => {
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                g.setAttribute("class", "placed-element");
+                const width = (item.cw || item.w || item.r * 3) * GRID;
+                const height = (item.ch || item.h || item.r * 3) * GRID;
+                const cx = width / 2;
+                const cy = height / 2;
+                g.setAttribute("transform", `translate(${item.x},${item.y}) rotate(${item.rot},${cx},${cy})`);
+
+                if (item.type !== 'humid' && item.type !== 'equip' && item.r == null) {
+                    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    rect.setAttribute("width", width);
+                    rect.setAttribute("height", height);
+                    if (item.type === 'rack') {
+                        rect.setAttribute("class", `rack ${item.isBlackout ? 'blackout' : ''}`);
+                        rackCount++;
+                        g.appendChild(rect);
+                        addNameBlock(g, cx, cy, `R${rackCount}`, 'var(--block-rack)', true);
+                    } else if (item.type === 'prep') {
+                        rect.setAttribute("fill", "none");
+                        rect.setAttribute("stroke", "var(--prep-outline)");
+                        rect.setAttribute("stroke-width", "4");
+                        const inner = rect.cloneNode(); inner.setAttribute("stroke-width", "1.5");
+                        g.appendChild(rect); g.appendChild(inner);
+                        addNameBlock(g, cx, cy, "PREP STATION", 'var(--block-prep)', false);
+                    } else if (item.type === 'text') {
+                        rect.setAttribute("fill", "rgba(255,0,255,0.05)");
+                        rect.setAttribute("stroke", "var(--accent)");
+                        rect.setAttribute("stroke-dasharray", "2");
+                        g.appendChild(rect);
+                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        t.setAttribute("x", cx); t.setAttribute("y", cy + 3);
+                        t.setAttribute("class", "label-text");
+                        t.style.fill = "var(--accent)";
+                        t.textContent = "NOTE";
+                        g.appendChild(t);
+                    }
+                } else if (item.type === 'equip' && item.w) {
+                    const rectOuter = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    rectOuter.setAttribute("width", width);
+                    rectOuter.setAttribute("height", height);
+                    rectOuter.setAttribute("fill", "none");
+                    rectOuter.setAttribute("stroke", item.blockColor);
+                    rectOuter.setAttribute("stroke-width", "4");
+                    const rectInner = rectOuter.cloneNode(); rectInner.setAttribute("stroke-width", "1.5");
+                    g.appendChild(rectOuter);
+                    g.appendChild(rectInner);
+                    addNameBlock(g, cx, cy, item.label, item.blockColor, false);
+                } else {
+                    const rad = item.r * GRID * 1.5;
+                    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    circle.setAttribute("cx", rad); circle.setAttribute("cy", rad); circle.setAttribute("r", rad);
+                    if (item.type === 'humid') {
+                        circle.setAttribute("fill", "none"); circle.setAttribute("stroke", "var(--humidifier-color)"); circle.setAttribute("stroke-width", "3");
+                        const inner = circle.cloneNode(); inner.setAttribute("r", rad * 0.6); inner.setAttribute("stroke-width", "1.5");
+                        g.appendChild(circle); g.appendChild(inner);
+                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        t.setAttribute("x", rad); t.setAttribute("y", rad * 2 + 15);
+                        t.setAttribute("class", "label-text");
+                        t.setAttribute("style", "fill: var(--humidifier-color); font-size: 8px; font-weight: 800;");
+                        t.textContent = "HUMIDIFIER";
+                        g.appendChild(t);
+                    } else {
+                        circle.setAttribute("fill", "none"); circle.setAttribute("stroke", item.blockColor || 'var(--text-secondary)'); circle.setAttribute("stroke-width", "4");
+                        const inner = circle.cloneNode(); inner.setAttribute("stroke-width", "1.5");
+                        g.appendChild(circle); g.appendChild(inner);
+                        addNameBlock(g, rad, rad, item.label, item.blockColor || 'var(--block-clean)', false);
+                    }
+                }
+
+                const controls = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                controls.setAttribute("class", "ui-controls");
+                const del = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                del.setAttribute("cx", 0); del.setAttribute("cy", 0); del.setAttribute("r", 10);
+                del.setAttribute("class", "btn-del");
+                del.onclick = (e) => { e.stopPropagation(); removeItem(item.uid); };
+                const delT = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                delT.setAttribute("x", 0); delT.setAttribute("y", 4); delT.setAttribute("style", "fill:white; font-size:12px; font-weight:bold; text-anchor:middle; pointer-events:none;");
+                delT.textContent = "×";
+                const rotH = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                rotH.setAttribute("cx", width); rotH.setAttribute("cy", 0); rotH.setAttribute("r", 8);
+                rotH.setAttribute("class", "btn-rot");
+                rotH.onmousedown = (e) => { e.stopPropagation(); startRotate(e, item); };
+                controls.appendChild(del); controls.appendChild(delT); controls.appendChild(rotH);
+                if (item.isResizable) {
+                    const resH = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    resH.setAttribute("cx", width); resH.setAttribute("cy", height); resH.setAttribute("r", 8);
+                    resH.setAttribute("class", "btn-resize");
+                    resH.onmousedown = (e) => { e.stopPropagation(); startResize(e, item); };
+                    controls.appendChild(resH);
+                }
+                g.appendChild(controls);
+                g.onmousedown = (e) => { if (e.target.classList.contains('btn-rot') || e.target.classList.contains('btn-resize')) return; startDrag(e, item); };
+                interactiveLayer.appendChild(g);
+            });
+            updateSpecs();
+            renderAllImprints();
+        }
+
+        function addNameBlock(parent, x, y, text, color, isSmall) {
+            const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            t.setAttribute("x", x); t.setAttribute("y", y + 3);
+            t.setAttribute("class", "label-text");
+            if (isSmall) t.style.fontSize = "6px";
+            t.textContent = text;
+            const bbox = isSmall ? { width: 22, height: 10 } : { width: text.length * 5, height: 12 };
+            const padW = 8; const padH = 6;
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("x", x - (bbox.width + padW) / 2); rect.setAttribute("y", y - (bbox.height + padH) / 2 + 1);
+            rect.setAttribute("width", bbox.width + padW); rect.setAttribute("height", bbox.height + padH);
+            rect.setAttribute("class", "name-block"); rect.setAttribute("fill", color);
+            group.appendChild(rect); group.appendChild(t); parent.appendChild(group);
+        }
+
+        function renderAllImprints() {
+            imprintLayer.innerHTML = '';
+            placedItems.forEach(item => {
+                const w = (item.cw || item.w || item.r * 3) * GRID;
+                const h = (item.ch || item.h || item.r * 3) * GRID;
+                const ix = item.x + OFFSET_X;
+                const iy = item.y + OFFSET_Y;
+
+                let closest = { top: OFFSET_Y, bottom: OFFSET_Y + CANVAS_H, left: OFFSET_X, right: OFFSET_X + CANVAS_W };
+
+                placedItems.forEach(other => {
+                    if (other.uid === item.uid) return;
+                    const ow = (other.cw || other.w || other.r * 3) * GRID;
+                    const oh = (other.ch || other.h || other.r * 3) * GRID;
+                    const ox = other.x + OFFSET_X;
+                    const oy = other.y + OFFSET_Y;
+
+                    if (ix < ox + ow && ix + w > ox) {
+                        if (oy + oh <= iy && oy + oh > closest.top) closest.top = oy + oh;
+                        if (oy >= iy + h && oy < closest.bottom) closest.bottom = oy;
+                    }
+                    if (iy < oy + oh && iy + h > oy) {
+                        if (ox + ow <= ix && ox + ow > closest.left) closest.left = ox + ow;
+                        if (ox >= ix + w && ox < closest.right) closest.right = ox;
+                    }
+                });
+
+                if (!hiddenImprints.has(`${item.uid}-t`)) addImprintLine(ix + w / 2, closest.top, ix + w / 2, iy, (iy - closest.top) / GRID, `${item.uid}-t`);
+                if (!hiddenImprints.has(`${item.uid}-b`)) addImprintLine(ix + w / 2, iy + h, ix + w / 2, closest.bottom, (closest.bottom - (iy + h)) / GRID, `${item.uid}-b`);
+                if (!hiddenImprints.has(`${item.uid}-l`)) addImprintLine(closest.left, iy + h / 2, ix, iy + h / 2, (ix - closest.left) / GRID, `${item.uid}-l`);
+                if (!hiddenImprints.has(`${item.uid}-r`)) addImprintLine(ix + w, iy + h / 2, closest.right, iy + h / 2, (closest.right - (ix + w)) / GRID, `${item.uid}-r`);
+            });
+        }
+
+        function addImprintLine(x1, y1, x2, y2, dist, id) {
+            if (dist <= 0.1) return;
+            const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+            line.setAttribute("class", "imprint-line");
+
+            const mx = (x1 + x2) / 2;
+            const my = (y1 + y2) / 2;
+
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", mx + 3); text.setAttribute("y", my + 2);
+            text.setAttribute("class", "imprint-text");
+            text.textContent = `${dist.toFixed(1)}'`;
+
+            const del = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            del.setAttribute("cx", mx - 4); del.setAttribute("cy", my - 1); del.setAttribute("r", 4);
+            del.setAttribute("class", "imprint-del");
+            del.onclick = () => toggleImprint(id);
+
+            const delX = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            delX.setAttribute("x", mx - 4); delX.setAttribute("y", my + 1);
+            delX.setAttribute("style", "fill:white; font-size:4px; font-weight:bold; text-anchor:middle; pointer-events:none;");
+            delX.textContent = "×";
+
+            group.appendChild(line); group.appendChild(text); group.appendChild(del); group.appendChild(delX);
+            imprintLayer.appendChild(group);
+        }
+
+        function startDrag(e, item) { pushHistory(); activeAction = 'drag'; currentItem = item; const pt = getMouse(e); item.offsetX = pt.x - item.x - OFFSET_X; item.offsetY = pt.y - item.y - OFFSET_Y; window.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', endAction); }
+        function startRotate(e, item) { pushHistory(); activeAction = 'rotate'; currentItem = item; const pt = getMouse(e); const cx = item.x + OFFSET_X + ((item.cw || item.w || item.r * 3) * GRID / 2); const cy = item.y + OFFSET_Y + ((item.ch || item.h || item.r * 3) * GRID / 2); startAngle = Math.atan2(pt.y - cy, pt.x - cx); startRotation = item.rot || 0; window.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', endAction); }
+        function startResize(e, item) { pushHistory(); activeAction = 'resize'; currentItem = item; window.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', endAction); }
+
+        function handleMove(e) {
+            if (!currentItem) return;
+            const pt = getMouse(e);
+            if (activeAction === 'drag') {
+                let nx = Math.round((pt.x - currentItem.offsetX - OFFSET_X) / TWO_INCH_GRID) * TWO_INCH_GRID;
+                let ny = Math.round((pt.y - currentItem.offsetY - OFFSET_Y) / TWO_INCH_GRID) * TWO_INCH_GRID;
+                currentItem.x = Math.max(0, Math.min(nx, CANVAS_W - (currentItem.cw || currentItem.w || currentItem.r * 3) * GRID));
+                currentItem.y = Math.max(0, Math.min(ny, CANVAS_H - (currentItem.ch || currentItem.h || currentItem.r * 3) * GRID));
+            } else if (activeAction === 'rotate') {
+                const cx = currentItem.x + OFFSET_X + ((currentItem.cw || currentItem.w || currentItem.r * 3) * GRID / 2);
+                const cy = currentItem.y + OFFSET_Y + ((currentItem.ch || currentItem.h || currentItem.r * 3) * GRID / 2);
+                currentItem.rot = Math.round((startRotation + (Math.atan2(pt.y - cy, pt.x - cx) - startAngle) * (180 / Math.PI)) / 45) * 45;
+            } else if (activeAction === 'resize') {
+                currentItem.cw = Math.max(0.2, (pt.x - currentItem.x - OFFSET_X) / GRID);
+                currentItem.ch = Math.max(0.2, (pt.y - currentItem.y - OFFSET_Y) / GRID);
+            }
+            render();
+        }
+
+        function endAction() { activeAction = null; currentItem = null; window.removeEventListener('mousemove', handleMove); window.removeEventListener('mouseup', endAction); render(); }
+        function getMouse(e) { const CTM = svg.getScreenCTM(); return { x: (e.clientX - CTM.e) / CTM.a, y: (e.clientY - CTM.f) / CTM.d }; }
+
+        function updateSpecs() {
+            const counts = {}; placedItems.forEach(i => counts[i.label] = (counts[i.label] || 0) + 1);
+            specsEl.innerHTML = `
+                <div class="spec-item"><strong>GROW AREA</strong><span class="spec-value">Std Racks: ${counts['Std Rack'] || 0} (2x1')<br>Blackout: ${counts['Blackout Rack'] || 0} (2x1')</span></div>
+                <div class="spec-item"><strong>PROCESSING</strong><span class="spec-value">Prep Station: ${counts['Prep Station'] || 0} (4x2.5')<br>Flow Hood: ${counts['Flow Hood'] || 0} (2x4')<br>Fridge: ${counts['Fridge'] || 0} (2x2')</span></div>
+                <div class="spec-item"><strong>UTILITIES</strong><span class="spec-value">Humidifier: ${counts['Humidifier'] || 0} (1' Rad)<br>Auto: ${counts['Autoclave'] || 0} (1.5' Rad)<br>Sink: ${counts['Sink'] || 0} (2x2')</span></div>
+            `;
+        }
+
+        themeToggle.onchange = () => {
+            document.body.classList.toggle('light-theme', themeToggle.checked);
+        };
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>
