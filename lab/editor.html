@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cordyceps Lab Design - Pro v3.1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cordyceps Lab Design - Pro v3.2</title>
     <link rel="icon" type="image/png"
         href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <style>
@@ -65,6 +65,7 @@
             align-items: center;
             min-height: 100vh;
             transition: background-color 0.3s ease;
+            touch-action: manipulation;
         }
 
         .header {
@@ -93,6 +94,23 @@
             box-sizing: border-box;
         }
 
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .sidebar {
+                width: 95% !important;
+                max-height: 35vh !important;
+            }
+
+            .canvas-wrapper {
+                transform: scale(0.85);
+                margin: -30px 0;
+            }
+        }
+
         .sidebar {
             width: 260px;
             background: var(--bg-sidebar);
@@ -115,7 +133,7 @@
             background: rgba(0, 0, 0, 0.03);
             border: 1px solid var(--text-secondary);
             border-radius: 6px;
-            padding: 8px 12px;
+            padding: 12px;
             margin-bottom: 8px;
             cursor: pointer;
             font-size: 0.75rem;
@@ -156,6 +174,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            touch-action: none;
         }
 
         svg#labDesigner {
@@ -169,13 +188,15 @@
             cursor: move;
         }
 
-        .placed-element:hover .ui-controls {
+        .placed-element:hover .ui-controls,
+        .active-element .ui-controls {
             opacity: 1;
         }
 
         .ui-controls {
             opacity: 0;
             transition: opacity 0.2s;
+            pointer-events: all;
         }
 
         .btn-del {
@@ -320,7 +341,7 @@
 
         .btn-undo {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: transparent;
             border: 1px solid var(--text-secondary);
             color: var(--text-secondary);
@@ -347,13 +368,22 @@
                 margin: 0;
             }
 
+            html,
             body {
-                background: white !important;
-                padding: 5mm;
-                display: block;
-                width: 100vw;
-                height: 100vh;
-                overflow: hidden;
+                height: 100%;
+                overflow: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background-color: white !important;
+            }
+
+            body {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center !important;
+                padding: 10mm !important;
+                box-sizing: border-box !important;
             }
 
             .sidebar,
@@ -365,50 +395,63 @@
             }
 
             .app-container {
-                display: block;
-                width: 100%;
-                padding: 0;
-                margin: 0;
+                display: flex !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                justify-content: center !important;
             }
 
             .header {
-                padding: 0 5mm;
-                margin-bottom: 2mm;
-                width: 100%;
+                padding: 0 0 5mm 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 740px !important;
+            }
+
+            .header h1 {
+                font-size: 1.8rem !important;
             }
 
             .canvas-wrapper {
-                margin: 0 auto;
-                border: none;
-                box-shadow: none;
-                width: fit-content;
-                padding: 0;
+                margin: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                width: 740px !important;
+                height: 380px !important;
+                padding: 0 !important;
             }
 
             svg#labDesigner {
-                width: 700px;
-                height: 340px;
+                width: 740px !important;
+                height: 380px !important;
             }
 
             .specs-panel {
-                max-width: 700px;
-                margin: 2mm auto 0;
-                padding: 10px;
+                max-width: 740px !important;
+                width: 740px !important;
+                margin: 5mm 0 0 0 !important;
+                padding: 10px !important;
                 background: none !important;
-                border-color: #000 !important;
-                border-width: 1px;
-                gap: 5px;
+                border: 1px solid #000 !important;
+                gap: 10px !important;
             }
 
             .print-footer {
                 display: block !important;
-                text-align: right;
-                max-width: 700px;
-                margin: 2mm auto 0;
-                font-weight: 700;
-                color: black;
-                font-size: 9pt;
-                text-transform: uppercase;
+                text-align: right !important;
+                width: 740px !important;
+                margin: 3mm 0 0 0 !important;
+                font-weight: 800 !important;
+                color: black !important;
+                font-size: 11pt !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.1em !important;
+            }
+
+            /* Prevent any additional pages */
+            * {
+                page-break-inside: avoid !important;
             }
         }
 
@@ -423,7 +466,7 @@
     <div class="header">
         <div>
             <h1>Cordyceps Lab Design</h1>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan v3.1 (2" Resolution)</p>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan v3.2 (Touch Support)</p>
         </div>
         <div class="controls">
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -607,7 +650,6 @@
                 const cy = height / 2;
                 g.setAttribute("transform", `translate(${item.x},${item.y}) rotate(${item.rot},${cx},${cy})`);
 
-                // Main Shape Logic
                 if (item.type === 'rack') {
                     rackCount++;
                     const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -630,14 +672,14 @@
                     g.appendChild(r1); g.appendChild(r2);
                     addLabel(g, cx, cy, item.label, item.blockColor, false);
                 } else if (item.type === 'humid') {
-                    const r = item.r * GRID * 1.5;
+                    const rad = item.r * GRID * 1.5;
                     const c1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                    c1.setAttribute("cx", r); c1.setAttribute("cy", r); c1.setAttribute("r", r);
+                    c1.setAttribute("cx", rad); c1.setAttribute("cy", rad); c1.setAttribute("r", rad);
                     c1.setAttribute("fill", "none"); c1.setAttribute("stroke", "var(--humidifier-color)"); c1.setAttribute("stroke-width", "3");
-                    const c2 = c1.cloneNode(); c2.setAttribute("r", r * 0.6); c2.setAttribute("stroke-width", "1.5");
+                    const c2 = c1.cloneNode(); c2.setAttribute("r", rad * 0.6); c2.setAttribute("stroke-width", "1.5");
                     g.appendChild(c1); g.appendChild(c2);
                     const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                    t.setAttribute("x", r); t.setAttribute("y", r * 2 + 15);
+                    t.setAttribute("x", rad); t.setAttribute("y", rad * 2 + 15);
                     t.setAttribute("class", "label-text"); t.setAttribute("style", "fill: var(--humidifier-color); font-size: 8px; font-weight:800;");
                     t.textContent = "HUMIDIFIER"; g.appendChild(t);
                 } else if (item.type === 'text') {
@@ -651,35 +693,41 @@
                     g.appendChild(t);
                 }
 
-                // UI Controls
                 const ui = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 ui.setAttribute("class", "ui-controls");
 
                 const del = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                del.setAttribute("cx", 0); del.setAttribute("cy", 0); del.setAttribute("r", 10);
+                del.setAttribute("cx", 0); del.setAttribute("cy", 0); del.setAttribute("r", 15); // Larger hit target for touch
                 del.setAttribute("class", "btn-del");
                 del.onclick = (e) => { e.stopPropagation(); removeItem(item.uid); };
+                del.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); removeItem(item.uid); }, { passive: false });
 
                 const delX = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                delX.setAttribute("x", 0); delX.setAttribute("y", 4); delX.setAttribute("style", "fill:white; font-size:12px; font-weight:bold; text-anchor:middle; pointer-events:none;");
+                delX.setAttribute("x", 0); delX.setAttribute("y", 6); delX.setAttribute("style", "fill:white; font-size:18px; font-weight:bold; text-anchor:middle; pointer-events:none;");
                 delX.textContent = "×";
 
                 const rot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                rot.setAttribute("cx", width); rot.setAttribute("cy", 0); rot.setAttribute("r", 8);
+                rot.setAttribute("cx", width); rot.setAttribute("cy", 0); rot.setAttribute("r", 15);
                 rot.setAttribute("class", "btn-rot");
                 rot.onmousedown = (e) => { e.stopPropagation(); startAction(e, item, 'rotate'); };
+                rot.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); startAction(e, item, 'rotate'); }, { passive: false });
 
                 ui.appendChild(del); ui.appendChild(delX); ui.appendChild(rot);
                 if (item.isResizable) {
                     const res = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                    res.setAttribute("cx", width); res.setAttribute("cy", height); res.setAttribute("r", 8);
+                    res.setAttribute("cx", width); res.setAttribute("cy", height); res.setAttribute("r", 15);
                     res.setAttribute("class", "btn-resize");
                     res.onmousedown = (e) => { e.stopPropagation(); startAction(e, item, 'resize'); };
+                    res.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); startAction(e, item, 'resize'); }, { passive: false });
                     ui.appendChild(res);
                 }
 
                 g.appendChild(ui);
                 g.onmousedown = (e) => { if (e.target.tagName !== 'circle') startAction(e, item, 'drag'); };
+                g.addEventListener('touchstart', (e) => {
+                    if (e.target.tagName !== 'circle') startAction(e, item, 'drag');
+                }, { passive: false });
+
                 interactiveLayer.appendChild(g);
             });
 
@@ -703,11 +751,28 @@
             group.appendChild(r); group.appendChild(t); parent.appendChild(group);
         }
 
+        function getCoords(e) {
+            const CTM = svg.getScreenCTM();
+            let clientX, clientY;
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            return {
+                x: (clientX - CTM.e) / CTM.a,
+                y: (clientY - CTM.f) / CTM.d
+            };
+        }
+
         function startAction(e, item, type) {
+            if (e.cancelable) e.preventDefault();
             pushHistory();
             activeAction = type;
             currentItem = item;
-            const pt = getMouse(e);
+            const pt = getCoords(e);
             if (type === 'drag') {
                 item.ox = pt.x - item.x - OFFSET_X;
                 item.oy = pt.y - item.y - OFFSET_Y;
@@ -717,13 +782,26 @@
                 startAngle = Math.atan2(pt.y - cy, pt.x - cx);
                 startRotation = item.rot;
             }
-            window.addEventListener('mousemove', handleMove);
-            window.addEventListener('mouseup', endAction);
+
+            const moveHandler = (moveEvt) => handleMove(moveEvt);
+            const endHandler = () => {
+                window.removeEventListener('mousemove', moveHandler);
+                window.removeEventListener('touchmove', moveHandler);
+                window.removeEventListener('mouseup', endHandler);
+                window.removeEventListener('touchend', endHandler);
+                endAction();
+            };
+
+            window.addEventListener('mousemove', moveHandler);
+            window.addEventListener('touchmove', moveHandler, { passive: false });
+            window.addEventListener('mouseup', endHandler);
+            window.addEventListener('touchend', endHandler);
         }
 
         function handleMove(e) {
             if (!currentItem) return;
-            const pt = getMouse(e);
+            if (e.cancelable) e.preventDefault();
+            const pt = getCoords(e);
             if (activeAction === 'drag') {
                 let nx = Math.round((pt.x - currentItem.ox - OFFSET_X) / SNAP) * SNAP;
                 let ny = Math.round((pt.y - currentItem.oy - OFFSET_Y) / SNAP) * SNAP;
@@ -741,12 +819,7 @@
             render();
         }
 
-        function endAction() { activeAction = null; currentItem = null; window.removeEventListener('mousemove', handleMove); window.removeEventListener('mouseup', endAction); render(); }
-
-        function getMouse(e) {
-            const CTM = svg.getScreenCTM();
-            return { x: (e.clientX - CTM.e) / CTM.a, y: (e.clientY - CTM.f) / CTM.d };
-        }
+        function endAction() { activeAction = null; currentItem = null; render(); }
 
         function renderImprints() {
             imprintLayer.innerHTML = '';
@@ -788,10 +861,12 @@
                         t.setAttribute("x", mx + 3); t.setAttribute("y", my + 2); t.setAttribute("class", "imprint-text");
                         t.textContent = `${dir.d.toFixed(1)}'`;
                         const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                        c.setAttribute("cx", mx - 4); c.setAttribute("cy", my - 1); c.setAttribute("r", 4); c.setAttribute("class", "imprint-del");
+                        c.setAttribute("cx", mx - 4); c.setAttribute("cy", my - 1); c.setAttribute("r", 7);
+                        c.setAttribute("class", "imprint-del");
                         c.onclick = () => toggleImprint(`${item.uid}-${dir.id}`);
+                        c.addEventListener('touchstart', (e) => { e.stopPropagation(); toggleImprint(`${item.uid}-${dir.id}`); });
                         const tx = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                        tx.setAttribute("x", mx - 4); tx.setAttribute("y", my + 1); tx.setAttribute("style", "fill:white; font-size:4px; font-weight:bold; text-anchor:middle; pointer-events:none;"); tx.textContent = "×";
+                        tx.setAttribute("x", mx - 4); tx.setAttribute("y", my + 1); tx.setAttribute("style", "fill:white; font-size:6px; font-weight:bold; text-anchor:middle; pointer-events:none;"); tx.textContent = "×";
                         g.appendChild(l); g.appendChild(t); g.appendChild(c); g.appendChild(tx); imprintLayer.appendChild(g);
                     }
                 });
