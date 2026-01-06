@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Cordyceps Lab Design Editor</title>
+    <title>Cordyceps Lab Design - Pro v3.1</title>
     <link rel="icon" type="image/png"
         href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <style>
@@ -89,7 +89,7 @@
             width: 95%;
             max-width: 1200px;
             gap: 20px;
-            padding: 0 0 20px 0;
+            padding-bottom: 20px;
             box-sizing: border-box;
         }
 
@@ -99,6 +99,7 @@
             border: 1px solid var(--sidebar-border);
             border-radius: 12px;
             padding: 15px;
+            height: fit-content;
             max-height: 85vh;
             display: flex;
             flex-direction: column;
@@ -215,18 +216,6 @@
             stroke: none;
             rx: 3;
             ry: 3;
-        }
-
-        .dim-line {
-            stroke: var(--dimension-line);
-            stroke-width: 1;
-            stroke-dasharray: 2, 2;
-        }
-
-        .dim-text {
-            font-size: 8px;
-            fill: var(--dimension-line);
-            font-weight: 700;
         }
 
         .imprint-line {
@@ -360,10 +349,10 @@
 
             body {
                 background: white !important;
-                padding: 10mm;
+                padding: 5mm;
                 display: block;
-                width: auto;
-                height: auto;
+                width: 100vw;
+                height: 100vh;
                 overflow: hidden;
             }
 
@@ -379,11 +368,12 @@
                 display: block;
                 width: 100%;
                 padding: 0;
+                margin: 0;
             }
 
             .header {
-                padding: 0;
-                margin-bottom: 5mm;
+                padding: 0 5mm;
+                margin-bottom: 2mm;
                 width: 100%;
             }
 
@@ -396,28 +386,29 @@
             }
 
             svg#labDesigner {
-                width: 740px;
-                height: 380px;
+                width: 700px;
+                height: 340px;
             }
 
             .specs-panel {
-                max-width: 740px;
-                margin: 5mm auto 0;
+                max-width: 700px;
+                margin: 2mm auto 0;
+                padding: 10px;
                 background: none !important;
                 border-color: #000 !important;
                 border-width: 1px;
+                gap: 5px;
             }
 
             .print-footer {
                 display: block !important;
                 text-align: right;
-                max-width: 740px;
-                margin: 5mm auto 0;
+                max-width: 700px;
+                margin: 2mm auto 0;
                 font-weight: 700;
                 color: black;
-                font-size: 10pt;
+                font-size: 9pt;
                 text-transform: uppercase;
-                letter-spacing: 1pt;
             }
         }
 
@@ -432,7 +423,7 @@
     <div class="header">
         <div>
             <h1>Cordyceps Lab Design</h1>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan (2 inch Grid)</p>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan v3.1 (2" Resolution)</p>
         </div>
         <div class="controls">
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -467,7 +458,6 @@
                         </pattern>
                     </defs>
 
-                    <!-- Structural Dimensions (Outside) -->
                     <g id="structural-dims">
                         <line x1="40" y1="20" x2="700" y2="20" stroke="var(--accent)" stroke-width="1"
                             stroke-dasharray="2,2" />
@@ -484,7 +474,6 @@
                     <rect x="40" y="40" width="660" height="300" class="wall"
                         style="stroke: var(--wall-stroke); stroke-width: 8; fill: none;" />
 
-                    <!-- Fixed Structural Elements -->
                     <g id="fixed-layer">
                         <g transform="translate(140, 40)">
                             <rect x="0" y="-4" width="90" height="8" fill="rgba(0,0,0,0.05)" />
@@ -502,7 +491,6 @@
                     </g>
 
                     <g id="imprint-layer"></g>
-                    <g id="dim-lines-layer"></g>
                     <g id="interactive-layer" transform="translate(40, 40)"></g>
                 </svg>
             </div>
@@ -519,7 +507,6 @@
     <script>
         const svg = document.getElementById('labDesigner');
         const interactiveLayer = document.getElementById('interactive-layer');
-        const dimLinesLayer = document.getElementById('dim-lines-layer');
         const imprintLayer = document.getElementById('imprint-layer');
         const inventoryEl = document.getElementById('inventory');
         const specsEl = document.getElementById('specs');
@@ -527,15 +514,15 @@
         const undoBtn = document.getElementById('undoBtn');
 
         const GRID = 30;
-        const TWO_INCH_GRID = 5;
+        const SNAP = 5; // 2 inches
         const OFFSET_X = 40;
         const OFFSET_Y = 40;
         const CANVAS_W = 660;
         const CANVAS_H = 300;
 
         let placedItems = [];
-        let hiddenImprints = new Set();
         let history = [];
+        let hiddenImprints = new Set();
         let activeAction = null;
         let currentItem = null;
         let startAngle = 0;
@@ -556,7 +543,7 @@
 
         function pushHistory() {
             history.push(JSON.stringify({ items: placedItems, hidden: Array.from(hiddenImprints) }));
-            if (history.length > 40) history.shift();
+            if (history.length > 50) history.shift();
             undoBtn.disabled = false;
         }
 
@@ -569,9 +556,9 @@
             render();
         }
 
-        undoBtn.onclick = undo;
+        undoBtn.addEventListener('click', undo);
 
-        function init() {
+        function initInventory() {
             library.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'inventory-item';
@@ -585,11 +572,11 @@
                 div.onclick = () => { pushHistory(); addItem(item); };
                 inventoryEl.appendChild(div);
             });
-            render();
         }
 
-        function addItem(def, x = 150, y = 100, rot = 0) {
-            const item = { ...def, uid: 'uid-' + Math.random().toString(36).substr(2, 9), x, y, rot, cw: def.w, ch: def.h };
+        function addItem(def) {
+            const uid = 'uid-' + Math.random().toString(36).substr(2, 9);
+            const item = { ...def, uid, x: 150, y: 120, rot: 0, cw: def.w, ch: def.h };
             placedItems.push(item);
             render();
         }
@@ -610,6 +597,7 @@
         function render() {
             interactiveLayer.innerHTML = '';
             let rackCount = 0;
+
             placedItems.forEach(item => {
                 const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 g.setAttribute("class", "placed-element");
@@ -619,191 +607,133 @@
                 const cy = height / 2;
                 g.setAttribute("transform", `translate(${item.x},${item.y}) rotate(${item.rot},${cx},${cy})`);
 
-                if (item.type !== 'humid' && item.type !== 'equip' && item.r == null) {
-                    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                    rect.setAttribute("width", width);
-                    rect.setAttribute("height", height);
-                    if (item.type === 'rack') {
-                        rect.setAttribute("class", `rack ${item.isBlackout ? 'blackout' : ''}`);
-                        rackCount++;
-                        g.appendChild(rect);
-                        addNameBlock(g, cx, cy, `R${rackCount}`, 'var(--block-rack)', true);
-                    } else if (item.type === 'prep') {
-                        rect.setAttribute("fill", "none");
-                        rect.setAttribute("stroke", "var(--prep-outline)");
-                        rect.setAttribute("stroke-width", "4");
-                        const inner = rect.cloneNode(); inner.setAttribute("stroke-width", "1.5");
-                        g.appendChild(rect); g.appendChild(inner);
-                        addNameBlock(g, cx, cy, "PREP STATION", 'var(--block-prep)', false);
-                    } else if (item.type === 'text') {
-                        rect.setAttribute("fill", "rgba(255,0,255,0.05)");
-                        rect.setAttribute("stroke", "var(--accent)");
-                        rect.setAttribute("stroke-dasharray", "2");
-                        g.appendChild(rect);
-                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                        t.setAttribute("x", cx); t.setAttribute("y", cy + 3);
-                        t.setAttribute("class", "label-text");
-                        t.style.fill = "var(--accent)";
-                        t.textContent = "NOTE";
-                        g.appendChild(t);
-                    }
-                } else if (item.type === 'equip' && item.w) {
-                    const rectOuter = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                    rectOuter.setAttribute("width", width);
-                    rectOuter.setAttribute("height", height);
-                    rectOuter.setAttribute("fill", "none");
-                    rectOuter.setAttribute("stroke", item.blockColor);
-                    rectOuter.setAttribute("stroke-width", "4");
-                    const rectInner = rectOuter.cloneNode(); rectInner.setAttribute("stroke-width", "1.5");
-                    g.appendChild(rectOuter);
-                    g.appendChild(rectInner);
-                    addNameBlock(g, cx, cy, item.label, item.blockColor, false);
-                } else {
-                    const rad = item.r * GRID * 1.5;
-                    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                    circle.setAttribute("cx", rad); circle.setAttribute("cy", rad); circle.setAttribute("r", rad);
-                    if (item.type === 'humid') {
-                        circle.setAttribute("fill", "none"); circle.setAttribute("stroke", "var(--humidifier-color)"); circle.setAttribute("stroke-width", "3");
-                        const inner = circle.cloneNode(); inner.setAttribute("r", rad * 0.6); inner.setAttribute("stroke-width", "1.5");
-                        g.appendChild(circle); g.appendChild(inner);
-                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                        t.setAttribute("x", rad); t.setAttribute("y", rad * 2 + 15);
-                        t.setAttribute("class", "label-text");
-                        t.setAttribute("style", "fill: var(--humidifier-color); font-size: 8px; font-weight: 800;");
-                        t.textContent = "HUMIDIFIER";
-                        g.appendChild(t);
-                    } else {
-                        circle.setAttribute("fill", "none"); circle.setAttribute("stroke", item.blockColor || 'var(--text-secondary)'); circle.setAttribute("stroke-width", "4");
-                        const inner = circle.cloneNode(); inner.setAttribute("stroke-width", "1.5");
-                        g.appendChild(circle); g.appendChild(inner);
-                        addNameBlock(g, rad, rad, item.label, item.blockColor || 'var(--block-clean)', false);
-                    }
+                // Main Shape Logic
+                if (item.type === 'rack') {
+                    rackCount++;
+                    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    r.setAttribute("width", width); r.setAttribute("height", height);
+                    r.setAttribute("class", `rack ${item.isBlackout ? 'blackout' : ''}`);
+                    g.appendChild(r);
+                    addLabel(g, cx, cy, `R${rackCount}`, 'var(--block-rack)', true);
+                } else if (item.type === 'prep') {
+                    const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    r1.setAttribute("width", width); r1.setAttribute("height", height);
+                    r1.setAttribute("fill", "none"); r1.setAttribute("stroke", "var(--prep-outline)"); r1.setAttribute("stroke-width", "4");
+                    const r2 = r1.cloneNode(); r2.setAttribute("stroke-width", "1.5");
+                    g.appendChild(r1); g.appendChild(r2);
+                    addLabel(g, cx, cy, "PREP", 'var(--block-prep)', false);
+                } else if (item.type === 'equip') {
+                    const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    r1.setAttribute("width", width); r1.setAttribute("height", height);
+                    r1.setAttribute("fill", "none"); r1.setAttribute("stroke", item.blockColor); r1.setAttribute("stroke-width", "4");
+                    const r2 = r1.cloneNode(); r2.setAttribute("stroke-width", "1.5");
+                    g.appendChild(r1); g.appendChild(r2);
+                    addLabel(g, cx, cy, item.label, item.blockColor, false);
+                } else if (item.type === 'humid') {
+                    const r = item.r * GRID * 1.5;
+                    const c1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    c1.setAttribute("cx", r); c1.setAttribute("cy", r); c1.setAttribute("r", r);
+                    c1.setAttribute("fill", "none"); c1.setAttribute("stroke", "var(--humidifier-color)"); c1.setAttribute("stroke-width", "3");
+                    const c2 = c1.cloneNode(); c2.setAttribute("r", r * 0.6); c2.setAttribute("stroke-width", "1.5");
+                    g.appendChild(c1); g.appendChild(c2);
+                    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    t.setAttribute("x", r); t.setAttribute("y", r * 2 + 15);
+                    t.setAttribute("class", "label-text"); t.setAttribute("style", "fill: var(--humidifier-color); font-size: 8px; font-weight:800;");
+                    t.textContent = "HUMIDIFIER"; g.appendChild(t);
+                } else if (item.type === 'text') {
+                    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    r.setAttribute("width", width); r.setAttribute("height", height);
+                    r.setAttribute("fill", "rgba(255,0,255,0.05)"); r.setAttribute("stroke", "var(--accent)"); r.setAttribute("stroke-dasharray", "2");
+                    g.appendChild(r);
+                    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    t.setAttribute("x", cx); t.setAttribute("y", cy + 3);
+                    t.setAttribute("class", "label-text"); t.style.fill = "var(--accent)"; t.textContent = "NOTE";
+                    g.appendChild(t);
                 }
 
-                const controls = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                controls.setAttribute("class", "ui-controls");
+                // UI Controls
+                const ui = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                ui.setAttribute("class", "ui-controls");
+
                 const del = document.createElementNS("http://www.w3.org/2000/svg", "circle");
                 del.setAttribute("cx", 0); del.setAttribute("cy", 0); del.setAttribute("r", 10);
                 del.setAttribute("class", "btn-del");
                 del.onclick = (e) => { e.stopPropagation(); removeItem(item.uid); };
-                const delT = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                delT.setAttribute("x", 0); delT.setAttribute("y", 4); delT.setAttribute("style", "fill:white; font-size:12px; font-weight:bold; text-anchor:middle; pointer-events:none;");
-                delT.textContent = "×";
-                const rotH = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                rotH.setAttribute("cx", width); rotH.setAttribute("cy", 0); rotH.setAttribute("r", 8);
-                rotH.setAttribute("class", "btn-rot");
-                rotH.onmousedown = (e) => { e.stopPropagation(); startRotate(e, item); };
-                controls.appendChild(del); controls.appendChild(delT); controls.appendChild(rotH);
+
+                const delX = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                delX.setAttribute("x", 0); delX.setAttribute("y", 4); delX.setAttribute("style", "fill:white; font-size:12px; font-weight:bold; text-anchor:middle; pointer-events:none;");
+                delX.textContent = "×";
+
+                const rot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                rot.setAttribute("cx", width); rot.setAttribute("cy", 0); rot.setAttribute("r", 8);
+                rot.setAttribute("class", "btn-rot");
+                rot.onmousedown = (e) => { e.stopPropagation(); startAction(e, item, 'rotate'); };
+
+                ui.appendChild(del); ui.appendChild(delX); ui.appendChild(rot);
                 if (item.isResizable) {
-                    const resH = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                    resH.setAttribute("cx", width); resH.setAttribute("cy", height); resH.setAttribute("r", 8);
-                    resH.setAttribute("class", "btn-resize");
-                    resH.onmousedown = (e) => { e.stopPropagation(); startResize(e, item); };
-                    controls.appendChild(resH);
+                    const res = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                    res.setAttribute("cx", width); res.setAttribute("cy", height); res.setAttribute("r", 8);
+                    res.setAttribute("class", "btn-resize");
+                    res.onmousedown = (e) => { e.stopPropagation(); startAction(e, item, 'resize'); };
+                    ui.appendChild(res);
                 }
-                g.appendChild(controls);
-                g.onmousedown = (e) => { if (e.target.classList.contains('btn-rot') || e.target.classList.contains('btn-resize')) return; startDrag(e, item); };
+
+                g.appendChild(ui);
+                g.onmousedown = (e) => { if (e.target.tagName !== 'circle') startAction(e, item, 'drag'); };
                 interactiveLayer.appendChild(g);
             });
+
             updateSpecs();
-            renderAllImprints();
+            renderImprints();
         }
 
-        function addNameBlock(parent, x, y, text, color, isSmall) {
+        function addLabel(parent, x, y, text, color, isSmall) {
             const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
             const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
             t.setAttribute("x", x); t.setAttribute("y", y + 3);
             t.setAttribute("class", "label-text");
             if (isSmall) t.style.fontSize = "6px";
             t.textContent = text;
-            const bbox = isSmall ? { width: 22, height: 10 } : { width: text.length * 5, height: 12 };
-            const padW = 8; const padH = 6;
-            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            rect.setAttribute("x", x - (bbox.width + padW) / 2); rect.setAttribute("y", y - (bbox.height + padH) / 2 + 1);
-            rect.setAttribute("width", bbox.width + padW); rect.setAttribute("height", bbox.height + padH);
-            rect.setAttribute("class", "name-block"); rect.setAttribute("fill", color);
-            group.appendChild(rect); group.appendChild(t); parent.appendChild(group);
+            const w = isSmall ? 22 : text.length * 6 + 10;
+            const h = isSmall ? 10 : 14;
+            const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            r.setAttribute("x", x - w / 2); r.setAttribute("y", y - h / 2 + 1);
+            r.setAttribute("width", w); r.setAttribute("height", h);
+            r.setAttribute("class", "name-block"); r.setAttribute("fill", color);
+            group.appendChild(r); group.appendChild(t); parent.appendChild(group);
         }
 
-        function renderAllImprints() {
-            imprintLayer.innerHTML = '';
-            placedItems.forEach(item => {
-                const w = (item.cw || item.w || item.r * 3) * GRID;
-                const h = (item.ch || item.h || item.r * 3) * GRID;
-                const ix = item.x + OFFSET_X;
-                const iy = item.y + OFFSET_Y;
-
-                let closest = { top: OFFSET_Y, bottom: OFFSET_Y + CANVAS_H, left: OFFSET_X, right: OFFSET_X + CANVAS_W };
-
-                placedItems.forEach(other => {
-                    if (other.uid === item.uid) return;
-                    const ow = (other.cw || other.w || other.r * 3) * GRID;
-                    const oh = (other.ch || other.h || other.r * 3) * GRID;
-                    const ox = other.x + OFFSET_X;
-                    const oy = other.y + OFFSET_Y;
-
-                    if (ix < ox + ow && ix + w > ox) {
-                        if (oy + oh <= iy && oy + oh > closest.top) closest.top = oy + oh;
-                        if (oy >= iy + h && oy < closest.bottom) closest.bottom = oy;
-                    }
-                    if (iy < oy + oh && iy + h > oy) {
-                        if (ox + ow <= ix && ox + ow > closest.left) closest.left = ox + ow;
-                        if (ox >= ix + w && ox < closest.right) closest.right = ox;
-                    }
-                });
-
-                if (!hiddenImprints.has(`${item.uid}-t`)) addImprintLine(ix + w / 2, closest.top, ix + w / 2, iy, (iy - closest.top) / GRID, `${item.uid}-t`);
-                if (!hiddenImprints.has(`${item.uid}-b`)) addImprintLine(ix + w / 2, iy + h, ix + w / 2, closest.bottom, (closest.bottom - (iy + h)) / GRID, `${item.uid}-b`);
-                if (!hiddenImprints.has(`${item.uid}-l`)) addImprintLine(closest.left, iy + h / 2, ix, iy + h / 2, (ix - closest.left) / GRID, `${item.uid}-l`);
-                if (!hiddenImprints.has(`${item.uid}-r`)) addImprintLine(ix + w, iy + h / 2, closest.right, iy + h / 2, (closest.right - (ix + w)) / GRID, `${item.uid}-r`);
-            });
+        function startAction(e, item, type) {
+            pushHistory();
+            activeAction = type;
+            currentItem = item;
+            const pt = getMouse(e);
+            if (type === 'drag') {
+                item.ox = pt.x - item.x - OFFSET_X;
+                item.oy = pt.y - item.y - OFFSET_Y;
+            } else if (type === 'rotate') {
+                const cx = item.x + OFFSET_X + ((item.cw || item.w || 1.5) * GRID / 2);
+                const cy = item.y + OFFSET_Y + ((item.ch || item.h || 1.5) * GRID / 2);
+                startAngle = Math.atan2(pt.y - cy, pt.x - cx);
+                startRotation = item.rot;
+            }
+            window.addEventListener('mousemove', handleMove);
+            window.addEventListener('mouseup', endAction);
         }
-
-        function addImprintLine(x1, y1, x2, y2, dist, id) {
-            if (dist <= 0.1) return;
-            const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2);
-            line.setAttribute("class", "imprint-line");
-
-            const mx = (x1 + x2) / 2;
-            const my = (y1 + y2) / 2;
-
-            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            text.setAttribute("x", mx + 3); text.setAttribute("y", my + 2);
-            text.setAttribute("class", "imprint-text");
-            text.textContent = `${dist.toFixed(1)}'`;
-
-            const del = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            del.setAttribute("cx", mx - 4); del.setAttribute("cy", my - 1); del.setAttribute("r", 4);
-            del.setAttribute("class", "imprint-del");
-            del.onclick = () => toggleImprint(id);
-
-            const delX = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            delX.setAttribute("x", mx - 4); delX.setAttribute("y", my + 1);
-            delX.setAttribute("style", "fill:white; font-size:4px; font-weight:bold; text-anchor:middle; pointer-events:none;");
-            delX.textContent = "×";
-
-            group.appendChild(line); group.appendChild(text); group.appendChild(del); group.appendChild(delX);
-            imprintLayer.appendChild(group);
-        }
-
-        function startDrag(e, item) { pushHistory(); activeAction = 'drag'; currentItem = item; const pt = getMouse(e); item.offsetX = pt.x - item.x - OFFSET_X; item.offsetY = pt.y - item.y - OFFSET_Y; window.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', endAction); }
-        function startRotate(e, item) { pushHistory(); activeAction = 'rotate'; currentItem = item; const pt = getMouse(e); const cx = item.x + OFFSET_X + ((item.cw || item.w || item.r * 3) * GRID / 2); const cy = item.y + OFFSET_Y + ((item.ch || item.h || item.r * 3) * GRID / 2); startAngle = Math.atan2(pt.y - cy, pt.x - cx); startRotation = item.rot || 0; window.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', endAction); }
-        function startResize(e, item) { pushHistory(); activeAction = 'resize'; currentItem = item; window.addEventListener('mousemove', handleMove); window.addEventListener('mouseup', endAction); }
 
         function handleMove(e) {
             if (!currentItem) return;
             const pt = getMouse(e);
             if (activeAction === 'drag') {
-                let nx = Math.round((pt.x - currentItem.offsetX - OFFSET_X) / TWO_INCH_GRID) * TWO_INCH_GRID;
-                let ny = Math.round((pt.y - currentItem.offsetY - OFFSET_Y) / TWO_INCH_GRID) * TWO_INCH_GRID;
-                currentItem.x = Math.max(0, Math.min(nx, CANVAS_W - (currentItem.cw || currentItem.w || currentItem.r * 3) * GRID));
-                currentItem.y = Math.max(0, Math.min(ny, CANVAS_H - (currentItem.ch || currentItem.h || currentItem.r * 3) * GRID));
+                let nx = Math.round((pt.x - currentItem.ox - OFFSET_X) / SNAP) * SNAP;
+                let ny = Math.round((pt.y - currentItem.oy - OFFSET_Y) / SNAP) * SNAP;
+                currentItem.x = Math.max(0, Math.min(nx, CANVAS_W - (currentItem.cw || currentItem.w || 1.5) * GRID));
+                currentItem.y = Math.max(0, Math.min(ny, CANVAS_H - (currentItem.ch || currentItem.h || 1.5) * GRID));
             } else if (activeAction === 'rotate') {
-                const cx = currentItem.x + OFFSET_X + ((currentItem.cw || currentItem.w || currentItem.r * 3) * GRID / 2);
-                const cy = currentItem.y + OFFSET_Y + ((currentItem.ch || currentItem.h || currentItem.r * 3) * GRID / 2);
-                currentItem.rot = Math.round((startRotation + (Math.atan2(pt.y - cy, pt.x - cx) - startAngle) * (180 / Math.PI)) / 45) * 45;
+                const cx = currentItem.x + OFFSET_X + ((currentItem.cw || currentItem.w || 1.5) * GRID / 2);
+                const cy = currentItem.y + OFFSET_Y + ((currentItem.ch || currentItem.h || 1.5) * GRID / 2);
+                const angle = Math.atan2(pt.y - cy, pt.x - cx);
+                currentItem.rot = Math.round((startRotation + (angle - startAngle) * 180 / Math.PI) / 45) * 45;
             } else if (activeAction === 'resize') {
                 currentItem.cw = Math.max(0.2, (pt.x - currentItem.x - OFFSET_X) / GRID);
                 currentItem.ch = Math.max(0.2, (pt.y - currentItem.y - OFFSET_Y) / GRID);
@@ -812,22 +742,73 @@
         }
 
         function endAction() { activeAction = null; currentItem = null; window.removeEventListener('mousemove', handleMove); window.removeEventListener('mouseup', endAction); render(); }
-        function getMouse(e) { const CTM = svg.getScreenCTM(); return { x: (e.clientX - CTM.e) / CTM.a, y: (e.clientY - CTM.f) / CTM.d }; }
+
+        function getMouse(e) {
+            const CTM = svg.getScreenCTM();
+            return { x: (e.clientX - CTM.e) / CTM.a, y: (e.clientY - CTM.f) / CTM.d };
+        }
+
+        function renderImprints() {
+            imprintLayer.innerHTML = '';
+            placedItems.forEach(item => {
+                const w = (item.cw || item.w || 1.5) * GRID;
+                const h = (item.ch || item.h || 1.5) * GRID;
+                const ix = item.x + OFFSET_X;
+                const iy = item.y + OFFSET_Y;
+                let close = { t: OFFSET_Y, b: OFFSET_Y + CANVAS_H, l: OFFSET_X, r: OFFSET_X + CANVAS_W };
+
+                placedItems.forEach(o => {
+                    if (o.uid === item.uid) return;
+                    const ow = (o.cw || o.w || 1.5) * GRID;
+                    const oh = (o.ch || o.h || 1.5) * GRID;
+                    const ox = o.x + OFFSET_X; const oy = o.y + OFFSET_Y;
+                    if (ix < ox + ow && ix + w > ox) {
+                        if (oy + oh <= iy && oy + oh > close.t) close.t = oy + oh;
+                        if (oy >= iy + h && oy < close.b) close.b = oy;
+                    }
+                    if (iy < oy + oh && iy + h > oy) {
+                        if (ox + ow <= ix && ox + ow > close.l) close.l = ox + ow;
+                        if (ox >= ix + w && ox < close.r) close.r = ox;
+                    }
+                });
+
+                const dirs = [{ d: (iy - close.t) / GRID, p: [ix + w / 2, close.t, ix + w / 2, iy], id: 't' },
+                { d: (close.b - (iy + h)) / GRID, p: [ix + w / 2, iy + h, ix + w / 2, close.b], id: 'b' },
+                { d: (ix - close.l) / GRID, p: [close.l, iy + h / 2, ix, iy + h / 2], id: 'l' },
+                { d: (close.r - (ix + w)) / GRID, p: [ix + w, iy + h / 2, close.r, iy + h / 2], id: 'r' }];
+
+                dirs.forEach(dir => {
+                    if (dir.d > 0.1 && !hiddenImprints.has(`${item.uid}-${dir.id}`)) {
+                        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+                        const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        l.setAttribute("x1", dir.p[0]); l.setAttribute("y1", dir.p[1]); l.setAttribute("x2", dir.p[2]); l.setAttribute("y2", dir.p[3]);
+                        l.setAttribute("class", "imprint-line");
+                        const mx = (dir.p[0] + dir.p[2]) / 2, my = (dir.p[1] + dir.p[3]) / 2;
+                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        t.setAttribute("x", mx + 3); t.setAttribute("y", my + 2); t.setAttribute("class", "imprint-text");
+                        t.textContent = `${dir.d.toFixed(1)}'`;
+                        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                        c.setAttribute("cx", mx - 4); c.setAttribute("cy", my - 1); c.setAttribute("r", 4); c.setAttribute("class", "imprint-del");
+                        c.onclick = () => toggleImprint(`${item.uid}-${dir.id}`);
+                        const tx = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                        tx.setAttribute("x", mx - 4); tx.setAttribute("y", my + 1); tx.setAttribute("style", "fill:white; font-size:4px; font-weight:bold; text-anchor:middle; pointer-events:none;"); tx.textContent = "×";
+                        g.appendChild(l); g.appendChild(t); g.appendChild(c); g.appendChild(tx); imprintLayer.appendChild(g);
+                    }
+                });
+            });
+        }
 
         function updateSpecs() {
             const counts = {}; placedItems.forEach(i => counts[i.label] = (counts[i.label] || 0) + 1);
             specsEl.innerHTML = `
                 <div class="spec-item"><strong>GROW AREA</strong><span class="spec-value">Std Racks: ${counts['Std Rack'] || 0} (2x1')<br>Blackout: ${counts['Blackout Rack'] || 0} (2x1')</span></div>
-                <div class="spec-item"><strong>PROCESSING</strong><span class="spec-value">Prep Station: ${counts['Prep Station'] || 0} (4x2.5')<br>Flow Hood: ${counts['Flow Hood'] || 0} (2x4')<br>Fridge: ${counts['Fridge'] || 0} (2x2')</span></div>
+                <div class="spec-item"><strong>PROCESSING</strong><span class="spec-value">Prep: ${counts['Prep Station'] || 0} (4x2.5')<br>Flow: ${counts['Flow Hood'] || 0} (2x4')<br>Fridge: ${counts['Fridge'] || 0} (2x2')</span></div>
                 <div class="spec-item"><strong>UTILITIES</strong><span class="spec-value">Humidifier: ${counts['Humidifier'] || 0} (1' Rad)<br>Auto: ${counts['Autoclave'] || 0} (1.5' Rad)<br>Sink: ${counts['Sink'] || 0} (2x2')</span></div>
             `;
         }
 
-        themeToggle.onchange = () => {
-            document.body.classList.toggle('light-theme', themeToggle.checked);
-        };
-
-        window.onload = init;
+        themeToggle.onchange = () => document.body.classList.toggle('light-theme', themeToggle.checked);
+        window.onload = () => { initInventory(); render(); };
     </script>
 </body>
 
