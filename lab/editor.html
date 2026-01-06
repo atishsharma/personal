@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cordyceps Lab Design Editor</title>
-    <link rel="icon" type="image/png"
-        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <style>
         :root {
             --bg-body: #0f172a;
@@ -22,12 +20,14 @@
             --wall-stroke: #cbd5e1;
             --humidifier-color: #3b82f6;
             --block-rack: #2563eb;
-            --block-prep: #000000;
+            --block-prep: #facc15;
             --block-clean: #4a044e;
             --dimension-line: #ff00ff;
             --imprint-line: rgba(255, 0, 255, 0.4);
             --text-block-bg: #ff00ff;
             --text-block-color: #000000;
+            --blackout-red: #ef4444;
+            --prep-yellow: #facc15;
         }
 
         body.light-theme {
@@ -174,8 +174,10 @@
             background: var(--bg-canvas);
         }
 
+        /* Component Classes */
         .placed-element {
             cursor: move;
+            pointer-events: all;
         }
 
         .placed-element:hover .ui-controls,
@@ -216,7 +218,8 @@
         }
 
         .rack.blackout {
-            stroke: var(--blackout-color);
+            stroke: var(--blackout-red);
+            stroke-width: 2.5;
         }
 
         .label-text {
@@ -389,7 +392,7 @@
 
         .modal-input {
             width: 100%;
-            height: 120px;
+            height: 100px;
             padding: 12px;
             border-radius: 8px;
             border: 1px solid var(--text-secondary);
@@ -397,7 +400,7 @@
             color: var(--text-primary);
             margin-bottom: 20px;
             box-sizing: border-box;
-            resize: vertical;
+            resize: none;
             font-family: inherit;
             font-size: 14px;
         }
@@ -408,7 +411,6 @@
             justify-content: flex-end;
         }
 
-        /* ForeignObject Styling */
         .svg-text-wrap {
             color: var(--text-block-color);
             font-size: 9px;
@@ -424,6 +426,7 @@
             justify-content: center;
             white-space: pre-wrap;
             word-break: break-word;
+            pointer-events: none;
         }
 
         @media print {
@@ -591,11 +594,10 @@
         </main>
     </div>
 
-    <!-- Edit Text Modal -->
     <div id="textModal" class="modal-overlay">
         <div class="modal-content">
-            <h2>Edit Text Block</h2>
-            <textarea id="modalInput" class="modal-input" placeholder="Type your note here..."></textarea>
+            <h2>Edit Element Name</h2>
+            <textarea id="modalInput" class="modal-input" placeholder="Enter custom name..."></textarea>
             <div class="modal-btns">
                 <button onclick="closeModal()" class="btn-action" style="background:#475569">Cancel</button>
                 <button onclick="saveModalText()" class="btn-action">Save Changes</button>
@@ -619,14 +621,14 @@
         const library = [
             { id: 'rack_std', label: 'Std Rack', w: 2, h: 1, type: 'rack', blockColor: '#2563eb' },
             { id: 'rack_blk', label: 'Blackout Rack', w: 2, h: 1, type: 'rack', isBlackout: true, blockColor: '#2563eb' },
-            { id: 'prep', label: 'Prep Station', w: 4, h: 2.5, type: 'prep', blockColor: '#000000' },
+            { id: 'prep', label: 'Prep Station', w: 4, h: 2.5, type: 'prep', blockColor: '#facc15' },
             { id: 'flow', label: 'Flow Hood', w: 2, h: 4, type: 'equip', blockColor: '#a855f7' },
             { id: 'fridge', label: 'Fridge', w: 2, h: 2, type: 'equip', blockColor: '#4c1d95' },
             { id: 'dehy', label: 'Dehydrator', w: 2, h: 3, type: 'equip', blockColor: '#701a75' },
-            { id: 'sink', label: 'Sink', w: 2, h: 2, type: 'water', blockColor: '#1e40af' },
-            { id: 'auto', label: 'Autoclave', r: 0.75, type: 'equip', blockColor: '#581c87' },
+            { id: 'sink', label: 'Sink', w: 2, h: 2, type: 'equip', blockColor: '#1e40af' },
+            { id: 'auto', label: 'Autoclave', w: 1.5, h: 1.5, type: 'equip', blockColor: '#581c87' },
             { id: 'humid', label: 'Humidifier', w: 1.5, h: 1.5, type: 'humid', blockColor: '#3b82f6' },
-            { id: 'text', label: 'Text Block', w: 3, h: 1, type: 'text', isResizable: true, isEditable: true, blockColor: '#ff00ff' }
+            { id: 'text', label: 'Text Block', w: 3, h: 1, type: 'text', isResizable: true, blockColor: '#ff00ff' }
         ];
 
         function pushHistory() {
@@ -649,7 +651,7 @@
             library.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'inventory-item';
-                div.innerHTML = `<span>${item.label}</span><div style="display:flex;align-items:center;gap:8px;"><span style="opacity:0.6">${item.w || (item.r * 2)}'x${item.h || (item.r * 2)}'</span><div class="item-color-preview" style="background:${item.blockColor || 'transparent'};"></div></div>`;
+                div.innerHTML = `<span>${item.label}</span><div style="display:flex;align-items:center;gap:8px;"><span style="opacity:0.6">${item.w}'x${item.h}'</span><div class="item-color-preview" style="background:${item.blockColor || 'transparent'};"></div></div>`;
                 div.onclick = () => { pushHistory(); addItem(item); };
                 inventoryEl.appendChild(div);
             });
@@ -657,7 +659,7 @@
 
         function addItem(def) {
             const uid = 'uid-' + Math.random().toString(36).substr(2, 9);
-            const item = { ...def, uid, x: 150, y: 120, rot: 0, cw: def.w, ch: def.h, customText: def.type === 'text' ? 'TAP TO EDIT NOTE' : '' };
+            const item = { ...def, uid, x: 150, y: 120, rot: 0, cw: def.w, ch: def.h, customTitle: '' };
             placedItems.push(item); render();
         }
 
@@ -669,50 +671,51 @@
             placedItems.forEach(item => {
                 const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 g.setAttribute("class", "placed-element");
-                const width = (item.cw || item.w || 1.5) * GRID, height = (item.ch || item.h || 1.5) * GRID, cx = width / 2, cy = height / 2;
+                const width = (item.cw || item.w) * GRID, height = (item.ch || item.h) * GRID, cx = width / 2, cy = height / 2;
                 g.setAttribute("transform", `translate(${item.x},${item.y}) rotate(${item.rot},${cx},${cy})`);
 
+                const displayTitle = item.customTitle || (item.type === 'rack' ? `R${++rackCount}` : (item.type === 'text' ? 'NOTE' : item.label));
                 if (item.type === 'rack') {
-                    rackCount++; const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                    r.setAttribute("width", width); r.setAttribute("height", height); r.setAttribute("class", `rack ${item.isBlackout ? 'blackout' : ''}`);
-                    g.appendChild(r); addLabel(g, cx, cy, `R${rackCount}`, 'var(--block-rack)', true);
+                    if (!item.customTitle) rackCount--; // Re-increment inside actual loop
+                    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    r.setAttribute("width", width); r.setAttribute("height", height);
+                    r.setAttribute("class", `rack ${item.isBlackout ? 'blackout' : ''}`);
+                    g.appendChild(r);
+                    const finalRackLabel = item.customTitle || `R${++rackCount}`;
+                    addLabel(g, cx, cy, finalRackLabel, 'var(--block-rack)', true);
                 } else if (item.type === 'prep') {
                     const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect"); r1.setAttribute("width", width); r1.setAttribute("height", height);
-                    r1.setAttribute("fill", "none"); r1.setAttribute("stroke", "var(--prep-outline)"); r1.setAttribute("stroke-width", "4");
+                    r1.setAttribute("fill", "none"); r1.setAttribute("stroke", "var(--prep-yellow)"); r1.setAttribute("stroke-width", "4");
                     const r2 = r1.cloneNode(); r2.setAttribute("stroke-width", "1.5"); g.appendChild(r1); g.appendChild(r2);
-                    addLabel(g, cx, cy, "PREP", 'var(--block-prep)', false);
-                } else if (item.type === 'equip' || item.type === 'water') {
+                    addLabel(g, cx, cy, displayTitle, 'var(--prep-yellow)', false);
+                } else if (item.type === 'equip') {
                     const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect"); r1.setAttribute("width", width); r1.setAttribute("height", height);
                     r1.setAttribute("fill", "none"); r1.setAttribute("stroke", item.blockColor); r1.setAttribute("stroke-width", "4");
                     const r2 = r1.cloneNode(); r2.setAttribute("stroke-width", "1.5"); g.appendChild(r1); g.appendChild(r2);
-                    addLabel(g, cx, cy, item.label, item.blockColor, false);
+                    addLabel(g, cx, cy, displayTitle, item.blockColor, false);
                 } else if (item.type === 'humid') {
                     const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon"); poly.setAttribute("points", `0,${height} ${width / 2},0 ${width},${height}`);
                     poly.setAttribute("fill", "none"); poly.setAttribute("stroke", "var(--humidifier-color)"); poly.setAttribute("stroke-width", "4");
                     const poly2 = poly.cloneNode(); poly2.setAttribute("stroke-width", "1.5"); g.appendChild(poly); g.appendChild(poly2);
                     const t = document.createElementNS("http://www.w3.org/2000/svg", "text"); t.setAttribute("x", width / 2); t.setAttribute("y", height + 15);
                     t.setAttribute("class", "label-text"); t.setAttribute("style", "fill: var(--humidifier-color); font-size: 8px; font-weight:800;");
-                    t.textContent = "HUMIDIFIER"; g.appendChild(t);
+                    t.textContent = displayTitle; g.appendChild(t);
                 } else if (item.type === 'text') {
                     const r = document.createElementNS("http://www.w3.org/2000/svg", "rect"); r.setAttribute("width", width); r.setAttribute("height", height);
                     r.setAttribute("fill", "var(--text-block-bg)"); r.setAttribute("stroke", "var(--accent)"); r.setAttribute("stroke-width", "1");
                     g.appendChild(r);
-
                     const fo = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
                     fo.setAttribute("width", width); fo.setAttribute("height", height);
-                    const div = document.createElement("div");
-                    div.className = "svg-text-wrap";
-                    div.textContent = item.customText || "";
-                    fo.appendChild(div);
-                    g.appendChild(fo);
+                    const div = document.createElement("div"); div.className = "svg-text-wrap"; div.textContent = displayTitle;
+                    fo.appendChild(div); g.appendChild(fo);
                 }
 
+                // UI Controls
                 const ui = document.createElementNS("http://www.w3.org/2000/svg", "g"); ui.setAttribute("class", "ui-controls");
-                const del = createControl(0, 0, 15, "btn-del", "×", (e) => { e.stopPropagation(); removeItem(item.uid); });
-                const rot = createControl(width, 0, 15, "btn-rot", "⟳", (e) => { e.stopPropagation(); startAction(e, item, 'rotate'); });
-                ui.appendChild(del); ui.appendChild(rot);
-                if (item.isResizable) ui.appendChild(createControl(width, height, 15, "btn-resize", "↘", (e) => { e.stopPropagation(); startAction(e, item, 'resize'); }));
-                if (item.isEditable) ui.appendChild(createControl(0, height, 15, "btn-edit", "✎", (e) => { e.stopPropagation(); openEditModal(item); }));
+                ui.appendChild(createControl(0, 0, 15, "btn-del", "×", (e) => removeItem(item.uid)));
+                ui.appendChild(createControl(width, 0, 15, "btn-rot", "⟳", (e) => startAction(e, item, 'rotate')));
+                ui.appendChild(createControl(0, height, 15, "btn-edit", "✎", (e) => openEditModal(item)));
+                if (item.isResizable) ui.appendChild(createControl(width, height, 15, "btn-resize", "↘", (e) => startAction(e, item, 'resize')));
 
                 g.appendChild(ui);
                 g.onmousedown = (e) => { if (e.target.tagName !== 'circle') startAction(e, item, 'drag'); };
@@ -726,7 +729,8 @@
             const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
             const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", r); c.setAttribute("class", cls);
-            c.onclick = callback; c.ontouchstart = (e) => { e.preventDefault(); callback(e); };
+            c.addEventListener('mousedown', (e) => { e.stopPropagation(); callback(e); });
+            c.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); callback(e); }, { passive: false });
             const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
             t.setAttribute("x", x); t.setAttribute("y", y + (char === '×' ? 6 : 4));
             t.setAttribute("style", `fill:white; font-size:${char === '×' ? '18' : '12'}px; font-weight:bold; text-anchor:middle; pointer-events:none;`);
@@ -745,17 +749,13 @@
             g.appendChild(r); g.appendChild(t); parent.appendChild(g);
         }
 
-        function openEditModal(item) { editingItemUid = item.uid; modalInput.value = item.customText || ''; textModal.style.display = 'flex'; modalInput.focus(); }
-        function closeModal() { textModal.style.display = 'none'; editingItemUid = null; }
-        function saveModalText() {
-            if (editingItemUid) {
-                pushHistory();
-                const item = placedItems.find(i => i.uid === editingItemUid);
-                if (item) item.customText = modalInput.value;
-                render();
-            }
-            closeModal();
+        function openEditModal(item) {
+            editingItemUid = item.uid;
+            modalInput.value = item.customTitle || (item.type === 'rack' ? '' : item.label);
+            textModal.style.display = 'flex'; modalInput.focus();
         }
+        function closeModal() { textModal.style.display = 'none'; editingItemUid = null; }
+        function saveModalText() { if (editingItemUid) { pushHistory(); const item = placedItems.find(i => i.uid === editingItemUid); if (item) item.customTitle = modalInput.value.toUpperCase(); render(); } closeModal(); }
 
         function getCoords(e) {
             const CTM = svg.getScreenCTM();
@@ -767,8 +767,8 @@
             if (e.cancelable) e.preventDefault(); pushHistory(); activeAction = type; currentItem = item; const pt = getCoords(e);
             if (type === 'drag') { item.ox = pt.x - item.x - OFFSET_X; item.oy = pt.y - item.y - OFFSET_Y; }
             else if (type === 'rotate') {
-                const cx = item.x + OFFSET_X + ((item.cw || item.w || 1.5) * GRID / 2);
-                const cy = item.y + OFFSET_Y + ((item.ch || item.h || 1.5) * GRID / 2);
+                const cx = item.x + OFFSET_X + ((item.cw || item.w) * GRID / 2);
+                const cy = item.y + OFFSET_Y + ((item.ch || item.h) * GRID / 2);
                 startAngle = Math.atan2(pt.y - cy, pt.x - cx); startRotation = item.rot;
             }
             const moveH = (m) => handleMove(m), endH = () => { window.removeEventListener('mousemove', moveH); window.removeEventListener('touchmove', moveH); window.removeEventListener('mouseup', endH); window.removeEventListener('touchend', endH); activeAction = null; currentItem = null; render(); };
@@ -779,13 +779,13 @@
             if (!currentItem) return; if (e.cancelable) e.preventDefault(); const pt = getCoords(e);
             if (activeAction === 'drag') {
                 let nx = Math.round((pt.x - currentItem.ox - OFFSET_X) / SNAP) * SNAP, ny = Math.round((pt.y - currentItem.oy - OFFSET_Y) / SNAP) * SNAP;
-                currentItem.x = Math.max(0, Math.min(nx, CANVAS_W - (currentItem.cw || currentItem.w || 1.5) * GRID));
-                currentItem.y = Math.max(0, Math.min(ny, CANVAS_H - (currentItem.ch || currentItem.h || 1.5) * GRID));
+                currentItem.x = Math.max(0, Math.min(nx, CANVAS_W - (currentItem.cw || currentItem.w) * GRID));
+                currentItem.y = Math.max(0, Math.min(ny, CANVAS_H - (currentItem.ch || currentItem.h) * GRID));
             } else if (activeAction === 'rotate') {
-                const cx = currentItem.x + OFFSET_X + ((currentItem.cw || currentItem.w || 1.5) * GRID / 2);
-                const cy = currentItem.y + OFFSET_Y + ((currentItem.ch || currentItem.h || 1.5) * GRID / 2);
+                const cx = currentItem.x + OFFSET_X + ((currentItem.cw || currentItem.w) * GRID / 2);
+                const cy = currentItem.y + OFFSET_Y + ((currentItem.ch || currentItem.h) * GRID / 2);
                 const angle = Math.atan2(pt.y - cy, pt.x - cx);
-                currentItem.rot = Math.round((startRotation + (angle - startAngle) * 180 / Math.PI) / 45) * 45;
+                currentItem.rot = Math.round((startRotation + (angle - startAngle) * 180 / Math.PI));
             } else if (activeAction === 'resize') {
                 currentItem.cw = Math.max(0.5, (pt.x - currentItem.x - OFFSET_X) / GRID); currentItem.ch = Math.max(0.5, (pt.y - currentItem.y - OFFSET_Y) / GRID);
             }
@@ -795,11 +795,11 @@
         function renderImprints() {
             imprintLayer.innerHTML = '';
             placedItems.forEach(item => {
-                const w = (item.cw || item.w || 1.5) * GRID, h = (item.ch || item.h || 1.5) * GRID, ix = item.x + OFFSET_X, iy = item.y + OFFSET_Y;
+                const w = (item.cw || item.w) * GRID, h = (item.ch || item.h) * GRID, ix = item.x + OFFSET_X, iy = item.y + OFFSET_Y;
                 let close = { t: OFFSET_Y, b: OFFSET_Y + CANVAS_H, l: OFFSET_X, r: OFFSET_X + CANVAS_W };
                 placedItems.forEach(o => {
                     if (o.uid === item.uid) return;
-                    const ow = (o.cw || o.w || 1.5) * GRID, oh = (o.ch || o.h || 1.5) * GRID, ox = o.x + OFFSET_X, oy = o.y + OFFSET_Y;
+                    const ow = (o.cw || o.w) * GRID, oh = (o.ch || o.h) * GRID, ox = o.x + OFFSET_X, oy = o.y + OFFSET_Y;
                     if (ix < ox + ow && ix + w > ox) { if (oy + oh <= iy && oy + oh > close.t) close.t = oy + oh; if (oy >= iy + h && oy < close.b) close.b = oy; }
                     if (iy < oy + oh && iy + h > oy) { if (ox + ow <= ix && ox + ow > close.l) close.l = ox + ow; if (ox >= ix + w && ox < close.r) close.r = ox; }
                 });
@@ -823,7 +823,7 @@
             const counts = {}; placedItems.forEach(i => counts[i.label] = (counts[i.label] || 0) + 1);
             specsEl.innerHTML = `
                 <div class="spec-item"><strong>GROW AREA</strong><span class="spec-value">Std Racks: ${counts['Std Rack'] || 0} (2x1')<br>Blackout: ${counts['Blackout Rack'] || 0} (2x1')</span></div>
-                <div class="spec-item"><strong>PROCESSING</strong><span class="spec-value">Prep: ${counts['Prep Station'] || 0} (4x2.5')<br>Flow: ${counts['Flow Hood'] || 0} (2x4')<br>Fridge/Sink: ${(counts['Fridge'] || 0) + (counts['Sink'] || 0)} (2x2')</span></div>
+                <div class="spec-item"><strong>PROCESSING</strong><span class="spec-value">Prep Station: ${counts['Prep Station'] || 0} (4x2.5')<br>Flow Hood: ${counts['Flow Hood'] || 0} (2x4')<br>Fridge/Sink: ${(counts['Fridge'] || 0) + (counts['Sink'] || 0)} (2x2')</span></div>
                 <div class="spec-item"><strong>UTILITIES</strong><span class="spec-value">Humidifier: ${counts['Humidifier'] || 0}<br>Auto: ${counts['Autoclave'] || 0}</span></div>
             `;
         }
@@ -840,11 +840,7 @@
             }; r.readAsText(f);
         }
 
-        themeToggle.onchange = () => {
-            document.body.classList.toggle('light-theme', themeToggle.checked);
-            render(); // Refresh colors
-        };
-
+        themeToggle.onchange = () => { document.body.classList.toggle('light-theme', themeToggle.checked); render(); };
         window.onload = () => { initInventory(); render(); };
     </script>
 </body>
