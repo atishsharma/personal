@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Cordyceps Lab Wireframe Design</title> 
+    <title>My Labs Wireframe Design</title> 
     <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <style>
         :root {
@@ -212,22 +212,41 @@
         .spec-value { color: var(--text-secondary); }
 
         @media print {
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
             body { 
-                padding: 10mm;
+                padding: 0;
+                margin: 0;
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+                background-color: var(--bg-body) !important;
+                display: block;
             }
             .controls { display: none !important; }
+            .header {
+                max-width: 100%;
+                margin-bottom: 10px;
+            }
             .canvas-wrapper { 
                 box-shadow: none !important; 
-                margin-top: 10px;
+                margin: 0 auto;
                 border: 2px solid var(--grid-color) !important;
+                transform: scale(1);
+                transform-origin: top center;
+                width: 660px; /* Force original scale width for print */
+                padding: 30px;
             }
             .header h1, .header p { display: block !important; }
             .specs-panel { 
                 display: grid !important; 
                 border: 1px solid var(--grid-color);
+                max-width: 100%;
+                margin-top: 15px;
+                background: transparent !important;
             }
+            .spec-item { page-break-inside: avoid; }
         }
     </style>
 </head>
