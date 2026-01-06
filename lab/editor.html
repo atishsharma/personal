@@ -4,42 +4,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cordyceps Lab Design - Pro v3.4</title>
+    <title>Cordyceps Lab Design Editor</title>
     <link rel="icon" type="image/png"
         href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <style>
         :root {
-            /* Dark Theme Variables */
             --bg-body: #0f172a;
             --bg-canvas: #1e293b;
             --bg-sidebar: #1e293b;
             --grid-color: #334155;
             --accent: #ff00ff;
-            /* Neon Pink */
             --text-primary: var(--accent);
             --text-secondary: #94a3b8;
             --rack-stroke: #64748b;
             --rack-fill: rgba(100, 116, 139, 0.1);
-            --water-color: #3b82f6;
-            --hood-color: #a855f7;
             --fan-color: #ef4444;
-            --blackout-color: #d946ef;
-            --ac-color: #ef4444;
             --wall-stroke: #cbd5e1;
             --humidifier-color: #3b82f6;
-            /* Blue */
-            --prep-outline: #000000;
-            --sidebar-border: #334155;
-
             --block-rack: #2563eb;
             --block-prep: #000000;
             --block-clean: #4a044e;
-            --block-water: #1e3a8a;
             --dimension-line: #ff00ff;
             --imprint-line: rgba(255, 0, 255, 0.4);
+            --text-block-bg: #ff00ff;
+            --text-block-color: #000000;
         }
 
-        /* Light Theme (Default) */
         body.light-theme {
             --bg-body: #f1f5f9;
             --bg-canvas: #ffffff;
@@ -50,9 +40,10 @@
             --sidebar-border: #e2e8f0;
             --wall-stroke: #1e293b;
             --rack-fill: rgba(241, 245, 249, 0.8);
-            --block-rack: #2563eb;
-            --dimension-line: #000000;
             --imprint-line: rgba(0, 0, 0, 0.3);
+            --dimension-line: #000;
+            --text-block-bg: #e2e8f0;
+            --text-block-color: #000000;
         }
 
         body {
@@ -75,7 +66,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin: 0 auto;
             box-sizing: border-box;
         }
 
@@ -106,15 +96,15 @@
             }
 
             .canvas-wrapper {
-                transform: scale(0.85);
-                margin: -30px 0;
+                transform: scale(0.8);
+                margin: -40px 0;
             }
         }
 
         .sidebar {
             width: 260px;
             background: var(--bg-sidebar);
-            border: 1px solid var(--sidebar-border);
+            border: 1px solid var(--grid-color);
             border-radius: 12px;
             padding: 15px;
             height: fit-content;
@@ -140,7 +130,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: 0.2s;
             color: var(--text-secondary);
             touch-action: none;
         }
@@ -215,6 +204,11 @@
             cursor: nwse-resize;
         }
 
+        .btn-edit {
+            fill: #3b82f6;
+            cursor: pointer;
+        }
+
         .rack {
             fill: var(--rack-fill);
             stroke: var(--rack-stroke);
@@ -235,7 +229,6 @@
         }
 
         .name-block {
-            stroke: none;
             rx: 3;
             ry: 3;
         }
@@ -250,17 +243,12 @@
             font-size: 6px;
             fill: var(--imprint-line);
             font-weight: 600;
-            cursor: default;
         }
 
         .imprint-del {
             fill: #ef4444;
             cursor: pointer;
             opacity: 0.4;
-        }
-
-        .imprint-del:hover {
-            opacity: 1;
         }
 
         .specs-panel {
@@ -292,7 +280,7 @@
         .controls {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .switch {
@@ -352,10 +340,6 @@
             transition: 0.2s;
         }
 
-        .btn-action:hover {
-            background: #475569;
-        }
-
         .btn-undo {
             width: 100%;
             padding: 12px;
@@ -366,18 +350,80 @@
             cursor: pointer;
             font-size: 0.75rem;
             font-weight: 600;
-            transition: 0.2s;
             margin-top: 10px;
-        }
-
-        .btn-undo:hover:not(:disabled) {
-            border-color: var(--accent);
-            color: var(--accent);
         }
 
         .btn-undo:disabled {
             opacity: 0.3;
             cursor: not-allowed;
+        }
+
+        /* Modal UI */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .modal-content {
+            background: var(--bg-sidebar);
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid var(--accent);
+            width: 350px;
+            box-shadow: 0 0 30px var(--accent);
+        }
+
+        .modal-content h2 {
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin: 0 0 15px 0;
+        }
+
+        .modal-input {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--text-secondary);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        /* ForeignObject Styling */
+        .svg-text-wrap {
+            color: var(--text-block-color);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px;
+            box-sizing: border-box;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         @media print {
@@ -408,7 +454,8 @@
             .controls,
             .ui-controls,
             .imprint-del,
-            #main-footer {
+            #main-footer,
+            .modal-overlay {
                 display: none !important;
             }
 
@@ -427,10 +474,6 @@
                 max-width: 740px !important;
             }
 
-            .header h1 {
-                font-size: 1.8rem !important;
-            }
-
             .canvas-wrapper {
                 margin: 0 !important;
                 border: none !important;
@@ -440,19 +483,13 @@
                 padding: 0 !important;
             }
 
-            svg#labDesigner {
-                width: 740px !important;
-                height: 380px !important;
-            }
-
             .specs-panel {
-                max-width: 740px;
+                max-width: 740px !important;
                 width: 740px !important;
                 margin: 5mm 0 0 0 !important;
                 padding: 10px !important;
                 background: none !important;
                 border: 1px solid #000 !important;
-                gap: 10px !important;
             }
 
             .print-footer {
@@ -463,8 +500,8 @@
                 font-weight: 800 !important;
                 color: black !important;
                 font-size: 11pt !important;
-                text-transform: uppercase !important;
-                letter-spacing: 0.1em !important;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
             }
 
             * {
@@ -483,20 +520,17 @@
     <div class="header">
         <div>
             <h1>Cordyceps Lab Design</h1>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan v3.4 (Triangle Humidifier)</p>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan (2 Inch Grid)</p>
         </div>
         <div class="controls">
             <button onclick="exportLayout()" class="btn-action">Export JSON</button>
             <button onclick="document.getElementById('importFile').click()" class="btn-action">Import JSON</button>
             <input type="file" id="importFile" style="display:none" accept="application/json"
                 onchange="importLayout(event)">
-
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">Theme</span>
-                <label class="switch">
-                    <input type="checkbox" id="themeToggle" checked>
-                    <span class="slider"></span>
-                </label>
+                <label class="switch"><input type="checkbox" id="themeToggle" checked><span
+                        class="slider"></span></label>
             </div>
             <button onclick="window.print()" class="btn-action" style="background: #334155;">Export PDF</button>
         </div>
@@ -508,7 +542,6 @@
             <div id="inventory" class="inventory-list"></div>
             <button id="undoBtn" class="btn-undo" disabled>Undo Last Action</button>
         </aside>
-
         <main class="canvas-area">
             <div class="canvas-wrapper">
                 <svg id="labDesigner" viewBox="0 0 740 380">
@@ -520,7 +553,6 @@
                             <path d="M 30 0 L 0 0 0 30" fill="none" stroke="var(--grid-color)" stroke-width="0.8" />
                         </pattern>
                     </defs>
-
                     <g id="structural-dims">
                         <line x1="40" y1="20" x2="700" y2="20" stroke="var(--accent)" stroke-width="1"
                             stroke-dasharray="2,2" />
@@ -531,12 +563,10 @@
                         <text x="15" y="190" class="label-text" style="fill: var(--accent); font-size: 10px;"
                             transform="rotate(-90 15 190)">10.0 ft Internal</text>
                     </g>
-
                     <rect x="40" y="40" width="660" height="300" fill="url(#grid)" />
                     <rect x="40" y="40" width="660" height="300" fill="url(#grid-major)" />
                     <rect x="40" y="40" width="660" height="300" class="wall"
                         style="stroke: var(--wall-stroke); stroke-width: 8; fill: none;" />
-
                     <g id="fixed-layer">
                         <g transform="translate(140, 40)">
                             <rect x="0" y="-4" width="90" height="8" fill="rgba(0,0,0,0.05)" />
@@ -544,7 +574,7 @@
                             <rect x="5" y="-14" width="80" height="14" fill="rgba(239, 68, 68, 0.2)"
                                 stroke="var(--fan-color)" stroke-width="2" />
                             <text x="45" y="-20" class="label-text"
-                                style="fill: var(--fan-color); font-size: 8px; text-anchor: middle;">Airtight Fan</text>
+                                style="fill: var(--fan-color); font-size: 8px;">Airtight Fan</text>
                         </g>
                         <g transform="translate(700, 130)">
                             <rect x="0" y="0" width="8" height="125" fill="var(--ac-color)" />
@@ -552,15 +582,25 @@
                                 transform="rotate(90 25 62)">Wall HVAC</text>
                         </g>
                     </g>
-
                     <g id="imprint-layer"></g>
                     <g id="interactive-layer" transform="translate(40, 40)"></g>
                 </svg>
             </div>
-
             <div class="specs-panel" id="specs"></div>
             <div class="print-footer">Property of Atish Ak Sharma</div>
         </main>
+    </div>
+
+    <!-- Edit Text Modal -->
+    <div id="textModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Edit Text Block</h2>
+            <textarea id="modalInput" class="modal-input" placeholder="Type your note here..."></textarea>
+            <div class="modal-btns">
+                <button onclick="closeModal()" class="btn-action" style="background:#475569">Cancel</button>
+                <button onclick="saveModalText()" class="btn-action">Save Changes</button>
+            </div>
+        </div>
     </div>
 
     <footer id="main-footer"
@@ -568,28 +608,13 @@
         OF ATISH AK SHARMA</footer>
 
     <script>
-        const svg = document.getElementById('labDesigner');
-        const interactiveLayer = document.getElementById('interactive-layer');
-        const imprintLayer = document.getElementById('imprint-layer');
-        const inventoryEl = document.getElementById('inventory');
-        const specsEl = document.getElementById('specs');
-        const themeToggle = document.getElementById('themeToggle');
-        const undoBtn = document.getElementById('undoBtn');
+        const svg = document.getElementById('labDesigner'), interactiveLayer = document.getElementById('interactive-layer');
+        const imprintLayer = document.getElementById('imprint-layer'), inventoryEl = document.getElementById('inventory');
+        const specsEl = document.getElementById('specs'), themeToggle = document.getElementById('themeToggle'), undoBtn = document.getElementById('undoBtn');
+        const textModal = document.getElementById('textModal'), modalInput = document.getElementById('modalInput');
 
-        const GRID = 30;
-        const SNAP = 5;
-        const OFFSET_X = 40;
-        const OFFSET_Y = 40;
-        const CANVAS_W = 660;
-        const CANVAS_H = 300;
-
-        let placedItems = [];
-        let history = [];
-        let hiddenImprints = new Set();
-        let activeAction = null;
-        let currentItem = null;
-        let startAngle = 0;
-        let startRotation = 0;
+        const GRID = 30, SNAP = 5, OFFSET_X = 40, OFFSET_Y = 40, CANVAS_W = 660, CANVAS_H = 300;
+        let placedItems = [], history = [], hiddenImprints = new Set(), activeAction = null, currentItem = null, startAngle = 0, startRotation = 0, editingItemUid = null;
 
         const library = [
             { id: 'rack_std', label: 'Std Rack', w: 2, h: 1, type: 'rack', blockColor: '#2563eb' },
@@ -601,7 +626,7 @@
             { id: 'sink', label: 'Sink', w: 2, h: 2, type: 'water', blockColor: '#1e40af' },
             { id: 'auto', label: 'Autoclave', r: 0.75, type: 'equip', blockColor: '#581c87' },
             { id: 'humid', label: 'Humidifier', w: 1.5, h: 1.5, type: 'humid', blockColor: '#3b82f6' },
-            { id: 'text', label: 'Text Block', w: 1, h: 0.5, type: 'text', isResizable: true, blockColor: '#ff00ff' }
+            { id: 'text', label: 'Text Block', w: 3, h: 1, type: 'text', isResizable: true, isEditable: true, blockColor: '#ff00ff' }
         ];
 
         function pushHistory() {
@@ -613,8 +638,7 @@
         function undo() {
             if (history.length === 0) return;
             const state = JSON.parse(history.pop());
-            placedItems = state.items;
-            hiddenImprints = new Set(state.hidden);
+            placedItems = state.items; hiddenImprints = new Set(state.hidden);
             if (history.length === 0) undoBtn.disabled = true;
             render();
         }
@@ -625,13 +649,7 @@
             library.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'inventory-item';
-                div.innerHTML = `
-                    <span>${item.label}</span> 
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="opacity:0.6">${item.w || (item.r * 2)}'x${item.h || (item.r * 2)}'</span>
-                        <div class="item-color-preview" style="background:${item.blockColor || 'transparent'};"></div>
-                    </div>
-                `;
+                div.innerHTML = `<span>${item.label}</span><div style="display:flex;align-items:center;gap:8px;"><span style="opacity:0.6">${item.w || (item.r * 2)}'x${item.h || (item.r * 2)}'</span><div class="item-color-preview" style="background:${item.blockColor || 'transparent'};"></div></div>`;
                 div.onclick = () => { pushHistory(); addItem(item); };
                 inventoryEl.appendChild(div);
             });
@@ -639,184 +657,128 @@
 
         function addItem(def) {
             const uid = 'uid-' + Math.random().toString(36).substr(2, 9);
-            const item = { ...def, uid, x: 150, y: 120, rot: 0, cw: def.w, ch: def.h };
-            placedItems.push(item);
-            render();
+            const item = { ...def, uid, x: 150, y: 120, rot: 0, cw: def.w, ch: def.h, customText: def.type === 'text' ? 'TAP TO EDIT NOTE' : '' };
+            placedItems.push(item); render();
         }
 
-        function removeItem(uid) {
-            pushHistory();
-            placedItems = placedItems.filter(i => i.uid !== uid);
-            render();
-        }
-
-        function toggleImprint(id) {
-            pushHistory();
-            if (hiddenImprints.has(id)) hiddenImprints.delete(id);
-            else hiddenImprints.add(id);
-            render();
-        }
+        function removeItem(uid) { pushHistory(); placedItems = placedItems.filter(i => i.uid !== uid); render(); }
+        function toggleImprint(id) { pushHistory(); if (hiddenImprints.has(id)) hiddenImprints.delete(id); else hiddenImprints.add(id); render(); }
 
         function render() {
-            interactiveLayer.innerHTML = '';
-            let rackCount = 0;
-
+            interactiveLayer.innerHTML = ''; let rackCount = 0;
             placedItems.forEach(item => {
                 const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 g.setAttribute("class", "placed-element");
-                const width = (item.cw || item.w || 1.5) * GRID;
-                const height = (item.ch || item.h || 1.5) * GRID;
-                const cx = width / 2;
-                const cy = height / 2;
+                const width = (item.cw || item.w || 1.5) * GRID, height = (item.ch || item.h || 1.5) * GRID, cx = width / 2, cy = height / 2;
                 g.setAttribute("transform", `translate(${item.x},${item.y}) rotate(${item.rot},${cx},${cy})`);
 
-                // Rendering Logic
                 if (item.type === 'rack') {
-                    rackCount++;
-                    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                    r.setAttribute("width", width); r.setAttribute("height", height);
-                    r.setAttribute("class", `rack ${item.isBlackout ? 'blackout' : ''}`);
-                    g.appendChild(r);
-                    addLabel(g, cx, cy, `R${rackCount}`, 'var(--block-rack)', true);
+                    rackCount++; const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                    r.setAttribute("width", width); r.setAttribute("height", height); r.setAttribute("class", `rack ${item.isBlackout ? 'blackout' : ''}`);
+                    g.appendChild(r); addLabel(g, cx, cy, `R${rackCount}`, 'var(--block-rack)', true);
                 } else if (item.type === 'prep') {
-                    const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                    r1.setAttribute("width", width); r1.setAttribute("height", height);
+                    const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect"); r1.setAttribute("width", width); r1.setAttribute("height", height);
                     r1.setAttribute("fill", "none"); r1.setAttribute("stroke", "var(--prep-outline)"); r1.setAttribute("stroke-width", "4");
-                    const r2 = r1.cloneNode(); r2.setAttribute("stroke-width", "1.5");
-                    g.appendChild(r1); g.appendChild(r2);
+                    const r2 = r1.cloneNode(); r2.setAttribute("stroke-width", "1.5"); g.appendChild(r1); g.appendChild(r2);
                     addLabel(g, cx, cy, "PREP", 'var(--block-prep)', false);
                 } else if (item.type === 'equip' || item.type === 'water') {
-                    const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                    r1.setAttribute("width", width); r1.setAttribute("height", height);
+                    const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect"); r1.setAttribute("width", width); r1.setAttribute("height", height);
                     r1.setAttribute("fill", "none"); r1.setAttribute("stroke", item.blockColor); r1.setAttribute("stroke-width", "4");
-                    const r2 = r1.cloneNode(); r2.setAttribute("stroke-width", "1.5");
-                    g.appendChild(r1); g.appendChild(r2);
+                    const r2 = r1.cloneNode(); r2.setAttribute("stroke-width", "1.5"); g.appendChild(r1); g.appendChild(r2);
                     addLabel(g, cx, cy, item.label, item.blockColor, false);
                 } else if (item.type === 'humid') {
-                    // Triangle Shape Humidifier
-                    const poly1 = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-                    const points = `0,${height} ${width / 2},0 ${width},${height}`;
-                    poly1.setAttribute("points", points);
-                    poly1.setAttribute("fill", "none"); poly1.setAttribute("stroke", "var(--humidifier-color)"); poly1.setAttribute("stroke-width", "4");
-                    const poly2 = poly1.cloneNode(); poly2.setAttribute("stroke-width", "1.5");
-                    g.appendChild(poly1); g.appendChild(poly2);
-                    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                    t.setAttribute("x", width / 2); t.setAttribute("y", height + 15);
+                    const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon"); poly.setAttribute("points", `0,${height} ${width / 2},0 ${width},${height}`);
+                    poly.setAttribute("fill", "none"); poly.setAttribute("stroke", "var(--humidifier-color)"); poly.setAttribute("stroke-width", "4");
+                    const poly2 = poly.cloneNode(); poly2.setAttribute("stroke-width", "1.5"); g.appendChild(poly); g.appendChild(poly2);
+                    const t = document.createElementNS("http://www.w3.org/2000/svg", "text"); t.setAttribute("x", width / 2); t.setAttribute("y", height + 15);
                     t.setAttribute("class", "label-text"); t.setAttribute("style", "fill: var(--humidifier-color); font-size: 8px; font-weight:800;");
                     t.textContent = "HUMIDIFIER"; g.appendChild(t);
                 } else if (item.type === 'text') {
-                    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-                    r.setAttribute("width", width); r.setAttribute("height", height);
-                    r.setAttribute("fill", "rgba(255,0,255,0.05)"); r.setAttribute("stroke", "var(--accent)"); r.setAttribute("stroke-dasharray", "2");
+                    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect"); r.setAttribute("width", width); r.setAttribute("height", height);
+                    r.setAttribute("fill", "var(--text-block-bg)"); r.setAttribute("stroke", "var(--accent)"); r.setAttribute("stroke-width", "1");
                     g.appendChild(r);
-                    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                    t.setAttribute("x", cx); t.setAttribute("y", cy + 3);
-                    t.setAttribute("class", "label-text"); t.style.fill = "var(--accent)"; t.textContent = "NOTE";
-                    g.appendChild(t);
+
+                    const fo = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+                    fo.setAttribute("width", width); fo.setAttribute("height", height);
+                    const div = document.createElement("div");
+                    div.className = "svg-text-wrap";
+                    div.textContent = item.customText || "";
+                    fo.appendChild(div);
+                    g.appendChild(fo);
                 }
 
-                // UI Controls
-                const ui = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                ui.setAttribute("class", "ui-controls");
-
-                const del = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                del.setAttribute("cx", 0); del.setAttribute("cy", 0); del.setAttribute("r", 15);
-                del.setAttribute("class", "btn-del");
-                del.onclick = (e) => { e.stopPropagation(); removeItem(item.uid); };
-                del.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); removeItem(item.uid); }, { passive: false });
-
-                const delX = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                delX.setAttribute("x", 0); delX.setAttribute("y", 6); delX.setAttribute("style", "fill:white; font-size:18px; font-weight:bold; text-anchor:middle; pointer-events:none;");
-                delX.textContent = "×";
-
-                const rot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                rot.setAttribute("cx", width); rot.setAttribute("cy", 0); rot.setAttribute("r", 15);
-                rot.setAttribute("class", "btn-rot");
-                rot.onmousedown = (e) => { e.stopPropagation(); startAction(e, item, 'rotate'); };
-                rot.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); startAction(e, item, 'rotate'); }, { passive: false });
-
-                ui.appendChild(del); ui.appendChild(delX); ui.appendChild(rot);
-                if (item.isResizable) {
-                    const res = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                    res.setAttribute("cx", width); res.setAttribute("cy", height); res.setAttribute("r", 15);
-                    res.setAttribute("class", "btn-resize");
-                    res.onmousedown = (e) => { e.stopPropagation(); startAction(e, item, 'resize'); };
-                    res.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); startAction(e, item, 'resize'); }, { passive: false });
-                    ui.appendChild(res);
-                }
+                const ui = document.createElementNS("http://www.w3.org/2000/svg", "g"); ui.setAttribute("class", "ui-controls");
+                const del = createControl(0, 0, 15, "btn-del", "×", (e) => { e.stopPropagation(); removeItem(item.uid); });
+                const rot = createControl(width, 0, 15, "btn-rot", "⟳", (e) => { e.stopPropagation(); startAction(e, item, 'rotate'); });
+                ui.appendChild(del); ui.appendChild(rot);
+                if (item.isResizable) ui.appendChild(createControl(width, height, 15, "btn-resize", "↘", (e) => { e.stopPropagation(); startAction(e, item, 'resize'); }));
+                if (item.isEditable) ui.appendChild(createControl(0, height, 15, "btn-edit", "✎", (e) => { e.stopPropagation(); openEditModal(item); }));
 
                 g.appendChild(ui);
                 g.onmousedown = (e) => { if (e.target.tagName !== 'circle') startAction(e, item, 'drag'); };
                 g.addEventListener('touchstart', (e) => { if (e.target.tagName !== 'circle') startAction(e, item, 'drag'); }, { passive: false });
-
                 interactiveLayer.appendChild(g);
             });
+            updateSpecs(); renderImprints();
+        }
 
-            updateSpecs();
-            renderImprints();
+        function createControl(x, y, r, cls, char, callback) {
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            c.setAttribute("cx", x); c.setAttribute("cy", y); c.setAttribute("r", r); c.setAttribute("class", cls);
+            c.onclick = callback; c.ontouchstart = (e) => { e.preventDefault(); callback(e); };
+            const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            t.setAttribute("x", x); t.setAttribute("y", y + (char === '×' ? 6 : 4));
+            t.setAttribute("style", `fill:white; font-size:${char === '×' ? '18' : '12'}px; font-weight:bold; text-anchor:middle; pointer-events:none;`);
+            t.textContent = char; g.appendChild(c); g.appendChild(t); return g;
         }
 
         function addLabel(parent, x, y, text, color, isSmall) {
-            const group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
             const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-            t.setAttribute("x", x); t.setAttribute("y", y + 3);
-            t.setAttribute("class", "label-text");
-            if (isSmall) t.style.fontSize = "6px";
-            t.textContent = text;
-            const w = isSmall ? 22 : text.length * 6 + 10;
-            const h = isSmall ? 10 : 14;
+            t.setAttribute("x", x); t.setAttribute("y", y + 3); t.setAttribute("class", "label-text");
+            if (isSmall) t.style.fontSize = "6px"; t.textContent = text;
+            const w = isSmall ? 22 : text.length * 6 + 10, h = isSmall ? 10 : 14;
             const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-            r.setAttribute("x", x - w / 2); r.setAttribute("y", y - h / 2 + 1);
-            r.setAttribute("width", w); r.setAttribute("height", h);
+            r.setAttribute("x", x - w / 2); r.setAttribute("y", y - h / 2 + 1); r.setAttribute("width", w); r.setAttribute("height", h);
             r.setAttribute("class", "name-block"); r.setAttribute("fill", color);
-            group.appendChild(r); group.appendChild(t); parent.appendChild(group);
+            g.appendChild(r); g.appendChild(t); parent.appendChild(g);
+        }
+
+        function openEditModal(item) { editingItemUid = item.uid; modalInput.value = item.customText || ''; textModal.style.display = 'flex'; modalInput.focus(); }
+        function closeModal() { textModal.style.display = 'none'; editingItemUid = null; }
+        function saveModalText() {
+            if (editingItemUid) {
+                pushHistory();
+                const item = placedItems.find(i => i.uid === editingItemUid);
+                if (item) item.customText = modalInput.value;
+                render();
+            }
+            closeModal();
         }
 
         function getCoords(e) {
             const CTM = svg.getScreenCTM();
-            let clientX, clientY;
-            if (e.touches && e.touches.length > 0) {
-                clientX = e.touches[0].clientX; clientY = e.touches[0].clientY;
-            } else {
-                clientX = e.clientX; clientY = e.clientY;
-            }
-            return { x: (clientX - CTM.e) / CTM.a, y: (clientY - CTM.f) / CTM.d };
+            let cX = e.touches ? e.touches[0].clientX : e.clientX, cY = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: (cX - CTM.e) / CTM.a, y: (cY - CTM.f) / CTM.d };
         }
 
         function startAction(e, item, type) {
-            if (e.cancelable) e.preventDefault();
-            pushHistory();
-            activeAction = type;
-            currentItem = item;
-            const pt = getCoords(e);
-            if (type === 'drag') {
-                item.ox = pt.x - item.x - OFFSET_X;
-                item.oy = pt.y - item.y - OFFSET_Y;
-            } else if (type === 'rotate') {
+            if (e.cancelable) e.preventDefault(); pushHistory(); activeAction = type; currentItem = item; const pt = getCoords(e);
+            if (type === 'drag') { item.ox = pt.x - item.x - OFFSET_X; item.oy = pt.y - item.y - OFFSET_Y; }
+            else if (type === 'rotate') {
                 const cx = item.x + OFFSET_X + ((item.cw || item.w || 1.5) * GRID / 2);
                 const cy = item.y + OFFSET_Y + ((item.ch || item.h || 1.5) * GRID / 2);
-                startAngle = Math.atan2(pt.y - cy, pt.x - cx);
-                startRotation = item.rot;
+                startAngle = Math.atan2(pt.y - cy, pt.x - cx); startRotation = item.rot;
             }
-            const moveHandler = (m) => handleMove(m);
-            const endHandler = () => {
-                window.removeEventListener('mousemove', moveHandler); window.removeEventListener('touchmove', moveHandler);
-                window.removeEventListener('mouseup', endHandler); window.removeEventListener('touchend', endHandler);
-                activeAction = null; currentItem = null; render();
-            };
-            window.addEventListener('mousemove', moveHandler);
-            window.addEventListener('touchmove', moveHandler, { passive: false });
-            window.addEventListener('mouseup', endHandler);
-            window.addEventListener('touchend', endHandler);
+            const moveH = (m) => handleMove(m), endH = () => { window.removeEventListener('mousemove', moveH); window.removeEventListener('touchmove', moveH); window.removeEventListener('mouseup', endH); window.removeEventListener('touchend', endH); activeAction = null; currentItem = null; render(); };
+            window.addEventListener('mousemove', moveH); window.addEventListener('touchmove', moveH, { passive: false }); window.addEventListener('mouseup', endH); window.addEventListener('touchend', endH);
         }
 
         function handleMove(e) {
-            if (!currentItem) return;
-            if (e.cancelable) e.preventDefault();
-            const pt = getCoords(e);
+            if (!currentItem) return; if (e.cancelable) e.preventDefault(); const pt = getCoords(e);
             if (activeAction === 'drag') {
-                let nx = Math.round((pt.x - currentItem.ox - OFFSET_X) / SNAP) * SNAP;
-                let ny = Math.round((pt.y - currentItem.oy - OFFSET_Y) / SNAP) * SNAP;
+                let nx = Math.round((pt.x - currentItem.ox - OFFSET_X) / SNAP) * SNAP, ny = Math.round((pt.y - currentItem.oy - OFFSET_Y) / SNAP) * SNAP;
                 currentItem.x = Math.max(0, Math.min(nx, CANVAS_W - (currentItem.cw || currentItem.w || 1.5) * GRID));
                 currentItem.y = Math.max(0, Math.min(ny, CANVAS_H - (currentItem.ch || currentItem.h || 1.5) * GRID));
             } else if (activeAction === 'rotate') {
@@ -825,8 +787,7 @@
                 const angle = Math.atan2(pt.y - cy, pt.x - cx);
                 currentItem.rot = Math.round((startRotation + (angle - startAngle) * 180 / Math.PI) / 45) * 45;
             } else if (activeAction === 'resize') {
-                currentItem.cw = Math.max(0.2, (pt.x - currentItem.x - OFFSET_X) / GRID);
-                currentItem.ch = Math.max(0.2, (pt.y - currentItem.y - OFFSET_Y) / GRID);
+                currentItem.cw = Math.max(0.5, (pt.x - currentItem.x - OFFSET_X) / GRID); currentItem.ch = Math.max(0.5, (pt.y - currentItem.y - OFFSET_Y) / GRID);
             }
             render();
         }
@@ -834,49 +795,24 @@
         function renderImprints() {
             imprintLayer.innerHTML = '';
             placedItems.forEach(item => {
-                const w = (item.cw || item.w || 1.5) * GRID;
-                const h = (item.ch || item.h || 1.5) * GRID;
-                const ix = item.x + OFFSET_X;
-                const iy = item.y + OFFSET_Y;
+                const w = (item.cw || item.w || 1.5) * GRID, h = (item.ch || item.h || 1.5) * GRID, ix = item.x + OFFSET_X, iy = item.y + OFFSET_Y;
                 let close = { t: OFFSET_Y, b: OFFSET_Y + CANVAS_H, l: OFFSET_X, r: OFFSET_X + CANVAS_W };
-
                 placedItems.forEach(o => {
                     if (o.uid === item.uid) return;
-                    const ow = (o.cw || o.w || 1.5) * GRID;
-                    const oh = (o.ch || o.h || 1.5) * GRID;
-                    const ox = o.x + OFFSET_X; const oy = o.y + OFFSET_Y;
-                    if (ix < ox + ow && ix + w > ox) {
-                        if (oy + oh <= iy && oy + oh > close.t) close.t = oy + oh;
-                        if (oy >= iy + h && oy < close.b) close.b = oy;
-                    }
-                    if (iy < oy + oh && iy + h > oy) {
-                        if (ox + ow <= ix && ox + ow > close.l) close.l = ox + ow;
-                        if (ox >= ix + w && ox < close.r) close.r = ox;
-                    }
+                    const ow = (o.cw || o.w || 1.5) * GRID, oh = (o.ch || o.h || 1.5) * GRID, ox = o.x + OFFSET_X, oy = o.y + OFFSET_Y;
+                    if (ix < ox + ow && ix + w > ox) { if (oy + oh <= iy && oy + oh > close.t) close.t = oy + oh; if (oy >= iy + h && oy < close.b) close.b = oy; }
+                    if (iy < oy + oh && iy + h > oy) { if (ox + ow <= ix && ox + ow > close.l) close.l = ox + ow; if (ox >= ix + w && ox < close.r) close.r = ox; }
                 });
-
-                const dirs = [{ d: (iy - close.t) / GRID, p: [ix + w / 2, close.t, ix + w / 2, iy], id: 't' },
-                { d: (close.b - (iy + h)) / GRID, p: [ix + w / 2, iy + h, ix + w / 2, close.b], id: 'b' },
-                { d: (ix - close.l) / GRID, p: [close.l, iy + h / 2, ix, iy + h / 2], id: 'l' },
-                { d: (close.r - (ix + w)) / GRID, p: [ix + w, iy + h / 2, close.r, iy + h / 2], id: 'r' }];
-
-                dirs.forEach(dir => {
+                [{ d: (iy - close.t) / GRID, p: [ix + w / 2, close.t, ix + w / 2, iy], id: 't' }, { d: (close.b - (iy + h)) / GRID, p: [ix + w / 2, iy + h, ix + w / 2, close.b], id: 'b' }, { d: (ix - close.l) / GRID, p: [close.l, iy + h / 2, ix, iy + h / 2], id: 'l' }, { d: (close.r - (ix + w)) / GRID, p: [ix + w, iy + h / 2, close.r, iy + h / 2], id: 'r' }].forEach(dir => {
                     if (dir.d > 0.1 && !hiddenImprints.has(`${item.uid}-${dir.id}`)) {
-                        const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-                        const l = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                        l.setAttribute("x1", dir.p[0]); l.setAttribute("y1", dir.p[1]); l.setAttribute("x2", dir.p[2]); l.setAttribute("y2", dir.p[3]);
-                        l.setAttribute("class", "imprint-line");
+                        const g = document.createElementNS("http://www.w3.org/2000/svg", "g"), l = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        l.setAttribute("x1", dir.p[0]); l.setAttribute("y1", dir.p[1]); l.setAttribute("x2", dir.p[2]); l.setAttribute("y2", dir.p[3]); l.setAttribute("class", "imprint-line");
                         const mx = (dir.p[0] + dir.p[2]) / 2, my = (dir.p[1] + dir.p[3]) / 2;
-                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                        t.setAttribute("x", mx + 3); t.setAttribute("y", my + 2); t.setAttribute("class", "imprint-text");
-                        t.textContent = `${dir.d.toFixed(1)}'`;
-                        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                        c.setAttribute("cx", mx - 4); c.setAttribute("cy", my - 1); c.setAttribute("r", 7);
-                        c.setAttribute("class", "imprint-del");
+                        const t = document.createElementNS("http://www.w3.org/2000/svg", "text"); t.setAttribute("x", mx + 3); t.setAttribute("y", my + 2); t.setAttribute("class", "imprint-text"); t.textContent = `${dir.d.toFixed(1)}'`;
+                        const c = document.createElementNS("http://www.w3.org/2000/svg", "circle"); c.setAttribute("cx", mx - 4); c.setAttribute("cy", my - 1); c.setAttribute("r", 7); c.setAttribute("class", "imprint-del");
                         c.onclick = () => toggleImprint(`${item.uid}-${dir.id}`);
                         c.addEventListener('touchstart', (e) => { e.stopPropagation(); toggleImprint(`${item.uid}-${dir.id}`); });
-                        const tx = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                        tx.setAttribute("x", mx - 4); tx.setAttribute("y", my + 1); tx.setAttribute("style", "fill:white; font-size:6px; font-weight:bold; text-anchor:middle; pointer-events:none;"); tx.textContent = "×";
+                        const tx = document.createElementNS("http://www.w3.org/2000/svg", "text"); tx.setAttribute("x", mx - 4); tx.setAttribute("y", my + 1); tx.setAttribute("style", "fill:white; font-size:6px; font-weight:bold; text-anchor:middle; pointer-events:none;"); tx.textContent = "×";
                         g.appendChild(l); g.appendChild(t); g.appendChild(c); g.appendChild(tx); imprintLayer.appendChild(g);
                     }
                 });
@@ -888,35 +824,27 @@
             specsEl.innerHTML = `
                 <div class="spec-item"><strong>GROW AREA</strong><span class="spec-value">Std Racks: ${counts['Std Rack'] || 0} (2x1')<br>Blackout: ${counts['Blackout Rack'] || 0} (2x1')</span></div>
                 <div class="spec-item"><strong>PROCESSING</strong><span class="spec-value">Prep: ${counts['Prep Station'] || 0} (4x2.5')<br>Flow: ${counts['Flow Hood'] || 0} (2x4')<br>Fridge/Sink: ${(counts['Fridge'] || 0) + (counts['Sink'] || 0)} (2x2')</span></div>
-                <div class="spec-item"><strong>UTILITIES</strong><span class="spec-value">Humidifier: ${counts['Humidifier'] || 0} (1.5x1.5')<br>Auto: ${counts['Autoclave'] || 0} (1.5' Rad)</span></div>
+                <div class="spec-item"><strong>UTILITIES</strong><span class="spec-value">Humidifier: ${counts['Humidifier'] || 0}<br>Auto: ${counts['Autoclave'] || 0}</span></div>
             `;
         }
 
         function exportLayout() {
-            const data = JSON.stringify({ items: placedItems, hidden: Array.from(hiddenImprints) });
-            const blob = new Blob([data], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'cordyceps_lab_layout.json'; a.click();
+            const blob = new Blob([JSON.stringify({ items: placedItems, hidden: Array.from(hiddenImprints) })], { type: 'application/json' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'cordyceps_lab.json'; a.click();
         }
 
         function importLayout(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                try {
-                    const data = JSON.parse(ev.target.result);
-                    pushHistory();
-                    placedItems = data.items;
-                    hiddenImprints = new Set(data.hidden);
-                    render();
-                } catch (err) { alert('Invalid layout file'); }
-            };
-            reader.readAsText(file);
+            const f = e.target.files[0]; if (!f) return;
+            const r = new FileReader(); r.onload = (ev) => {
+                try { const d = JSON.parse(ev.target.result); pushHistory(); placedItems = d.items; hiddenImprints = new Set(d.hidden); render(); } catch (err) { alert('Invalid file'); }
+            }; r.readAsText(f);
         }
 
-        themeToggle.onchange = () => document.body.classList.toggle('light-theme', themeToggle.checked);
+        themeToggle.onchange = () => {
+            document.body.classList.toggle('light-theme', themeToggle.checked);
+            render(); // Refresh colors
+        };
+
         window.onload = () => { initInventory(); render(); };
     </script>
 </body>
