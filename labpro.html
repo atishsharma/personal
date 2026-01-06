@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Cordyceps Lab Visualization</title>
+    <title>My 3D Cordyceps Lab</title>
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <style>
         body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; transition: background-color 0.5s; }
         
@@ -45,63 +47,103 @@
         .legend-item { display: flex; align-items: center; margin-bottom: 5px; font-size: 0.85rem; }
         .color-box { width: 12px; height: 12px; margin-right: 10px; border-radius: 2px; }
         
-        /* UI Control Group (Top Right) */
-        #ui-controls {
-            position: absolute; 
-            top: 20px; 
+        /* Hamburger Menu & Controls */
+        #menu-container {
+            position: absolute;
+            top: 20px;
             right: 20px;
-            z-index: 10;
+            z-index: 20;
             display: flex;
             flex-direction: column;
-            gap: 8px;
             align-items: flex-end;
         }
+
+        #hamburger {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #444;
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        #hamburger:hover { background: #333; }
+
+        #menu-content {
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #444;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            gap: 12px;
+            min-width: 200px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            transform-origin: top right;
+            animation: slideIn 0.2s ease-out;
+        }
         
+        #menu-content.open { display: flex; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .menu-label {
+            font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: -5px;
+        }
+
         .btn {
             background: #2563eb; color: white; border: none;
-            padding: 10px 16px; border-radius: 8px; cursor: pointer;
-            font-weight: 600; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: all 0.2s;
-            font-size: 0.9rem;
-            min-width: 140px;
-            text-align: center;
+            padding: 10px 16px; border-radius: 6px; cursor: pointer;
+            font-weight: 600; font-size: 0.9rem;
+            transition: all 0.2s; width: 100%; text-align: left;
+            display: flex; align-items: center; justify-content: space-between;
         }
-        .btn:hover { background: #1d4ed8; transform: translateY(-1px); }
-        .btn:active { transform: translateY(0); }
+        .btn:hover { background: #1d4ed8; }
         
         .btn.night { background: #7c3aed; }
         .btn.night:hover { background: #6d28d9; }
         
-        .btn.secondary { background: #4b5563; }
-        .btn.secondary:hover { background: #374151; }
+        .btn.secondary { background: #374151; }
+        .btn.secondary:hover { background: #4b5563; }
         
-        .btn.hidden-walls { background: #ea580c; }
-        .btn.hidden-walls:hover { background: #c2410c; }
+        .btn.undo { background: #ea580c; opacity: 0.5; pointer-events: none; }
+        .btn.undo.active { opacity: 1; pointer-events: auto; }
+        .btn.undo:hover { background: #c2410c; }
 
         /* Light Color Controls */
         .light-controls {
             display: flex;
-            gap: 5px;
-            background: rgba(0,0,0,0.5);
-            padding: 5px;
-            border-radius: 8px;
-            margin-top: 5px;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px;
+            border-radius: 6px;
+            justify-content: center;
         }
         .color-btn {
-            width: 30px; height: 30px;
+            width: 32px; height: 32px;
             border-radius: 50%;
             border: 2px solid transparent;
             cursor: pointer;
-            transition: transform 0.2s, border-color 0.2s;
+            transition: transform 0.2s;
         }
         .color-btn:hover { transform: scale(1.1); }
-        .color-btn.active { border-color: white; transform: scale(1.1); box-shadow: 0 0 8px white; }
+        .color-btn.active { border-color: white; box-shadow: 0 0 8px white; }
 
         /* Mobile Adjustments */
         @media (max-width: 600px) {
-            #info { top: 10px; left: 10px; right: 10px; max-width: none; font-size: 0.8rem; }
-            #ui-controls { top: auto; bottom: 60px; right: 10px; }
-            .btn { padding: 12px 20px; font-size: 1rem; }
+            #info { top: 10px; left: 10px; right: 60px; max-width: none; font-size: 0.8rem; }
+            #menu-container { top: 10px; right: 10px; }
             .controls { display: none; } 
         }
 
@@ -116,19 +158,11 @@
             background: rgba(0,0,0,0.8); padding: 20px; border-radius: 10px;
             pointer-events: none; z-index: 20;
         }
-        
-        #wall-tip {
-            position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-            background: rgba(0,0,0,0.6); color: #ddd;
-            padding: 5px 10px; border-radius: 4px; font-size: 0.8rem;
-            pointer-events: none;
-            white-space: nowrap;
-        }
     </style>
 </head>
 <body>
 
-    <div id="loading">Installing Sink Lighting...</div>
+    <div id="loading">Fabricating Blackout Cloth...</div>
 
     <div id="info">
         <div class="header-row">
@@ -144,26 +178,34 @@
             <p style="font-size: 0.8rem; line-height: 1.4; color: #ccc; margin:0;">
                 <strong>Jars on Racks:</strong> ~1,944<br>
                 <strong>Table Jars:</strong> 10 units<br>
-                <strong>Walls:</strong> 3" Black ACC Block<br>
+                <strong>Walls:</strong> 3" Brick (Dual Tone)<br>
                 <strong>Table:</strong> Black(Day)/White(Night)
             </p>
         </div>
     </div>
 
-    <div id="ui-controls">
-        <button id="themeBtn" class="btn" onclick="toggleTheme()">Switch to Night Mode</button>
-        <div class="light-controls">
-            <button class="color-btn active" style="background: #d946ef;" onclick="setLightColor('purple')" title="Purple Spectrum"></button>
-            <button class="color-btn" style="background: #fcd34d;" onclick="setLightColor('warm')" title="Full Spectrum (Warm)"></button>
-            <button class="color-btn" style="background: #e0f2fe;" onclick="setLightColor('cool')" title="Cool White"></button>
+    <div id="menu-container">
+        <button id="hamburger" onclick="toggleMenu()">☰</button>
+        <div id="menu-content">
+            <span class="menu-label">Lighting</span>
+            <button id="themeBtn" class="btn" onclick="toggleTheme()">Switch to Night Mode</button>
+            
+            <span class="menu-label">Grow Spectrum</span>
+            <div class="light-controls">
+                <button class="color-btn active" style="background: #d946ef;" onclick="setLightColor('purple')" title="Purple"></button>
+                <button class="color-btn" style="background: #fcd34d;" onclick="setLightColor('warm')" title="Warm"></button>
+                <button class="color-btn" style="background: #e0f2fe;" onclick="setLightColor('cool')" title="Cool"></button>
+            </div>
+
+            <span class="menu-label">Visibility</span>
+            <button id="clothBtn" class="btn secondary" onclick="toggleCloth()">Blackout Top Row</button>
+            <button id="wallBtn" class="btn secondary" onclick="toggleWalls()">Hide All Walls</button>
+            <button id="undoBtn" class="btn undo" onclick="undoHide()">Undo Hide <span>(0)</span></button>
         </div>
-        <button id="wallBtn" class="btn secondary" onclick="toggleWalls()">Hide Walls</button>
     </div>
-    
-    <div id="wall-tip">Tip: Click specific walls to hide them individually</div>
 
     <div class="controls">
-        Left Click: Rotate | Right Click: Pan | Scroll: Zoom | Click Wall: Hide
+        Left Click: Rotate | Right Click: Pan | Scroll: Zoom | Long Press Object: Hide
     </div>
 
     <!-- Three.js Dependencies -->
@@ -174,13 +216,28 @@
         // --- UI LOGIC ---
         let isNight = false;
         let areWallsVisible = true;
+        let isClothActive = false;
         let currentLightColor = { hex: 0xd946ef, name: 'purple' };
+        let isMenuOpen = false;
 
         function toggleInfo() {
             const info = document.getElementById('info');
             const btn = document.getElementById('minBtn');
             info.classList.toggle('collapsed');
             btn.textContent = info.classList.contains('collapsed') ? '+' : '-';
+        }
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            const menu = document.getElementById('menu-content');
+            const btn = document.getElementById('hamburger');
+            if(isMenuOpen) {
+                menu.classList.add('open');
+                btn.textContent = '✕';
+            } else {
+                menu.classList.remove('open');
+                btn.textContent = '☰';
+            }
         }
 
         // --- CONFIGURATION ---
@@ -210,32 +267,95 @@
         controls.dampingFactor = 0.05;
         controls.maxPolarAngle = Math.PI / 2 - 0.05;
 
-        // --- INTERACTION ---
+        // --- INTERACTION: LONG PRESS TO HIDE ---
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
-        const walls = []; 
+        let pressTimer;
+        let isDragging = false;
+        const hiddenStack = [];
+        const LONG_PRESS_DURATION = 500; // ms
+
+        // We raycast against everything in the scene except helpers
+        const walls = []; // Kept for "Hide All Walls" toggle
 
         window.addEventListener('pointerdown', (event) => {
             if(event.button !== 0) return;
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(walls);
-            if (intersects.length > 0) {
-                const wall = intersects[0].object;
-                wall.visible = false;
-            }
+            isDragging = false;
+            
+            // Start Long Press Timer
+            pressTimer = setTimeout(() => {
+                if(!isDragging) {
+                    performHide(event.clientX, event.clientY);
+                }
+            }, LONG_PRESS_DURATION);
         });
+
+        window.addEventListener('pointermove', () => {
+            isDragging = true;
+            clearTimeout(pressTimer); // Cancel if moving
+        });
+
+        window.addEventListener('pointerup', () => {
+            clearTimeout(pressTimer); // Cancel if released early
+        });
+
+        function performHide(x, y) {
+            mouse.x = (x / window.innerWidth) * 2 - 1;
+            mouse.y = -(y / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            
+            // Intersect everything
+            const intersects = raycaster.intersectObjects(scene.children, true);
+            
+            if (intersects.length > 0) {
+                let target = intersects[0].object;
+                let parent = target.parent;
+                while(parent && parent.type !== 'Scene') {
+                    if(parent.userData.isInteractableGroup) {
+                        target = parent;
+                        break;
+                    }
+                    parent = parent.parent;
+                }
+
+                if(target.visible) {
+                    target.visible = false;
+                    hiddenStack.push(target);
+                    updateUndoBtn();
+                }
+            }
+        }
+
+        function undoHide() {
+            if(hiddenStack.length > 0) {
+                const obj = hiddenStack.pop();
+                obj.visible = true;
+                updateUndoBtn();
+            }
+        }
+
+        function updateUndoBtn() {
+            const btn = document.getElementById('undoBtn');
+            const count = hiddenStack.length;
+            btn.querySelector('span').textContent = `(${count})`;
+            if(count > 0) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
 
         function toggleWalls() {
             areWallsVisible = !areWallsVisible;
             const btn = document.getElementById('wallBtn');
-            walls.forEach(wall => wall.visible = areWallsVisible);
+            walls.forEach(wall => {
+                wall.visible = areWallsVisible;
+            });
             if (areWallsVisible) {
-                btn.textContent = "Hide Walls";
+                btn.textContent = "Hide All Walls";
                 btn.classList.remove('hidden-walls');
             } else {
-                btn.textContent = "Show Walls";
+                btn.textContent = "Show All Walls";
                 btn.classList.add('hidden-walls');
             }
         }
@@ -256,6 +376,7 @@
         scene.add(prepLight);
 
         const rackLights = [];
+        const topRowLights = []; // Separate array for blackout row
         const floorLights = [];
         let hoodLight; 
         
@@ -270,37 +391,46 @@
             const canvas = document.createElement('canvas');
             canvas.width = 512; canvas.height = 512;
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, 512, 512);
+            ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, 512, 512);
             ctx.fillStyle = '#cccccc'; 
             const size = 128;
-            for(let y=0; y<4; y++) {
-                for(let x=0; x<4; x++) {
-                    if((x+y)%2 === 1) ctx.fillRect(x*size, y*size, size, size);
-                }
-            }
+            for(let y=0; y<4; y++) for(let x=0; x<4; x++) if((x+y)%2 === 1) ctx.fillRect(x*size, y*size, size, size);
             const tex = new THREE.CanvasTexture(canvas);
-            tex.wrapS = THREE.RepeatWrapping;
-            tex.wrapT = THREE.RepeatWrapping;
+            tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
             tex.repeat.set(ROOM_WIDTH/4, ROOM_DEPTH/4); 
             return tex;
         }
 
-        const wallMat = new THREE.MeshStandardMaterial({ 
-            color: 0x222222, 
-            side: THREE.DoubleSide, 
-            roughness: 0.9 
-        });
-        
-        const floorMat = new THREE.MeshStandardMaterial({ 
-            map: createCheckerboardTexture(),
-            roughness: 0.4 
-        });
-        
+        function createBrickTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#888888'; 
+            ctx.fillRect(0, 0, 512, 512);
+            const rows = 16; const cols = 8;
+            const brickH = 512/rows; const brickW = 512/cols; const mortar = 4;
+            for(let r=0; r<rows; r++) {
+                const offset = (r%2) * (brickW/2);
+                for(let c=-1; c<cols+1; c++) {
+                    ctx.fillStyle = (r+c)%2 === 0 ? '#2f3542' : '#222222';
+                    const x = c * brickW + offset + mortar/2;
+                    const y = r * brickH + mortar/2;
+                    const w = brickW - mortar; const h = brickH - mortar;
+                    ctx.fillRect(x, y, w, h);
+                }
+            }
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.wrapS = THREE.RepeatWrapping; tex.wrapT = THREE.RepeatWrapping;
+            tex.repeat.set(2, 1); 
+            return tex;
+        }
+
+        const wallMat = new THREE.MeshStandardMaterial({ map: createBrickTexture(), side: THREE.DoubleSide, roughness: 0.9, bumpMap: createBrickTexture(), bumpScale: 0.02 });
+        const floorMat = new THREE.MeshStandardMaterial({ map: createCheckerboardTexture(), roughness: 0.4 });
         const rackMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.6, roughness: 0.2 });
         const rackLegMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.6, roughness: 0.2 });
         const tableMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0 });
-        const workTableMat = new THREE.MeshStandardMaterial({ color: 0x111111 }); // Black Default (Day)
+        const workTableMat = new THREE.MeshStandardMaterial({ color: 0x111111 }); 
         const hoodMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
         const sinkMat = new THREE.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.5 });
         const acMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
@@ -310,28 +440,15 @@
         const applianceMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.3, roughness: 0.2 });
         const dehydratorMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.1, roughness: 0.8 });
         
-        const growLightMat = new THREE.MeshStandardMaterial({ 
-            color: 0x222222, 
-            emissive: currentLightColor.hex, 
-            emissiveIntensity: 0.5 
-        });
-
-        const floorStripMat = new THREE.MeshStandardMaterial({
-            color: 0x00ffff,
-            emissive: 0x00ffff,
-            emissiveIntensity: 0
-        });
-
-        const hoodInteriorMat = new THREE.MeshStandardMaterial({
-            color: 0xeeeeee,
-            emissive: 0x00ffff, 
-            emissiveIntensity: 0
-        });
-
-        // Props Materials
+        const growLightMat = new THREE.MeshStandardMaterial({ color: 0x222222, emissive: currentLightColor.hex, emissiveIntensity: 0.5 });
+        const floorStripMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, emissiveIntensity: 0 });
+        const hoodInteriorMat = new THREE.MeshStandardMaterial({ color: 0xeeeeee, emissive: 0x00ffff, emissiveIntensity: 0 });
         const glassMat = new THREE.MeshStandardMaterial({ color: 0xa5f3fc, transparent: true, opacity: 0.4, metalness: 0.9, roughness: 0.1 });
         const gloveMat = new THREE.MeshStandardMaterial({ color: 0x3b82f6 });
-        const coatMat = new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide }); // White Coat
+        const coatMat = new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+        
+        // Velvet Cloth Material
+        const clothMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 1.0, side: THREE.DoubleSide });
 
         // --- LIGHT COLOR CONTROLS ---
         window.setLightColor = function(type) {
@@ -345,10 +462,30 @@
             
             growLightMat.emissive.setHex(hex);
             rackLights.forEach(light => light.color.setHex(hex));
+            topRowLights.forEach(light => light.color.setHex(hex));
+            
             if(lampLight1) lampLight1.color.setHex(hex);
             if(lampLight2) lampLight2.color.setHex(hex);
             
             toggleTheme(false); 
+        };
+
+        // --- CLOTH TOGGLE ---
+        let clothMesh;
+        window.toggleCloth = function() {
+            isClothActive = !isClothActive;
+            const btn = document.getElementById('clothBtn');
+            
+            if(isClothActive) {
+                btn.textContent = "Remove Blackout";
+                btn.classList.add('hidden-walls'); // reuse active style
+                clothMesh.visible = true;
+            } else {
+                btn.textContent = "Blackout Top Row";
+                btn.classList.remove('hidden-walls');
+                clothMesh.visible = false;
+            }
+            toggleTheme(false); // Refresh lights
         };
 
         // --- THEME TOGGLE FUNCTION ---
@@ -365,20 +502,24 @@
                 sunLight.intensity = 0.05;
                 prepLight.intensity = 0.2;
                 
-                workTableMat.color.setHex(0xffffff); // White table at night
+                workTableMat.color.setHex(0xffffff); 
                 
                 growLightMat.emissiveIntensity = 3.0;
+                
+                // Normal Racks
                 rackLights.forEach(light => { light.intensity = 0.8; });
+                
+                // Top Row (Blackout Logic)
+                topRowLights.forEach(light => {
+                    light.intensity = isClothActive ? 0 : 0.8;
+                });
+
                 floorStripMat.emissiveIntensity = 1.0;
                 floorLights.forEach(l => l.intensity = 0.5);
                 hoodInteriorMat.emissiveIntensity = 0.8;
                 if(hoodLight) hoodLight.intensity = 0.8;
-
-                // Lamps ON
                 if(lampLight1) lampLight1.intensity = 2.0;
                 if(lampLight2) lampLight2.intensity = 2.0;
-                
-                // Sink Light ON
                 if(sinkLight) sinkLight.intensity = 1.0;
 
             } else {
@@ -390,20 +531,18 @@
                 sunLight.intensity = 0.8;
                 prepLight.intensity = 0.4;
                 
-                workTableMat.color.setHex(0x111111); // Black table at day
+                workTableMat.color.setHex(0x111111); 
                 
                 growLightMat.emissiveIntensity = 0.8; 
                 rackLights.forEach(light => { light.intensity = 0; });
+                topRowLights.forEach(light => { light.intensity = 0; });
+                
                 floorStripMat.emissiveIntensity = 0;
                 floorLights.forEach(l => l.intensity = 0);
                 hoodInteriorMat.emissiveIntensity = 0;
                 if(hoodLight) hoodLight.intensity = 0;
-
-                // Lamps OFF
                 if(lampLight1) lampLight1.intensity = 0;
                 if(lampLight2) lampLight2.intensity = 0;
-                
-                // Sink Light OFF
                 if(sinkLight) sinkLight.intensity = 0;
             }
         };
@@ -490,6 +629,7 @@
         const dDisplay = new THREE.Mesh(new THREE.PlaneGeometry(2.0, 4), new THREE.MeshStandardMaterial({color: 0x111827, emissive: 0x1f2937, emissiveIntensity: 0.2}));
         dDisplay.position.set(0, 2.5, 1.01); 
         const dGroup = new THREE.Group();
+        dGroup.userData.isInteractableGroup = true; 
         dGroup.add(dehydrator);
         const dDispMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 3), new THREE.MeshStandardMaterial({color: 0x10b981, emissive: 0x059669}));
         dDispMesh.rotation.y = Math.PI / 2;
@@ -500,6 +640,7 @@
 
         // Flow Hood
         const hoodGroup = new THREE.Group();
+        hoodGroup.userData.isInteractableGroup = true;
         const hTable = new THREE.Mesh(new THREE.BoxGeometry(2.0, 3, 5), tableMat); 
         hTable.position.y = 1.5;
         const hBody = new THREE.Mesh(new THREE.BoxGeometry(1.6, 3, 4.8), hoodMat);
@@ -507,7 +648,6 @@
         const hInterior = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.5, 4.6), hoodInteriorMat);
         hInterior.position.set(0.6, 4.5, 0);
         
-        // Hood Props
         for(let i=0; i<3; i++) {
             const dish = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.05, 16), glassMat);
             dish.position.set(0.4, 3.05, -1 + i*0.4);
@@ -531,6 +671,7 @@
 
         // Fridge
         const fridgeGroup = new THREE.Group();
+        fridgeGroup.userData.isInteractableGroup = true;
         const fridgeBody = new THREE.Mesh(new THREE.BoxGeometry(2.0, 5, 2.0), applianceMat);
         fridgeBody.position.y = 2.5;
         const fridgeHandle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1, 0.1), new THREE.MeshStandardMaterial({color: 0x94a3b8}));
@@ -541,6 +682,7 @@
 
         // Sink & Lighting
         const sinkGroup = new THREE.Group();
+        sinkGroup.userData.isInteractableGroup = true;
         const sCabinet = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 2), tableMat);
         sCabinet.position.y = 1.5;
         const sBasin = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.5, 1.5), sinkMat);
@@ -549,8 +691,7 @@
         faucet.position.set(0, 3.5, -0.5);
         sinkGroup.add(sCabinet); sinkGroup.add(sBasin); sinkGroup.add(faucet);
         
-        // ** SINK SPOTLIGHT **
-        sinkLight = new THREE.SpotLight(0xffffff, 0); // Start OFF
+        sinkLight = new THREE.SpotLight(0xffffff, 0); 
         sinkLight.position.set(0, 5, 0);
         sinkLight.target.position.set(0, 3, 0);
         sinkLight.angle = 0.5; sinkLight.penumbra = 0.5;
@@ -559,17 +700,15 @@
         sinkGroup.position.set(-6, 0, 4); 
         scene.add(sinkGroup);
 
-        // Wall Coat Rack (Above Sink)
+        // Wall Coat Rack
         const rackGroup = new THREE.Group();
+        rackGroup.userData.isInteractableGroup = true;
         const rBar = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 3, 8), new THREE.MeshStandardMaterial({color: 0x888888}));
         rBar.rotation.z = Math.PI/2;
-        
-        // Wall Brackets
         const b1 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.3), new THREE.MeshStandardMaterial({color: 0x333333})); b1.position.set(-1.4, 0, -0.15);
         const b2 = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.3), new THREE.MeshStandardMaterial({color: 0x333333})); b2.position.set(1.4, 0, -0.15);
         rackGroup.add(rBar); rackGroup.add(b1); rackGroup.add(b2);
 
-        // Hanging Coats (White)
         const hangerMat = new THREE.MeshStandardMaterial({color: 0xaaaaaa});
         const makeHangingCoat = (x) => {
             const g = new THREE.Group();
@@ -584,11 +723,8 @@
         }
         rackGroup.add(makeHangingCoat(-0.5));
         rackGroup.add(makeHangingCoat(0.5));
-        
-        // Attached to Front Wall area above sink
         rackGroup.position.set(-6, 6, 4.8); 
         scene.add(rackGroup);
-
 
         // Autoclave
         createBox(2.5, 3, 3, tableMat, -6.5, 0, 0);
@@ -597,8 +733,9 @@
         autoClave.position.set(-6.5, 3.6, 0.5);
         scene.add(autoClave);
 
-        // Work Table (with Props & Lamps)
+        // Work Table
         const storageGroup = new THREE.Group();
+        storageGroup.userData.isInteractableGroup = true;
         const tableTop = new THREE.Mesh(new THREE.BoxGeometry(4, 0.2, 2.5), workTableMat);
         tableTop.position.y = 3;
         const legGeo = new THREE.BoxGeometry(0.2, 3, 0.2);
@@ -624,7 +761,7 @@
         glove2.position.set(0.3, 3.05, 0.6);
         glove2.rotation.y = 0.5;
 
-        // ** Function to create a Lamp **
+        // Table Lamps
         function createLamp(x, z) {
             const g = new THREE.Group();
             const base = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.05, 32), new THREE.MeshStandardMaterial({color: 0x333333})); base.position.y = 0.025;
@@ -641,25 +778,19 @@
             g.add(light); g.add(light.target);
             
             g.position.set(x, 3.1, z);
-            // Ensure they point towards center (Z=0). 
-            // If Lamp is at +Z, rotate PI. If Lamp is at -Z, rotate 0?
-            // Original lamp was at Z=0.8. Target was local 0,0,0.5. Rotation PI made it point -Z (Towards 0).
-            // So if Z > 0, Rotation PI. If Z < 0, Rotation 0.
             g.rotation.y = (z > 0) ? Math.PI : 0;
             return { group: g, light: light };
         }
 
-        // Lamp 1 (Left Back)
         const l1 = createLamp(-1.5, 0.8);
         lampLight1 = l1.light;
         storageGroup.add(l1.group);
 
-        // Lamp 2 (Right Back)
         const l2 = createLamp(1.5, 0.8);
         lampLight2 = l2.light;
         storageGroup.add(l2.group);
 
-        // ** 10 Jars on Table **
+        // 10 Jars
         const tableJarGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.3, 10);
         for(let i=0; i<10; i++) {
             const tJar = new THREE.Mesh(tableJarGeo, jarSubstrateMat);
@@ -726,8 +857,9 @@
             }
         }
 
-        function createRack(x, z, rotY = 0) {
+        function createRack(x, z, rotY = 0, isTopRow = false) {
             const group = new THREE.Group();
+            group.userData.isInteractableGroup = true;
             const w = 2, h = 6, d = 1;
             
             for(let i=0; i<6; i++) {
@@ -749,7 +881,12 @@
             const rackLight = new THREE.PointLight(currentLightColor.hex, 0, 4); 
             rackLight.position.set(0, 3, 0);
             group.add(rackLight);
-            rackLights.push(rackLight);
+            
+            if(isTopRow) {
+                topRowLights.push(rackLight);
+            } else {
+                rackLights.push(rackLight);
+            }
 
             addJarsToShelf(x, 0.5, z, w, d, rotY);
             for(let i=1; i<6; i++) addJarsToShelf(x, i + 0.5, z, w, d, rotY);
@@ -770,7 +907,10 @@
         const rackStartX = -3;
         const rackSpacing = 2.2;
 
-        for(let i=0; i<6; i++) createRack(rackStartX + (i * rackSpacing), -3.8);
+        // TOP ROW (Tagged for Blackout)
+        for(let i=0; i<6; i++) createRack(rackStartX + (i * rackSpacing), -3.8, 0, true);
+        
+        // Others
         for(let i=0; i<6; i++) createRack(rackStartX + (i * rackSpacing), 3.8);
         for(let i=2; i<4; i++) {
             const xPos = rackStartX + (i * rackSpacing);
@@ -780,7 +920,18 @@
         createRack(10.5, -1.5, Math.PI / 2);
         createRack(10.5, 1.5, Math.PI / 2);
         
+        // BLACKOUT CLOTH (Top Row Coverage)
+        // Center X = 2.5, Width = 13.2, Center Z = -3.8
+        clothMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(13.2, 6.1, 1.2), 
+            clothMat
+        );
+        clothMesh.position.set(2.5, 3.05, -3.8);
+        clothMesh.visible = false;
+        scene.add(clothMesh);
+
         const acGroup = new THREE.Group();
+        acGroup.userData.isInteractableGroup = true;
         const acBody = new THREE.Mesh(new THREE.BoxGeometry(1, 1.5, 3.5), acMat);
         acBody.castShadow = true;
         const vent = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1, 3), new THREE.MeshStandardMaterial({color: 0x333333}));
@@ -790,6 +941,7 @@
         scene.add(acGroup);
 
         const humGroup = new THREE.Group();
+        humGroup.userData.isInteractableGroup = true;
         const tank = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 1.5, 16), new THREE.MeshStandardMaterial({color: 0xffffff}));
         tank.position.y = 0.75;
         const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1, 8), new THREE.MeshStandardMaterial({color: 0x333333}));
