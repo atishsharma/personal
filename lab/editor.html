@@ -70,11 +70,12 @@
         .header {
             width: 95%;
             max-width: 1200px;
-            padding: 20px 0;
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin: 0 auto;
+            box-sizing: border-box;
         }
 
         .header h1 {
@@ -359,19 +360,30 @@
 
             body {
                 background: white !important;
-                padding: 20px;
+                padding: 10mm;
                 display: block;
+                width: auto;
+                height: auto;
+                overflow: hidden;
             }
 
             .sidebar,
             .controls,
             .ui-controls,
-            .imprint-del {
+            .imprint-del,
+            #main-footer {
                 display: none !important;
             }
 
             .app-container {
                 display: block;
+                width: 100%;
+                padding: 0;
+            }
+
+            .header {
+                padding: 0;
+                margin-bottom: 5mm;
                 width: 100%;
             }
 
@@ -379,21 +391,33 @@
                 margin: 0 auto;
                 border: none;
                 box-shadow: none;
+                width: fit-content;
+                padding: 0;
+            }
+
+            svg#labDesigner {
+                width: 740px;
+                height: 380px;
             }
 
             .specs-panel {
                 max-width: 740px;
-                margin: 20px auto;
+                margin: 5mm auto 0;
                 background: none !important;
                 border-color: #000 !important;
+                border-width: 1px;
             }
 
             .print-footer {
                 display: block !important;
-                text-align: center;
-                margin-top: 20px;
-                font-weight: bold;
+                text-align: right;
+                max-width: 740px;
+                margin: 5mm auto 0;
+                font-weight: 700;
                 color: black;
+                font-size: 10pt;
+                text-transform: uppercase;
+                letter-spacing: 1pt;
             }
         }
 
@@ -407,14 +431,13 @@
 
     <div class="header">
         <div>
-            <h1>My Cordyceps Lab Designer</h1>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan Editor</p>
+            <h1>Cordyceps Lab Design</h1>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan (2 inch Grid)</p>
         </div>
         <div class="controls">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">Theme</span>
                 <label class="switch">
-                    <!-- Default checked for Day Theme -->
                     <input type="checkbox" id="themeToggle" checked>
                     <span class="slider"></span>
                 </label>
@@ -464,7 +487,7 @@
                     <!-- Fixed Structural Elements -->
                     <g id="fixed-layer">
                         <g transform="translate(140, 40)">
-                            <rect x="0" y="-4" width="90" height="8" fill="rgba(0,0,0,0.1)" />
+                            <rect x="0" y="-4" width="90" height="8" fill="rgba(0,0,0,0.05)" />
                             <path d="M 0 0 Q 45 45 90 0" fill="none" stroke="var(--accent)" stroke-dasharray="4" />
                             <rect x="5" y="-14" width="80" height="14" fill="rgba(239, 68, 68, 0.2)"
                                 stroke="var(--fan-color)" stroke-width="2" />
