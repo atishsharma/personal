@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cordyceps Lab Design - Pro v3.2</title>
+    <title>Cordyceps Lab Design - Pro v3.4</title>
     <link rel="icon" type="image/png"
         href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <style>
@@ -142,6 +142,7 @@
             align-items: center;
             transition: 0.2s;
             color: var(--text-secondary);
+            touch-action: none;
         }
 
         .inventory-item:hover {
@@ -291,7 +292,7 @@
         .controls {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
         .switch {
@@ -339,6 +340,22 @@
             transform: translateX(24px);
         }
 
+        .btn-action {
+            padding: 8px 12px;
+            background: #334155;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-action:hover {
+            background: #475569;
+        }
+
         .btn-undo {
             width: 100%;
             padding: 12px;
@@ -350,6 +367,7 @@
             font-size: 0.75rem;
             font-weight: 600;
             transition: 0.2s;
+            margin-top: 10px;
         }
 
         .btn-undo:hover:not(:disabled) {
@@ -370,7 +388,7 @@
 
             html,
             body {
-                height: 100%;
+                height: 100% !important;
                 overflow: hidden !important;
                 margin: 0 !important;
                 padding: 0 !important;
@@ -428,7 +446,7 @@
             }
 
             .specs-panel {
-                max-width: 740px !important;
+                max-width: 740px;
                 width: 740px !important;
                 margin: 5mm 0 0 0 !important;
                 padding: 10px !important;
@@ -449,7 +467,6 @@
                 letter-spacing: 0.1em !important;
             }
 
-            /* Prevent any additional pages */
             * {
                 page-break-inside: avoid !important;
             }
@@ -466,9 +483,14 @@
     <div class="header">
         <div>
             <h1>Cordyceps Lab Design</h1>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan v3.2 (Touch Support)</p>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Architectural Floor Plan v3.4 (Triangle Humidifier)</p>
         </div>
         <div class="controls">
+            <button onclick="exportLayout()" class="btn-action">Export JSON</button>
+            <button onclick="document.getElementById('importFile').click()" class="btn-action">Import JSON</button>
+            <input type="file" id="importFile" style="display:none" accept="application/json"
+                onchange="importLayout(event)">
+
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase;">Theme</span>
                 <label class="switch">
@@ -476,9 +498,7 @@
                     <span class="slider"></span>
                 </label>
             </div>
-            <button onclick="window.print()"
-                style="padding: 6px 12px; background: #334155; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">Export
-                PDF</button>
+            <button onclick="window.print()" class="btn-action" style="background: #334155;">Export PDF</button>
         </div>
     </div>
 
@@ -557,7 +577,7 @@
         const undoBtn = document.getElementById('undoBtn');
 
         const GRID = 30;
-        const SNAP = 5; // 2 inches
+        const SNAP = 5;
         const OFFSET_X = 40;
         const OFFSET_Y = 40;
         const CANVAS_W = 660;
@@ -580,7 +600,7 @@
             { id: 'dehy', label: 'Dehydrator', w: 2, h: 3, type: 'equip', blockColor: '#701a75' },
             { id: 'sink', label: 'Sink', w: 2, h: 2, type: 'water', blockColor: '#1e40af' },
             { id: 'auto', label: 'Autoclave', r: 0.75, type: 'equip', blockColor: '#581c87' },
-            { id: 'humid', label: 'Humidifier', r: 0.5, type: 'humid', blockColor: '#3b82f6' },
+            { id: 'humid', label: 'Humidifier', w: 1.5, h: 1.5, type: 'humid', blockColor: '#3b82f6' },
             { id: 'text', label: 'Text Block', w: 1, h: 0.5, type: 'text', isResizable: true, blockColor: '#ff00ff' }
         ];
 
@@ -644,12 +664,13 @@
             placedItems.forEach(item => {
                 const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 g.setAttribute("class", "placed-element");
-                const width = (item.cw || item.w || item.r * 3) * GRID;
-                const height = (item.ch || item.h || item.r * 3) * GRID;
+                const width = (item.cw || item.w || 1.5) * GRID;
+                const height = (item.ch || item.h || 1.5) * GRID;
                 const cx = width / 2;
                 const cy = height / 2;
                 g.setAttribute("transform", `translate(${item.x},${item.y}) rotate(${item.rot},${cx},${cy})`);
 
+                // Rendering Logic
                 if (item.type === 'rack') {
                     rackCount++;
                     const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -664,7 +685,7 @@
                     const r2 = r1.cloneNode(); r2.setAttribute("stroke-width", "1.5");
                     g.appendChild(r1); g.appendChild(r2);
                     addLabel(g, cx, cy, "PREP", 'var(--block-prep)', false);
-                } else if (item.type === 'equip') {
+                } else if (item.type === 'equip' || item.type === 'water') {
                     const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
                     r1.setAttribute("width", width); r1.setAttribute("height", height);
                     r1.setAttribute("fill", "none"); r1.setAttribute("stroke", item.blockColor); r1.setAttribute("stroke-width", "4");
@@ -672,14 +693,15 @@
                     g.appendChild(r1); g.appendChild(r2);
                     addLabel(g, cx, cy, item.label, item.blockColor, false);
                 } else if (item.type === 'humid') {
-                    const rad = item.r * GRID * 1.5;
-                    const c1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                    c1.setAttribute("cx", rad); c1.setAttribute("cy", rad); c1.setAttribute("r", rad);
-                    c1.setAttribute("fill", "none"); c1.setAttribute("stroke", "var(--humidifier-color)"); c1.setAttribute("stroke-width", "3");
-                    const c2 = c1.cloneNode(); c2.setAttribute("r", rad * 0.6); c2.setAttribute("stroke-width", "1.5");
-                    g.appendChild(c1); g.appendChild(c2);
+                    // Triangle Shape Humidifier
+                    const poly1 = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+                    const points = `0,${height} ${width / 2},0 ${width},${height}`;
+                    poly1.setAttribute("points", points);
+                    poly1.setAttribute("fill", "none"); poly1.setAttribute("stroke", "var(--humidifier-color)"); poly1.setAttribute("stroke-width", "4");
+                    const poly2 = poly1.cloneNode(); poly2.setAttribute("stroke-width", "1.5");
+                    g.appendChild(poly1); g.appendChild(poly2);
                     const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
-                    t.setAttribute("x", rad); t.setAttribute("y", rad * 2 + 15);
+                    t.setAttribute("x", width / 2); t.setAttribute("y", height + 15);
                     t.setAttribute("class", "label-text"); t.setAttribute("style", "fill: var(--humidifier-color); font-size: 8px; font-weight:800;");
                     t.textContent = "HUMIDIFIER"; g.appendChild(t);
                 } else if (item.type === 'text') {
@@ -693,11 +715,12 @@
                     g.appendChild(t);
                 }
 
+                // UI Controls
                 const ui = document.createElementNS("http://www.w3.org/2000/svg", "g");
                 ui.setAttribute("class", "ui-controls");
 
                 const del = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-                del.setAttribute("cx", 0); del.setAttribute("cy", 0); del.setAttribute("r", 15); // Larger hit target for touch
+                del.setAttribute("cx", 0); del.setAttribute("cy", 0); del.setAttribute("r", 15);
                 del.setAttribute("class", "btn-del");
                 del.onclick = (e) => { e.stopPropagation(); removeItem(item.uid); };
                 del.addEventListener('touchstart', (e) => { e.stopPropagation(); e.preventDefault(); removeItem(item.uid); }, { passive: false });
@@ -724,9 +747,7 @@
 
                 g.appendChild(ui);
                 g.onmousedown = (e) => { if (e.target.tagName !== 'circle') startAction(e, item, 'drag'); };
-                g.addEventListener('touchstart', (e) => {
-                    if (e.target.tagName !== 'circle') startAction(e, item, 'drag');
-                }, { passive: false });
+                g.addEventListener('touchstart', (e) => { if (e.target.tagName !== 'circle') startAction(e, item, 'drag'); }, { passive: false });
 
                 interactiveLayer.appendChild(g);
             });
@@ -755,16 +776,11 @@
             const CTM = svg.getScreenCTM();
             let clientX, clientY;
             if (e.touches && e.touches.length > 0) {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
+                clientX = e.touches[0].clientX; clientY = e.touches[0].clientY;
             } else {
-                clientX = e.clientX;
-                clientY = e.clientY;
+                clientX = e.clientX; clientY = e.clientY;
             }
-            return {
-                x: (clientX - CTM.e) / CTM.a,
-                y: (clientY - CTM.f) / CTM.d
-            };
+            return { x: (clientX - CTM.e) / CTM.a, y: (clientY - CTM.f) / CTM.d };
         }
 
         function startAction(e, item, type) {
@@ -782,16 +798,12 @@
                 startAngle = Math.atan2(pt.y - cy, pt.x - cx);
                 startRotation = item.rot;
             }
-
-            const moveHandler = (moveEvt) => handleMove(moveEvt);
+            const moveHandler = (m) => handleMove(m);
             const endHandler = () => {
-                window.removeEventListener('mousemove', moveHandler);
-                window.removeEventListener('touchmove', moveHandler);
-                window.removeEventListener('mouseup', endHandler);
-                window.removeEventListener('touchend', endHandler);
-                endAction();
+                window.removeEventListener('mousemove', moveHandler); window.removeEventListener('touchmove', moveHandler);
+                window.removeEventListener('mouseup', endHandler); window.removeEventListener('touchend', endHandler);
+                activeAction = null; currentItem = null; render();
             };
-
             window.addEventListener('mousemove', moveHandler);
             window.addEventListener('touchmove', moveHandler, { passive: false });
             window.addEventListener('mouseup', endHandler);
@@ -818,8 +830,6 @@
             }
             render();
         }
-
-        function endAction() { activeAction = null; currentItem = null; render(); }
 
         function renderImprints() {
             imprintLayer.innerHTML = '';
@@ -877,9 +887,33 @@
             const counts = {}; placedItems.forEach(i => counts[i.label] = (counts[i.label] || 0) + 1);
             specsEl.innerHTML = `
                 <div class="spec-item"><strong>GROW AREA</strong><span class="spec-value">Std Racks: ${counts['Std Rack'] || 0} (2x1')<br>Blackout: ${counts['Blackout Rack'] || 0} (2x1')</span></div>
-                <div class="spec-item"><strong>PROCESSING</strong><span class="spec-value">Prep: ${counts['Prep Station'] || 0} (4x2.5')<br>Flow: ${counts['Flow Hood'] || 0} (2x4')<br>Fridge: ${counts['Fridge'] || 0} (2x2')</span></div>
-                <div class="spec-item"><strong>UTILITIES</strong><span class="spec-value">Humidifier: ${counts['Humidifier'] || 0} (1' Rad)<br>Auto: ${counts['Autoclave'] || 0} (1.5' Rad)<br>Sink: ${counts['Sink'] || 0} (2x2')</span></div>
+                <div class="spec-item"><strong>PROCESSING</strong><span class="spec-value">Prep: ${counts['Prep Station'] || 0} (4x2.5')<br>Flow: ${counts['Flow Hood'] || 0} (2x4')<br>Fridge/Sink: ${(counts['Fridge'] || 0) + (counts['Sink'] || 0)} (2x2')</span></div>
+                <div class="spec-item"><strong>UTILITIES</strong><span class="spec-value">Humidifier: ${counts['Humidifier'] || 0} (1.5x1.5')<br>Auto: ${counts['Autoclave'] || 0} (1.5' Rad)</span></div>
             `;
+        }
+
+        function exportLayout() {
+            const data = JSON.stringify({ items: placedItems, hidden: Array.from(hiddenImprints) });
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'cordyceps_lab_layout.json'; a.click();
+        }
+
+        function importLayout(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    pushHistory();
+                    placedItems = data.items;
+                    hiddenImprints = new Set(data.hidden);
+                    render();
+                } catch (err) { alert('Invalid layout file'); }
+            };
+            reader.readAsText(file);
         }
 
         themeToggle.onchange = () => document.body.classList.toggle('light-theme', themeToggle.checked);
