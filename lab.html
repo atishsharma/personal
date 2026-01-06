@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Cordyceps Lab Visualization</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1a1a1a; }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            pointer-events: none;
+            max-width: 300px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        h1 { margin: 0 0 10px 0; font-size: 1.2rem; color: #4ade80; }
+        .legend-item { display: flex; align-items: center; margin-bottom: 5px; font-size: 0.9rem; }
+        .color-box { width: 15px; height: 15px; margin-right: 10px; border-radius: 3px; }
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: #aaa;
+            font-size: 0.8rem;
+            z-index: 10;
+        }
+        #loading {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: white; font-size: 1.5rem; transition: opacity 0.5s;
+            background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px;
+            pointer-events: none;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading">Refining Layout...</div>
+
+    <div id="info">
+        <h1>Cordyceps Lab (22' x 10')</h1>
+        <div class="legend-item"><div class="color-box" style="background: #a3a3a3;"></div>Stainless Steel Racks (18 units)</div>
+        <div class="legend-item"><div class="color-box" style="background: #d97706;"></div>Culture Jars (18/shelf)</div>
+        <div class="legend-item"><div class="color-box" style="background: #e2e8f0;"></div>Table Joined to Racks</div>
+        <div class="legend-item"><div class="color-box" style="background: #a855f7;"></div>5ft Flow Hood</div>
+        <div class="legend-item"><div class="color-box" style="background: #3b82f6;"></div>Wet Area</div>
+        <hr style="border-color: #444;">
+        <p style="font-size: 0.8rem; line-height: 1.4; color: #ccc;">
+            <strong>Layout:</strong> Integrated Workflow<br>
+            <strong>Table:</strong> Connected to Center Island<br>
+            <strong>Capacity:</strong> ~1,944 Jars Total
+        </p>
+    </div>
+
+    <div class="controls">
+        Left Click: Rotate | Right Click: Pan | Scroll: Zoom
+    </div>
+
+    <!-- Three.js Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        const ROOM_WIDTH = 22;
+        const ROOM_DEPTH = 10;
+        const ROOM_HEIGHT = 9;
+        
+        // --- SCENE SETUP ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1e1e24);
+        scene.fog = new THREE.Fog(0x1e1e24, 15, 60);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(-15, 20, 20); 
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.maxPolarAngle = Math.PI / 2 - 0.05;
+
+        // --- LIGHTING ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        dirLight.position.set(5, 20, 10);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        scene.add(dirLight);
+
+        const prepLight = new THREE.PointLight(0xdbeafe, 0.5, 15);
+        prepLight.position.set(-8, 8, 0);
+        scene.add(prepLight);
+
+        const growLight = new THREE.PointLight(0xffedd5, 0.3, 20);
+        growLight.position.set(5, 8, 0);
+        scene.add(growLight);
+
+        // --- MATERIALS ---
+        const floorMat = new THREE.MeshStandardMaterial({ color: 0xe5e5e5, roughness: 0.5 });
+        const wallMat = new THREE.MeshStandardMaterial({ color: 0xf3f4f6, side: THREE.DoubleSide });
+        const rackMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.6, roughness: 0.2 });
+        const rackLegMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.6, roughness: 0.2 });
+        const tableMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0 });
+        const hoodMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const sinkMat = new THREE.MeshStandardMaterial({ color: 0x9ca3af, metalness: 0.5 });
+        const acMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const fanMat = new THREE.MeshStandardMaterial({ color: 0x374151, metalness: 0.7 });
+        const jarSubstrateMat = new THREE.MeshStandardMaterial({ color: 0xd97706 });
+        const jarLidMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const applianceMat = new THREE.MeshStandardMaterial({ color: 0xf1f5f9, metalness: 0.3, roughness: 0.2 });
+        const dehydratorMat = new THREE.MeshStandardMaterial({ color: 0x1f2937, metalness: 0.1, roughness: 0.8 });
+        
+        // --- HELPER FUNCTIONS ---
+        function createBox(w, h, d, mat, x, y, z, rotY = 0, shadow = true) {
+            const geometry = new THREE.BoxGeometry(w, h, d);
+            const mesh = new THREE.Mesh(geometry, mat);
+            mesh.position.set(x, y + h/2, z); 
+            mesh.rotation.y = rotY;
+            if(shadow) {
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+            }
+            scene.add(mesh);
+            return mesh;
+        }
+
+        function createLabel(text, x, y, z) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 256; 
+            canvas.height = 128; 
+            
+            context.fillStyle = "rgba(0, 0, 0, 0.6)";
+            context.fillRect(0, 0, 256, 128);
+            
+            context.font = "Bold 24px Arial";
+            context.fillStyle = "white";
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+            context.fillText(text, 128, 64);
+            
+            context.strokeStyle = "white";
+            context.lineWidth = 4;
+            context.strokeRect(0, 0, 256, 128);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            const spriteMaterial = new THREE.SpriteMaterial({ map: texture, transparent: true });
+            const sprite = new THREE.Sprite(spriteMaterial);
+            
+            sprite.position.set(x, y, z);
+            sprite.scale.set(3, 1.5, 1); 
+            scene.add(sprite);
+        }
+
+        // --- BUILDING STRUCTURE ---
+
+        createBox(ROOM_WIDTH, 0.2, ROOM_DEPTH, floorMat, 0, -0.2, 0);
+        
+        const edges = new THREE.EdgesGeometry(new THREE.BoxGeometry(ROOM_WIDTH, 0.2, ROOM_DEPTH));
+        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x000000 }));
+        line.position.y = -0.2;
+        scene.add(line);
+
+        // --- PREP ROOM EQUIPMENT ---
+        
+        // Door (Back Wall of Prep Area: X=-8, Z=-5)
+        const doorGroup = new THREE.Group();
+        const doorGeo = new THREE.BoxGeometry(0.15, 7, 3);
+        const doorMesh = new THREE.Mesh(doorGeo, new THREE.MeshStandardMaterial({color: 0x334155}));
+        doorMesh.position.set(0, 3.5, 0);
+        
+        const frameMat = new THREE.MeshStandardMaterial({color: 0x1e293b});
+        const frameL = new THREE.Mesh(new THREE.BoxGeometry(0.3, 7.2, 0.3), frameMat);
+        frameL.position.set(0, 3.6, -1.6);
+        const frameR = new THREE.Mesh(new THREE.BoxGeometry(0.3, 7.2, 0.3), frameMat);
+        frameR.position.set(0, 3.6, 1.6);
+        const frameT = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 3.5), frameMat);
+        frameT.position.set(0, 7.2, 0);
+        
+        const handleGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.5);
+        const handleMesh = new THREE.Mesh(handleGeo, new THREE.MeshStandardMaterial({color: 0xc0c0c0}));
+        handleMesh.rotation.x = Math.PI/2;
+        handleMesh.position.set(0.1, 3.5, 1.2); 
+
+        const fanHousing = new THREE.Mesh(new THREE.BoxGeometry(0.6, 1, 3.2), fanMat);
+        fanHousing.position.set(0, 7.9, 0);
+        
+        doorGroup.add(doorMesh); doorGroup.add(frameL); doorGroup.add(frameR);
+        doorGroup.add(frameT); doorGroup.add(handleMesh); doorGroup.add(fanHousing);
+        
+        doorGroup.position.set(-8, 0, -5);
+        doorGroup.rotation.y = Math.PI / 2;
+        scene.add(doorGroup);
+        createLabel("Entrance", -8, 9.5, -5);
+
+        // --- LEFT WALL CONFIGURATION (X = -10.5) ---
+        
+        // 1. Dehydrator (Back Left)
+        const dehydrator = new THREE.Mesh(new THREE.BoxGeometry(2.5, 5, 2.0), dehydratorMat);
+        dehydrator.position.y = 2.5;
+        const dDisplay = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 4), new THREE.MeshStandardMaterial({color: 0x111827, emissive: 0x1f2937, emissiveIntensity: 0.2}));
+        dDisplay.position.set(0, 2.5, 1.01); 
+        const dGroup = new THREE.Group();
+        dGroup.add(dehydrator);
+        const dDispMesh = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 3), new THREE.MeshStandardMaterial({color: 0x10b981, emissive: 0x059669}));
+        dDispMesh.rotation.y = Math.PI / 2;
+        dDispMesh.position.set(1.26, 3, 0);
+        dGroup.add(dDispMesh);
+        
+        dGroup.position.set(-10.5, 0, -3.8); 
+        scene.add(dGroup);
+        createLabel("Dehydrator", -10.5, 6, -3.8);
+
+        // 2. Flow Hood (5ft Wide, Middle Left)
+        const hoodGroup = new THREE.Group();
+        const hTable = new THREE.Mesh(new THREE.BoxGeometry(2.5, 3, 5), tableMat); 
+        hTable.position.y = 1.5;
+        
+        const hBody = new THREE.Mesh(new THREE.BoxGeometry(2, 3, 4.8), hoodMat);
+        hBody.position.set(-0.2, 4.5, 0); 
+        
+        const hFilter = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 2.5), new THREE.MeshStandardMaterial({color: 0xe0e7ff}));
+        hFilter.rotation.y = Math.PI / 2;
+        hFilter.scale.set(40, 1, 1); 
+        hFilter.position.set(0.81, 4.5, 0); 
+        
+        hoodGroup.add(hTable); hoodGroup.add(hBody); hoodGroup.add(hFilter);
+        hoodGroup.position.set(-10.5, 0, 0); 
+        scene.add(hoodGroup);
+        createLabel("5ft Flow Hood", -10.5, 7.5, 0);
+
+        // 3. Fridge (Front Left)
+        const fridgeGroup = new THREE.Group();
+        const fridgeBody = new THREE.Mesh(new THREE.BoxGeometry(2, 5, 2), applianceMat);
+        fridgeBody.position.y = 2.5;
+        const fridgeHandle = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1, 0.1), new THREE.MeshStandardMaterial({color: 0x94a3b8}));
+        fridgeHandle.position.set(1.05, 2.8, 0.5); 
+        fridgeGroup.add(fridgeBody); fridgeGroup.add(fridgeHandle);
+        fridgeGroup.position.set(-10.5, 0, 3.8);
+        scene.add(fridgeGroup);
+        createLabel("Fridge", -10.5, 6, 3.8);
+
+
+        // Sink (Front Wall Z=4, Shifted Right to X=-6)
+        const sinkGroup = new THREE.Group();
+        const sCabinet = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 2), tableMat);
+        sCabinet.position.y = 1.5;
+        const sBasin = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.5, 1.5), sinkMat);
+        sBasin.position.y = 3.25;
+        const faucet = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.05, 8, 16, Math.PI), new THREE.MeshStandardMaterial({color: 0x64748b}));
+        faucet.position.set(0, 3.5, -0.5);
+        sinkGroup.add(sCabinet); sinkGroup.add(sBasin); sinkGroup.add(faucet);
+        sinkGroup.position.set(-6, 0, 4); 
+        scene.add(sinkGroup);
+        createLabel("Sink", -6, 5, 4);
+
+        // Autoclave
+        createBox(2.5, 3, 3, tableMat, -6.5, 0, 0);
+        const autoClave = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 1.2, 16), new THREE.MeshStandardMaterial({color: 0xcbd5e1, metalness: 0.8, roughness: 0.2}));
+        autoClave.rotation.z = Math.PI / 2;
+        autoClave.position.set(-6.5, 3.6, 0.5);
+        scene.add(autoClave);
+        createLabel("Autoclave", -6.5, 5.5, 0.5);
+
+        // Work Table (4x2.5) - JOINED TO MIDDLE RACKS (X = -1.6)
+        // Racks start at X=1.4. Left edge is 0.4.
+        // Table Width 4. Right edge is TableX + 2.
+        // TableX + 2 = 0.4 => TableX = -1.6
+        const storageGroup = new THREE.Group();
+        const tableTop = new THREE.Mesh(new THREE.BoxGeometry(4, 0.2, 2.5), tableMat);
+        tableTop.position.y = 3;
+        const legGeo = new THREE.BoxGeometry(0.2, 3, 0.2);
+        const leg1 = new THREE.Mesh(legGeo, tableMat); leg1.position.set(-1.8, 1.5, -1.1);
+        const leg2 = new THREE.Mesh(legGeo, tableMat); leg2.position.set(1.8, 1.5, -1.1);
+        const leg3 = new THREE.Mesh(legGeo, tableMat); leg3.position.set(-1.8, 1.5, 1.1);
+        const leg4 = new THREE.Mesh(legGeo, tableMat); leg4.position.set(1.8, 1.5, 1.1);
+        const tableShelf1 = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.1, 2.3), new THREE.MeshStandardMaterial({color: 0xcbd5e1}));
+        tableShelf1.position.y = 1;
+        const tableShelf2 = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.1, 2.3), new THREE.MeshStandardMaterial({color: 0xcbd5e1}));
+        tableShelf2.position.y = 2;
+
+        storageGroup.add(tableTop); storageGroup.add(leg1); storageGroup.add(leg2);
+        storageGroup.add(leg3); storageGroup.add(leg4);
+        storageGroup.add(tableShelf1); storageGroup.add(tableShelf2);
+        
+        storageGroup.position.set(-1.6, 0, 0); // Joined to racks
+        scene.add(storageGroup);
+        createLabel("Work Table", -1.6, 4.5, 0);
+
+
+        // --- GROW AREA RACKS ---
+        
+        const jarGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.3, 10);
+        const jarMat = jarSubstrateMat;
+        const jarCount = 2100; // Increased for 18 racks
+        const jarMesh = new THREE.InstancedMesh(jarGeo, jarMat, jarCount);
+        jarMesh.castShadow = true;
+        scene.add(jarMesh);
+        const lidGeo = new THREE.CylinderGeometry(0.10, 0.10, 0.05, 10);
+        const lidMesh = new THREE.InstancedMesh(lidGeo, jarLidMat, jarCount);
+        scene.add(lidMesh);
+
+        let jarIndex = 0;
+        const dummy = new THREE.Object3D();
+
+        function addJarsToShelf(x, y, z, width, depth, rotY = 0) {
+            const rows = 3; const cols = 6;
+            const spacingX = width / cols; 
+            const spacingZ = depth / rows; 
+            
+            const localStartX = -width/2 + (spacingX/2);
+            const localStartZ = -depth/2 + (spacingZ/2);
+
+            for(let r=0; r<rows; r++) {
+                for(let c=0; c<cols; c++) {
+                    if(jarIndex >= jarCount) return;
+                    
+                    const lx = localStartX + (c * spacingX);
+                    const lz = localStartZ + (r * spacingZ);
+                    
+                    const rx = lx * Math.cos(rotY) - lz * Math.sin(rotY);
+                    const rz = lx * Math.sin(rotY) + lz * Math.cos(rotY);
+                    
+                    const jX = x + rx;
+                    const jZ = z + rz;
+
+                    dummy.position.set(jX, y + 0.15, jZ);
+                    dummy.updateMatrix();
+                    jarMesh.setMatrixAt(jarIndex, dummy.matrix);
+                    
+                    dummy.position.set(jX, y + 0.32, jZ);
+                    dummy.updateMatrix();
+                    lidMesh.setMatrixAt(jarIndex, dummy.matrix);
+                    
+                    jarIndex++;
+                }
+            }
+        }
+
+        function createRack(x, z, rotY = 0) {
+            const group = new THREE.Group();
+            const w = 2, h = 6, d = 1;
+            for(let i=0; i<6; i++) {
+                const shelfY = (i * 1) + 0.5;
+                const shelf = new THREE.Mesh(new THREE.BoxGeometry(w, 0.05, d), rackMat);
+                shelf.position.y = shelfY;
+                shelf.castShadow = true;
+                group.add(shelf);
+            }
+            addJarsToShelf(x, 0.5, z, w, d, rotY);
+            for(let i=1; i<6; i++) addJarsToShelf(x, i + 0.5, z, w, d, rotY);
+
+            const postGeo = new THREE.BoxGeometry(0.05, h, 0.05);
+            const positions = [[-w/2, d/2], [w/2, d/2], [-w/2, -d/2], [w/2, -d/2]];
+            positions.forEach(pos => {
+                const post = new THREE.Mesh(postGeo, rackLegMat);
+                post.position.set(pos[0], h/2, pos[1]);
+                group.add(post);
+            });
+            
+            group.position.set(x, 0, z);
+            group.rotation.y = rotY;
+            scene.add(group);
+        }
+
+        // --- RACK PLACEMENT ---
+        const rackStartX = -3;
+        const rackSpacing = 2.2;
+
+        // Top Row (6 Racks)
+        for(let i=0; i<6; i++) createRack(rackStartX + (i * rackSpacing), -3.8);
+        
+        // Bottom Row (6 Racks)
+        for(let i=0; i<6; i++) createRack(rackStartX + (i * rackSpacing), 3.8);
+        
+        // Center Island: Restoring 4 Racks
+        for(let i=2; i<4; i++) {
+            const xPos = rackStartX + (i * rackSpacing);
+            createRack(xPos, -0.6);
+            createRack(xPos, 0.6);
+        }
+
+        // Right Wall Racks (2 Units)
+        createRack(10.5, -1.5, Math.PI / 2);
+        createRack(10.5, 1.5, Math.PI / 2);
+        
+        createLabel("Grow Racks (18 Units)", 7, 7.5, -3);
+
+        // --- UTILITIES ---
+
+        // AC Unit
+        const acGroup = new THREE.Group();
+        const acBody = new THREE.Mesh(new THREE.BoxGeometry(1, 1.5, 3.5), acMat);
+        acBody.castShadow = true;
+        const vent = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1, 3), new THREE.MeshStandardMaterial({color: 0x333333}));
+        vent.position.x = -0.46;
+        acGroup.add(acBody); acGroup.add(vent);
+        acGroup.position.set(10.5, 7, 0); 
+        scene.add(acGroup);
+        createLabel("Split AC", 10.5, 8.5, 0);
+
+        // Humidifier - MOVED TO X=6
+        const humGroup = new THREE.Group();
+        const tank = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 0.8, 1.5, 16), new THREE.MeshStandardMaterial({color: 0xffffff}));
+        tank.position.y = 0.75;
+        const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 1, 8), new THREE.MeshStandardMaterial({color: 0x333333}));
+        pipe.position.set(0, 2, 0);
+        const cap = new THREE.Mesh(new THREE.ConeGeometry(0.3, 0.2, 8), new THREE.MeshStandardMaterial({color: 0x333333}));
+        cap.position.set(0, 2.5, 0);
+        humGroup.add(tank); humGroup.add(pipe); humGroup.add(cap);
+        humGroup.position.set(6, 0, 0); 
+        scene.add(humGroup);
+        createLabel("Humidifier", 6, 4, 0);
+
+        // --- FINALIZE ---
+        jarMesh.instanceMatrix.needsUpdate = true;
+        lidMesh.instanceMatrix.needsUpdate = true;
+        
+        document.getElementById('loading').style.opacity = 0;
+        setTimeout(() => document.getElementById('loading').remove(), 500);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+
+    </script>
+</body>
+</html>
