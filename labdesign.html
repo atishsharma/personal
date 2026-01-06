@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Labs Wireframe Design</title> 
+    <title>My Cordyceps Lab Wireframe Design</title>
     <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <style>
         :root {
@@ -204,6 +204,9 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
+            border: 2px solid var(--accent);
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
         }
         body.light-theme .specs-panel { background: rgba(0,0,0,0.03); }
 
@@ -226,8 +229,8 @@
             }
             .controls { display: none !important; }
             .header {
-                max-width: 100%;
-                margin-bottom: 10px;
+                max-width: 720px;
+                margin: 0 auto 10px;
             }
             .canvas-wrapper { 
                 box-shadow: none !important; 
@@ -235,16 +238,18 @@
                 border: 2px solid var(--grid-color) !important;
                 transform: scale(1);
                 transform-origin: top center;
-                width: 660px; /* Force original scale width for print */
-                padding: 30px;
+                width: 660px; /* SVG internal width */
+                padding: 30px; /* Total printed width: 720px */
             }
             .header h1, .header p { display: block !important; }
             .specs-panel { 
                 display: grid !important; 
-                border: 1px solid var(--grid-color);
-                max-width: 100%;
-                margin-top: 15px;
+                max-width: 720px !important; /* Force width to match canvas wrapper print footprint */
+                width: 720px !important;
+                margin: 15px auto 0 !important;
                 background: transparent !important;
+                border: 2px solid var(--accent) !important;
+                box-sizing: border-box;
             }
             .spec-item { page-break-inside: avoid; }
         }
