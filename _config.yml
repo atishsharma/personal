@@ -1,4 +1,5 @@
 url: "https://atishaksharma.com"
 baseurl: ""
+enforce_ssl: atishaksharma.com
 plugins:
   - jekyll-sitemap
