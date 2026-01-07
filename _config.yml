@@ -1,2 +1,4 @@
+url: "https://atishaksharma.com"
+baseurl: ""
 plugins:
   - jekyll-sitemap
