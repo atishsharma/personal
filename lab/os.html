@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cordyceps Lab OS v5.2 </title>
+    <title>Cordyceps Lab OS v5.2</title>
     <link rel="icon" type="image/png"
         href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Library for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
 
@@ -26,12 +29,12 @@
             --transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
+        /* Chosen Palette: Cordyceps Deep-Burn (Slate, Neon Orange, Cyan) */
         /* Application Structure Plan: 
-           Single-page interactive dashboard removing all utility frameworks (Tailwind) in favor of 
-           semantic CSS. 
-           - Grid & Flexbox layouts for the Pipeline.
-           - Custom 3D perspective visual containers.
-           - Modal system using pure JS and CSS.
+           Single-page interactive dashboard featuring:
+           - 3D perspective visual containers (CSS-based).
+           - Modal system for technical protocols.
+           - Integrated PDF Generator that compiles all hidden and visible text.
            - Yield calculator with real-time DOM updates.
         */
         /* CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All visuals use pure CSS. */
@@ -612,6 +615,35 @@
             color: var(--text-main);
         }
 
+        /* PDF Download Footer Section */
+        .download-section {
+            padding: 4rem 20px;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 4rem;
+        }
+
+        .btn-download {
+            background: #f1f5f9;
+            color: #0f172a;
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            border: 2px solid #cbd5e1;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-download:hover {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
         /* Animations */
         @keyframes spin {
             from {
@@ -813,6 +845,13 @@
             </div>
         </div>
 
+        <!-- DOWNLOAD SECTION -->
+        <div class="download-section">
+            <button class="btn-download" onclick="generatePDF()">
+                <span>📄</span> Download Manual (PDF)
+            </button>
+        </div>
+
     </div>
 
     <!-- MODAL POPUP -->
@@ -944,6 +983,97 @@
             document.getElementById('dryYield').innerText = (jars * avg).toLocaleString();
         }
 
+        // --- PDF GENERATION ENGINE ---
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const jarCount = document.getElementById('jarCount').value;
+            const dryYield = document.getElementById('dryYield').innerText;
+
+            let y = 20;
+            const margin = 20;
+            const lineSpacing = 8;
+            const pageWidth = doc.internal.pageSize.getWidth();
+
+            const checkPage = (addedHeight) => {
+                if (y + addedHeight > 280) {
+                    doc.addPage();
+                    y = 20;
+                }
+            };
+
+            const addTitle = (text) => {
+                checkPage(15);
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(18);
+                doc.text(text, margin, y);
+                y += 12;
+            };
+
+            const addHeader = (text) => {
+                checkPage(12);
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(14);
+                doc.text(text, margin, y);
+                y += 8;
+            };
+
+            const addText = (text) => {
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(11);
+                const lines = doc.splitTextToSize(text, pageWidth - margin * 2);
+                checkPage(lines.length * 6);
+                doc.text(lines, margin, y);
+                y += (lines.length * 6) + 4;
+            };
+
+            // Start PDF Construction
+            addTitle("CORDYCEPS LAB OS v5.2 - PRODUCTION MANUAL");
+            addText("Expert Workflow Management System for High-Yield Laminar Flow Hood Production.");
+
+            // Current Projection
+            addHeader("Current Production Projection");
+            addText(`Batch Size: ${jarCount} Jars (500ml)`);
+            addText(`Estimated Total Dried Yield: ${dryYield}g (~4g dry per jar base average)`);
+            y += 5;
+
+            // Phase 1
+            addHeader("PHASE 01: AGAR GENETIC SELECTION");
+            addText("Success starts at the microscopic level. Agar plates are used to verify strain purity and isolate the most aggressive genetics for expansion.");
+            addText("Target: Rhizomorphic Strands");
+            addText("State: 4C Suspended Animation");
+            addText("PROTOCOL DETAILS:");
+            addText("Operate exclusively within the Laminar Flow Hood. Sanitize hands, arms, and tools with 70% Isopropyl. Work closest to the filter to ensure zero downstream contamination.");
+            addText("Identify thick strands. Use a flamed-scalpel to harvest a 5mm wedge from the leading edge. Recipe: 1L Water, 20g Dextrose, 20g Agar, 2g Soy Peptone.");
+
+            // Phase 2
+            addHeader("PHASE 02: LIQUID CULTURE EXPANSION");
+            addText("Transform a single genetic sample into a high-volume Mycelium Soup. This allows for uniform, rapid inoculation of your production batch.");
+            addText("Recipe: 1000ml Distilled Water, 20g Light Malt Extract, 5g Soy Peptone, 2g Yeast Extract.");
+            addText("Expansion Cycle: Temperature 21C Room, Duration 7-10 Days.");
+
+            // Phase 3
+            addHeader("PHASE 03: HARDWARE (JAR MODS)");
+            addText("Optimized for Laminar Flow Hood users. We prioritize simple, effective gas exchange (GE) while maintaining a total sterile barrier.");
+            addText("Hole Config: Single 1/4 inch Center Hole. Filter Media: Dual-Layer Micropore Tape.");
+            addText("In-Hood Inoculation: Open the lid in front of your Flow Hood, pour in 10-15ml of LC broth, and seal immediately.");
+
+            // Phase 4
+            addHeader("PHASE 04: DARK VEGETATIVE GROWTH");
+            addText("The fungus consumes the rice substrate in total darkness. Stability during this phase is required to build energy for the fruiting stage.");
+            addText("Climate: 20C / Constant Thermal. Lux: 0% Light Leakage.");
+            addText("Zero light exposure is mandatory for 14 days. Light triggers pins too early, which leads to weak growth.");
+
+            // Phase 5
+            addHeader("PHASE 05: HARVEST & ANALYSIS");
+            addText("Triggered by 6500K LED light. The fungus shifts its metabolism to produce the bright orange medicinal compounds (Cordycepin).");
+            addText("Initiation: 16 hours of 6500K LED light. Drop room temperature to 18C. Harvest at Day 50-60.");
+            addText("Dehydrate at 40C for 24 hours until Cracker Dry. Store in dark glass with silica packs.");
+
+            // Download
+            doc.save("Cordyceps_Production_Manual.pdf");
+        }
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) entry.target.classList.add('visible');
@@ -952,7 +1082,6 @@
 
         document.querySelectorAll('.pipeline-step').forEach(s => observer.observe(s));
 
-        // Final init
         window.onload = () => {
             calculateYield();
         };
