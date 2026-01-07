@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atish Ak Sharma | Website Concept Manager</title>
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" <style>
+    @import
+    url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+    :root {
+    --bg-color: #f8fafc;
+    --surface-color: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --accent-solid: #6366f1;
+    --border-color: rgba(0, 0, 0, 0.08);
+    --modal-bg: #f1f5f9;
+    --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04);
+    --hover-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.15);
+    --viewer-nav-bg: rgba(255, 255, 255, 0.3);
+
+    --grad-standalone: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+    --grad-separate: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    }
+
+    [data-theme="dark"] {
+    --bg-color: #050505;
+    --surface-color: #111111;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --modal-bg: #0a0a0a;
+    --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+    --hover-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.2);
+    --viewer-nav-bg: rgba(0, 0, 0, 0.3);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow-x: hidden;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Navigation */
+    nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--surface-color);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+
+    .nav-logo { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: var(--text-main); }
+    .logo-svg { width: 38px; height: 38px; }
+    .logo-mark { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.4rem; font-weight: 700; }
+    .studio-name { font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; font-size: 0.55rem; color:
+    var(--text-muted); }
+
+    .nav-actions { display: flex; gap: 0.75rem; align-items: center; }
+
+    .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 110; }
+    .menu-toggle span { width: 25px; height: 2px; background: var(--text-main); transition: 0.3s; }
+
+    @media (max-width: 768px) {
+    .nav-actions {
+    position: fixed; top: 0; right: -100%; width: 80%; height: 100vh;
+    background: var(--surface-color); flex-direction: column; justify-content: center;
+    padding: 2rem; transition: 0.4s; box-shadow: -10px 0 30px rgba(0,0,0,0.1); gap: 1.5rem; z-index: 105;
+    }
+    .nav-actions.active { right: 0; }
+    .menu-toggle { display: flex; }
+    }
+
+    /* Buttons */
+    .btn {
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    }
+    .btn-primary { background: var(--accent-gradient); color: white; border: none; }
+    .btn-ghost { background: transparent; color: var(--text-main); border: 1px solid var(--border-color); }
+    .btn-icon { padding: 0.6rem; background: var(--surface-color); border: 1px solid var(--border-color); color:
+    var(--text-main); border-radius: 8px; cursor: pointer; }
+
+    /* Main Content */
+    main { max-width: 1300px; margin: 0 auto; padding: 3rem 2rem; flex: 1; width: 100%; }
+    header { margin-bottom: 3rem; text-align: center; }
+    .section-tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.3em; color: #6366f1; display: block;
+    margin-bottom: 0.75rem; font-weight: 700; }
+    h2.section-title { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700;
+    line-height: 1.1; margin-bottom: 1rem; }
+
+    #pageGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2.5rem; }
+
+    .preview-card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    }
+    .preview-card:hover { transform: translateY(-4px); box-shadow: var(--hover-shadow); border-color: #6366f1; }
+
+    .add-card { border: 2px dashed var(--border-color); background: transparent; justify-content: center; align-items:
+    center; min-height: 380px; }
+    .add-card-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--accent-gradient); display: flex;
+    align-items: center; justify-content: center; color: white; font-size: 40px; margin-bottom: 1.5rem; box-shadow: 0
+    10px 20px rgba(99, 102, 241, 0.2); }
+
+    .iframe-container { position: relative; width: 100%; padding-top: 60%; background: var(--bg-color); overflow:
+    hidden; border-bottom: 1px solid var(--border-color); }
+    .iframe-container iframe { position: absolute; top: -1px; left: -1px; width: 1442px; height: 902px; border: 0;
+    pointer-events: none; transform: scale(0.35); transform-origin: top left; }
+
+    .card-content { padding: 1.5rem; flex-grow: 1; }
+    .card-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; margin-bottom: 0.25rem; line-height: 1.2;
+    }
+    .card-desc { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; display: block; margin-top: 0.25rem; }
+
+    /* Modal */
+    .modal { position: fixed; inset: 0; z-index: 1200; display: none; align-items: center; justify-content: center;
+    padding: 1.5rem; }
+    .modal.flex { display: flex !important; }
+    .modal-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); }
+    .modal-content {
+    position: relative; background: var(--surface-color); width: 100%; max-width: 85rem;
+    display: flex; flex-direction: column; max-height: 95vh; border-radius: 24px; overflow: hidden; box-shadow: 0 40px
+    80px rgba(0,0,0,0.5);
+    }
+
+    .modal-scroll-area { overflow-y: auto; flex: 1; display: flex; flex-direction: column; width: 100%; }
+    .setup-screen { padding: 4rem 2rem; max-width: 55rem; margin: 0 auto; width: 100%; text-align: center; }
+    .form-input-big { width: 100%; background: var(--modal-bg); border: 1px solid var(--border-color); border-radius:
+    16px; padding: 1.5rem; margin-bottom: 1.25rem; outline: none; font-size: 1.1rem; color: var(--text-main); }
+    .form-input-big:focus { border-color: #6366f1; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+
+    .mode-selector { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; }
+    .mode-btn { background: var(--modal-bg); border: 2px solid transparent; border-radius: 20px; padding: 2.5rem 1.5rem;
+    cursor: pointer; text-align: center; transition: 0.3s; color: var(--text-main); }
+    .mode-btn:hover { background: var(--surface-color); border-color: var(--border-color); transform: translateY(-5px);
+    }
+    #btnModeStandalone.active { border-color: #00c6ff; box-shadow: 0 10px 20px rgba(0, 198, 255, 0.15); }
+    #btnModeSeparate.active { border-color: #a855f7; box-shadow: 0 10px 20px rgba(168, 85, 247, 0.15); }
+
+    .import-section { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); display: flex;
+    flex-direction: column; gap: 1.5rem; }
+    .import-controls { display: flex; gap: 1rem; justify-content: center; align-items: center; }
+    .import-url-input { flex: 1; max-width: 400px; padding: 0.75rem 1.25rem; border-radius: 8px; border: 1px solid
+    var(--border-color); outline: none; background: var(--modal-bg); color: var(--text-main); }
+
+    /* Code Editors */
+    #editorContainer { flex: 1; display: flex; flex-direction: column; overflow: hidden; background:
+    var(--surface-color); border-top: 4px solid transparent; }
+    .editor-tabs { display: flex; background: var(--modal-bg); padding: 0.5rem 2rem 0; gap: 0.5rem; border-bottom: 1px
+    solid var(--border-color); }
+    .tab-btn { padding: 1rem 1.5rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; cursor: pointer;
+    background: transparent; border: none; color: var(--text-muted); }
+    .tab-btn.active { color: var(--text-main); border-bottom: 2px solid var(--accent-solid); }
+    .form-textarea { flex: 1; width: 100%; border: none; background: var(--surface-color); padding: 2rem; color:
+    var(--text-main); font-family: 'Courier New', Courier, monospace; font-size: 14px; outline: none; resize: none;
+    min-height: 500px; }
+
+    /* Fixed Centered Footer */
+    .modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    background: var(--surface-color);
+    position: relative;
+    justify-content: center; /* Center the container */
+    }
+    .footer-action-group {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    }
+    #btnBack { position: absolute; left: 2rem; }
+
+    /* Export System - Google Style */
+    .download-list { padding: 1rem; max-height: 400px; overflow-y: auto; }
+    .download-row {
+    display: flex; align-items: center; padding: 1rem 1.5rem; border-radius: 16px;
+    cursor: pointer; transition: 0.2s; gap: 1.25rem; margin-bottom: 0.5rem; border: 1px solid transparent;
+    }
+    .download-row:hover { background: var(--modal-bg); }
+    .download-row.selected { background: rgba(99, 102, 241, 0.08); border: 1px solid var(--accent-solid); }
+    .row-avatar {
+    width: 40px; height: 40px; border-radius: 50%; background: var(--accent-gradient);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 700; font-size: 1.1rem;
+    }
+    .row-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; text-align: left; }
+    .row-title { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
+    .row-meta { font-size: 0.75rem; color: var(--text-muted); }
+    .row-check { width: 20px; height: 20px; accent-color: var(--accent-solid); cursor: pointer; }
+
+    /* Main Footer */
+    footer { padding: 4rem 2rem; background: var(--surface-color); border-top: 1px solid var(--border-color);
+    margin-top: 4rem; }
+    .footer-grid { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr auto 1fr; align-items:
+    center; width: 100%; gap: 2rem; }
+    .footer-left { text-align: left; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
+    .footer-center { display: flex; justify-content: center; }
+    .footer-right { text-align: right; }
+    .counter-pill {
+    display: inline-flex; align-items: center; padding: 0.6rem 1.5rem;
+    background: var(--accent-gradient); color: white; border-radius: 100px;
+    font-weight: 800; font-size: 0.85rem; gap: 10px; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Immersive Viewer */
+    #fullPageView { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1300; background:
+    var(--bg-color); display: flex; flex-direction: column; padding-top: 5.5rem; }
+    #fullFrame { flex: 1; width: 100%; border: 0; background: white; }
+    .viewer-controls {
+    position: absolute; top: 1.25rem; left: 50%; transform: translateX(-50%);
+    z-index: 1401; display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 1.5rem; background: var(--viewer-nav-bg); backdrop-filter: blur(25px);
+    border: 1px solid var(--border-color); border-radius: 100px; width: 90%; max-width: 800px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+
+    /* Floating Delete Action */
+    .floating-delete {
+    position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px;
+    border-radius: 50%; background: #ef4444; color: white;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 1500; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+    border: none; transition: 0.2s;
+    }
+    .floating-delete:hover { transform: scale(1.1); background: #dc2626; }
+    .floating-delete:active { transform: scale(0.9); background: #991b1b; }
+    </style>
+</head>
+
+<body>
+
+    <nav id="mainNav">
+        <a href="#" onclick="showHome(); return false;" class="nav-logo">
+            <svg class="logo-svg" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#6366f1" />
+                        <stop offset="100%" stop-color="#a855f7" />
+                    </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" stroke="url(#g)" stroke-width="8" fill="none" />
+                <path d="M30 70L50 30L70 70M40 55H60" stroke="url(#g)" stroke-width="8" stroke-linecap="round"
+                    fill="none" />
+            </svg>
+            <div class="studio-brand"><span class="logo-mark">Ats</span><span class="studio-name">Web Studio</span>
+            </div>
+        </a>
+        <div class="nav-actions">
+            <button onclick="toggleTheme()" class="btn-icon" id="themeToggle" title="Theme"><svg width="18" height="18"
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707.707M12 8a4 4 0 100 8 4 4 0 000-8z">
+                    </path>
+                </svg></button>
+            <button onclick="openDownloadModal()" class="btn-icon" id="downloadBtn" title="Export"><svg width="18"
+                    height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg></button>
+            <button onclick="openModal()" class="btn btn-primary">Add Concept</button>
+        </div>
+    </nav>
+
+    <main id="mainContent">
+        <header>
+            <span class="section-tag">test your creativity</span>
+            <h2 class="section-title">Concept Portfolio</h2>
+            <p style="color:var(--text-muted)">Crafting digital high-fidelity visions.</p>
+        </header>
+        <div id="pageGrid"></div>
+    </main>
+
+    <div id="fullPageView" class="hidden">
+        <div class="viewer-controls">
+            <button onclick="showHome()" class="btn btn-ghost">Studio</button>
+            <h2 id="viewTitle" class="logo-mark" style="font-size:1.2rem; margin: 0;">Project</h2>
+            <div style="display:flex; gap:0.5rem;">
+                <button onclick="handleRefine()" class="btn btn-ghost">Refine</button>
+            </div>
+        </div>
+        <button class="floating-delete" onclick="handleDelete()" title="Delete Concept">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                </path>
+            </svg>
+        </button>
+        <iframe id="fullFrame"></iframe>
+    </div>
+
+    <!-- Modals -->
+    <div id="editorModal" class="modal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-scroll-area">
+                <div id="setupView" class="setup-screen">
+                    <h2 class="logo-mark" style="font-size:3rem; margin-bottom:1rem;">New Concept</h2>
+                    <input type="text" id="pageTitle" class="form-input-big" placeholder="Enter Project Name">
+                    <input type="text" id="pageDesc" class="form-input-big" placeholder="Brief Description / Rationale">
+                    <div class="mode-selector">
+                        <button class="mode-btn" id="btnModeStandalone" onclick="initEditor('standalone')">
+                            <h4>Standalone</h4>
+                            <p>One unified code field.</p>
+                        </button>
+                        <button class="mode-btn" id="btnModeSeparate" onclick="initEditor('separate')">
+                            <h4>Separate</h4>
+                            <p>Pro HTML / CSS / JS.</p>
+                        </button>
+                    </div>
+
+                    <div class="import-section">
+                        <div class="import-controls">
+                            <input type="file" id="fileUpload" accept=".html" style="display:none"
+                                onchange="handleFileUpload(event)">
+                            <button onclick="document.getElementById('fileUpload').click()" class="btn btn-ghost"
+                                style="flex:1">Upload File</button>
+                            <div style="flex:2; display:flex; gap:10px;">
+                                <input type="text" id="urlInput" class="import-url-input"
+                                    placeholder="Fetch from URL...">
+                                <button onclick="handleUrlImport()" class="btn btn-ghost">Fetch</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="editorContainer" class="hidden">
+                    <div id="tabContainer" class="editor-tabs">
+                        <button class="tab-btn active" id="tab-html" onclick="switchTab('html')">HTML</button>
+                        <button class="tab-btn" id="tab-css" onclick="switchTab('css')">CSS</button>
+                        <button class="tab-btn" id="tab-js" onclick="switchTab('js')">JS</button>
+                    </div>
+                    <textarea id="htmlEditor" class="form-textarea" placeholder="Enter HTML here..."></textarea>
+                    <textarea id="cssEditor" class="form-textarea hidden" placeholder="Enter CSS here..."></textarea>
+                    <textarea id="jsEditor" class="form-textarea hidden" placeholder="Enter JS here..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button onclick="backToSetup()" id="btnBack" class="btn btn-ghost hidden">Back to Setup</button>
+                <div class="footer-action-group">
+                    <button onclick="closeModal()" class="btn btn-ghost">Discard</button>
+                    <button onclick="savePage()" class="btn btn-primary">Add to Concept</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Modal -->
+    <div id="downloadModal" class="modal">
+        <div class="modal-overlay" onclick="closeDownloadModal()"></div>
+        <div class="modal-content" style="max-width: 45rem;">
+            <div
+                style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="logo-mark" style="font-size: 1.5rem;">Export Studio Vault</h3>
+                <button onclick="toggleAllCheckboxes()" class="btn btn-ghost" style="font-size: 10px;">Select
+                    All</button>
+            </div>
+            <div class="modal-scroll-area">
+                <div id="downloadList" class="download-list"></div>
+            </div>
+            <div class="modal-footer" style="background: var(--surface-color);">
+                <button onclick="closeDownloadModal()" class="btn btn-ghost">Cancel</button>
+                <button onclick="downloadSelected()" class="btn btn-primary">Download Selected</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-left">
+                <p>© 2026 Ats Web Studio. Creative Prototype Archive.</p>
+            </div>
+            <div class="footer-center">
+                <div class="nav-logo">
+                    <svg class="logo-svg" viewBox="0 0 100 100">
+                        <defs>
+                            <linearGradient id="gf" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6366f1" />
+                                <stop offset="100%" stop-color="#a855f7" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="50" cy="50" r="45" stroke="url(#gf)" stroke-width="8" fill="none" />
+                        <path d="M30 70L50 30L70 70M40 55H60" stroke="url(#gf)" stroke-width="8" stroke-linecap="round"
+                            fill="none" />
+                    </svg>
+                    <div class="studio-brand"><span class="logo-mark" style="font-size: 1rem;">Ats</span><span
+                            class="studio-name" style="font-size: 0.4rem;">Web Studio</span></div>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="counter-pill"><span>Concepts</span><span id="conceptCounter" class="counter-value">0</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const STORAGE_KEY = 'ats_studio_final_v5';
+        const THEME_KEY = 'ats_theme_v2026';
+
+        const defaultPages = [
+            {
+                id: 'ae-2026', title: 'Aethelgard Zenith', desc: 'Minimalist architecture with floating 3D geometry.', mode: 'separate',
+                html: `<div class="p-wrap"><div class="shape"></div><h1>ZENITH<br>STRIKE</h1><p>Intersection of material and light.</p></div>`,
+                css: `body{background:#fff; color:#111; overflow:hidden;} .p-wrap{height:100vh; padding:10%; display:flex; flex-direction:column; justify-content:center;} .shape{width:120px; height:120px; background:#111; border-radius:30% 70% 70% 30% / 30% 30% 70% 70%; animation: morph 8s infinite ease-in-out; margin-bottom:40px;} h1{font-family:Playfair Display, serif; font-size:12vw; line-height:0.8; letter-spacing:-8px; margin:0;} p{font-size:1.5rem; color:#666; max-width:400px; margin-top:30px;} @keyframes morph{0%,100%{border-radius:30% 70% 70% 30%; transform:rotate(0);} 50%{border-radius:50%; transform:translateY(-20px) rotate(180deg);}}`, js: ''
+            },
+            {
+                id: 'np-2026', title: 'Plasma Protocol', desc: 'Reactive kinetic interface with fluid energy fields.', mode: 'separate',
+                html: `<div id="pw"><canvas id="pc"></canvas><div class="pu"><h1>PLASMA</h1><div class="bar"></div><p>POWER STATUS: CRITICAL</p></div></div>`,
+                css: `#pw{height:100vh; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;} #pc{position:absolute; inset:0; opacity:0.6;} .pu{text-align:center; position:relative; z-index:5;} .bar{width:120px; height:2px; background:#6366f1; margin:20px auto;} h1{font-size:10vw; font-weight:900; color:#fff; text-shadow:0 0 30px #6366f1; letter-spacing:-5px;} p{color:#6366f1; font-weight:800; letter-spacing:4px; font-size:11px;}`,
+                js: `const c=document.getElementById('pc'); if(c){const ctx=c.getContext('2d'); let w,h,p=[]; function init(){w=c.width=window.innerWidth; h=c.height=window.innerHeight; p=Array.from({length:100},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*5,vy:(Math.random()-0.5)*5}));} function draw(){ctx.clearRect(0,0,w,h); ctx.fillStyle='#a855f7'; p.forEach(i=>{i.x+=i.vx; i.y+=i.vy; if(i.x<0||i.x>w)i.vx*=-1; if(i.y<0||i.y>h)i.vy*=-1; ctx.beginPath(); ctx.arc(i.x,i.y,1.2,0,Math.PI*2); ctx.fill();}); requestAnimationFrame(draw);} init(); draw();}`
+            }
+        ];
+
+        let pages = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultPages;
+        let currentEditingId = null;
+        let currentViewingId = null;
+        let currentMode = 'separate';
+
+        function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem(THEME_KEY, t); }
+        function toggleTheme() { setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
+        function switchTab(l) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.form-textarea').forEach(tx => tx.classList.add('hidden')); document.getElementById('tab-' + l).classList.add('active'); document.getElementById(l + 'Editor').classList.remove('hidden'); }
+
+        function updateCounter() {
+            const el = document.getElementById('conceptCounter');
+            if (el) el.innerText = pages.length;
+        }
+
+        function initEditor(m) {
+            const title = document.getElementById('pageTitle').value.trim();
+            if (!title) { alert("Enter project name first."); return; }
+            currentMode = m;
+            document.getElementById('setupView').classList.add('hidden');
+            document.getElementById('btnBack').classList.remove('hidden');
+            const c = document.getElementById('editorContainer');
+            c.classList.remove('hidden');
+            c.style.borderColor = (m === 'standalone') ? '#00c6ff' : '#a855f7';
+            if (m === 'standalone') document.getElementById('tabContainer').classList.add('hidden'); else document.getElementById('tabContainer').classList.remove('hidden');
+            switchTab('html');
+        }
+
+        function backToSetup() {
+            document.getElementById('setupView').classList.remove('hidden');
+            document.getElementById('editorContainer').classList.add('hidden');
+            document.getElementById('btnBack').classList.add('hidden');
+        }
+
+        function handleFileUpload(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => { document.getElementById('pageTitle').value = file.name.replace('.html', ''); document.getElementById('htmlEditor').value = ev.target.result; initEditor('standalone'); };
+            reader.readAsText(file);
+        }
+
+        async function handleUrlImport() {
+            const url = document.getElementById('urlInput').value.trim(); if (!url) return;
+            try { const res = await fetch(url); const text = await res.text(); document.getElementById('pageTitle').value = "Imported Concept"; document.getElementById('htmlEditor').value = text; initEditor('standalone'); }
+            catch (err) { alert("Import error (CORS Blocked)."); }
+        }
+
+        function compileContent(p) {
+            if (p.mode === 'standalone') return p.html;
+            return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{margin:0;font-family:sans-serif;background:transparent;overflow-x:hidden;} ' + (p.css || '') + '</style></head><body>' + (p.html || '') + '<script>' + (p.js || '') + '<\/script></body></html>';
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('pageGrid'); if (!grid) return; grid.innerHTML = '';
+            updateCounter();
+            const add = document.createElement('div');
+            add.className = 'preview-card add-card'; add.onclick = () => openModal();
+            add.innerHTML = '<div class="add-card-icon">+</div><span class="add-card-text">New Concept</span>';
+            grid.appendChild(add);
+            pages.forEach(p => {
+                const card = document.createElement('div'); card.className = 'preview-card'; card.onclick = () => viewPage(p.id);
+                card.innerHTML = `<div class="iframe-container"><iframe srcdoc="${compileContent(p).replace(/"/g, '&quot;')}" scrolling="no"></iframe></div><div class="card-content"><h3 class="card-title">${p.title}</h3><p class="card-desc">${p.desc}</p></div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function viewPage(id) {
+            const p = pages.find(x => x.id === id); if (!p) return;
+            currentViewingId = id;
+            document.getElementById('mainNav').classList.add('hidden');
+            document.getElementById('mainContent').classList.add('hidden');
+            document.querySelector('footer').classList.add('hidden');
+            document.getElementById('fullPageView').classList.remove('hidden');
+            document.getElementById('viewTitle').innerText = p.title;
+            document.getElementById('fullFrame').srcdoc = compileContent(p);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function showHome() {
+            currentViewingId = null;
+            document.getElementById('mainNav').classList.remove('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.querySelector('footer').classList.remove('hidden');
+            document.getElementById('fullPageView').classList.add('hidden');
+            document.body.style.overflow = 'auto'; renderGrid();
+        }
+
+        function openModal(id = null) {
+            currentEditingId = id;
+            backToSetup();
+            if (id) {
+                const p = pages.find(x => x.id === id);
+                document.getElementById('pageTitle').value = p.title;
+                document.getElementById('pageDesc').value = p.desc;
+                document.getElementById('htmlEditor').value = p.html;
+                document.getElementById('cssEditor').value = p.css || '';
+                document.getElementById('jsEditor').value = p.js || '';
+                initEditor(p.mode);
+            } else {
+                document.getElementById('pageTitle').value = '';
+                document.getElementById('pageDesc').value = '';
+                document.getElementById('htmlEditor').value = '';
+                document.getElementById('cssEditor').value = '';
+                document.getElementById('jsEditor').value = '';
+            }
+            document.getElementById('editorModal').classList.add('flex');
+        }
+
+        function closeModal() { document.getElementById('editorModal').classList.remove('flex'); }
+
+        function savePage() {
+            const title = document.getElementById('pageTitle').value.trim() || 'Untitled';
+            const desc = document.getElementById('pageDesc').value.trim() || 'Concept.';
+            const h = document.getElementById('htmlEditor').value;
+            const c = document.getElementById('cssEditor').value;
+            const j = document.getElementById('jsEditor').value;
+            if (currentEditingId) {
+                const idx = pages.findIndex(x => x.id === currentEditingId);
+                pages[idx] = { ...pages[idx], title, desc, html: h, css: c, js: j, mode: currentMode };
+            } else {
+                pages.unshift({ id: Date.now().toString(), title, desc, html: h, css: c, js: j, mode: currentMode });
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(pages));
+            closeModal(); renderGrid();
+        }
+
+        function handleRefine() {
+            if (currentViewingId) {
+                const idToEdit = currentViewingId;
+                showHome();
+                openModal(idToEdit);
+            }
+        }
+
+        function handleDelete() {
+            if (confirm("Permanently delete this concept?")) {
+                pages = pages.filter(p => p.id !== currentViewingId);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(pages));
+                showHome();
+            }
+        }
+
+        function openDownloadModal() {
+            const list = document.getElementById('downloadList'); if (!list) return;
+            list.innerHTML = '';
+            pages.forEach(p => {
+                const item = document.createElement('div'); item.className = 'download-row';
+                const initial = p.title.charAt(0).toUpperCase();
+                item.innerHTML = `
+                    <div class="row-avatar">${initial}</div>
+                    <div class="row-info"><span class="row-title">${p.title}</span><span class="row-meta">${p.mode}</span></div>
+                    <input type="checkbox" value="${p.id}" class="row-check exp-check">
+                `;
+                item.onclick = (e) => {
+                    if (e.target.tagName !== 'INPUT') {
+                        const ck = item.querySelector('input');
+                        ck.checked = !ck.checked;
+                    }
+                    item.classList.toggle('selected', item.querySelector('input').checked);
+                };
+                list.appendChild(item);
+            });
+            document.getElementById('downloadModal').classList.add('flex');
+        }
+
+        function toggleAllCheckboxes() { const checks = document.querySelectorAll('.exp-check'); const allChecked = [...checks].every(c => c.checked); checks.forEach(c => { c.checked = !allChecked; c.parentElement.classList.toggle('selected', c.checked); }); }
+        function closeDownloadModal() { document.getElementById('downloadModal').classList.remove('flex'); }
+        function dl(id) { const p = pages.find(x => x.id === id); const blob = new Blob([compileContent(p)], { type: 'text/html' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = p.title.toLowerCase().replace(/ /g, '_') + '.html'; a.click(); }
+        function downloadSelected() { const sel = [...document.querySelectorAll('.exp-check:checked')].map(c => c.value); sel.forEach((id, i) => setTimeout(() => dl(id), i * 400)); }
+
+        window.onload = () => { setTheme(localStorage.getItem(THEME_KEY) || 'light'); renderGrid(); };
+    </script>
+</body>
+
+</html>
