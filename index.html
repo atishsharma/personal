@@ -731,18 +731,18 @@
     <main id="mainContent">
         <header>
             <span class="section-tag">test your creativity</span>
-            <h2 class="section-title">Concept Portfolio</h2>
-            <p style="color:var(--text-muted)">Crafting digital high-fidelity visions.</p>
+            <h2 class="section-title">Concepts Portfolio</h2>
+            <p style="color:var(--text-muted)">Crafting Your Visions One Page at a Time.</p>
         </header>
         <div id="pageGrid"></div>
     </main>
 
     <div id="fullPageView" class="hidden">
         <div class="viewer-controls">
-            <button onclick="showHome()" class="btn btn-ghost">Studio</button>
+            <button onclick="showHome()" class="btn btn-ghost">Home</button>
             <h2 id="viewTitle" class="logo-mark" style="font-size:1.2rem; margin: 0;">Project</h2>
             <div style="display:flex; gap:0.5rem;">
-                <button onclick="handleRefine()" class="btn btn-ghost">Refine</button>
+                <button onclick="handleRefine()" class="btn btn-ghost">Editor</button>
             </div>
         </div>
         <button class="floating-delete" onclick="handleDelete()" title="Delete Concept">
@@ -761,7 +761,7 @@
         <div class="modal-content">
             <div class="modal-scroll-area">
                 <div id="setupView" class="setup-screen">
-                    <h2 class="logo-mark" style="font-size:3rem; margin-bottom:1rem;">New Concept</h2>
+                    <h2 class="logo-mark" style="font-size:3rem; margin-bottom:1rem;">Add New Concept</h2>
                     <input type="text" id="pageTitle" class="form-input-big" placeholder="Enter Project Name">
                     <input type="text" id="pageDesc" class="form-input-big" placeholder="Brief Description / Rationale">
                     <div class="mode-selector">
@@ -935,7 +935,7 @@
             updateCounter();
             const add = document.createElement('div');
             add.className = 'preview-card add-card'; add.onclick = () => openModal();
-            add.innerHTML = '<div class="add-card-icon">+</div><span class="add-card-text">New Concept</span>';
+            add.innerHTML = '<div class="add-card-icon">+</div><span class="add-card-text">Add New Concept</span>';
             grid.appendChild(add);
             pages.forEach(p => {
                 const card = document.createElement('div'); card.className = 'preview-card'; card.onclick = () => viewPage(p.id);
