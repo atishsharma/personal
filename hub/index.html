@@ -3,15 +3,15 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Atish Ak Sharma | Browser Local Bookmark Manager</title>
     <link rel="icon" type="image/png"
         href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 
         :root {
-            /* Pink-themed Light Mode */
             --bg-color: #fff9fa;
             --surface-color: #ffffff;
             --text-main: #4a0e1c;
@@ -196,6 +196,17 @@
             margin-top: 4px;
         }
 
+        /* DnD Styles */
+        .dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+
+        .drag-over {
+            background: rgba(255, 77, 109, 0.1) !important;
+            border: 2px dashed var(--accent-solid) !important;
+        }
+
         /* Context Menu */
         #contextMenu {
             position: fixed;
@@ -289,11 +300,11 @@
             -webkit-backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid var(--glass-border);
             border-radius: 36px;
-            padding: 2rem;
+            padding: 2.5rem;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            height: 220px;
+            height: 240px;
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
             position: relative;
@@ -315,7 +326,7 @@
 
         .tile-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-main);
             line-height: 1.1;
@@ -324,12 +335,12 @@
         }
 
         .tile-count {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 800;
             color: var(--accent-solid);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            padding: 4px 12px;
+            padding: 5px 14px;
             background: var(--modal-bg);
             border-radius: 100px;
             display: inline-block;
@@ -492,7 +503,7 @@
 
         /* Buttons */
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.8rem 1.75rem;
             border-radius: 12px;
             font-size: 0.75rem;
             font-weight: 800;
@@ -579,7 +590,7 @@
             position: relative;
             background: var(--surface-color);
             width: 100%;
-            max-width: 44rem;
+            max-width: 48rem;
             border-radius: 40px;
             overflow: hidden;
             box-shadow: 0 50px 100px rgba(0, 0, 0, 0.2);
@@ -589,7 +600,7 @@
         }
 
         .inspect-snapshot {
-            height: 240px;
+            height: 260px;
             position: relative;
             overflow: hidden;
             background: var(--modal-bg);
@@ -608,18 +619,18 @@
         }
 
         .inspect-body {
-            padding: 1.5rem 3rem 3rem;
+            padding: 2rem 3.5rem 3.5rem;
             text-align: center;
         }
 
         .inspect-favicon {
-            width: 74px;
-            height: 74px;
+            width: 84px;
+            height: 84px;
             border-radius: 20px;
             background: white;
-            padding: 14px;
+            padding: 16px;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            margin: -55px auto 1.25rem;
+            margin: -68px auto 1.5rem;
             position: relative;
             z-index: 4;
         }
@@ -627,7 +638,7 @@
         #viewTitle {
             font-family: 'Playfair Display', serif;
             font-style: italic;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: var(--text-main);
             margin-bottom: 0.5rem;
@@ -635,17 +646,22 @@
         }
 
         .inspect-url-display {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--accent-solid);
             font-weight: 700;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
             opacity: 0.8;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 300px;
+            margin: 0 auto 1.5rem;
         }
 
         .inspect-desc {
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--text-muted);
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
             max-width: 90%;
             margin-left: auto;
             margin-right: auto;
@@ -653,7 +669,7 @@
 
         .inspect-actions-row {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             align-items: center;
             justify-content: center;
             width: 100%;
@@ -685,7 +701,7 @@
             position: relative;
             background: var(--surface-color);
             width: 100%;
-            max-width: 32rem;
+            max-width: 30rem;
             border-radius: 36px;
             overflow: hidden;
             box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
@@ -738,6 +754,7 @@
             gap: 12px;
         }
 
+        /* Footer */
         footer {
             padding: 4rem 2rem;
             background: var(--surface-color);
@@ -801,14 +818,11 @@
                 <path d="M30 70L50 30L70 70M40 55H60" stroke="url(#g)" stroke-width="8" stroke-linecap="round"
                     fill="none" />
             </svg>
-            <div class="studio-brand"><span class="logo-mark">Atish's</span><span class="hub-name"> Hub</span>
-            </div>
+            <div class="studio-brand"><span class="logo-mark">Atish's</span><span class="hub-name">Hub</span></div>
         </a>
         <div class="nav-actions">
-            <!-- Install Web App Button -->
             <button id="installBtn" class="btn btn-ghost hidden"
                 style="border-color:var(--accent-solid); color:var(--accent-solid)">Install Hub</button>
-
             <input type="file" id="chromeImport" accept=".html" style="display:none" onchange="importChrome(event)">
             <button onclick="document.getElementById('chromeImport').click()" class="btn btn-blue-gradient">Import
                 Chrome</button>
@@ -866,7 +880,7 @@
         </div>
     </div>
 
-    <!-- Vault Entry Modal -->
+    <!-- Add Modal -->
     <div id="addModal" class="modal">
         <div class="modal-overlay" onclick="closeModal()"></div>
         <div class="modal-content">
@@ -877,10 +891,10 @@
                 <input type="text" id="linkName" class="form-input" placeholder="e.g. Design Inspiration">
                 <label class="form-label">URL</label>
                 <input type="text" id="linkUrl" class="form-input" placeholder="https://...">
-                <label class="form-label">Folder Hierarchy</label>
+                <label class="form-label">Folder Path</label>
                 <select id="linkFolder" class="form-select"></select>
                 <label class="form-label">Notes</label>
-                <input type="text" id="linkDesc" class="form-input" placeholder="Key takeaways...">
+                <input type="text" id="linkDesc" class="form-input" placeholder="Thoughts...">
             </div>
             <div class="modal-footer">
                 <button onclick="closeModal()" class="btn btn-ghost">Discard</button>
@@ -889,58 +903,74 @@
         </div>
     </div>
 
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-left">
+                <p>© 2026 Atish's Hub. Professional Organizing.</p>
+            </div>
+            <div class="footer-center">
+                <div class="nav-logo">
+                    <svg class="logo-svg" viewBox="0 0 100 100">
+                        <defs>
+                            <linearGradient id="gf" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ff4d6d" />
+                                <stop offset="100%" stop-color="#ff85a1" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="50" cy="50" r="45" stroke="url(#gf)" stroke-width="8" fill="none" />
+                        <path d="M30 70L50 30L70 70M40 55H60" stroke="url(#gf)" stroke-width="8" stroke-linecap="round"
+                            fill="none" />
+                    </svg>
+                    <div class="studio-brand"><span class="logo-mark" style="font-size: 1rem;">Atish's</span><span
+                            class="hub-name" style="font-size: 0.4rem;">Bookmark Hub</span></div>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="counter-pill"><span>Saved</span><span id="linkCounter" class="counter-value">0</span></div>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        const STORAGE_KEY = 'atish_bookmark_v22_fix';
-        const THEME_KEY = 'atish_bookmark_theme';
-        const VIEW_MODE_KEY = 'atish_bookmark_view_mode';
-        const LAST_FOLDER_KEY = 'atish_last_folder';
-        const EMPTY_FOLDERS_KEY = 'atish_empty_folders';
+        const STORAGE_KEY = 'atish_v24_pages';
+        const THEME_KEY = 'atish_v24_theme';
+        const VIEW_MODE_KEY = 'atish_v24_view';
+        const EMPTY_FOLDERS_KEY = 'atish_v24_empty';
 
-        // PWA Install Logic
-        let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
-
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.classList.remove('hidden');
-        });
-
-        installBtn.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') installBtn.classList.add('hidden');
-            deferredPrompt = null;
-        });
-
-        // Basic Service Worker Registration (via Blob to remain in 1 file)
-        if ('serviceWorker' in navigator) {
-            const swCode = `
-                self.addEventListener('install', (e) => e.waitUntil(self.skipWaiting()));
-                self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
-                self.addEventListener('fetch', (e) => {});
-            `;
-            const blob = new Blob([swCode], { type: 'application/javascript' });
-            const url = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(url).catch(err => console.log("SW Reg failed: ", err));
-        }
-
-        // Restored demo folders and items
-        const demoBookmarks = [
-            { id: 'd1', name: 'Atish\'s Library Reference', url: 'https://apple.com', desc: 'Industry standard for design benchmarks.', folder: 'Design', captured: true },
-            { id: 'd2', name: 'Stripe Components', url: 'https://stripe.com/docs', desc: 'Developer experience standard.', folder: 'Work', captured: true }
+        let bookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+            { id: '1', name: 'Apple Reference', url: 'https://apple.com', desc: 'Design benchmark.', folder: 'Design', captured: true },
+            { id: '2', name: 'Stripe Docs', url: 'https://stripe.com/docs', desc: 'Interface standard.', folder: 'Work', captured: true }
         ];
-        const demoFolders = ['Design', 'Work'];
-
-        let bookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || (localStorage.getItem(STORAGE_KEY) ? [] : demoBookmarks);
-        let emptyFolders = JSON.parse(localStorage.getItem(EMPTY_FOLDERS_KEY)) || (localStorage.getItem(EMPTY_FOLDERS_KEY) ? [] : demoFolders);
+        let emptyFolders = JSON.parse(localStorage.getItem(EMPTY_FOLDERS_KEY)) || ['Design', 'Work'];
 
         let currentFolder = 'All';
         let currentViewingId = null;
         let currentViewMode = localStorage.getItem(VIEW_MODE_KEY) || 'thumb';
         let expandedFolders = new Set(['All']);
+        let draggedPath = null;
         let rightClickedPath = "";
+        let deferredPrompt;
+
+        // PWA Trigger
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btn = document.getElementById('installBtn');
+            if (btn) btn.classList.remove('hidden');
+        });
+
+        document.getElementById('installBtn')?.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') document.getElementById('installBtn').classList.add('hidden');
+            deferredPrompt = null;
+        });
+
+        // SW Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
+        }
 
         function initApp() {
             setTheme(localStorage.getItem(THEME_KEY) || 'light', false);
@@ -954,19 +984,14 @@
             document.documentElement.setAttribute('data-theme', t);
             if (save) localStorage.setItem(THEME_KEY, t);
             const btn = document.getElementById('themeBtn');
-            if (btn) btn.innerHTML = t === 'light'
-                ? `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`
-                : `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>`;
+            if (btn) btn.innerHTML = t === 'light' ? '🌙' : '☀️';
         }
 
         function toggleTheme() { setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); renderGrid(); renderTree(); }
         function toggleViewMode() { currentViewMode = currentViewMode === 'thumb' ? 'list' : 'thumb'; localStorage.setItem(VIEW_MODE_KEY, currentViewMode); updateViewModeBtn(); renderGrid(); }
-
         function updateViewModeBtn() {
             const btn = document.getElementById('viewModeBtn');
-            if (btn) btn.innerHTML = currentViewMode === 'thumb'
-                ? `<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>`
-                : `<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>`;
+            if (btn) btn.innerHTML = currentViewMode === 'thumb' ? '☰' : '▦';
         }
 
         function generateFolderColor(name) {
@@ -979,26 +1004,15 @@
         function setupContextMenus() {
             const menu = document.getElementById('contextMenu');
             window.addEventListener('click', () => menu.style.display = 'none');
-
-            document.getElementById('ctxAddLink').onclick = () => {
-                const path = rightClickedPath === 'All' ? "" : rightClickedPath;
-                localStorage.setItem(LAST_FOLDER_KEY, path);
-                openAddModal();
-            };
-
+            document.getElementById('ctxAddLink').onclick = () => openAddModal();
             document.getElementById('ctxAddSub').onclick = () => {
-                const sub = prompt("Enter sub-folder name:");
+                const sub = prompt("Folder Name:");
                 if (sub) {
                     const newPath = rightClickedPath === 'All' ? sub : `${rightClickedPath}/${sub}`;
-                    if (!emptyFolders.includes(newPath)) {
-                        emptyFolders.push(newPath);
-                        localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders));
-                    }
-                    renderTree();
-                    renderGrid();
+                    if (!emptyFolders.includes(newPath)) emptyFolders.push(newPath);
+                    saveState(); initApp();
                 }
             };
-
             document.getElementById('ctxDelete').onclick = () => { if (rightClickedPath !== 'All') deleteFolder(rightClickedPath); };
         }
 
@@ -1012,16 +1026,46 @@
             document.getElementById('ctxDelete').style.display = (path === 'All') ? 'none' : 'flex';
         }
 
+        // Drag & Drop
+        function onDragStart(e, path) { draggedPath = path; e.target.classList.add('dragging'); }
+        function onDragEnd(e) { e.target.classList.remove('dragging'); draggedPath = null; }
+        function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+        function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+        function onDrop(e, targetPath) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (draggedPath && draggedPath !== targetPath && !targetPath.startsWith(draggedPath + '/')) {
+                const newParent = targetPath === 'All' ? "" : targetPath;
+                const name = draggedPath.split('/').pop();
+                const newPath = newParent ? `${newParent}/${name}` : name;
+
+                // Update all items
+                bookmarks.forEach(b => {
+                    if (b.folder === draggedPath) b.folder = newPath;
+                    else if (b.folder.startsWith(draggedPath + '/')) b.folder = b.folder.replace(draggedPath, newPath);
+                });
+
+                // Update empty list
+                emptyFolders = emptyFolders.map(f => {
+                    if (f === draggedPath) return newPath;
+                    if (f.startsWith(draggedPath + '/')) return f.replace(draggedPath, newPath);
+                    return f;
+                });
+
+                saveState(); initApp();
+            }
+        }
+
         function buildFolderTree() {
             const tree = {};
             const allFolders = new Set([...bookmarks.map(b => b.folder), ...emptyFolders]);
             allFolders.forEach(path => {
                 if (!path) return;
                 const parts = path.split('/');
-                let currentLevel = tree;
+                let cur = tree;
                 parts.forEach(part => {
-                    if (!currentLevel[part]) currentLevel[part] = { _children: {} };
-                    currentLevel = currentLevel[part]._children;
+                    if (!cur[part]) cur[part] = { _children: {} };
+                    cur = cur[part]._children;
                 });
             });
             return tree;
@@ -1031,30 +1075,31 @@
             const tree = buildFolderTree();
             const container = document.getElementById('rootTree');
             const allNode = container.firstElementChild;
-            const allFolderHeader = document.getElementById('allFolderHeader');
-
-            container.innerHTML = '';
-            container.appendChild(allNode);
-            allFolderHeader.classList.toggle('active', currentFolder === 'All');
-            allFolderHeader.oncontextmenu = (e) => showContextMenu(e, 'All');
+            const header = document.getElementById('allFolderHeader');
+            container.innerHTML = ''; container.appendChild(allNode);
+            header.classList.toggle('active', currentFolder === 'All');
+            header.oncontextmenu = (e) => showContextMenu(e, 'All');
+            header.ondragover = onDragOver; header.ondragleave = onDragLeave; header.ondrop = (e) => onDrop(e, 'All');
 
             function createNode(name, subTree, fullPath) {
                 const li = document.createElement('li'); li.className = 'folder-node';
                 const hasChildren = Object.keys(subTree._children).length > 0;
-                const isExpanded = expandedFolders.has(fullPath);
-                const header = document.createElement('div');
-                header.className = `folder-header ${currentFolder === fullPath ? 'active' : ''}`;
-                header.innerHTML = `
-                    <span class="folder-toggle ${isExpanded ? 'expanded' : ''}" onclick="event.stopPropagation(); toggleFolderExpand('${fullPath}')">${hasChildren ? '▶' : ''}</span>
-                    <span style="color:${generateFolderColor(name)}">📁</span>
-                    <span style="flex:1">${name}</span>
-                `;
-                header.onclick = () => setFolder(fullPath);
-                header.oncontextmenu = (e) => showContextMenu(e, fullPath);
-                li.appendChild(header);
-                if (hasChildren && isExpanded) {
+                const isExp = expandedFolders.has(fullPath);
+                const h = document.createElement('div');
+                h.className = `folder-header ${currentFolder === fullPath ? 'active' : ''}`;
+                h.setAttribute('draggable', 'true');
+                h.innerHTML = `<span class="folder-toggle ${isExp ? 'expanded' : ''}" onclick="event.stopPropagation(); toggleFolderExpand('${fullPath}')">${hasChildren ? '▶' : ''}</span><span style="color:${generateFolderColor(name)}">📁</span><span style="flex:1">${name}</span>`;
+                h.onclick = () => setFolder(fullPath);
+                h.oncontextmenu = (e) => showContextMenu(e, fullPath);
+                h.ondragstart = (e) => onDragStart(e, fullPath);
+                h.ondragend = onDragEnd;
+                h.ondragover = onDragOver;
+                h.ondragleave = onDragLeave;
+                h.ondrop = (e) => onDrop(e, fullPath);
+                li.appendChild(h);
+                if (hasChildren && isExp) {
                     const ul = document.createElement('ul'); ul.className = 'sub-folder-list';
-                    Object.entries(subTree._children).forEach(([subN, subV]) => ul.appendChild(createNode(subN, subV, `${fullPath}/${subN}`)));
+                    Object.entries(subTree._children).forEach(([sN, sV]) => ul.appendChild(createNode(sN, sV, `${fullPath}/${sN}`)));
                     li.appendChild(ul);
                 }
                 return li;
@@ -1063,7 +1108,7 @@
         }
 
         function toggleFolderExpand(path) { expandedFolders.has(path) ? expandedFolders.delete(path) : expandedFolders.add(path); renderTree(); }
-        function setFolder(f) { currentFolder = f; renderTree(); renderGrid(); }
+        function setFolder(f) { currentFolder = f; renderGrid(); renderTree(); }
 
         function renderGrid() {
             const grid = document.getElementById('bookmarkGrid');
@@ -1073,23 +1118,14 @@
 
             if (currentFolder === 'All') {
                 header.className = "center";
-                header.innerHTML = `
-                    <h2 class="section-title">Your Bookmark Library</h2>
-                    <p class="section-sub">All data is stored locally in your browser via Local Storage and is never sent to a server. You can remove it by clearing browser data.</p>
-                `;
+                header.innerHTML = `<h2 class="section-title">Your Bookmark Library</h2><p class="section-sub">All data is stored locally in your browser via Local Storage and is never sent to a server. You can remove it by clearing browser data.</p>`;
                 grid.classList.remove('list-mode');
                 renderFolderHomepage(grid);
             } else {
                 header.className = "";
-                const pathParts = currentFolder.split('/');
-                const currentFolderName = pathParts[pathParts.length - 1];
-                const breadcrumb = pathParts.join(' > ');
-                header.innerHTML = `
-                    <span class="section-tag">${breadcrumb.toUpperCase()}</span>
-                    <h2 class="section-title">${currentFolderName}</h2>
-                `;
-                if (currentViewMode === 'list') grid.classList.add('list-mode');
-                else grid.classList.remove('list-mode');
+                const parts = currentFolder.split('/');
+                header.innerHTML = `<span class="section-tag">${currentFolder.replace(/\//g, ' > ')}</span><h2 class="section-title">${parts[parts.length - 1]}</h2>`;
+                if (currentViewMode === 'list') grid.classList.add('list-mode'); else grid.classList.remove('list-mode');
                 renderLinkGrid(grid);
             }
         }
@@ -1098,7 +1134,6 @@
             const topFolders = [...new Set([...bookmarks.map(b => b.folder.split('/')[0]), ...emptyFolders.map(f => f.split('/')[0])])].filter(f => f).sort();
             const counter = document.getElementById('linkCounter');
             if (counter) counter.innerText = bookmarks.length;
-
             topFolders.forEach(folder => {
                 const count = bookmarks.filter(b => b.folder === folder || b.folder.startsWith(folder + '/')).length;
                 container.appendChild(createFolderTile(folder, count));
@@ -1106,16 +1141,19 @@
         }
 
         function createFolderTile(path, count) {
-            const folderName = path.split('/').pop();
+            const name = path.split('/').pop();
             const card = document.createElement('div');
             card.className = 'folder-tile';
-            const color = generateFolderColor(folderName);
+            card.setAttribute('draggable', 'true');
+            const color = generateFolderColor(name);
             card.style.setProperty('--folder-color', color);
-            card.innerHTML = `
-                <div class="tile-icon" style="color:${color}">📁</div>
-                <div class="tile-info"><span class="tile-name">${folderName}</span><span class="tile-count">${count} Items</span></div>
-            `;
+            card.innerHTML = `<div class="tile-icon" style="color:${color}">📁</div><div class="tile-info"><span class="tile-name">${name}</span><span class="tile-count">${count} Items</span></div>`;
             card.onclick = () => setFolder(path);
+            card.ondragstart = (e) => onDragStart(e, path);
+            card.ondragend = onDragEnd;
+            card.ondragover = onDragOver;
+            card.ondragleave = onDragLeave;
+            card.ondrop = (e) => onDrop(e, path);
             return card;
         }
 
@@ -1132,50 +1170,43 @@
             const counter = document.getElementById('linkCounter');
             if (counter) counter.innerText = directItems.length;
 
-            subFolders.forEach(folderPath => {
-                const totalInSub = bookmarks.filter(b => b.folder === folderPath || b.folder.startsWith(folderPath + "/")).length;
-                container.appendChild(createFolderTile(folderPath, totalInSub));
-            });
+            subFolders.forEach(path => container.appendChild(createFolderTile(path, bookmarks.filter(b => b.folder === path || b.folder.startsWith(path + "/")).length)));
 
             directItems.forEach(link => {
                 const host = new URL(link.url).hostname;
                 const favicon = `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
                 if (currentViewMode === 'list') {
                     const row = document.createElement('div'); row.className = 'bookmark-list-item'; row.onclick = () => viewLink(link.id);
-                    row.innerHTML = `<img src="${favicon}" class="list-avatar"><div class="list-info"><span class="list-title">${link.name}</span><span class="list-url">${link.url.substring(0, 40)}${link.url.length > 40 ? '...' : ''}</span><span class="list-desc">${link.desc || ''}</span></div>`;
+                    row.innerHTML = `<img src="${favicon}" class="list-avatar"><div class="list-info"><span class="list-title">${link.name}</span><span class="list-url">${link.url.substring(0, 40)}...</span><span class="list-desc">${link.desc || ''}</span></div>`;
                     container.appendChild(row);
                 } else {
                     const card = document.createElement('div'); card.className = 'bookmark-card'; card.onclick = () => viewLink(link.id);
                     const snapshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(link.url)}?w=600`;
-                    card.innerHTML = `<div class="card-snapshot-full">${link.captured ? `<img class="snapshot-img" src="${snapshotUrl}" loading="lazy" onerror="this.style.opacity=0">` : ''}<div class="snapshot-gradient"></div></div><img src="${favicon}" class="card-favicon-top"><div class="card-overlay-content"><span class="card-title">${link.name}</span><span class="card-url-meta">${host}</span></div>`;
+                    card.innerHTML = `<div class="card-snapshot-full">${link.captured ? `<img class="snapshot-img" src="${snapshotUrl}" loading="lazy">` : ''}<div class="snapshot-gradient"></div></div><img src="${favicon}" class="card-favicon-top"><div class="card-overlay-content"><span class="card-title">${link.name}</span><span class="card-url-meta">${host}</span></div>`;
                     container.appendChild(card);
                 }
             });
         }
 
-        function deleteFolder(folderPath) {
-            if (confirm(`Purge entire folder hierarchy "${folderPath}"?`)) {
-                bookmarks = bookmarks.filter(b => b.folder !== folderPath && !b.folder.startsWith(folderPath + '/'));
-                emptyFolders = emptyFolders.filter(f => f !== folderPath && !f.startsWith(folderPath + '/'));
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
-                localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders));
-                if (currentFolder === folderPath || currentFolder.startsWith(folderPath + "/")) currentFolder = 'All';
-                initApp();
+        function deleteFolder(path) {
+            if (confirm(`Purge hierarchy "${path}"?`)) {
+                bookmarks = bookmarks.filter(b => b.folder !== path && !b.folder.startsWith(path + '/'));
+                emptyFolders = emptyFolders.filter(f => f !== path && !f.startsWith(path + '/'));
+                if (currentFolder === path || currentFolder.startsWith(path + "/")) currentFolder = 'All';
+                saveState(); initApp();
             }
         }
 
         function viewLink(id) {
-            const link = bookmarks.find(x => x.id === id);
-            if (!link) return;
+            const link = bookmarks.find(x => x.id === id); if (!link) return;
             currentViewingId = id;
-            if (!link.captured) { link.captured = true; localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks)); }
+            if (!link.captured) { link.captured = true; saveState(); }
             const host = new URL(link.url).hostname;
-            const snapshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(link.url)}?w=800`;
             document.getElementById('viewTitle').innerText = link.name;
-            document.getElementById('inspectSnapshotImg').src = snapshotUrl;
+            document.getElementById('inspectSnapshotImg').src = `https://s0.wp.com/mshots/v1/${encodeURIComponent(link.url)}?w=800`;
             document.getElementById('inspectFavicon').src = `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
-            document.getElementById('inspectDesc').innerText = link.desc || `Reference from ${host}`;
-            document.getElementById('inspectUrlDisplay').innerText = link.url.length > 40 ? link.url.substring(0, 40) + '...' : link.url;
+            document.getElementById('inspectDesc').innerText = link.desc || `Stashed resource.`;
+            document.getElementById('inspectUrlDisplay').innerText = link.url.substring(0, 40) + (link.url.length > 40 ? '...' : '');
             document.getElementById('visitLinkBtn').onclick = () => window.open(link.url, '_blank');
             document.getElementById('inspectView').classList.add('flex');
         }
@@ -1183,44 +1214,26 @@
         function closeInspect() { document.getElementById('inspectView').classList.remove('flex'); currentViewingId = null; renderGrid(); }
         function showHome() { closeInspect(); setFolder('All'); }
         function handleEditFromView() { if (currentViewingId) { const id = currentViewingId; closeInspect(); openAddModal(id); } }
+        function handleDelete() { if (confirm("Archive permanently?")) { bookmarks = bookmarks.filter(b => b.id !== currentViewingId); saveState(); closeInspect(); initApp(); } }
+        function closeModal() { document.getElementById('addModal').classList.remove('flex'); }
 
-        function handleDelete() {
-            if (confirm("Permanently delete this bookmark?")) {
-                bookmarks = bookmarks.filter(b => b.id !== currentViewingId);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
-                closeInspect(); initApp();
-            }
-        }
-
-        function openAddModal(editId = null) {
-            const lastFolder = localStorage.getItem(LAST_FOLDER_KEY) || '';
+        function openAddModal(id = null) {
             const allPaths = new Set([...bookmarks.map(b => b.folder), ...emptyFolders]);
-            allPaths.forEach(path => {
-                if (!path) return;
-                const parts = path.split('/');
-                let temp = "";
-                parts.forEach(p => { temp = temp ? `${temp}/${p}` : p; allPaths.add(temp); });
-            });
-            const sortedFolders = Array.from(allPaths).sort();
+            allPaths.forEach(p => { if (!p) return; const parts = p.split('/'); let t = ""; parts.forEach(i => { t = t ? `${t}/${i}` : i; allPaths.add(t); }); });
+            const sorted = Array.from(allPaths).sort();
             const select = document.getElementById('linkFolder');
-            let options = sortedFolders.map(f => `<option value="${f}">${f}</option>`).join('');
-            select.innerHTML = `<option value="">(Root)</option>` + options + `<option value="NEW">+ Create New Path hierarchy...</option>`;
+            select.innerHTML = `<option value="">(Root)</option>` + sorted.map(f => `<option value="${f}">${f}</option>`).join('') + `<option value="NEW">+ Create New Path...</option>`;
 
-            if (editId) {
-                const link = bookmarks.find(b => b.id === editId);
-                isEditing = editId;
-                document.getElementById('modalTitle').innerText = "Update Resource";
+            if (id) {
+                const link = bookmarks.find(b => b.id === id);
+                document.getElementById('modalTitle').innerText = "Update Vault";
                 document.getElementById('linkName').value = link.name;
                 document.getElementById('linkUrl').value = link.url;
                 document.getElementById('linkDesc').value = link.desc;
                 select.value = link.folder;
             } else {
-                isEditing = false;
-                document.getElementById('modalTitle').innerText = "Vault Entry";
-                document.getElementById('linkName').value = '';
-                document.getElementById('linkUrl').value = '';
-                document.getElementById('linkDesc').value = '';
-                select.value = lastFolder;
+                document.getElementById('modalTitle').innerText = "New Vault Entry";
+                document.getElementById('linkName').value = ''; document.getElementById('linkUrl').value = ''; document.getElementById('linkDesc').value = '';
             }
             document.getElementById('addModal').classList.add('flex');
         }
@@ -1230,39 +1243,28 @@
             const url = document.getElementById('linkUrl').value.trim();
             const desc = document.getElementById('linkDesc').value.trim();
             let folder = document.getElementById('linkFolder').value;
-            if (folder === 'NEW') folder = prompt("Path hierarchy (e.g. Work/2026/Assets):", "") || "";
+            if (folder === 'NEW') folder = prompt("Path (e.g. Work/2026):", "") || "";
             if (!name || !url) return;
-            localStorage.setItem(LAST_FOLDER_KEY, folder);
-            if (folder && !emptyFolders.includes(folder)) {
-                emptyFolders.push(folder);
-                localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders));
-            }
-            if (isEditing) {
-                const idx = bookmarks.findIndex(b => b.id === isEditing);
+            if (folder && !emptyFolders.includes(folder)) emptyFolders.push(folder);
+            if (currentViewingId) {
+                const idx = bookmarks.findIndex(b => b.id === currentViewingId);
                 bookmarks[idx] = { ...bookmarks[idx], name, url, desc, folder };
-                isEditing = false;
             } else {
-                bookmarks.unshift({ id: Date.now().toString(), name, url: url.startsWith('http') ? url : `https://${url}`, desc, folder, captured: false });
+                bookmarks.unshift({ id: Date.now().toString(), name, url, desc, folder, captured: false });
             }
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
-            closeModal(); initApp();
+            saveState(); closeModal(); initApp();
         }
 
-        function closeModal() { document.getElementById('addModal').classList.remove('flex'); }
+        function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks)); localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders)); }
 
         function importChrome(event) {
             const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function (e) {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(e.target.result, 'text/html');
-                const dl = doc.querySelector('dl');
-                if (!dl) return;
-                const imported = parseChromeNodes(Array.from(dl.children));
-                bookmarks = [...bookmarks, ...imported];
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
-                initApp();
-                alert(`Vault synchronized with ${imported.length} items.`);
+                const doc = new DOMParser().parseFromString(e.target.result, 'text/html');
+                const dl = doc.querySelector('dl'); if (!dl) return;
+                bookmarks = [...bookmarks, ...parseChromeNodes(Array.from(dl.children))];
+                saveState(); initApp();
             };
             reader.readAsText(file);
         }
@@ -1270,18 +1272,13 @@
         function parseChromeNodes(nodes, path = "") {
             let extracted = [];
             nodes.forEach(node => {
-                if (node.tagName === 'A') {
-                    extracted.push({ id: Math.random().toString(36).substr(2, 9), name: node.innerText || 'Untitled', url: node.href, desc: 'Imported.', folder: path || '', captured: false });
-                } else if (node.tagName === 'H3') {
-                    const nextDl = node.nextElementSibling;
-                    if (nextDl && nextDl.tagName === 'DL') {
-                        const newPath = path ? `${path}/${node.innerText}` : node.innerText;
-                        if (newPath && !emptyFolders.includes(newPath)) emptyFolders.push(newPath);
-                        extracted = extracted.concat(parseChromeNodes(Array.from(nextDl.children), newPath));
-                    }
-                } else if (node.tagName === 'DT') extracted = extracted.concat(parseChromeNodes(Array.from(node.children), path));
+                if (node.tagName === 'A') extracted.push({ id: Math.random().toString(36).substr(2, 9), name: node.innerText, url: node.href, folder: path || '', captured: false });
+                else if (node.tagName === 'H3') {
+                    const nPath = path ? `${path}/${node.innerText}` : node.innerText;
+                    if (!emptyFolders.includes(nPath)) emptyFolders.push(nPath);
+                    if (node.nextElementSibling?.tagName === 'DL') extracted = extracted.concat(parseChromeNodes(Array.from(node.nextElementSibling.children), nPath));
+                }
             });
-            localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders));
             return extracted;
         }
     </script>

@@ -1,7 +1,7 @@
 {
     "name": "Atishs Bookmark Hub",
     "short_name": "Atish Hub",
-    "start_url": "/hub/index.html",
+    "start_url": "index.html",
     "display": "standalone",
     "background_color": "#fff9fa",
     "theme_color": "#ff4d6d",
