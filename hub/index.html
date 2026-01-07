@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atish Ak Sharma | Browser Local Bookmark Manager</title>
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#fff9fa">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Atish Hub">
+
+    <!-- Inlined Web Manifest via Data URI -->
+    <link rel="manifest"
+        href='data:application/json,{"name":"Atishs Bookmark Hub","short_name":"Atish Hub","start_url":".","display":"standalone","background_color":"#fff9fa","theme_color":"#ff4d6d","icons":[{"src":"https://api.dicebear.com/7.x/initials/svg?seed=Atish","sizes":"192x192","type":"image/svg+xml"},{"src":"https://api.dicebear.com/7.x/initials/svg?seed=Atish","sizes":"512x512","type":"image/svg+xml"}]}'>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+        :root {
+            /* Pink-themed Light Mode */
+            --bg-color: #fff9fa;
+            --surface-color: #ffffff;
+            --text-main: #4a0e1c;
+            --text-muted: #8c5e69;
+            --accent-gradient: linear-gradient(135deg, #ff4d6d 0%, #ff85a1 100%);
+            --accent-solid: #ff4d6d;
+            --blue-gradient: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%);
+            --border-color: rgba(255, 77, 109, 0.12);
+            --modal-bg: #fff0f3;
+            --card-shadow: 0 10px 30px -5px rgba(255, 77, 109, 0.08);
+            --hover-shadow: 0 20px 40px -10px rgba(255, 77, 109, 0.2);
+            --viewer-nav-bg: rgba(255, 255, 255, 0.6);
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.5);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #050505;
+            --surface-color: #111111;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --modal-bg: #1a1a1a;
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            --hover-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.2);
+            --viewer-nav-bg: rgba(15, 23, 42, 0.6);
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --accent-solid: #6366f1;
+            --glass-bg: rgba(30, 30, 30, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--surface-color);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo-svg {
+            width: 38px;
+            height: 38px;
+        }
+
+        .logo-mark {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .hub-name {
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            font-size: 0.55rem;
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 320px;
+            background: var(--surface-color);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem 0.75rem;
+            height: calc(100vh - 64px);
+            position: sticky;
+            top: 64px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            aside {
+                display: none;
+            }
+        }
+
+        /* Tree UI */
+        .folder-tree {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .folder-node {
+            margin-bottom: 4px;
+            position: relative;
+        }
+
+        .folder-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            gap: 10px;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .folder-header:hover {
+            background: var(--modal-bg);
+            color: var(--text-main);
+        }
+
+        .folder-header.active {
+            background: var(--accent-gradient);
+            color: white !important;
+        }
+
+        .folder-toggle {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            transition: 0.2s;
+        }
+
+        .folder-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .sub-folder-list {
+            list-style: none;
+            padding-left: 18px;
+            border-left: 1px solid var(--border-color);
+            margin-left: 20px;
+            margin-top: 4px;
+        }
+
+        /* Context Menu */
+        #contextMenu {
+            position: fixed;
+            display: none;
+            z-index: 5000;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 8px;
+            width: 220px;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            transition: 0.2s;
+        }
+
+        .menu-item:hover {
+            background: var(--accent-gradient);
+            color: white;
+        }
+
+        .menu-item.danger:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* Content Area */
+        .content-main {
+            flex: 1;
+            padding: 2.5rem;
+        }
+
+        header {
+            margin-bottom: 3.5rem;
+        }
+
+        header.center {
+            text-align: center;
+        }
+
+        .section-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--accent-solid);
+            font-weight: 800;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.1;
+        }
+
+        .section-sub {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Grid */
+        #bookmarkGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Liquid Glass Folder Tiles */
+        .folder-tile {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid var(--glass-border);
+            border-radius: 36px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: 220px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        .folder-tile:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--folder-color);
+            background: var(--surface-color);
+        }
+
+        .tile-icon {
+            font-size: 3.5rem;
+            margin-bottom: auto;
+            filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.1));
+        }
+
+        .tile-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.1;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .tile-count {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--accent-solid);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 4px 12px;
+            background: var(--modal-bg);
+            border-radius: 100px;
+            display: inline-block;
+        }
+
+        /* Square Bookmark Card */
+        .bookmark-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            overflow: hidden;
+            aspect-ratio: 1 / 1;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: var(--card-shadow);
+        }
+
+        .bookmark-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--accent-solid);
+        }
+
+        .card-snapshot-full {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+            background: var(--modal-bg);
+        }
+
+        .snapshot-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            filter: brightness(0.9);
+        }
+
+        .snapshot-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.98) 85%);
+            z-index: 2;
+        }
+
+        .card-overlay-content {
+            position: relative;
+            z-index: 3;
+            flex: 1;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .card-favicon-top {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 14px;
+            padding: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 3;
+        }
+
+        .card-title {
+            font-weight: 800;
+            font-size: 1.15rem;
+            color: var(--text-main);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-url-meta {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--accent-solid);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        /* List Mode */
+        #bookmarkGrid.list-mode {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .bookmark-list-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--surface-color);
+            transition: 0.2s;
+            cursor: pointer;
+            gap: 1.5rem;
+        }
+
+        .bookmark-list-item:hover {
+            background: var(--modal-bg);
+        }
+
+        .list-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            padding: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+        }
+
+        .list-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            overflow: hidden;
+        }
+
+        .list-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-main);
+            width: 250px;
+            flex-shrink: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .list-url {
+            font-size: 0.8rem;
+            color: var(--accent-solid);
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            opacity: 0.8;
+        }
+
+        .list-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: 0.25s;
+        }
+
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: white;
+            border: none;
+        }
+
+        .btn-blue-gradient {
+            background: var(--blue-gradient);
+            color: white;
+            border: none;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-icon {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 12px;
+            cursor: pointer;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #visitLinkBtn {
+            background: #0072ff;
+            color: white;
+            border: 2px solid #ff4d6d;
+            box-shadow: 0 8px 25px rgba(0, 114, 255, 0.3);
+            font-weight: 900;
+            padding: 1rem 2rem;
+        }
+
+        #visitLinkBtn:active {
+            transform: scale(0.92);
+            background: #0056b3;
+        }
+
+        #deleteBtn {
+            background: #ef4444;
+            color: white;
+            border: 2px solid #ffccd5;
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2);
+            font-weight: 900;
+        }
+
+        /* Inspect Popup */
+        .inspect-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .inspect-modal.flex {
+            display: flex !important;
+        }
+
+        .inspect-content {
+            position: relative;
+            background: var(--surface-color);
+            width: 100%;
+            max-width: 44rem;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.2);
+            z-index: 3002;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .inspect-snapshot {
+            height: 240px;
+            position: relative;
+            overflow: hidden;
+            background: var(--modal-bg);
+        }
+
+        .inspect-snapshot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .inspect-snapshot-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent, var(--surface-color));
+        }
+
+        .inspect-body {
+            padding: 1.5rem 3rem 3rem;
+            text-align: center;
+        }
+
+        .inspect-favicon {
+            width: 74px;
+            height: 74px;
+            border-radius: 20px;
+            background: white;
+            padding: 14px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin: -55px auto 1.25rem;
+            position: relative;
+            z-index: 4;
+        }
+
+        #viewTitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .inspect-url-display {
+            font-size: 0.8rem;
+            color: var(--accent-solid);
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            opacity: 0.8;
+        }
+
+        .inspect-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .inspect-actions-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Pretty Compact Vault Entry Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal.flex {
+            display: flex !important;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(15px);
+        }
+
+        .modal-content {
+            position: relative;
+            background: var(--surface-color);
+            width: 100%;
+            max-width: 32rem;
+            border-radius: 36px;
+            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-body {
+            padding: 2.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
+            text-align: left;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.1rem;
+            margin-bottom: 1.5rem;
+            outline: none;
+            font-size: 1rem;
+            color: var(--text-main);
+            font-family: inherit;
+            transition: 0.3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: var(--accent-solid);
+            box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1);
+            background: var(--surface-color);
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            background: var(--surface-color);
+            justify-content: center;
+            gap: 12px;
+        }
+
+        footer {
+            padding: 4rem 2rem;
+            background: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            width: 100%;
+            gap: 2rem;
+        }
+
+        .footer-left {
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .footer-center {
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer-right {
+            text-align: right;
+        }
+
+        .counter-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.7rem 1.8rem;
+            background: var(--accent-gradient);
+            color: white;
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.25);
+        }
+    </style>
+</head>
+
+<body onload="initApp()">
+
+    <nav>
+        <a href="#" onclick="showHome(); return false;" class="nav-logo">
+            <svg class="logo-svg" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ff4d6d" />
+                        <stop offset="100%" stop-color="#ff85a1" />
+                    </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" stroke="url(#g)" stroke-width="8" fill="none" />
+                <path d="M30 70L50 30L70 70M40 55H60" stroke="url(#g)" stroke-width="8" stroke-linecap="round"
+                    fill="none" />
+            </svg>
+            <div class="studio-brand"><span class="logo-mark">Atish's</span><span class="hub-name">Bookmark Hub</span>
+            </div>
+        </a>
+        <div class="nav-actions">
+            <!-- Install Web App Button -->
+            <button id="installBtn" class="btn btn-ghost hidden"
+                style="border-color:var(--accent-solid); color:var(--accent-solid)">Install Hub</button>
+
+            <input type="file" id="chromeImport" accept=".html" style="display:none" onchange="importChrome(event)">
+            <button onclick="document.getElementById('chromeImport').click()" class="btn btn-blue-gradient">Import
+                Chrome</button>
+            <button onclick="openAddModal()" class="btn btn-primary">Add Link</button>
+            <button onclick="toggleViewMode()" class="btn-icon" id="viewModeBtn" title="Change View Mode"></button>
+            <button onclick="toggleTheme()" class="btn-icon" id="themeBtn"></button>
+        </div>
+    </nav>
+
+    <div class="app-container">
+        <aside id="sidebar" oncontextmenu="return false;">
+            <ul class="folder-tree" id="rootTree">
+                <li class="folder-node">
+                    <div class="folder-header active" id="allFolderHeader" onclick="setFolder('All')">
+                        <span class="folder-toggle"></span>
+                        <span class="folder-icon">🏛️</span>
+                        <span>Library Vault</span>
+                    </div>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="content-main">
+            <header id="mainHeader"></header>
+            <div id="bookmarkGrid"></div>
+        </main>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="contextMenu">
+        <div class="menu-item" id="ctxAddLink"><span>➕</span> Add Link Here</div>
+        <div class="menu-item" id="ctxAddSub"><span>📂</span> New Sub-folder</div>
+        <div class="menu-item danger" id="ctxDelete"><span>🗑️</span> Delete Folder</div>
+    </div>
+
+    <!-- Inspect Modal -->
+    <div id="inspectView" class="inspect-modal">
+        <div class="modal-overlay" onclick="closeInspect()"></div>
+        <div class="inspect-content">
+            <div class="inspect-snapshot"><img id="inspectSnapshotImg" src="">
+                <div class="inspect-snapshot-overlay"></div>
+            </div>
+            <div class="inspect-body">
+                <img id="inspectFavicon" class="inspect-favicon" src="">
+                <h2 id="viewTitle">Target Website</h2>
+                <div id="inspectUrlDisplay" class="inspect-url-display"></div>
+                <p id="inspectDesc" class="inspect-desc">Metadata description here.</p>
+                <div class="inspect-actions-row">
+                    <button id="visitLinkBtn" class="btn">Open In New Tab</button>
+                    <button onclick="handleEditFromView()" class="btn btn-ghost"
+                        style="background:var(--modal-bg)">Edit</button>
+                    <button id="deleteBtn" class="btn" onclick="handleDelete()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vault Entry Modal -->
+    <div id="addModal" class="modal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-body">
+                <h2 id="modalTitle" class="logo-mark" style="font-size:2rem; margin-bottom:1.5rem; text-align:center;">
+                    Vault Entry</h2>
+                <label class="form-label">Name</label>
+                <input type="text" id="linkName" class="form-input" placeholder="e.g. Design Inspiration">
+                <label class="form-label">URL</label>
+                <input type="text" id="linkUrl" class="form-input" placeholder="https://...">
+                <label class="form-label">Folder Hierarchy</label>
+                <select id="linkFolder" class="form-select"></select>
+                <label class="form-label">Notes</label>
+                <input type="text" id="linkDesc" class="form-input" placeholder="Key takeaways...">
+            </div>
+            <div class="modal-footer">
+                <button onclick="closeModal()" class="btn btn-ghost">Discard</button>
+                <button onclick="saveBookmark()" class="btn btn-primary">Save to Hub</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'atish_bookmark_v22_fix';
+        const THEME_KEY = 'atish_bookmark_theme';
+        const VIEW_MODE_KEY = 'atish_bookmark_view_mode';
+        const LAST_FOLDER_KEY = 'atish_last_folder';
+        const EMPTY_FOLDERS_KEY = 'atish_empty_folders';
+
+        // PWA Install Logic
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.classList.remove('hidden');
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') installBtn.classList.add('hidden');
+            deferredPrompt = null;
+        });
+
+        // Basic Service Worker Registration (via Blob to remain in 1 file)
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (e) => e.waitUntil(self.skipWaiting()));
+                self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+                self.addEventListener('fetch', (e) => {});
+            `;
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const url = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(url).catch(err => console.log("SW Reg failed: ", err));
+        }
+
+        // Restored demo folders and items
+        const demoBookmarks = [
+            { id: 'd1', name: 'Atish\'s Library Reference', url: 'https://apple.com', desc: 'Industry standard for design benchmarks.', folder: 'Design', captured: true },
+            { id: 'd2', name: 'Stripe Components', url: 'https://stripe.com/docs', desc: 'Developer experience standard.', folder: 'Work', captured: true }
+        ];
+        const demoFolders = ['Design', 'Work'];
+
+        let bookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || (localStorage.getItem(STORAGE_KEY) ? [] : demoBookmarks);
+        let emptyFolders = JSON.parse(localStorage.getItem(EMPTY_FOLDERS_KEY)) || (localStorage.getItem(EMPTY_FOLDERS_KEY) ? [] : demoFolders);
+
+        let currentFolder = 'All';
+        let currentViewingId = null;
+        let currentViewMode = localStorage.getItem(VIEW_MODE_KEY) || 'thumb';
+        let expandedFolders = new Set(['All']);
+        let rightClickedPath = "";
+
+        function initApp() {
+            setTheme(localStorage.getItem(THEME_KEY) || 'light', false);
+            updateViewModeBtn();
+            renderTree();
+            renderGrid();
+            setupContextMenus();
+        }
+
+        function setTheme(t, save = true) {
+            document.documentElement.setAttribute('data-theme', t);
+            if (save) localStorage.setItem(THEME_KEY, t);
+            const btn = document.getElementById('themeBtn');
+            if (btn) btn.innerHTML = t === 'light'
+                ? `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>`
+                : `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path></svg>`;
+        }
+
+        function toggleTheme() { setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); renderGrid(); renderTree(); }
+        function toggleViewMode() { currentViewMode = currentViewMode === 'thumb' ? 'list' : 'thumb'; localStorage.setItem(VIEW_MODE_KEY, currentViewMode); updateViewModeBtn(); renderGrid(); }
+
+        function updateViewModeBtn() {
+            const btn = document.getElementById('viewModeBtn');
+            if (btn) btn.innerHTML = currentViewMode === 'thumb'
+                ? `<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>`
+                : `<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>`;
+        }
+
+        function generateFolderColor(name) {
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            const h = Math.abs(hash % 360);
+            return document.documentElement.getAttribute('data-theme') === 'dark' ? `hsl(${h}, 70%, 75%)` : `hsl(${h}, 75%, 60%)`;
+        }
+
+        function setupContextMenus() {
+            const menu = document.getElementById('contextMenu');
+            window.addEventListener('click', () => menu.style.display = 'none');
+
+            document.getElementById('ctxAddLink').onclick = () => {
+                const path = rightClickedPath === 'All' ? "" : rightClickedPath;
+                localStorage.setItem(LAST_FOLDER_KEY, path);
+                openAddModal();
+            };
+
+            document.getElementById('ctxAddSub').onclick = () => {
+                const sub = prompt("Enter sub-folder name:");
+                if (sub) {
+                    const newPath = rightClickedPath === 'All' ? sub : `${rightClickedPath}/${sub}`;
+                    if (!emptyFolders.includes(newPath)) {
+                        emptyFolders.push(newPath);
+                        localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders));
+                    }
+                    renderTree();
+                    renderGrid();
+                }
+            };
+
+            document.getElementById('ctxDelete').onclick = () => { if (rightClickedPath !== 'All') deleteFolder(rightClickedPath); };
+        }
+
+        function showContextMenu(e, path) {
+            e.preventDefault();
+            rightClickedPath = path;
+            const menu = document.getElementById('contextMenu');
+            menu.style.display = 'block';
+            menu.style.left = e.pageX + 'px';
+            menu.style.top = e.pageY + 'px';
+            document.getElementById('ctxDelete').style.display = (path === 'All') ? 'none' : 'flex';
+        }
+
+        function buildFolderTree() {
+            const tree = {};
+            const allFolders = new Set([...bookmarks.map(b => b.folder), ...emptyFolders]);
+            allFolders.forEach(path => {
+                if (!path) return;
+                const parts = path.split('/');
+                let currentLevel = tree;
+                parts.forEach(part => {
+                    if (!currentLevel[part]) currentLevel[part] = { _children: {} };
+                    currentLevel = currentLevel[part]._children;
+                });
+            });
+            return tree;
+        }
+
+        function renderTree() {
+            const tree = buildFolderTree();
+            const container = document.getElementById('rootTree');
+            const allNode = container.firstElementChild;
+            const allFolderHeader = document.getElementById('allFolderHeader');
+
+            container.innerHTML = '';
+            container.appendChild(allNode);
+            allFolderHeader.classList.toggle('active', currentFolder === 'All');
+            allFolderHeader.oncontextmenu = (e) => showContextMenu(e, 'All');
+
+            function createNode(name, subTree, fullPath) {
+                const li = document.createElement('li'); li.className = 'folder-node';
+                const hasChildren = Object.keys(subTree._children).length > 0;
+                const isExpanded = expandedFolders.has(fullPath);
+                const header = document.createElement('div');
+                header.className = `folder-header ${currentFolder === fullPath ? 'active' : ''}`;
+                header.innerHTML = `
+                    <span class="folder-toggle ${isExpanded ? 'expanded' : ''}" onclick="event.stopPropagation(); toggleFolderExpand('${fullPath}')">${hasChildren ? '▶' : ''}</span>
+                    <span style="color:${generateFolderColor(name)}">📁</span>
+                    <span style="flex:1">${name}</span>
+                `;
+                header.onclick = () => setFolder(fullPath);
+                header.oncontextmenu = (e) => showContextMenu(e, fullPath);
+                li.appendChild(header);
+                if (hasChildren && isExpanded) {
+                    const ul = document.createElement('ul'); ul.className = 'sub-folder-list';
+                    Object.entries(subTree._children).forEach(([subN, subV]) => ul.appendChild(createNode(subN, subV, `${fullPath}/${subN}`)));
+                    li.appendChild(ul);
+                }
+                return li;
+            }
+            Object.entries(tree).forEach(([name, subTree]) => container.appendChild(createNode(name, subTree, name)));
+        }
+
+        function toggleFolderExpand(path) { expandedFolders.has(path) ? expandedFolders.delete(path) : expandedFolders.add(path); renderTree(); }
+        function setFolder(f) { currentFolder = f; renderTree(); renderGrid(); }
+
+        function renderGrid() {
+            const grid = document.getElementById('bookmarkGrid');
+            const header = document.getElementById('mainHeader');
+            if (!grid || !header) return;
+            grid.innerHTML = '';
+
+            if (currentFolder === 'All') {
+                header.className = "center";
+                header.innerHTML = `
+                    <h2 class="section-title">Your Bookmark Library</h2>
+                    <p class="section-sub">All data is stored locally in your browser via Local Storage and is never sent to a server. You can remove it by clearing browser data.</p>
+                `;
+                grid.classList.remove('list-mode');
+                renderFolderHomepage(grid);
+            } else {
+                header.className = "";
+                const pathParts = currentFolder.split('/');
+                const currentFolderName = pathParts[pathParts.length - 1];
+                const breadcrumb = pathParts.join(' > ');
+                header.innerHTML = `
+                    <span class="section-tag">${breadcrumb.toUpperCase()}</span>
+                    <h2 class="section-title">${currentFolderName}</h2>
+                `;
+                if (currentViewMode === 'list') grid.classList.add('list-mode');
+                else grid.classList.remove('list-mode');
+                renderLinkGrid(grid);
+            }
+        }
+
+        function renderFolderHomepage(container) {
+            const topFolders = [...new Set([...bookmarks.map(b => b.folder.split('/')[0]), ...emptyFolders.map(f => f.split('/')[0])])].filter(f => f).sort();
+            const counter = document.getElementById('linkCounter');
+            if (counter) counter.innerText = bookmarks.length;
+
+            topFolders.forEach(folder => {
+                const count = bookmarks.filter(b => b.folder === folder || b.folder.startsWith(folder + '/')).length;
+                container.appendChild(createFolderTile(folder, count));
+            });
+        }
+
+        function createFolderTile(path, count) {
+            const folderName = path.split('/').pop();
+            const card = document.createElement('div');
+            card.className = 'folder-tile';
+            const color = generateFolderColor(folderName);
+            card.style.setProperty('--folder-color', color);
+            card.innerHTML = `
+                <div class="tile-icon" style="color:${color}">📁</div>
+                <div class="tile-info"><span class="tile-name">${folderName}</span><span class="tile-count">${count} Items</span></div>
+            `;
+            card.onclick = () => setFolder(path);
+            return card;
+        }
+
+        function renderLinkGrid(container) {
+            const directItems = bookmarks.filter(b => b.folder === currentFolder);
+            const subFolders = [...new Set([...bookmarks, ...emptyFolders.map(f => ({ folder: f }))]
+                .filter(b => b.folder.startsWith(currentFolder + "/"))
+                .map(b => {
+                    const suffix = b.folder.substring(currentFolder.length + 1);
+                    return currentFolder + "/" + suffix.split('/')[0];
+                })
+            )].sort();
+
+            const counter = document.getElementById('linkCounter');
+            if (counter) counter.innerText = directItems.length;
+
+            subFolders.forEach(folderPath => {
+                const totalInSub = bookmarks.filter(b => b.folder === folderPath || b.folder.startsWith(folderPath + "/")).length;
+                container.appendChild(createFolderTile(folderPath, totalInSub));
+            });
+
+            directItems.forEach(link => {
+                const host = new URL(link.url).hostname;
+                const favicon = `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
+                if (currentViewMode === 'list') {
+                    const row = document.createElement('div'); row.className = 'bookmark-list-item'; row.onclick = () => viewLink(link.id);
+                    row.innerHTML = `<img src="${favicon}" class="list-avatar"><div class="list-info"><span class="list-title">${link.name}</span><span class="list-url">${link.url.substring(0, 40)}${link.url.length > 40 ? '...' : ''}</span><span class="list-desc">${link.desc || ''}</span></div>`;
+                    container.appendChild(row);
+                } else {
+                    const card = document.createElement('div'); card.className = 'bookmark-card'; card.onclick = () => viewLink(link.id);
+                    const snapshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(link.url)}?w=600`;
+                    card.innerHTML = `<div class="card-snapshot-full">${link.captured ? `<img class="snapshot-img" src="${snapshotUrl}" loading="lazy" onerror="this.style.opacity=0">` : ''}<div class="snapshot-gradient"></div></div><img src="${favicon}" class="card-favicon-top"><div class="card-overlay-content"><span class="card-title">${link.name}</span><span class="card-url-meta">${host}</span></div>`;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+        function deleteFolder(folderPath) {
+            if (confirm(`Purge entire folder hierarchy "${folderPath}"?`)) {
+                bookmarks = bookmarks.filter(b => b.folder !== folderPath && !b.folder.startsWith(folderPath + '/'));
+                emptyFolders = emptyFolders.filter(f => f !== folderPath && !f.startsWith(folderPath + '/'));
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
+                localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders));
+                if (currentFolder === folderPath || currentFolder.startsWith(folderPath + "/")) currentFolder = 'All';
+                initApp();
+            }
+        }
+
+        function viewLink(id) {
+            const link = bookmarks.find(x => x.id === id);
+            if (!link) return;
+            currentViewingId = id;
+            if (!link.captured) { link.captured = true; localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks)); }
+            const host = new URL(link.url).hostname;
+            const snapshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(link.url)}?w=800`;
+            document.getElementById('viewTitle').innerText = link.name;
+            document.getElementById('inspectSnapshotImg').src = snapshotUrl;
+            document.getElementById('inspectFavicon').src = `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
+            document.getElementById('inspectDesc').innerText = link.desc || `Reference from ${host}`;
+            document.getElementById('inspectUrlDisplay').innerText = link.url.length > 40 ? link.url.substring(0, 40) + '...' : link.url;
+            document.getElementById('visitLinkBtn').onclick = () => window.open(link.url, '_blank');
+            document.getElementById('inspectView').classList.add('flex');
+        }
+
+        function closeInspect() { document.getElementById('inspectView').classList.remove('flex'); currentViewingId = null; renderGrid(); }
+        function showHome() { closeInspect(); setFolder('All'); }
+        function handleEditFromView() { if (currentViewingId) { const id = currentViewingId; closeInspect(); openAddModal(id); } }
+
+        function handleDelete() {
+            if (confirm("Permanently delete this bookmark?")) {
+                bookmarks = bookmarks.filter(b => b.id !== currentViewingId);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
+                closeInspect(); initApp();
+            }
+        }
+
+        function openAddModal(editId = null) {
+            const lastFolder = localStorage.getItem(LAST_FOLDER_KEY) || '';
+            const allPaths = new Set([...bookmarks.map(b => b.folder), ...emptyFolders]);
+            allPaths.forEach(path => {
+                if (!path) return;
+                const parts = path.split('/');
+                let temp = "";
+                parts.forEach(p => { temp = temp ? `${temp}/${p}` : p; allPaths.add(temp); });
+            });
+            const sortedFolders = Array.from(allPaths).sort();
+            const select = document.getElementById('linkFolder');
+            let options = sortedFolders.map(f => `<option value="${f}">${f}</option>`).join('');
+            select.innerHTML = `<option value="">(Root)</option>` + options + `<option value="NEW">+ Create New Path hierarchy...</option>`;
+
+            if (editId) {
+                const link = bookmarks.find(b => b.id === editId);
+                isEditing = editId;
+                document.getElementById('modalTitle').innerText = "Update Resource";
+                document.getElementById('linkName').value = link.name;
+                document.getElementById('linkUrl').value = link.url;
+                document.getElementById('linkDesc').value = link.desc;
+                select.value = link.folder;
+            } else {
+                isEditing = false;
+                document.getElementById('modalTitle').innerText = "Vault Entry";
+                document.getElementById('linkName').value = '';
+                document.getElementById('linkUrl').value = '';
+                document.getElementById('linkDesc').value = '';
+                select.value = lastFolder;
+            }
+            document.getElementById('addModal').classList.add('flex');
+        }
+
+        function saveBookmark() {
+            const name = document.getElementById('linkName').value.trim();
+            const url = document.getElementById('linkUrl').value.trim();
+            const desc = document.getElementById('linkDesc').value.trim();
+            let folder = document.getElementById('linkFolder').value;
+            if (folder === 'NEW') folder = prompt("Path hierarchy (e.g. Work/2026/Assets):", "") || "";
+            if (!name || !url) return;
+            localStorage.setItem(LAST_FOLDER_KEY, folder);
+            if (folder && !emptyFolders.includes(folder)) {
+                emptyFolders.push(folder);
+                localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders));
+            }
+            if (isEditing) {
+                const idx = bookmarks.findIndex(b => b.id === isEditing);
+                bookmarks[idx] = { ...bookmarks[idx], name, url, desc, folder };
+                isEditing = false;
+            } else {
+                bookmarks.unshift({ id: Date.now().toString(), name, url: url.startsWith('http') ? url : `https://${url}`, desc, folder, captured: false });
+            }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
+            closeModal(); initApp();
+        }
+
+        function closeModal() { document.getElementById('addModal').classList.remove('flex'); }
+
+        function importChrome(event) {
+            const file = event.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(e.target.result, 'text/html');
+                const dl = doc.querySelector('dl');
+                if (!dl) return;
+                const imported = parseChromeNodes(Array.from(dl.children));
+                bookmarks = [...bookmarks, ...imported];
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
+                initApp();
+                alert(`Vault synchronized with ${imported.length} items.`);
+            };
+            reader.readAsText(file);
+        }
+
+        function parseChromeNodes(nodes, path = "") {
+            let extracted = [];
+            nodes.forEach(node => {
+                if (node.tagName === 'A') {
+                    extracted.push({ id: Math.random().toString(36).substr(2, 9), name: node.innerText || 'Untitled', url: node.href, desc: 'Imported.', folder: path || '', captured: false });
+                } else if (node.tagName === 'H3') {
+                    const nextDl = node.nextElementSibling;
+                    if (nextDl && nextDl.tagName === 'DL') {
+                        const newPath = path ? `${path}/${node.innerText}` : node.innerText;
+                        if (newPath && !emptyFolders.includes(newPath)) emptyFolders.push(newPath);
+                        extracted = extracted.concat(parseChromeNodes(Array.from(nextDl.children), newPath));
+                    }
+                } else if (node.tagName === 'DT') extracted = extracted.concat(parseChromeNodes(Array.from(node.children), path));
+            });
+            localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders));
+            return extracted;
+        }
+    </script>
+</body>
+
+</html>
