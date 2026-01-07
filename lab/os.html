@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cordyceps Lab OS v5.2 </title>
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
+
+        :root {
+            --bg: #020617;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #f97316;
+            --primary-glow: rgba(249, 115, 22, 0.4);
+            --secondary: #38bdf8;
+            --accent: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --container-max: 1200px;
+            --radius-xl: 32px;
+            --radius-lg: 16px;
+            --transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Application Structure Plan: 
+           Single-page interactive dashboard removing all utility frameworks (Tailwind) in favor of 
+           semantic CSS. 
+           - Grid & Flexbox layouts for the Pipeline.
+           - Custom 3D perspective visual containers.
+           - Modal system using pure JS and CSS.
+           - Yield calculator with real-time DOM updates.
+        */
+        /* CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. All visuals use pure CSS. */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(circle at 10% 10%, rgba(249, 115, 22, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(56, 189, 248, 0.08) 0%, transparent 40%);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            height: 50vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        header h1 {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px var(--primary-glow));
+            letter-spacing: -2px;
+            margin-bottom: 1rem;
+        }
+
+        header p {
+            max-width: 600px;
+            color: var(--text-dim);
+            padding: 0 20px;
+        }
+
+        .container {
+            max-width: var(--container-max);
+            margin: -80px auto 0;
+            padding: 0 20px 100px;
+        }
+
+        .pipeline-step {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 40px;
+            margin-bottom: 120px;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s, transform 1s;
+        }
+
+        .pipeline-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 900px) {
+            .pipeline-step {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            header {
+                height: 40vh;
+            }
+        }
+
+        /* 3D Visual Stage */
+        .visual-stage {
+            position: sticky;
+            top: 100px;
+            perspective: 2000px;
+            z-index: 10;
+        }
+
+        .visual-container {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transform: rotateY(-15deg) rotateX(8deg);
+            box-shadow: -30px 30px 60px rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .visual-container:hover {
+            transform: rotateY(-5deg) rotateX(5deg) scale(1.02);
+        }
+
+        .visual-label {
+            margin-top: 1.5rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-size: 10px;
+        }
+
+        /* Detail Card */
+        .content-card {
+            padding: 3.5rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        @media (max-width: 640px) {
+            .content-card {
+                padding: 2rem;
+            }
+        }
+
+        .badge {
+            background: linear-gradient(90deg, var(--primary), #ea580c);
+            padding: 6px 18px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            color: #fff;
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            font-weight: 800;
+            color: var(--secondary);
+            margin-bottom: 1.2rem;
+            line-height: 1.1;
+        }
+
+        .desc {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            margin-bottom: 2rem;
+        }
+
+        /* Specs Grid */
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .spec-box {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.25rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .spec-box h4 {
+            font-size: 0.65rem;
+            color: var(--primary);
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.05em;
+        }
+
+        .spec-box p {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .btn-popup {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 14px 28px;
+            border-radius: 14px;
+            color: var(--primary);
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+        }
+
+        .btn-popup:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px var(--primary-glow);
+        }
+
+        /* --- CSS VISUALS --- */
+
+        /* Phase 1: Dish */
+        .dish-visual {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid #94a3b8;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .dish-inner {
+            position: absolute;
+            inset: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            filter: blur(20px);
+            opacity: 0.6;
+            animation: pulse 4s infinite;
+        }
+
+        /* Phase 2: Jar */
+        .liquid-jar {
+            width: 100px;
+            height: 160px;
+            border: 4px solid #94a3b8;
+            border-radius: 10px 10px 30px 30px;
+            background: rgba(56, 189, 248, 0.1);
+            position: relative;
+        }
+
+        .liquid-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70%;
+            background: rgba(250, 204, 21, 0.2);
+            border-radius: 0 0 25px 25px;
+        }
+
+        .stir-bar {
+            width: 30px;
+            height: 8px;
+            background: white;
+            border-radius: 4px;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            margin-left: -15px;
+            animation: spin 0.5s linear infinite;
+        }
+
+        /* Phase 3: Lid */
+        .lid-view {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: #334155;
+            margin: 20px auto;
+            position: relative;
+            border: 4px solid #475569;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .hole-ge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #1e293b;
+            font-weight: 900;
+            border: 2px solid #94a3b8;
+        }
+
+        /* Phase 4: Incubation */
+        .shelf-visual {
+            width: 140px;
+            height: 160px;
+            background: #0f172a;
+            border: 2px solid #334155;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .white-block {
+            width: 70px;
+            height: 100px;
+            background: #f8fafc;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        /* Phase 5: Harvest */
+        .harvest-jar-visual {
+            width: 110px;
+            height: 160px;
+            border: 4px solid #94a3b8;
+            border-radius: 12px 12px 36px 36px;
+            background: rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .substrate-base {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: #451a03;
+        }
+
+        .fingers-container {
+            position: absolute;
+            bottom: 40px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding: 0 10px;
+            height: 80px;
+        }
+
+        .finger {
+            width: 12px;
+            background: linear-gradient(to top, #ea580c, #fb923c);
+            border-radius: 10px 10px 0 0;
+        }
+
+        .f1 {
+            height: 60px;
+        }
+
+        .f2 {
+            height: 80px;
+        }
+
+        .f3 {
+            height: 70px;
+        }
+
+        /* Calculator Styles */
+        .calc-panel {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            padding: 3rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--primary);
+            margin-top: 2rem;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="number"] {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            padding: 1.25rem;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.5rem;
+            width: 100%;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .calc-result {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding-left: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .calc-result {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                padding-top: 2rem;
+            }
+        }
+
+        .result-label {
+            font-size: 10px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .result-value {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1;
+            margin: 0.5rem 0;
+        }
+
+        .result-sub {
+            font-size: 0.75rem;
+            color: var(--secondary);
+        }
+
+        /* Modal / Popup */
+        #modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #1e293b;
+            width: 100%;
+            max-width: 850px;
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            padding: 4rem;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 100px rgba(249, 115, 22, 0.1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            color: white;
+            cursor: pointer;
+            font-size: 2.5rem;
+            font-weight: 200;
+            line-height: 1;
+            background: none;
+            border: none;
+        }
+
+        /* Modal Content Styling */
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-icon {
+            width: 4rem;
+            height: 4rem;
+            background: rgba(249, 115, 22, 0.2);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .modal-step-card {
+            background: rgba(15, 23, 42, 0.3);
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .step-num {
+            color: var(--primary);
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .step-title {
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .step-desc {
+            font-size: 0.875rem;
+            color: var(--text-dim);
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            .modal-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-box {
+            background: rgba(56, 189, 248, 0.1);
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+        }
+
+        .info-label {
+            color: var(--secondary);
+            font-weight: 900;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .info-content {
+            font-size: 0.875rem;
+            color: var(--text-main);
+        }
+
+        /* Animations */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(0.9);
+                opacity: 0.4;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Cordyceps Lab OS v5.2</h1>
+        <p>Expert Workflow Management System for High-Yield Laminar Flow Hood Production.</p>
+    </header>
+
+    <div class="container">
+
+        <!-- PHASE 1: GENETICS -->
+        <div class="pipeline-step" id="step1">
+            <div class="visual-stage">
+                <div class="visual-container">
+                    <div class="dish-visual">
+                        <div class="dish-inner"></div>
+                    </div>
+                    <p class="visual-label">Biological Master Feed</p>
+                </div>
+            </div>
+            <div class="content-card">
+                <span class="badge">Phase 01: The Seed</span>
+                <h2>Agar Genetic Selection</h2>
+                <p class="desc">Success starts at the microscopic level. Agar plates are used to verify strain purity
+                    and isolate the most aggressive genetics for expansion.</p>
+
+                <div class="specs-grid">
+                    <div class="spec-box">
+                        <h4>Target</h4>
+                        <p>Rhizomorphic Strands</p>
+                    </div>
+                    <div class="spec-box">
+                        <h4>State</h4>
+                        <p>4°C Suspended Animation</p>
+                    </div>
+                </div>
+
+                <button class="btn-popup" onclick="openModal('phase1')">Open Technical Protocol ➔</button>
+            </div>
+        </div>
+
+        <!-- PHASE 2: LIQUID CULTURE -->
+        <div class="pipeline-step" id="step2">
+            <div class="visual-stage">
+                <div class="visual-container">
+                    <div class="liquid-jar">
+                        <div class="liquid-fill"></div>
+                        <div class="stir-bar"></div>
+                    </div>
+                    <p class="visual-label">Biomass Multiplier</p>
+                </div>
+            </div>
+            <div class="content-card">
+                <span class="badge">Phase 02: The Multiplier</span>
+                <h2>Liquid Culture Expansion</h2>
+                <p class="desc">Transform a single genetic sample into a high-volume "Mycelium Soup". This allows for
+                    uniform, rapid inoculation of your production batch.</p>
+
+                <div class="specs-grid">
+                    <div class="spec-box">
+                        <h4>Volume</h4>
+                        <p>1 Wedge to 1000ml Broth</p>
+                    </div>
+                    <div class="spec-box">
+                        <h4>Time</h4>
+                        <p>7 Day Agitation Cycle</p>
+                    </div>
+                </div>
+
+                <button class="btn-popup" onclick="openModal('phase2')">Open Technical Protocol ➔</button>
+            </div>
+        </div>
+
+        <!-- PHASE 3: HARDWARE -->
+        <div class="pipeline-step" id="step3">
+            <div class="visual-stage">
+                <div class="visual-container">
+                    <div class="lid-view">
+                        <div class="hole-ge">TAPE</div>
+                    </div>
+                    <p class="visual-label">Hardware Interface</p>
+                </div>
+            </div>
+            <div class="content-card">
+                <span class="badge">Phase 03: The Home</span>
+                <h2>Cleanroom Jar Hardware</h2>
+                <p class="desc">Optimized for Laminar Flow Hood users. We prioritize simple, effective gas exchange (GE)
+                    while maintaining a total sterile barrier.</p>
+
+                <div class="specs-grid">
+                    <div class="spec-box">
+                        <h4>Hole Config</h4>
+                        <p>Single 1/4" Center Hole</p>
+                    </div>
+                    <div class="spec-box">
+                        <h4>Filter Media</h4>
+                        <p>Dual-Layer Micropore</p>
+                    </div>
+                </div>
+
+                <button class="btn-popup" onclick="openModal('phase3')">Lid Modification Guide ➔</button>
+            </div>
+        </div>
+
+        <!-- PHASE 4: INCUBATION -->
+        <div class="pipeline-step" id="step4">
+            <div class="visual-stage">
+                <div class="visual-container">
+                    <div class="shelf-visual">
+                        <div class="white-block"></div>
+                    </div>
+                    <p class="visual-label">Colony Consolidation</p>
+                </div>
+            </div>
+            <div class="content-card">
+                <span class="badge">Phase 04: The Feast</span>
+                <h2>Dark Vegetative Growth</h2>
+                <p class="desc">The fungus consumes the rice substrate in total darkness. Stability during this phase is
+                    required to build energy for the fruiting stage.</p>
+
+                <div class="specs-grid">
+                    <div class="spec-box">
+                        <h4>Climate</h4>
+                        <p>20°C / Constant Thermal</p>
+                    </div>
+                    <div class="spec-box">
+                        <h4>Lux</h4>
+                        <p>0% Light Leakage</p>
+                    </div>
+                </div>
+
+                <button class="btn-popup" onclick="openModal('phase4')">Incubation Checklist ➔</button>
+            </div>
+        </div>
+
+        <!-- PHASE 5: HARVEST -->
+        <div class="pipeline-step" id="step5">
+            <div class="visual-stage">
+                <div class="visual-container">
+                    <div class="harvest-jar-visual">
+                        <div class="substrate-base"></div>
+                        <div class="fingers-container">
+                            <div class="finger f1"></div>
+                            <div class="finger f2"></div>
+                            <div class="finger f3"></div>
+                        </div>
+                    </div>
+                    <p class="visual-label">Metabolic Synthesis</p>
+                </div>
+            </div>
+            <div class="content-card">
+                <span class="badge">Phase 05: The Fruit</span>
+                <h2>Harvest & Yield Analysis</h2>
+                <p class="desc">Triggered by 6500K LED light. The fungus shifts its metabolism to produce the bright
+                    orange medicinal compounds (Cordycepin).</p>
+
+                <div class="calc-panel">
+                    <div class="calc-grid">
+                        <div class="input-group">
+                            <label>Batch Size (500ml Jars)</label>
+                            <input type="number" id="jarCount" value="100" oninput="calculateYield()">
+                        </div>
+                        <div class="calc-result">
+                            <span class="result-label">Total Dried Volume</span>
+                            <div class="result-value"><span id="dryYield">400</span>g</div>
+                            <span class="result-sub">~4g dry per jar base average</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-popup" style="margin-top: 2.5rem;" onclick="openModal('phase5')">Harvest Procedures
+                    ➔</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL POPUP -->
+    <div id="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        const detailedData = {
+            phase1: `
+                <div class="modal-header">
+                    <div class="modal-icon">🧫</div>
+                    <h3 class="modal-title">Agar Protocol: The Seed</h3>
+                </div>
+                
+                <div class="modal-step-card">
+                    <span class="step-num">Step 01</span>
+                    <span class="step-title">The Environment</span>
+                    <p class="step-desc">Operate exclusively within the Laminar Flow Hood. Sanitize hands, arms, and tools with 70% Isopropyl. Work closest to the filter to ensure zero downstream contamination.</p>
+                </div>
+
+                <div class="modal-step-card">
+                    <span class="step-num">Step 02</span>
+                    <span class="step-title">The Selection</span>
+                    <p class="step-desc">Identify thick, "rhizomorphic" white strands. Avoid thin, wispy "tomentose" growth. Use a flamed-scalpel to harvest a 5mm wedge from the leading edge of the best sector.</p>
+                </div>
+
+                <div class="modal-grid">
+                    <div class="info-box">
+                        <span class="info-label">Recipe Mastery</span>
+                        <p class="info-content">Recipe: 1L Water, 20g Dextrose, 20g Agar, 2g Soy Peptone. The Peptone is mandatory for Cordyceps vigor. Sterilize at 15 PSI for exactly 20 minutes.</p>
+                    </div>
+                </div>`,
+
+            phase2: `
+                <div class="modal-header">
+                    <div class="modal-icon">🧪</div>
+                    <h3 class="modal-title">Liquid Culture Mastery</h3>
+                </div>
+                
+                <div class="modal-grid">
+                    <div class="info-box">
+                        <span class="info-label">Nutrient Solution</span>
+                        <p class="info-content">1000ml Distilled Water, 20g Light Malt Extract, 5g Soy Peptone, 2g Yeast Extract.</p>
+                    </div>
+                    <div class="info-box">
+                        <span class="info-label">Expansion Cycle</span>
+                        <p class="info-content">Temperature: 21°C Room, Duration: 7 - 10 Days, Goal: Thick Mycelial Clouds.</p>
+                    </div>
+                </div>
+                <p style="margin-top: 2rem; font-size: 0.875rem; color: var(--text-dim); font-style: italic; text-align: center;">
+                    Note: Healthy LC should be crystal clear with floating "clouds". Any cloudiness in the liquid itself indicates bacteria.
+                </p>`,
+
+            phase3: `
+                <div class="modal-header">
+                    <div class="modal-icon">🛠️</div>
+                    <h3 class="modal-title">Lid Mod: The Home</h3>
+                </div>
+                
+                <div class="modal-step-card">
+                    <span class="step-num">01</span>
+                    <span class="step-title">Center Drilling</span>
+                    <p class="step-desc">Drill a single 1/4" (6mm) hole in the center of the PP5 plastic lid. Clean off plastic burrs to ensure a flush surface.</p>
+                </div>
+                <div class="modal-step-card">
+                    <span class="step-num">02</span>
+                    <span class="step-title">Filtering System</span>
+                    <p class="step-desc">Apply two layers of 3M Micropore Tape over the hole. This acts as a 0.2-micron bacterial filter while allowing gas exchange.</p>
+                </div>
+                <div class="modal-step-card">
+                    <span class="step-num">03</span>
+                    <span class="step-title">In-Hood Inoculation</span>
+                    <p class="step-desc">Open the lid in front of your Flow Hood, pour in 10-15ml of LC broth, and seal immediately. This is faster and cleaner than injection.</p>
+                </div>`,
+
+            phase4: `
+                <div class="modal-header">
+                    <div class="modal-icon">🌑</div>
+                    <h3 class="modal-title">Incubation Protocol</h3>
+                </div>
+                <div class="modal-step-card">
+                    <span class="step-title">Total Luminous Isolation</span>
+                    <p class="step-desc">Zero light exposure is mandatory for 14 days. Light triggers "pins" too early, which leads to weak growth and low Cordycepin content.</p>
+                </div>
+                <div class="modal-step-card">
+                    <span class="step-title">The White Peak</span>
+                    <p class="step-desc">Wait until the rice substrate is 100% colonized and looks like a solid white block. If the center is still brown, do not move to the light phase.</p>
+                </div>`,
+
+            phase5: `
+                <div class="modal-header">
+                    <div class="modal-icon">🍄</div>
+                    <h3 class="modal-title">Synthesis: The Fruit</h3>
+                </div>
+                <div class="modal-grid">
+                    <div class="info-box">
+                        <span class="info-label">Initiation Trigger</span>
+                        <p class="info-content">Introduce 16 hours of 6500K LED light. Drop room temperature to 18°C. The white block will blush orange in 72 hours.</p>
+                    </div>
+                    <div class="info-box">
+                        <span class="info-label">Final Harvest</span>
+                        <p class="info-content">Harvest at Day 50-60. Pick when fingers are bumpy but before they turn pale (indicating spore release).</p>
+                    </div>
+                </div>
+                <div style="margin-top: 2rem; background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 1.5rem;">
+                    <p style="font-weight: 700; color: #fff; margin-bottom: 0.5rem; font-size: 0.875rem;">Preservation Protocol</p>
+                    <p style="font-size: 0.875rem; color: var(--text-dim);">Dehydrate at 40°C for 24 hours until "Cracker Dry". Store in dark glass with silica packs to prevent color fading.</p>
+                </div>`
+        };
+
+        function openModal(phase) {
+            document.getElementById('modal-body').innerHTML = detailedData[phase];
+            document.getElementById('modal-overlay').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function calculateYield() {
+            const jars = document.getElementById('jarCount').value || 0;
+            const avg = 4;
+            document.getElementById('dryYield').innerText = (jars * avg).toLocaleString();
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.pipeline-step').forEach(s => observer.observe(s));
+
+        // Final init
+        window.onload = () => {
+            calculateYield();
+        };
+    </script>
+</body>
+
+</html>
