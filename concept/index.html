@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ats Web Studio | Concept Webpages</title>
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+
+        :root {
+            --bg-color: #f8fafc;
+            --surface-color: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --modal-bg: #f1f5f9;
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04);
+            --hover-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.15);
+            --viewer-nav-bg: rgba(255, 255, 255, 0.85);
+
+            /* Gradient Definitions */
+            --grad-standalone: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            --grad-separate: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --grad-visual: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #050505;
+            --surface-color: #111111;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --modal-bg: #0a0a0a;
+            --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            --hover-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.2);
+            --viewer-nav-bg: rgba(15, 23, 42, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface-color);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .logo-svg {
+            width: 38px;
+            height: 38px;
+            display: block;
+        }
+
+        .studio-brand {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+            justify-content: center;
+        }
+
+        .logo-mark {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .studio-name {
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            font-size: 0.55rem;
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border: 1px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--grad-separate);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-icon {
+            padding: 0.6rem;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        main {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            flex: 1;
+            width: 100%;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .section-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: #6366f1;
+            display: block;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        h2.section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        #pageGrid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+            gap: 2.5rem;
+        }
+
+        @media (min-width: 768px) {
+            #pageGrid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (min-width: 1100px) {
+            #pageGrid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        /* Cards */
+        .preview-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .preview-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--hover-shadow);
+            border-color: #6366f1;
+        }
+
+        .add-card {
+            border: 2px dashed var(--border-color);
+            background: transparent;
+            justify-content: center;
+            align-items: center;
+            min-height: 380px;
+        }
+
+        .add-card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--grad-separate);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .add-card-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            padding-top: 60%;
+            background: var(--bg-color);
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .iframe-container iframe {
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            width: 1442px;
+            height: 902px;
+            border: 0;
+            pointer-events: none;
+            transform: scale(0.35);
+            transform-origin: top left;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        /* Modal Redesign */
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .modal.flex {
+            display: flex !important;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            position: relative;
+            background: var(--surface-color);
+            width: 100%;
+            max-width: 85rem;
+            display: flex;
+            flex-direction: column;
+            max-height: 95vh;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-scroll-area {
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .setup-screen {
+            padding: 4rem 2rem;
+            max-width: 55rem;
+            margin: 0 auto;
+            width: 100%;
+            text-align: center;
+        }
+
+        .form-input-big {
+            width: 100%;
+            background: var(--modal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.25rem 1.75rem;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 500;
+            outline: none;
+            margin-bottom: 1.5rem;
+            transition: 0.2s;
+        }
+
+        .form-input-big:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .mode-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .mode-btn {
+            background: var(--modal-bg);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 2rem 1rem;
+            cursor: pointer;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .mode-btn:hover {
+            background: var(--surface-color);
+            border-color: var(--border-color);
+            transform: translateY(-5px);
+        }
+
+        /* Gradient Button Outlines */
+        #btnModeStandalone.active {
+            border-color: #0072ff;
+            box-shadow: 0 10px 20px rgba(0, 114, 255, 0.15);
+        }
+
+        #btnModeSeparate.active {
+            border-color: #a855f7;
+            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.15);
+        }
+
+        #btnModeVisual.active {
+            border-color: #10b981;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .mode-btn h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .mode-btn p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Visual Builder Wrapper Outlines */
+        .editor-wrapper {
+            margin: 2rem;
+            border-radius: 20px;
+            border: 4px solid transparent;
+            overflow: hidden;
+        }
+
+        .wrapper-standalone {
+            border-image: var(--grad-standalone) 1;
+            border-style: solid;
+            border-width: 2px;
+        }
+
+        .wrapper-separate {
+            border-image: var(--grad-separate) 1;
+            border-style: solid;
+            border-width: 2px;
+        }
+
+        .wrapper-visual {
+            border-image: var(--grad-visual) 1;
+            border-style: solid;
+            border-width: 2px;
+        }
+
+        /* Visual Builder - Elementor Style */
+        #visualBuilder {
+            display: flex;
+            height: 75vh;
+            background: #f1f5f9;
+            overflow: hidden;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .builder-sidebar {
+            width: 320px;
+            background: var(--surface-color);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .widget-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 1.5rem;
+        }
+
+        .draggable-el {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem 0.5rem;
+            border-radius: 12px;
+            cursor: grab;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: 0.2s;
+        }
+
+        .draggable-el:hover {
+            border-color: #10b981;
+            color: #10b981;
+            transform: translateY(-2px);
+        }
+
+        .builder-canvas-area {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
+            background: #e2e8f0;
+            overflow-y: auto;
+            padding: 40px 0;
+        }
+
+        .canvas-side {
+            background: transparent;
+        }
+
+        .canvas-center {
+            background: white;
+            min-height: 1200px;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.05);
+            position: relative;
+            padding: 80px 40px;
+        }
+
+        .dropped-el {
+            position: relative;
+            margin-bottom: 2.5rem;
+            border: 1px solid transparent;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+
+        .dropped-el:hover {
+            outline: 2px solid #10b981;
+            outline-offset: 6px;
+        }
+
+        .dropped-el.active {
+            outline: 2px solid #10b981;
+            outline-offset: 6px;
+            background: rgba(16, 185, 129, 0.02);
+        }
+
+        .el-tools {
+            position: absolute;
+            top: -34px;
+            left: -2px;
+            background: #10b981;
+            color: white;
+            padding: 6px 12px;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 6px 6px 0 0;
+            display: none;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .dropped-el:hover .el-tools,
+        .dropped-el.active .el-tools {
+            display: flex;
+        }
+
+        .tool-btn {
+            cursor: pointer;
+            opacity: 0.9;
+        }
+
+        .tool-btn:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        /* Code Editor Container */
+        #editorContainer {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .editor-tabs {
+            display: flex;
+            background: var(--modal-bg);
+            padding: 0.5rem 2rem 0;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+        }
+
+        .tab-btn.active {
+            color: #a855f7;
+            border-bottom: 2px solid #a855f7;
+        }
+
+        .form-textarea {
+            flex: 1;
+            width: 100%;
+            border: none;
+            background: var(--surface-color);
+            padding: 2rem;
+            color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            outline: none;
+            resize: none;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            padding: 1.25rem 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-color);
+        }
+
+        .footer-action-group {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Sidebar Settings */
+        #sidebarSettings {
+            padding: 1.5rem;
+            display: none;
+        }
+
+        .setting-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .setting-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .setting-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            background: var(--bg-color);
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .setting-input:focus {
+            border-color: #10b981;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 2rem;
+            background: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        .footer-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            width: 100%;
+            gap: 2rem;
+        }
+
+        .footer-left {
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .footer-center {
+            display: flex;
+            justify-content: center;
+        }
+
+        .footer-right {
+            text-align: right;
+        }
+
+        .counter-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.6rem 1.5rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            gap: 10px;
+        }
+
+        .counter-value {
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Immersive Viewer */
+        #fullPageView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1300;
+            background: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            padding-top: 5.5rem;
+        }
+
+        #fullFrame {
+            flex: 1;
+            width: 100%;
+            border: 0;
+            background: white;
+        }
+
+        .viewer-controls {
+            position: absolute;
+            top: 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1401;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1.5rem;
+            background: var(--viewer-nav-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 100px;
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav id="mainNav">
+        <a href="#" onclick="showHome(); return false;" class="nav-logo">
+            <svg class="logo-svg" viewBox="0 0 100 100">
+                <defs>
+                    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#6366f1" />
+                        <stop offset="100%" stop-color="#a855f7" />
+                    </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="45" stroke="url(#g)" stroke-width="8" fill="none" />
+                <path d="M30 70L50 30L70 70M40 55H60" stroke="url(#g)" stroke-width="8" stroke-linecap="round"
+                    fill="none" />
+            </svg>
+            <div class="studio-brand"><span class="logo-mark">Ats</span><span class="studio-name">Web Studio</span>
+            </div>
+        </a>
+        <div class="nav-actions">
+            <button onclick="toggleTheme()" class="btn-icon" id="themeToggle"><svg width="18" height="18" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707.707M12 8a4 4 0 100 8 4 4 0 000-8z">
+                    </path>
+                </svg></button>
+            <button onclick="openDownloadModal()" class="btn-icon" id="downloadBtn" title="Export"><svg width="18"
+                    height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg></button>
+            <button onclick="openModal()" class="btn btn-primary">New Concept</button>
+        </div>
+    </nav>
+
+    <main id="mainContent">
+        <header>
+            <span class="section-tag">test your creativity</span>
+            <h2 class="section-title">Concept Portfolio</h2>
+            <p style="color:var(--text-muted)">Crafting digital high-fidelity visions.</p>
+        </header>
+        <div id="pageGrid"></div>
+    </main>
+
+    <div id="fullPageView" class="hidden">
+        <div class="viewer-controls">
+            <button onclick="showHome()" class="btn btn-ghost">Studio</button>
+            <h2 id="viewTitle" class="logo-mark" style="font-size:1.2rem; margin: 0;">Project</h2>
+            <div style="display:flex; gap:0.5rem;">
+                <button onclick="editCurrentPage()" class="btn btn-ghost">Refine</button>
+                <button onclick="deleteCurrentPage()" class="btn-icon" style="color:#ef4444;"><svg width="18"
+                        height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                        </path>
+                    </svg></button>
+            </div>
+        </div>
+        <iframe id="fullFrame"></iframe>
+    </div>
+
+    <!-- Modals -->
+    <div id="editorModal" class="modal">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <div class="modal-scroll-area">
+                <div id="setupView" class="setup-screen">
+                    <h2 class="logo-mark" style="font-size:3rem; margin-bottom:1rem;">New Concept</h2>
+                    <input type="text" id="pageTitle" class="form-input-big" placeholder="Enter Project Name">
+                    <input type="text" id="pageDesc" class="form-input-big" placeholder="Brief Description / Rationale">
+                    <div class="mode-selector">
+                        <button class="mode-btn" id="btnModeStandalone" onclick="initEditor('standalone')">
+                            <h4>Standalone</h4>
+                            <p>Single code field.</p>
+                        </button>
+                        <button class="mode-btn" id="btnModeSeparate" onclick="initEditor('separate')">
+                            <h4>Separate</h4>
+                            <p>HTML / CSS / JS.</p>
+                        </button>
+                        <button class="mode-btn" id="btnModeVisual" onclick="initEditor('visual')">
+                            <h4>Visual Builder</h4>
+                            <p>Drag & Drop Grid.</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Visual Builder Screen -->
+                <div id="visualBuilder" class="hidden">
+                    <div class="builder-sidebar">
+                        <div id="widgetPanel">
+                            <div class="sidebar-header">Widgets</div>
+                            <div class="widget-grid">
+                                <div class="draggable-el" draggable="true" data-type="h1">Heading</div>
+                                <div class="draggable-el" draggable="true" data-type="p">Text</div>
+                                <div class="draggable-el" draggable="true" data-type="img">Media</div>
+                                <div class="draggable-el" draggable="true" data-type="vid">Video</div>
+                                <div class="draggable-el" draggable="true" data-type="btn">Button</div>
+                            </div>
+                        </div>
+                        <div id="sidebarSettings">
+                            <div class="sidebar-header">Settings</div>
+                            <div class="setting-group"><label class="setting-label">Content</label><textarea
+                                    id="set-content" class="setting-input" rows="4"></textarea></div>
+                            <div class="setting-group"><label class="setting-label">Padding</label><input type="number"
+                                    id="set-padding" class="setting-input"></div>
+                            <button onclick="applySettings()" class="btn btn-primary" style="width:100%">Update</button>
+                            <button onclick="showWidgets()" class="btn btn-ghost"
+                                style="width:100%; margin-top:10px;">Back</button>
+                        </div>
+                    </div>
+                    <div class="builder-canvas-area">
+                        <div class="canvas-side"></div>
+                        <div class="canvas-center" id="visualCanvas"></div>
+                        <div class="canvas-side"></div>
+                    </div>
+                </div>
+
+                <!-- Code Editor Screen -->
+                <div id="editorContainer" class="hidden">
+                    <div id="tabContainer" class="editor-tabs">
+                        <button class="tab-btn active" id="tab-html" onclick="switchTab('html')">HTML</button>
+                        <button class="tab-btn" id="tab-css" onclick="switchTab('css')">CSS</button>
+                        <button class="tab-btn" id="tab-js" onclick="switchTab('js')">JS</button>
+                    </div>
+                    <textarea id="htmlEditor" class="form-textarea"></textarea>
+                    <textarea id="cssEditor" class="form-textarea hidden"></textarea>
+                    <textarea id="jsEditor" class="form-textarea hidden"></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button onclick="backToSetup()" id="btnBack" class="btn btn-ghost hidden">Back to Setup</button>
+                <div class="footer-action-group">
+                    <button onclick="closeModal()" class="btn btn-ghost">Discard</button>
+                    <button onclick="savePage()" class="btn btn-primary">Add to Concept</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Modal -->
+    <div id="downloadModal" class="modal">
+        <div class="modal-overlay" onclick="closeDownloadModal()"></div>
+        <div class="modal-content" style="max-width: 40rem;">
+            <div
+                style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <h3 class="logo-mark" style="font-size: 1.5rem;">Export Vault</h3>
+                <button onclick="toggleAllCheckboxes()" class="btn btn-ghost" style="font-size: 10px;">Select
+                    All</button>
+            </div>
+            <div class="modal-scroll-area">
+                <div id="downloadList"></div>
+            </div>
+            <div class="modal-footer" style="background: var(--surface-color);">
+                <button onclick="closeDownloadModal()" class="btn btn-ghost">Cancel</button>
+                <button onclick="downloadSelected()" class="btn btn-primary">Download Selected</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-left">
+                <p>© 2026 Ats Web Studio. Creative Prototype Archive.</p>
+            </div>
+            <div class="footer-center">
+                <div class="nav-logo">
+                    <svg class="logo-svg" viewBox="0 0 100 100">
+                        <defs>
+                            <linearGradient id="gf" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#6366f1" />
+                                <stop offset="100%" stop-color="#a855f7" />
+                            </linearGradient>
+                        </defs>
+                        <circle cx="50" cy="50" r="45" stroke="url(#gf)" stroke-width="8" fill="none" />
+                        <path d="M30 70L50 30L70 70M40 55H60" stroke="url(#gf)" stroke-width="8" stroke-linecap="round"
+                            fill="none" />
+                    </svg>
+                    <div class="studio-brand"><span class="logo-mark">Ats</span><span class="studio-name">Web
+                            Studio</span></div>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="counter-pill">
+                    <span>Concepts</span>
+                    <span id="conceptCounter" class="counter-value">0</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const STORAGE_KEY = 'ats_v2026_elementor_v7';
+        const THEME_KEY = 'ats_theme_v2026';
+
+        const defaultPages = [
+            {
+                id: 'arch-2026', title: 'Aethelgard Mono', desc: 'Minimalist brutalist editorial design.', mode: 'separate',
+                html: `<div style="padding:15% 10%"><h1 style="font-family:Playfair Display,serif; font-size:10vw; letter-spacing:-5px; line-height:0.8;">THE<br>ESSENCE</h1><p style="margin-top:40px; font-size:1.5rem; color:#666; max-width:500px;">A dialogue between material and light.</p></div>`,
+                css: `body{background:#fff; color:#000;} h1{font-weight:900;}`, js: ''
+            },
+            {
+                id: 'forge-2026', title: 'The Neon Forge', desc: 'Reactive dark-mode interface concept.', mode: 'separate',
+                html: `<div id="fw"><canvas id="fc"></canvas><div class="fu"><h1>FORGE</h1><div class="m"><span>CPU: 12%</span><span>GPU: ACTIVE</span></div></div></div>`,
+                css: `#fw{height:100vh; background:#000; display:flex; align-items:center; justify-content:center; overflow:hidden;} #fc{position:absolute; inset:0; opacity:0.4;} .fu{text-align:center; position:relative; z-index:5;} h1{font-size:12vw; font-weight:900; background:linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip:text; -webkit-text-fill-color:transparent;} .m{display:flex; gap:30px; margin-top:20px; color:#555; font-size:10px; font-weight:800; letter-spacing:3px;}`,
+                js: `const c=document.getElementById('fc'); if(c){const ctx=c.getContext('2d'); let w,h,p=[]; function init(){w=c.width=window.innerWidth; h=c.height=window.innerHeight; p=Array.from({length:80},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-0.5)*2,vy:(Math.random()-0.5)*2}));} function draw(){ctx.clearRect(0,0,w,h); ctx.fillStyle='#6366f1'; p.forEach(i=>{i.x+=i.vx; i.y+=i.vy; if(i.x<0||i.x>w)i.vx*=-1; if(i.y<0||i.y>h)i.vy*=-1; ctx.beginPath(); ctx.arc(i.x,i.y,1.5,0,Math.PI*2); ctx.fill();}); requestAnimationFrame(draw);} init(); draw();}`
+            }
+        ];
+
+        let pages = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultPages;
+        let currentEditingId = null;
+        let currentViewingId = null;
+        let currentMode = 'separate';
+        let selectedEl = null;
+
+        function setTheme(t) { document.documentElement.setAttribute('data-theme', t); localStorage.setItem(THEME_KEY, t); }
+        function toggleTheme() { setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
+        function switchTab(l) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.form-textarea').forEach(tx => tx.classList.add('hidden')); document.getElementById('tab-' + l).classList.add('active'); document.getElementById(l + 'Editor').classList.remove('hidden'); }
+
+        function initEditor(m) {
+            const title = document.getElementById('pageTitle').value.trim();
+            if (!title) { alert("Project name required."); return; }
+            currentMode = m;
+            document.getElementById('setupView').classList.add('hidden');
+            const btnBack = document.getElementById('btnBack');
+            if (btnBack) btnBack.classList.remove('hidden');
+            const v = document.getElementById('visualBuilder');
+            const c = document.getElementById('editorContainer');
+            if (m === 'visual') { v.classList.remove('hidden'); c.classList.add('hidden'); }
+            else { v.classList.add('hidden'); c.classList.remove('hidden'); if (m === 'standalone') document.getElementById('tabContainer').classList.add('hidden'); else document.getElementById('tabContainer').classList.remove('hidden'); switchTab('html'); }
+        }
+
+        function backToSetup() {
+            document.getElementById('setupView').classList.remove('hidden');
+            document.getElementById('editorContainer').classList.add('hidden');
+            document.getElementById('visualBuilder').classList.add('hidden');
+            const btnBack = document.getElementById('btnBack');
+            if (btnBack) btnBack.classList.add('hidden');
+        }
+
+        const canvas = document.getElementById('visualCanvas');
+        document.querySelectorAll('.draggable-el').forEach(el => {
+            el.addEventListener('dragstart', (e) => e.dataTransfer.setData('type', e.target.dataset.type));
+        });
+        if (canvas) {
+            canvas.addEventListener('dragover', (e) => e.preventDefault());
+            canvas.addEventListener('drop', (e) => { e.preventDefault(); createDroppedEl(e.dataTransfer.getData('type')); });
+        }
+
+        function createDroppedEl(type, content = "") {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'dropped-el';
+            wrapper.dataset.type = type;
+            wrapper.onclick = (e) => { e.stopPropagation(); selectElement(wrapper); };
+            wrapper.innerHTML = `<div class="el-tools"><span class="tool-btn" onclick="toggleWidth(this.parentElement.parentElement)">WIDE</span><span class="tool-btn" onclick="this.parentElement.parentElement.remove(); showWidgets();">DEL</span></div><div class="el-content-body"></div>`;
+            const body = wrapper.querySelector('.el-content-body');
+            if (type === 'h1') body.innerHTML = '<h1 style="font-family:Playfair Display, serif; font-size:5rem; line-height:1; margin:0;">' + (content || 'The Core') + '</h1>';
+            else if (type === 'p') body.innerHTML = '<p style="font-size:1.2rem; color:#555; margin:0;">' + (content || 'The narrative begins.') + '</p>';
+            else if (type === 'img') body.innerHTML = '<div style="width:100%; height:400px; background:#f0f0f0; border:1px solid #ddd; display:flex; align-items:center; justify-content:center; color:#aaa;">IMAGE</div>';
+            else if (type === 'vid') body.innerHTML = '<div style="width:100%; aspect-ratio:16/9; background:#000;"></div>';
+            else if (type === 'btn') body.innerHTML = '<button style="background:#6366f1; color:white; border:none; padding:18px 45px; border-radius:100px;">Explore</button>';
+            canvas.appendChild(wrapper);
+            selectElement(wrapper);
+        }
+
+        function selectElement(el) {
+            document.querySelectorAll('.dropped-el').forEach(x => x.classList.remove('active'));
+            el.classList.add('active');
+            selectedEl = el;
+            document.getElementById('widgetPanel').style.display = 'none';
+            document.getElementById('sidebarSettings').style.display = 'block';
+            document.getElementById('set-content').value = el.querySelector('.el-content-body').innerText;
+            document.getElementById('set-padding').value = parseInt(el.style.paddingTop) || 0;
+        }
+
+        function showWidgets() {
+            document.getElementById('widgetPanel').style.display = 'block';
+            document.getElementById('sidebarSettings').style.display = 'none';
+            document.querySelectorAll('.dropped-el').forEach(x => x.classList.remove('active'));
+            selectedEl = null;
+        }
+
+        function applySettings() {
+            if (!selectedEl) return;
+            const content = document.getElementById('set-content').value;
+            const padding = document.getElementById('set-padding').value;
+            const body = selectedEl.querySelector('.el-content-body');
+            if (selectedEl.dataset.type === 'h1') body.querySelector('h1').innerText = content;
+            else if (selectedEl.dataset.type === 'p') body.querySelector('p').innerText = content;
+            else if (selectedEl.dataset.type === 'btn') body.querySelector('button').innerText = content;
+            selectedEl.style.paddingTop = padding + 'px';
+            selectedEl.style.paddingBottom = padding + 'px';
+        }
+
+        function toggleWidth(el) { el.style.width = el.style.width === '160%' ? '100%' : '160%'; el.style.marginLeft = el.style.width === '160%' ? '-30%' : '0'; }
+
+        function compileContent(p) {
+            if (p.mode === 'standalone') return p.html;
+            return '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>body{margin:0;font-family:sans-serif;background:transparent;overflow-x:hidden;} ' + p.css + '</style></head><body>' + p.html + '<script>' + p.js + '<\/script></body></html>';
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('pageGrid'); if (!grid) return; grid.innerHTML = '';
+            document.getElementById('conceptCounter').innerText = pages.length;
+            const add = document.createElement('div');
+            add.className = 'preview-card add-card'; add.onclick = () => openModal();
+            add.innerHTML = '<div class="add-card-icon">+</div><span class="add-card-text">New Concept</span>';
+            grid.appendChild(add);
+            pages.forEach(p => {
+                const card = document.createElement('div'); card.className = 'preview-card'; card.onclick = () => viewPage(p.id);
+                card.innerHTML = `<div class="iframe-container"><iframe srcdoc="${compileContent(p).replace(/"/g, '&quot;')}" scrolling="no"></iframe></div><div class="card-content"><h3 class="card-title">${p.title}</h3><p class="card-desc">${p.desc}</p></div>`;
+                grid.appendChild(card);
+            });
+        }
+
+        function viewPage(id) {
+            const p = pages.find(x => x.id === id); if (!p) return;
+            currentViewingId = id;
+            document.getElementById('mainNav').classList.add('hidden');
+            document.getElementById('mainContent').classList.add('hidden');
+            document.querySelector('footer').classList.add('hidden');
+            document.getElementById('fullPageView').classList.remove('hidden');
+            document.getElementById('viewTitle').innerText = p.title;
+            document.getElementById('fullFrame').srcdoc = compileContent(p);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function showHome() {
+            currentViewingId = null;
+            document.getElementById('mainNav').classList.remove('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            document.querySelector('footer').classList.remove('hidden');
+            document.getElementById('fullPageView').classList.add('hidden');
+            document.body.style.overflow = 'auto'; renderGrid();
+        }
+
+        function openModal(id = null) {
+            currentEditingId = id; if (canvas) canvas.innerHTML = '';
+            backToSetup();
+            if (id) {
+                const p = pages.find(x => x.id === id);
+                document.getElementById('pageTitle').value = p.title;
+                document.getElementById('pageDesc').value = p.desc;
+                document.getElementById('htmlEditor').value = p.html;
+                document.getElementById('cssEditor').value = p.css;
+                document.getElementById('jsEditor').value = p.js;
+                initEditor(p.mode);
+            } else {
+                document.getElementById('pageTitle').value = '';
+                document.getElementById('pageDesc').value = '';
+                document.getElementById('htmlEditor').value = '';
+                document.getElementById('cssEditor').value = '';
+                document.getElementById('jsEditor').value = '';
+            }
+            document.getElementById('editorModal').classList.add('flex');
+        }
+
+        function closeModal() { document.getElementById('editorModal').classList.remove('flex'); }
+
+        function savePage() {
+            const title = document.getElementById('pageTitle').value.trim() || 'Untitled';
+            const desc = document.getElementById('pageDesc').value.trim() || 'Visual Concept.';
+            let h = '', c = '', j = '';
+            if (currentMode === 'visual') {
+                const clone = canvas.cloneNode(true);
+                clone.querySelectorAll('.el-tools').forEach(e => e.remove());
+                clone.querySelectorAll('.dropped-el').forEach(el => el.classList.remove('active'));
+                h = '<div style="max-width:1200px; margin:0 auto; padding:80px 40px; overflow-x:hidden;">' + clone.innerHTML + '</div>';
+                c = 'h1{font-family:Playfair Display,serif; margin-bottom:2rem;} p{margin-bottom:1.5rem; line-height:1.8; color:#444;} .dropped-el{margin-bottom:2.5rem;}';
+            } else { h = document.getElementById('htmlEditor').value; c = document.getElementById('cssEditor').value; j = document.getElementById('jsEditor').value; }
+            if (currentEditingId) { const idx = pages.findIndex(x => x.id === currentEditingId); pages[idx] = { ...pages[idx], title, desc, html: h, css: c, js: j, mode: currentMode }; }
+            else { pages.unshift({ id: Date.now().toString(), title, desc, html: h, css: c, js: j, mode: currentMode }); }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(pages));
+            closeModal(); renderGrid();
+        }
+
+        function openDownloadModal() {
+            const list = document.getElementById('downloadList'); list.innerHTML = '';
+            pages.forEach(p => {
+                const item = document.createElement('label'); item.className = 'download-item';
+                item.innerHTML = `<div class="checkbox-container"><input type="checkbox" value="${p.id}" class="exp-check"><span>${p.title}</span></div>`;
+                list.appendChild(item);
+            });
+            document.getElementById('downloadModal').classList.add('flex');
+        }
+
+        function toggleAllCheckboxes() { const checks = document.querySelectorAll('.exp-check'); const allChecked = [...checks].every(c => c.checked); checks.forEach(c => c.checked = !allChecked); }
+        function closeDownloadModal() { document.getElementById('downloadModal').classList.remove('flex'); }
+        function dl(id) { const p = pages.find(x => x.id === id); const blob = new Blob([compileContent(p)], { type: 'text/html' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = p.title.toLowerCase().replace(/ /g, '_') + '.html'; a.click(); }
+        function downloadSelected() { const sel = [...document.querySelectorAll('.exp-check:checked')].map(c => c.value); sel.forEach((id, i) => setTimeout(() => dl(id), i * 400)); }
+        window.onload = () => { setTheme(localStorage.getItem(THEME_KEY) || 'light'); renderGrid(); };
+    </script>
+</body>
+
+</html>
