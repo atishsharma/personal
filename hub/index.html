@@ -7,7 +7,8 @@
     <title>Atish Ak Sharma | Browser Local Bookmark Manager</title>
     <link rel="icon" type="image/png"
         href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
-
+    <link rel="manifest" href="/hub/manifest.json">
+    <meta name="theme-color" content="#111111">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 
@@ -23,9 +24,10 @@
             --modal-bg: #fff0f3;
             --card-shadow: 0 10px 30px -5px rgba(255, 77, 109, 0.08);
             --hover-shadow: 0 20px 40px -10px rgba(255, 77, 109, 0.2);
-            --viewer-nav-bg: rgba(255, 255, 255, 0.6);
-            --glass-bg: rgba(255, 255, 255, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --nav-height: 70px;
+            --footer-height: 60px;
         }
 
         [data-theme="dark"] {
@@ -36,11 +38,8 @@
             --border-color: rgba(255, 255, 255, 0.1);
             --modal-bg: #1a1a1a;
             --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-            --hover-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.2);
-            --viewer-nav-bg: rgba(15, 23, 42, 0.6);
-            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            --accent-solid: #6366f1;
-            --glass-bg: rgba(30, 30, 30, 0.4);
+            --hover-shadow: 0 20px 40px -10px rgba(255, 77, 109, 0.3);
+            --glass-bg: rgba(30, 30, 30, 0.5);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
 
@@ -55,9 +54,8 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            overflow-x: hidden;
-            line-height: 1.6;
-            min-height: 100vh;
+            overflow: hidden;
+            height: 100vh;
             display: flex;
             flex-direction: column;
         }
@@ -66,18 +64,18 @@
             display: none !important;
         }
 
-        /* Navigation */
+        /* Fixed Navigation */
         nav {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            height: var(--nav-height);
             background: var(--surface-color);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
-            padding: 0.75rem 2rem;
+            padding: 0 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 1000;
+            flex-shrink: 0;
         }
 
         .nav-logo {
@@ -114,32 +112,69 @@
             align-items: center;
         }
 
-        /* Layout */
+        /* Fixed Footer */
+        footer {
+            height: var(--footer-height);
+            background: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+        }
+
+        /* Independent Scroll Shell */
         .app-container {
             display: flex;
             flex: 1;
-            position: relative;
+            overflow: hidden;
         }
 
-        /* Sidebar */
         aside {
-            width: 320px;
+            width: 300px;
             background: var(--surface-color);
             border-right: 1px solid var(--border-color);
             padding: 1.5rem 0.75rem;
-            height: calc(100vh - 64px);
-            position: sticky;
-            top: 64px;
             overflow-y: auto;
+            flex-shrink: 0;
         }
 
-        @media (max-width: 768px) {
-            aside {
-                display: none;
-            }
+        .content-main {
+            flex: 1;
+            padding: 2.5rem;
+            overflow-y: auto;
+            background: var(--bg-color);
         }
 
-        /* Tree UI */
+        header {
+            margin-bottom: 3rem;
+        }
+
+        header.center {
+            text-align: center;
+        }
+
+        .section-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--accent-solid);
+            font-weight: 800;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.1;
+        }
+
+        /* Sidebar Tree */
         .folder-tree {
             list-style: none;
             padding-left: 0;
@@ -147,7 +182,6 @@
 
         .folder-node {
             margin-bottom: 4px;
-            position: relative;
         }
 
         .folder-header {
@@ -161,7 +195,6 @@
             color: var(--text-muted);
             gap: 10px;
             transition: 0.2s;
-            user-select: none;
         }
 
         .folder-header:hover {
@@ -196,126 +229,48 @@
             margin-top: 4px;
         }
 
-        /* DnD Styles */
+        /* DnD Visuals */
         .dragging {
-            opacity: 0.5;
-            transform: scale(0.98);
+            opacity: 0.4;
+            filter: grayscale(1);
+            cursor: grabbing;
         }
 
         .drag-over {
             background: rgba(255, 77, 109, 0.1) !important;
             border: 2px dashed var(--accent-solid) !important;
+            border-radius: 12px;
         }
 
-        /* Context Menu */
-        #contextMenu {
-            position: fixed;
-            display: none;
-            z-index: 5000;
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            padding: 8px;
-            width: 220px;
-            backdrop-filter: blur(10px);
-        }
-
-        .menu-item {
-            padding: 12px 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-main);
-            transition: 0.2s;
-        }
-
-        .menu-item:hover {
-            background: var(--accent-gradient);
-            color: white;
-        }
-
-        .menu-item.danger:hover {
-            background: #ef4444;
-            color: white;
-        }
-
-        /* Content Area */
-        .content-main {
-            flex: 1;
-            padding: 2.5rem;
-        }
-
-        header {
-            margin-bottom: 3.5rem;
-        }
-
-        header.center {
-            text-align: center;
-        }
-
-        .section-tag {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            color: var(--accent-solid);
-            font-weight: 800;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--text-main);
-            line-height: 1.1;
-        }
-
-        .section-sub {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 15px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-
-        /* Grid */
+        /* Grid Mode (Thumbs) */
         #bookmarkGrid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 2rem;
+            padding-bottom: 3rem;
         }
 
-        /* Liquid Glass Folder Tiles */
         .folder-tile {
             background: var(--glass-bg);
             backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid var(--glass-border);
             border-radius: 36px;
-            padding: 2.5rem;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            height: 240px;
+            height: 230px;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+            transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1);
             position: relative;
             overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.02);
         }
 
         .folder-tile:hover {
-            transform: translateY(-10px) scale(1.02);
+            transform: translateY(-10px);
             border-color: var(--folder-color);
             background: var(--surface-color);
+            box-shadow: var(--hover-shadow);
         }
 
         .tile-icon {
@@ -326,7 +281,7 @@
 
         .tile-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
             color: var(--text-main);
             line-height: 1.1;
@@ -335,18 +290,17 @@
         }
 
         .tile-count {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 800;
             color: var(--accent-solid);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            padding: 5px 14px;
+            padding: 4px 12px;
             background: var(--modal-bg);
             border-radius: 100px;
             display: inline-block;
         }
 
-        /* Square Bookmark Card */
         .bookmark-card {
             background: var(--surface-color);
             border: 1px solid var(--border-color);
@@ -390,6 +344,10 @@
             z-index: 2;
         }
 
+        [data-theme="dark"] .snapshot-gradient {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(17, 17, 17, 0.98) 85%);
+        }
+
         .card-overlay-content {
             position: relative;
             z-index: 3;
@@ -431,22 +389,30 @@
             letter-spacing: 1.2px;
         }
 
-        /* List Mode */
+        /* List Mode (Google Contact Style) */
         #bookmarkGrid.list-mode {
             display: flex;
             flex-direction: column;
             gap: 0;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--surface-color);
         }
 
         .bookmark-list-item {
             display: flex;
             align-items: center;
-            padding: 0.8rem 1.5rem;
+            padding: 0.85rem 1.5rem;
             border-bottom: 1px solid var(--border-color);
             background: var(--surface-color);
-            transition: 0.2s;
             cursor: pointer;
-            gap: 1.5rem;
+            gap: 1.25rem;
+            transition: 0.2s;
+        }
+
+        .bookmark-list-item:last-child {
+            border-bottom: none;
         }
 
         .bookmark-list-item:hover {
@@ -454,13 +420,17 @@
         }
 
         .list-avatar {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: white;
-            padding: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
 
         .list-info {
@@ -472,10 +442,10 @@
         }
 
         .list-title {
-            font-weight: 700;
-            font-size: 1rem;
+            font-weight: 600;
+            font-size: 0.95rem;
             color: var(--text-main);
-            width: 250px;
+            width: 260px;
             flex-shrink: 0;
             white-space: nowrap;
             overflow: hidden;
@@ -483,199 +453,23 @@
         }
 
         .list-url {
-            font-size: 0.8rem;
-            color: var(--accent-solid);
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            opacity: 0.8;
-        }
-
-        .list-desc {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.8rem 1.75rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            cursor: pointer;
-            border: 1px solid transparent;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            transition: 0.25s;
-        }
-
-        .btn-primary {
-            background: var(--accent-gradient);
-            color: white;
-            border: none;
-        }
-
-        .btn-blue-gradient {
-            background: var(--blue-gradient);
-            color: white;
-            border: none;
-        }
-
-        .btn-ghost {
-            background: transparent;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-icon {
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            border-radius: 12px;
-            cursor: pointer;
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #visitLinkBtn {
-            background: #0072ff;
-            color: white;
-            border: 2px solid #ff4d6d;
-            box-shadow: 0 8px 25px rgba(0, 114, 255, 0.3);
-            font-weight: 900;
-            padding: 1rem 2rem;
-        }
-
-        #visitLinkBtn:active {
-            transform: scale(0.92);
-            background: #0056b3;
-        }
-
-        #deleteBtn {
-            background: #ef4444;
-            color: white;
-            border: 2px solid #ffccd5;
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2);
-            font-weight: 900;
-        }
-
-        /* Inspect Popup */
-        .inspect-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 3000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-        }
-
-        .inspect-modal.flex {
-            display: flex !important;
-        }
-
-        .inspect-content {
-            position: relative;
-            background: var(--surface-color);
-            width: 100%;
-            max-width: 48rem;
-            border-radius: 40px;
-            overflow: hidden;
-            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.2);
-            z-index: 3002;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .inspect-snapshot {
-            height: 260px;
-            position: relative;
-            overflow: hidden;
-            background: var(--modal-bg);
-        }
-
-        .inspect-snapshot img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .inspect-snapshot-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to bottom, transparent, var(--surface-color));
-        }
-
-        .inspect-body {
-            padding: 2rem 3.5rem 3.5rem;
-            text-align: center;
-        }
-
-        .inspect-favicon {
-            width: 84px;
-            height: 84px;
-            border-radius: 20px;
-            background: white;
-            padding: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            margin: -68px auto 1.5rem;
-            position: relative;
-            z-index: 4;
-        }
-
-        #viewTitle {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 0.5rem;
-            line-height: 1.2;
-        }
-
-        .inspect-url-display {
             font-size: 0.85rem;
-            color: var(--accent-solid);
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            opacity: 0.8;
+            color: var(--text-muted);
+            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 300px;
-            margin: 0 auto 1.5rem;
+            flex: 1;
         }
 
-        .inspect-desc {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 2.5rem;
-            max-width: 90%;
-            margin-left: auto;
-            margin-right: auto;
+        .list-meta {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--accent-solid);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .inspect-actions-row {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-
-        /* Pretty Compact Vault Entry Modal */
+        /* Modal */
         .modal {
             position: fixed;
             inset: 0;
@@ -693,8 +487,8 @@
         .modal-overlay {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(15px);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
         }
 
         .modal-content {
@@ -716,9 +510,9 @@
             font-size: 0.65rem;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1.2px;
             color: var(--text-muted);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.5rem;
             text-align: left;
         }
 
@@ -728,17 +522,15 @@
             background: var(--modal-bg);
             border: 1px solid var(--border-color);
             border-radius: 14px;
-            padding: 1.1rem;
-            margin-bottom: 1.5rem;
+            padding: 1rem;
+            margin-bottom: 1.25rem;
             outline: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: var(--text-main);
             font-family: inherit;
-            transition: 0.3s;
         }
 
-        .form-input:focus,
-        .form-select:focus {
+        .form-input:focus {
             border-color: var(--accent-solid);
             box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1);
             background: var(--surface-color);
@@ -754,51 +546,172 @@
             gap: 12px;
         }
 
-        /* Footer */
-        footer {
-            padding: 4rem 2rem;
-            background: var(--surface-color);
-            border-top: 1px solid var(--border-color);
-            margin-top: auto;
-        }
-
-        .footer-grid {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            width: 100%;
-            gap: 2rem;
-        }
-
-        .footer-left {
-            text-align: left;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .footer-center {
-            display: flex;
-            justify-content: center;
-        }
-
-        .footer-right {
-            text-align: right;
-        }
-
-        .counter-pill {
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border: 1px solid transparent;
             display: inline-flex;
             align-items: center;
-            padding: 0.7rem 1.8rem;
+            justify-content: center;
+            gap: 0.6rem;
+            transition: 0.25s;
+        }
+
+        .btn-primary {
             background: var(--accent-gradient);
             color: white;
-            border-radius: 100px;
-            font-weight: 800;
-            font-size: 0.95rem;
+            border: none;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-icon {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 12px;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        /* Inspect Popup */
+        .inspect-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .inspect-modal.flex {
+            display: flex !important;
+        }
+
+        .inspect-content {
+            position: relative;
+            background: var(--surface-color);
+            width: 100%;
+            max-width: 44rem;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.2);
+            z-index: 3002;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .inspect-snapshot {
+            height: 240px;
+            position: relative;
+            overflow: hidden;
+            background: var(--modal-bg);
+        }
+
+        .inspect-snapshot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .inspect-snapshot-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent, var(--surface-color));
+        }
+
+        .inspect-body {
+            padding: 1.5rem 3rem 3rem;
+            text-align: center;
+        }
+
+        .inspect-favicon {
+            width: 74px;
+            height: 74px;
+            border-radius: 20px;
+            background: white;
+            padding: 14px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin: -55px auto 1.25rem;
+            position: relative;
+            z-index: 4;
+        }
+
+        #viewTitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            line-height: 1.2;
+        }
+
+        .inspect-url-display {
+            font-size: 0.85rem;
+            color: var(--accent-solid);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 350px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .inspect-actions-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Context Menu Styling */
+        #contextMenu {
+            position: fixed;
+            display: none;
+            z-index: 5000;
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 8px;
+            width: 220px;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-item {
+            padding: 12px 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
             gap: 10px;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.25);
+            color: var(--text-main);
+            transition: 0.2s;
+        }
+
+        .menu-item:hover {
+            background: var(--accent-gradient);
+            color: white;
         }
     </style>
 </head>
@@ -818,17 +731,16 @@
                 <path d="M30 70L50 30L70 70M40 55H60" stroke="url(#g)" stroke-width="8" stroke-linecap="round"
                     fill="none" />
             </svg>
-            <div class="studio-brand"><span class="logo-mark">Atish's</span><span class="hub-name">Hub</span></div>
+            <div class="studio-brand"><span class="logo-mark">Atish's</span><span class="hub-name">Bookmark Hub</span>
+            </div>
         </a>
         <div class="nav-actions">
-            <button id="installBtn" class="btn btn-ghost hidden"
-                style="border-color:var(--accent-solid); color:var(--accent-solid)">Install Hub</button>
             <input type="file" id="chromeImport" accept=".html" style="display:none" onchange="importChrome(event)">
-            <button onclick="document.getElementById('chromeImport').click()" class="btn btn-blue-gradient">Import
-                Chrome</button>
+            <button onclick="document.getElementById('chromeImport').click()" class="btn btn-ghost"
+                style="border-color: #0072ff; color: #0072ff">Import</button>
             <button onclick="openAddModal()" class="btn btn-primary">Add Link</button>
-            <button onclick="toggleViewMode()" class="btn-icon" id="viewModeBtn" title="Change View Mode"></button>
-            <button onclick="toggleTheme()" class="btn-icon" id="themeBtn"></button>
+            <button onclick="toggleViewMode()" class="btn-icon" id="viewModeBtn" title="View Mode">☰</button>
+            <button onclick="toggleTheme()" class="btn-icon" id="themeBtn">🌙</button>
         </div>
     </nav>
 
@@ -869,32 +781,34 @@
                 <img id="inspectFavicon" class="inspect-favicon" src="">
                 <h2 id="viewTitle">Target Website</h2>
                 <div id="inspectUrlDisplay" class="inspect-url-display"></div>
-                <p id="inspectDesc" class="inspect-desc">Metadata description here.</p>
+                <p id="inspectDesc" style="color:var(--text-muted); margin-bottom: 2rem;">Resource metadata.</p>
                 <div class="inspect-actions-row">
-                    <button id="visitLinkBtn" class="btn">Open In New Tab</button>
+                    <button id="visitLinkBtn" class="btn"
+                        style="background:#0072ff; color:white; border:2px solid #ff4d6d">Open In New Tab</button>
                     <button onclick="handleEditFromView()" class="btn btn-ghost"
                         style="background:var(--modal-bg)">Edit</button>
-                    <button id="deleteBtn" class="btn" onclick="handleDelete()">Delete</button>
+                    <button class="btn" style="background:#ef4444; color:white; border:2px solid #ffccd5"
+                        onclick="handleDelete()">Delete</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Add Modal -->
+    <!-- Vault Entry Modal -->
     <div id="addModal" class="modal">
         <div class="modal-overlay" onclick="closeModal()"></div>
         <div class="modal-content">
             <div class="modal-body">
-                <h2 id="modalTitle" class="logo-mark" style="font-size:2rem; margin-bottom:1.5rem; text-align:center;">
-                    Vault Entry</h2>
+                <h2 id="modalTitle" class="logo-mark"
+                    style="font-size:1.8rem; margin-bottom:1.5rem; text-align:center;">Vault Entry</h2>
                 <label class="form-label">Name</label>
                 <input type="text" id="linkName" class="form-input" placeholder="e.g. Design Inspiration">
                 <label class="form-label">URL</label>
                 <input type="text" id="linkUrl" class="form-input" placeholder="https://...">
-                <label class="form-label">Folder Path</label>
+                <label class="form-label">Folder Hierarchy</label>
                 <select id="linkFolder" class="form-select"></select>
                 <label class="form-label">Notes</label>
-                <input type="text" id="linkDesc" class="form-input" placeholder="Thoughts...">
+                <input type="text" id="linkDesc" class="form-input" placeholder="Key takeaways...">
             </div>
             <div class="modal-footer">
                 <button onclick="closeModal()" class="btn btn-ghost">Discard</button>
@@ -904,76 +818,42 @@
     </div>
 
     <footer>
-        <div class="footer-grid">
-            <div class="footer-left">
-                <p>© 2026 Atish's Hub. Professional Organizing.</p>
-            </div>
-            <div class="footer-center">
-                <div class="nav-logo">
-                    <svg class="logo-svg" viewBox="0 0 100 100">
-                        <defs>
-                            <linearGradient id="gf" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#ff4d6d" />
-                                <stop offset="100%" stop-color="#ff85a1" />
-                            </linearGradient>
-                        </defs>
-                        <circle cx="50" cy="50" r="45" stroke="url(#gf)" stroke-width="8" fill="none" />
-                        <path d="M30 70L50 30L70 70M40 55H60" stroke="url(#gf)" stroke-width="8" stroke-linecap="round"
-                            fill="none" />
-                    </svg>
-                    <div class="studio-brand"><span class="logo-mark" style="font-size: 1rem;">Atish's</span><span
-                            class="hub-name" style="font-size: 0.4rem;">Bookmark Hub</span></div>
-                </div>
-            </div>
-            <div class="footer-right">
-                <div class="counter-pill"><span>Saved</span><span id="linkCounter" class="counter-value">0</span></div>
-            </div>
-        </div>
+        <div style="font-size: 0.8rem; font-weight: 500; color: var(--text-muted);">© 2026 Atish's Hub. Local Engine
+            Secure.</div>
+        <div class="counter-pill"><span>Vault Total</span><span id="linkCounter"
+                style="margin-left: 10px; font-weight: 900;">0</span></div>
     </footer>
 
     <script>
-        const STORAGE_KEY = 'atish_v24_pages';
-        const THEME_KEY = 'atish_v24_theme';
-        const VIEW_MODE_KEY = 'atish_v24_view';
-        const EMPTY_FOLDERS_KEY = 'atish_v24_empty';
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/hub/sw.js", {
+                scope: "/hub/"
+            });
+        }
+    </script>
 
-        let bookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
-            { id: '1', name: 'Apple Reference', url: 'https://apple.com', desc: 'Design benchmark.', folder: 'Design', captured: true },
-            { id: '2', name: 'Stripe Docs', url: 'https://stripe.com/docs', desc: 'Interface standard.', folder: 'Work', captured: true }
+    <script>
+        const STORAGE_KEY = 'atish_v30_final_rewrite';
+        const FOLDER_KEY = 'atish_folders_v30';
+
+        const demoBookmarks = [
+            { id: 'd1', name: 'Apple Reference', url: 'https://apple.com', desc: 'Design benchmark.', folder: 'Design', captured: true },
+            { id: 'd2', name: 'Stripe Components', url: 'https://stripe.com/docs', desc: 'Industry documentation standard.', folder: 'Work', captured: true }
         ];
-        let emptyFolders = JSON.parse(localStorage.getItem(EMPTY_FOLDERS_KEY)) || ['Design', 'Work'];
+        const demoFolders = ['Design', 'Work'];
+
+        let bookmarks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || (localStorage.getItem(STORAGE_KEY) ? [] : demoBookmarks);
+        let emptyFolders = JSON.parse(localStorage.getItem(FOLDER_KEY)) || (localStorage.getItem(FOLDER_KEY) ? [] : demoFolders);
 
         let currentFolder = 'All';
         let currentViewingId = null;
-        let currentViewMode = localStorage.getItem(VIEW_MODE_KEY) || 'thumb';
+        let currentViewMode = localStorage.getItem('atish_view_mode') || 'thumb';
         let expandedFolders = new Set(['All']);
         let draggedPath = null;
         let rightClickedPath = "";
-        let deferredPrompt;
-
-        // PWA Trigger
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            const btn = document.getElementById('installBtn');
-            if (btn) btn.classList.remove('hidden');
-        });
-
-        document.getElementById('installBtn')?.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') document.getElementById('installBtn').classList.add('hidden');
-            deferredPrompt = null;
-        });
-
-        // SW Registration
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
-        }
 
         function initApp() {
-            setTheme(localStorage.getItem(THEME_KEY) || 'light', false);
+            setTheme(localStorage.getItem('atish_theme') || 'light', false);
             updateViewModeBtn();
             renderTree();
             renderGrid();
@@ -982,13 +862,13 @@
 
         function setTheme(t, save = true) {
             document.documentElement.setAttribute('data-theme', t);
-            if (save) localStorage.setItem(THEME_KEY, t);
+            if (save) localStorage.setItem('atish_theme', t);
             const btn = document.getElementById('themeBtn');
             if (btn) btn.innerHTML = t === 'light' ? '🌙' : '☀️';
         }
 
         function toggleTheme() { setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); renderGrid(); renderTree(); }
-        function toggleViewMode() { currentViewMode = currentViewMode === 'thumb' ? 'list' : 'thumb'; localStorage.setItem(VIEW_MODE_KEY, currentViewMode); updateViewModeBtn(); renderGrid(); }
+        function toggleViewMode() { currentViewMode = currentViewMode === 'thumb' ? 'list' : 'thumb'; localStorage.setItem('atish_view_mode', currentViewMode); updateViewModeBtn(); renderGrid(); }
         function updateViewModeBtn() {
             const btn = document.getElementById('viewModeBtn');
             if (btn) btn.innerHTML = currentViewMode === 'thumb' ? '☰' : '▦';
@@ -997,14 +877,21 @@
         function generateFolderColor(name) {
             let hash = 0;
             for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            const theme = document.documentElement.getAttribute('data-theme');
             const h = Math.abs(hash % 360);
-            return document.documentElement.getAttribute('data-theme') === 'dark' ? `hsl(${h}, 70%, 75%)` : `hsl(${h}, 75%, 60%)`;
+            return theme === 'dark' ? `hsl(${h}, 70%, 75%)` : `hsl(${h}, 75%, 60%)`;
         }
 
         function setupContextMenus() {
             const menu = document.getElementById('contextMenu');
             window.addEventListener('click', () => menu.style.display = 'none');
-            document.getElementById('ctxAddLink').onclick = () => openAddModal();
+
+            document.getElementById('ctxAddLink').onclick = () => {
+                const path = rightClickedPath === 'All' ? "" : rightClickedPath;
+                localStorage.setItem('atish_last_folder', path);
+                openAddModal();
+            };
+
             document.getElementById('ctxAddSub').onclick = () => {
                 const sub = prompt("Folder Name:");
                 if (sub) {
@@ -1013,6 +900,7 @@
                     saveState(); initApp();
                 }
             };
+
             document.getElementById('ctxDelete').onclick = () => { if (rightClickedPath !== 'All') deleteFolder(rightClickedPath); };
         }
 
@@ -1026,34 +914,31 @@
             document.getElementById('ctxDelete').style.display = (path === 'All') ? 'none' : 'flex';
         }
 
-        // Drag & Drop
         function onDragStart(e, path) { draggedPath = path; e.target.classList.add('dragging'); }
         function onDragEnd(e) { e.target.classList.remove('dragging'); draggedPath = null; }
         function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
         function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+
         function onDrop(e, targetPath) {
             e.preventDefault();
             e.currentTarget.classList.remove('drag-over');
-            if (draggedPath && draggedPath !== targetPath && !targetPath.startsWith(draggedPath + '/')) {
-                const newParent = targetPath === 'All' ? "" : targetPath;
-                const name = draggedPath.split('/').pop();
-                const newPath = newParent ? `${newParent}/${name}` : name;
+            if (!draggedPath || draggedPath === targetPath || targetPath.startsWith(draggedPath + "/")) return;
 
-                // Update all items
-                bookmarks.forEach(b => {
-                    if (b.folder === draggedPath) b.folder = newPath;
-                    else if (b.folder.startsWith(draggedPath + '/')) b.folder = b.folder.replace(draggedPath, newPath);
-                });
+            const name = draggedPath.split('/').pop();
+            const newPath = targetPath === 'All' ? name : `${targetPath}/${name}`;
 
-                // Update empty list
-                emptyFolders = emptyFolders.map(f => {
-                    if (f === draggedPath) return newPath;
-                    if (f.startsWith(draggedPath + '/')) return f.replace(draggedPath, newPath);
-                    return f;
-                });
+            bookmarks.forEach(b => {
+                if (b.folder === draggedPath) b.folder = newPath;
+                else if (b.folder.startsWith(draggedPath + "/")) b.folder = b.folder.replace(draggedPath, newPath);
+            });
 
-                saveState(); initApp();
-            }
+            emptyFolders = emptyFolders.map(f => {
+                if (f === draggedPath) return newPath;
+                if (f.startsWith(draggedPath + "/")) return f.replace(draggedPath, newPath);
+                return f;
+            });
+
+            saveState(); initApp();
         }
 
         function buildFolderTree() {
@@ -1096,6 +981,7 @@
                 h.ondragover = onDragOver;
                 h.ondragleave = onDragLeave;
                 h.ondrop = (e) => onDrop(e, fullPath);
+
                 li.appendChild(h);
                 if (hasChildren && isExp) {
                     const ul = document.createElement('ul'); ul.className = 'sub-folder-list';
@@ -1118,13 +1004,13 @@
 
             if (currentFolder === 'All') {
                 header.className = "center";
-                header.innerHTML = `<h2 class="section-title">Your Bookmark Library</h2><p class="section-sub">All data is stored locally in your browser via Local Storage and is never sent to a server. You can remove it by clearing browser data.</p>`;
+                header.innerHTML = `<h2 class="section-title">Your Bookmark Library</h2><p class="section-sub">Data is stored locally in your browser. Clearing browser data will remove it.</p>`;
                 grid.classList.remove('list-mode');
                 renderFolderHomepage(grid);
             } else {
                 header.className = "";
                 const parts = currentFolder.split('/');
-                header.innerHTML = `<span class="section-tag">${currentFolder.replace(/\//g, ' > ')}</span><h2 class="section-title">${parts[parts.length - 1]}</h2>`;
+                header.innerHTML = `<span class="section-tag">${currentFolder.replace(/\//g, ' > ').toUpperCase()}</span><h2 class="section-title">${parts[parts.length - 1]}</h2>`;
                 if (currentViewMode === 'list') grid.classList.add('list-mode'); else grid.classList.remove('list-mode');
                 renderLinkGrid(grid);
             }
@@ -1132,8 +1018,7 @@
 
         function renderFolderHomepage(container) {
             const topFolders = [...new Set([...bookmarks.map(b => b.folder.split('/')[0]), ...emptyFolders.map(f => f.split('/')[0])])].filter(f => f).sort();
-            const counter = document.getElementById('linkCounter');
-            if (counter) counter.innerText = bookmarks.length;
+            document.getElementById('linkCounter').innerText = bookmarks.length;
             topFolders.forEach(folder => {
                 const count = bookmarks.filter(b => b.folder === folder || b.folder.startsWith(folder + '/')).length;
                 container.appendChild(createFolderTile(folder, count));
@@ -1157,6 +1042,35 @@
             return card;
         }
 
+        function createListItem(name, url, isFolder, count, id) {
+            const row = document.createElement('div');
+            row.className = 'bookmark-list-item';
+            const color = generateFolderColor(name);
+            const favicon = isFolder ? "" : `https://www.google.com/s2/favicons?domain=${new URL(url).hostname}&sz=64`;
+
+            row.innerHTML = `
+                <div class="list-avatar" style="${isFolder ? 'color:' + color : ''}">
+                    ${isFolder ? '📁' : `<img src="${favicon}" style="width:24px; height:24px;">`}
+                </div>
+                <div class="list-info">
+                    <span class="list-title">${name}</span>
+                    <span class="list-url">${isFolder ? 'Folder' : url.substring(0, 50) + (url.length > 50 ? '...' : '')}</span>
+                    <span class="list-meta">${isFolder ? count + ' Items' : ''}</span>
+                </div>
+            `;
+
+            row.onclick = () => isFolder ? setFolder(id) : viewLink(id);
+            if (isFolder) {
+                row.setAttribute('draggable', 'true');
+                row.ondragstart = (e) => onDragStart(e, id);
+                row.ondragend = onDragEnd;
+                row.ondragover = onDragOver;
+                row.ondragleave = onDragLeave;
+                row.ondrop = (e) => onDrop(e, id);
+            }
+            return row;
+        }
+
         function renderLinkGrid(container) {
             const directItems = bookmarks.filter(b => b.folder === currentFolder);
             const subFolders = [...new Set([...bookmarks, ...emptyFolders.map(f => ({ folder: f }))]
@@ -1167,29 +1081,33 @@
                 })
             )].sort();
 
-            const counter = document.getElementById('linkCounter');
-            if (counter) counter.innerText = directItems.length;
+            document.getElementById('linkCounter').innerText = directItems.length;
 
-            subFolders.forEach(path => container.appendChild(createFolderTile(path, bookmarks.filter(b => b.folder === path || b.folder.startsWith(path + "/")).length)));
+            subFolders.forEach(path => {
+                const count = bookmarks.filter(b => b.folder === path || b.folder.startsWith(path + "/")).length;
+                if (currentViewMode === 'list') {
+                    container.appendChild(createListItem(path.split('/').pop(), '', true, count, path));
+                } else {
+                    container.appendChild(createFolderTile(path, count));
+                }
+            });
 
             directItems.forEach(link => {
-                const host = new URL(link.url).hostname;
-                const favicon = `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
                 if (currentViewMode === 'list') {
-                    const row = document.createElement('div'); row.className = 'bookmark-list-item'; row.onclick = () => viewLink(link.id);
-                    row.innerHTML = `<img src="${favicon}" class="list-avatar"><div class="list-info"><span class="list-title">${link.name}</span><span class="list-url">${link.url.substring(0, 40)}...</span><span class="list-desc">${link.desc || ''}</span></div>`;
-                    container.appendChild(row);
+                    container.appendChild(createListItem(link.name, link.url, false, 0, link.id));
                 } else {
+                    const host = new URL(link.url).hostname;
+                    const favicon = `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
                     const card = document.createElement('div'); card.className = 'bookmark-card'; card.onclick = () => viewLink(link.id);
                     const snapshotUrl = `https://s0.wp.com/mshots/v1/${encodeURIComponent(link.url)}?w=600`;
-                    card.innerHTML = `<div class="card-snapshot-full">${link.captured ? `<img class="snapshot-img" src="${snapshotUrl}" loading="lazy">` : ''}<div class="snapshot-gradient"></div></div><img src="${favicon}" class="card-favicon-top"><div class="card-overlay-content"><span class="card-title">${link.name}</span><span class="card-url-meta">${host}</span></div>`;
+                    card.innerHTML = `<div class="card-snapshot-full">${link.captured ? `<img class="snapshot-img" src="${snapshotUrl}" loading="lazy" onerror="this.style.opacity=0">` : ''}<div class="snapshot-gradient"></div></div><img src="${favicon}" class="card-favicon-top"><div class="card-overlay-content"><span class="card-title">${link.name}</span><span class="card-url-meta">${host}</span></div>`;
                     container.appendChild(card);
                 }
             });
         }
 
         function deleteFolder(path) {
-            if (confirm(`Purge hierarchy "${path}"?`)) {
+            if (confirm(`Purge entire folder hierarchy "${path}"?`)) {
                 bookmarks = bookmarks.filter(b => b.folder !== path && !b.folder.startsWith(path + '/'));
                 emptyFolders = emptyFolders.filter(f => f !== path && !f.startsWith(path + '/'));
                 if (currentFolder === path || currentFolder.startsWith(path + "/")) currentFolder = 'All';
@@ -1205,8 +1123,7 @@
             document.getElementById('viewTitle').innerText = link.name;
             document.getElementById('inspectSnapshotImg').src = `https://s0.wp.com/mshots/v1/${encodeURIComponent(link.url)}?w=800`;
             document.getElementById('inspectFavicon').src = `https://www.google.com/s2/favicons?domain=${host}&sz=128`;
-            document.getElementById('inspectDesc').innerText = link.desc || `Stashed resource.`;
-            document.getElementById('inspectUrlDisplay').innerText = link.url.substring(0, 40) + (link.url.length > 40 ? '...' : '');
+            document.getElementById('inspectUrlDisplay').innerText = link.url.length > 40 ? link.url.substring(0, 40) + '...' : link.url;
             document.getElementById('visitLinkBtn').onclick = () => window.open(link.url, '_blank');
             document.getElementById('inspectView').classList.add('flex');
         }
@@ -1214,26 +1131,27 @@
         function closeInspect() { document.getElementById('inspectView').classList.remove('flex'); currentViewingId = null; renderGrid(); }
         function showHome() { closeInspect(); setFolder('All'); }
         function handleEditFromView() { if (currentViewingId) { const id = currentViewingId; closeInspect(); openAddModal(id); } }
-        function handleDelete() { if (confirm("Archive permanently?")) { bookmarks = bookmarks.filter(b => b.id !== currentViewingId); saveState(); closeInspect(); initApp(); } }
+        function handleDelete() { if (confirm("Permanently delete?")) { bookmarks = bookmarks.filter(b => b.id !== currentViewingId); saveState(); closeInspect(); initApp(); } }
         function closeModal() { document.getElementById('addModal').classList.remove('flex'); }
 
         function openAddModal(id = null) {
+            const last = localStorage.getItem('atish_last_folder') || '';
             const allPaths = new Set([...bookmarks.map(b => b.folder), ...emptyFolders]);
             allPaths.forEach(p => { if (!p) return; const parts = p.split('/'); let t = ""; parts.forEach(i => { t = t ? `${t}/${i}` : i; allPaths.add(t); }); });
-            const sorted = Array.from(allPaths).sort();
             const select = document.getElementById('linkFolder');
-            select.innerHTML = `<option value="">(Root)</option>` + sorted.map(f => `<option value="${f}">${f}</option>`).join('') + `<option value="NEW">+ Create New Path...</option>`;
+            select.innerHTML = `<option value="">(Root)</option>` + Array.from(allPaths).sort().map(f => `<option value="${f}">${f}</option>`).join('') + `<option value="NEW">+ New Folder Hierarchy...</option>`;
 
             if (id) {
                 const link = bookmarks.find(b => b.id === id);
-                document.getElementById('modalTitle').innerText = "Update Vault";
+                document.getElementById('modalTitle').innerText = "Update Resource";
                 document.getElementById('linkName').value = link.name;
                 document.getElementById('linkUrl').value = link.url;
                 document.getElementById('linkDesc').value = link.desc;
                 select.value = link.folder;
             } else {
-                document.getElementById('modalTitle').innerText = "New Vault Entry";
+                document.getElementById('modalTitle').innerText = "Vault Entry";
                 document.getElementById('linkName').value = ''; document.getElementById('linkUrl').value = ''; document.getElementById('linkDesc').value = '';
+                select.value = last;
             }
             document.getElementById('addModal').classList.add('flex');
         }
@@ -1245,25 +1163,27 @@
             let folder = document.getElementById('linkFolder').value;
             if (folder === 'NEW') folder = prompt("Path (e.g. Work/2026):", "") || "";
             if (!name || !url) return;
+            localStorage.setItem('atish_last_folder', folder);
             if (folder && !emptyFolders.includes(folder)) emptyFolders.push(folder);
             if (currentViewingId) {
                 const idx = bookmarks.findIndex(b => b.id === currentViewingId);
                 bookmarks[idx] = { ...bookmarks[idx], name, url, desc, folder };
+                currentViewingId = null;
             } else {
-                bookmarks.unshift({ id: Date.now().toString(), name, url, desc, folder, captured: false });
+                bookmarks.unshift({ id: Date.now().toString(), name, url: url.startsWith('http') ? url : `https://${url}`, desc, folder, captured: false });
             }
             saveState(); closeModal(); initApp();
         }
 
-        function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks)); localStorage.setItem(EMPTY_FOLDERS_KEY, JSON.stringify(emptyFolders)); }
+        function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks)); localStorage.setItem(FOLDER_KEY, JSON.stringify(emptyFolders)); }
 
         function importChrome(event) {
             const file = event.target.files[0]; if (!file) return;
             const reader = new FileReader();
             reader.onload = function (e) {
                 const doc = new DOMParser().parseFromString(e.target.result, 'text/html');
-                const dl = doc.querySelector('dl'); if (!dl) return;
-                bookmarks = [...bookmarks, ...parseChromeNodes(Array.from(dl.children))];
+                const dls = Array.from(doc.querySelectorAll('dl')); if (!dls.length) return;
+                bookmarks = [...bookmarks, ...parseChromeNodes(Array.from(dls[0].children))];
                 saveState(); initApp();
             };
             reader.readAsText(file);
@@ -1272,11 +1192,17 @@
         function parseChromeNodes(nodes, path = "") {
             let extracted = [];
             nodes.forEach(node => {
-                if (node.tagName === 'A') extracted.push({ id: Math.random().toString(36).substr(2, 9), name: node.innerText, url: node.href, folder: path || '', captured: false });
-                else if (node.tagName === 'H3') {
-                    const nPath = path ? `${path}/${node.innerText}` : node.innerText;
-                    if (!emptyFolders.includes(nPath)) emptyFolders.push(nPath);
-                    if (node.nextElementSibling?.tagName === 'DL') extracted = extracted.concat(parseChromeNodes(Array.from(node.nextElementSibling.children), nPath));
+                if (node.tagName === 'DT') {
+                    const firstChild = node.firstElementChild;
+                    if (!firstChild) return;
+                    if (firstChild.tagName === 'A') {
+                        extracted.push({ id: Math.random().toString(36).substr(2, 9), name: firstChild.innerText, url: firstChild.href, folder: path || '', captured: false });
+                    } else if (firstChild.tagName === 'H3') {
+                        const nPath = path ? `${path}/${firstChild.innerText}` : firstChild.innerText;
+                        if (!emptyFolders.includes(nPath)) emptyFolders.push(nPath);
+                        const nextDl = node.querySelector('dl') || node.nextElementSibling;
+                        if (nextDl && nextDl.tagName === 'DL') extracted = extracted.concat(parseChromeNodes(Array.from(nextDl.children), nPath));
+                    }
                 }
             });
             return extracted;
