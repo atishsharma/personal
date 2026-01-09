@@ -65,5 +65,3 @@ Feel free to add a license if you want open use (MIT recommended).
 ```bash
 git clone https://github.com/atishsharma/personal.git
 cd personal
-
----
