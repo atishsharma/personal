@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tulip File Explorer - Beautiful & Universal</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --primary: #9333ea;
+            --primary-hover: #7e22ce;
+            --glass-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(30, 41, 59, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Utilities */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-col {
+            flex-direction: column;
+        }
+
+        .items-center {
+            align-items: center;
+        }
+
+        .justify-between {
+            justify-content: space-between;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+
+        .gap-6 {
+            gap: 1.5rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            padding: 1rem 0;
+            transition: box-shadow 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        /* This class ensures the logo is exactly 30px by 30px 
+           as requested, regardless of the original file size.
+        */
+        .logo-img {
+            width: 30px;
+            height: 30px;
+            object-fit: contain;
+            border-radius: 6px;
+            display: block;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        .btn-source {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .btn-source:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 160px 20px 100px;
+            background: radial-gradient(circle at 50% 0%, #3b0764 0%, #0f172a 70%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-blobs div {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .blob-1 {
+            top: 10%;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: #9333ea;
+        }
+
+        .blob-2 {
+            bottom: 0;
+            left: 0;
+            width: 300px;
+            height: 300px;
+            background: #2563eb;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(147, 51, 234, 0.2);
+            border: 1px solid rgba(147, 51, 234, 0.4);
+            color: #d8b4fe;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #a855f7;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 16px;
+            height: 16px;
+            background: inherit;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes ping {
+
+            75%,
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .gradient-text {
+            background: linear-gradient(to right, #c084fc, #f472b6, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .download-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Updated Lighter Download Buttons */
+        .download-btn {
+            background: rgba(255, 255, 255, 0.15);
+            /* Much lighter glass effect */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 220px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+        }
+
+        .download-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .download-btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn-content {
+            text-align: left;
+        }
+
+        .btn-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            opacity: 0.8;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .btn-platform {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        /* Adjusted icon colors for better visibility on lighter bg */
+        .btn-windows i {
+            color: #93c5fd;
+            filter: drop-shadow(0 0 8px rgba(96, 165, 250, 0.3));
+        }
+
+        .btn-linux i {
+            color: #fde047;
+            filter: drop-shadow(0 0 8px rgba(250, 204, 21, 0.3));
+        }
+
+        .btn-mac i {
+            color: #f8fafc;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+        }
+
+        .version-info {
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 0;
+        }
+
+        .bg-dark {
+            background: #0f172a;
+        }
+
+        .bg-darker {
+            background: #020617;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Grid Layouts */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        /* Feature Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            border-radius: 1rem;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(147, 51, 234, 0.4);
+        }
+
+        .icon-box {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .icon-purple {
+            background: rgba(147, 51, 234, 0.1);
+            color: #c084fc;
+            border: 1px solid rgba(147, 51, 234, 0.2);
+        }
+
+        .icon-blue {
+            background: rgba(59, 130, 246, 0.1);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .icon-green {
+            background: rgba(34, 197, 94, 0.1);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+        }
+
+        /* Gallery */
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .gallery-header h2 {
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+
+        .view-all {
+            color: #c084fc;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .view-all:hover {
+            color: #d8b4fe;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 1rem;
+            padding: 0.5rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+            border-color: rgba(147, 51, 234, 0.4);
+        }
+
+        .img-wrapper {
+            border-radius: 0.75rem;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            background: #1e293b;
+            position: relative;
+        }
+
+        .img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+            display: block;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .item-caption {
+            padding: 1rem 0.5rem 0.5rem;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            border-top: 1px solid var(--glass-border);
+            padding: 4rem 0 2rem;
+            margin-top: auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            margin: 1rem 0 1.5rem;
+            max-width: 300px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-btn {
+            background: rgba(255, 255, 255, 0.05);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: var(--text-muted);
+            transition: all 0.2s;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .footer-col h3 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-col a {
+            color: var(--text-muted);
+        }
+
+        .footer-col a:hover {
+            color: #c084fc;
+        }
+
+        .copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            color: #64748b;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox.active .lightbox-content {
+            transform: scale(1);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 2001;
+            transition: color 0.3s;
+        }
+
+        .lightbox-close:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            /* Simplified for plain css mobile menu */
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .gallery-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">
+                <img src="icon.png" alt="Logo" class="logo-img"
+                    onerror="this.src='https://placehold.co/30x30/9333ea/FFF?text=T'">
+                <span>Tulip</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#download">Download</a>
+            </div>
+
+            <a href="https://github.com/atishsharma/Tulip-File-Explorer" target="_blank" class="btn-source">
+                <i data-lucide="github" width="16" height="16"></i>
+                <span>Source Code</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-blobs">
+            <div class="blob-1"></div>
+            <div class="blob-2"></div>
+        </div>
+
+        <div class="container text-center">
+            <div class="badge">
+                <div class="status-dot"></div>
+                New Release 1.4.3-2 Available
+            </div>
+
+            <h1>
+                File Management, <br />
+                <span class="gradient-text">Beautifully Simple.</span>
+            </h1>
+
+            <p>
+                Tulip is a modern, open-source file explorer designed for speed and aesthetics.
+                Manage your files with a fluid, adaptive interface on any operating system.
+            </p>
+
+            <!-- Download Options -->
+            <div id="download" class="download-group">
+                <!-- Windows -->
+                <a href="https://github.com/atishsharma/Tulip-File-Explorer/releases/download/Third/Tulip.File.Explorer-1.4.3-2-win.zip"
+                    class="download-btn btn-windows">
+                    <i data-lucide="monitor" width="32" height="32"></i>
+                    <div class="btn-content">
+                        <div class="btn-label">Download for</div>
+                        <div class="btn-platform">Windows</div>
+                    </div>
+                </a>
+
+                <!-- Linux -->
+                <a href="https://github.com/atishsharma/Tulip-File-Explorer/releases/download/Third/Tulip-File-Explorer_1.4.3-2_amd64.deb"
+                    class="download-btn btn-linux">
+                    <i data-lucide="terminal" width="32" height="32"></i>
+                    <div class="btn-content">
+                        <div class="btn-label">Download for</div>
+                        <div class="btn-platform">Linux</div>
+                    </div>
+                </a>
+
+                <!-- Mac -->
+                <a href="https://github.com/atishsharma/Tulip-File-Explorer/releases/download/Third/Tulip.File.Explorer-1.4.3-2-Mac-arm64.zip"
+                    class="download-btn btn-mac">
+                    <i data-lucide="apple" width="32" height="32"></i>
+                    <div class="btn-content">
+                        <div class="btn-label">Download for</div>
+                        <div class="btn-platform">macOS</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="version-info">
+                <i data-lucide="check-circle-2" width="16" height="16" color="#4ade80"></i>
+                Latest Stable Build 1.4.3-2
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section id="features" class="bg-dark">
+        <div class="container">
+            <div class="section-header">
+                <h2>Crafted for Performance</h2>
+                <p>Everything you need in a file manager, minus the clutter.</p>
+            </div>
+
+            <div class="grid-3">
+                <!-- Feature 1 -->
+                <div class="card">
+                    <div class="icon-box icon-purple">
+                        <i data-lucide="zap" width="28" height="28"></i>
+                    </div>
+                    <h3>Lightning Fast</h3>
+                    <p>Built with performance in mind. Browse heavy directories and search through thousands of files
+                        instantly.</p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="card">
+                    <div class="icon-box icon-blue">
+                        <i data-lucide="layout-grid" width="28" height="28"></i>
+                    </div>
+                    <h3>Adaptive UI</h3>
+                    <p>A modern interface that adapts to your workflow. Switch between grid, list, and detail views
+                        seamlessly.</p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="card">
+                    <div class="icon-box icon-green">
+                        <i data-lucide="shield-check" width="28" height="28"></i>
+                    </div>
+                    <h3>Open & Secure</h3>
+                    <p>Completely open source. No tracking, no hidden background processes. Your files remain yours.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="bg-darker">
+        <div class="container">
+            <div class="gallery-header">
+                <div>
+                    <h2>Interface Gallery</h2>
+                    <p style="margin-top: 0.5rem; color: var(--text-muted);">Click any image to enlarge</p>
+                </div>
+                <a href="https://github.com/atishsharma/Tulip-File-Explorer" class="view-all">
+                    View more on GitHub <i data-lucide="arrow-right" width="16" height="16"></i>
+                </a>
+            </div>
+
+            <div class="gallery-grid">
+                <!-- Gallery Item 1 -->
+                <div class="gallery-item">
+                    <div class="img-wrapper">
+                        <img src="image-5.jpg" alt="Tulip Main Interface" class="lightbox-trigger" loading="lazy"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;text-align:center;\'>Image not found</div>'">
+                    </div>
+                    <div class="item-caption">Dashboard Overview</div>
+                </div>
+
+                <!-- Gallery Item 2 -->
+                <div class="gallery-item">
+                    <div class="img-wrapper">
+                        <img src="image-6.jpg" alt="Folder Structure" class="lightbox-trigger" loading="lazy"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;text-align:center;\'>Image not found</div>'">
+                    </div>
+                    <div class="item-caption">Tree View Navigation</div>
+                </div>
+
+                <!-- Gallery Item 3 -->
+                <div class="gallery-item">
+                    <div class="img-wrapper">
+                        <img src="image-7.jpg" alt="Settings Panel" class="lightbox-trigger" loading="lazy"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;text-align:center;\'>Image not found</div>'">
+                    </div>
+                    <div class="item-caption">Settings & Configuration</div>
+                </div>
+
+                <!-- Gallery Item 4 -->
+                <div class="gallery-item">
+                    <div class="img-wrapper">
+                        <img src="image-8.jpg" alt="Dark Mode" class="lightbox-trigger" loading="lazy"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;text-align:center;\'>Image not found</div>'">
+                    </div>
+                    <div class="item-caption">Immersive Dark Mode</div>
+                </div>
+
+                <!-- Gallery Item 5 -->
+                <div class="gallery-item">
+                    <div class="img-wrapper">
+                        <img src="image-9.jpg" alt="Search Functionality" class="lightbox-trigger" loading="lazy"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;text-align:center;\'>Image not found</div>'">
+                    </div>
+                    <div class="item-caption">Advanced Search</div>
+                </div>
+
+                <!-- Gallery Item 6 -->
+                <div class="gallery-item">
+                    <div class="img-wrapper">
+                        <img src="image-10.jpg" alt="Grid Layout" class="lightbox-trigger" loading="lazy"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;text-align:center;\'>Image not found</div>'">
+                    </div>
+                    <div class="item-caption">Grid Layout</div>
+                </div>
+
+                <!-- Gallery Item 7 -->
+                <div class="gallery-item">
+                    <div class="img-wrapper">
+                        <img src="image-11.jpg" alt="List Layout" class="lightbox-trigger" loading="lazy"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;text-align:center;\'>Image not found</div>'">
+                    </div>
+                    <div class="item-caption">List Layout</div>
+                </div>
+
+                <!-- Gallery Item 8 -->
+                <div class="gallery-item">
+                    <div class="img-wrapper">
+                        <img src="image-12.jpg" alt="File Details" class="lightbox-trigger" loading="lazy"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;text-align:center;\'>Image not found</div>'">
+                    </div>
+                    <div class="item-caption">File Details</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="img-wrapper">
+                        <img src="icon.png" alt="File Details" class="lightbox-trigger" loading="lazy"
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;text-align:center;\'>Image not found</div>'">
+                    </div>
+                    <div class="item-caption">Application Logo</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+    </div>
+
+    <!-- Load scripts at the end -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize Lucide Icons
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            } else {
+                window.addEventListener('load', function () {
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                });
+            }
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function () {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 0) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Lightbox Functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.querySelector('.lightbox-close');
+        const triggers = document.querySelectorAll('.lightbox-trigger');
+
+        triggers.forEach(img => {
+            img.addEventListener('click', function () {
+                lightbox.classList.add('active');
+                lightboxImg.src = this.src;
+            });
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+        }
+
+        lightboxClose.addEventListener('click', closeLightbox);
+
+        lightbox.addEventListener('click', function (e) {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', function (e) {
+            if (e.key === "Escape") {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+
+</html>
