@@ -10,10 +10,14 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tinos:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
         :root {
             --paper-width: 210mm;
             --font-main: 'Tinos', 'Times New Roman', serif;
+            --font-ui: 'Inter', sans-serif;
+            --primary-color: #0d6efd;
+            --border-color: #dee2e6;
         }
 
         body {
@@ -26,45 +30,46 @@
             print-color-adjust: exact;
         }
 
-        /* --- Control Panel --- */
+        /* --- UI Controls --- */
         .control-panel {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
-            padding: 10px 20px;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-            font-family: sans-serif;
+            font-family: var(--font-ui);
         }
 
         .btn {
             padding: 8px 16px;
-            border-radius: 4px;
+            border-radius: 6px;
             border: 1px solid #ced4da;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            font-weight: 600;
+            font-weight: 500;
             background: white;
             transition: all 0.2s;
+            font-family: var(--font-ui);
         }
 
         .btn:hover {
-            background-color: #e9ecef;
+            background-color: #f8f9fa;
         }
 
         .btn-primary {
-            background-color: #0d6efd;
+            background-color: var(--primary-color);
             color: white;
-            border-color: #0d6efd;
+            border-color: var(--primary-color);
         }
 
         .btn-primary:hover {
@@ -85,21 +90,24 @@
             background-color: #198754;
             color: white;
             border: none;
-            padding: 5px 10px;
-            font-size: 12px;
-            margin-top: 5px;
+            padding: 6px 12px;
+            font-size: 13px;
+            margin-top: 8px;
+            border-radius: 4px;
             cursor: pointer;
+            font-family: var(--font-ui);
         }
 
         select.form-select {
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 8px 12px;
+            border-radius: 6px;
             border: 1px solid #ced4da;
-            font-size: 13px;
-            margin-right: 10px;
+            font-size: 14px;
+            margin-right: 12px;
+            font-family: var(--font-ui);
         }
 
-        /* --- Modal Styling --- */
+        /* --- Modal --- */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -107,73 +115,127 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(2px);
             z-index: 2000;
             justify-content: center;
             align-items: center;
+            font-family: var(--font-ui);
         }
 
         .modal-content {
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 600px;
-            max-width: 90%;
+            border-radius: 12px;
+            width: 900px;
+            max-width: 95%;
             max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 12px 12px 0 0;
         }
 
         .modal-title {
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         .close-modal {
             cursor: pointer;
-            font-size: 20px;
-            color: #666;
+            font-size: 24px;
+            color: #adb5bd;
         }
 
-        .form-group {
-            margin-bottom: 15px;
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .grid-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             font-weight: 500;
             font-size: 13px;
+            color: #495057;
         }
 
         .form-control {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             box-sizing: border-box;
-            border: 1px solid #ccc;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .invoice-items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .invoice-items-table th {
+            background: #f1f3f5;
+            text-align: left;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .invoice-items-table td {
+            padding: 8px;
+            border-bottom: 1px solid #f1f3f5;
+        }
+
+        .invoice-items-table input {
+            border: 1px solid #e9ecef;
+            background: white;
+            width: 100%;
+            padding: 8px;
             border-radius: 4px;
         }
 
-        .modal-footer {
-            margin-top: 20px;
-            text-align: right;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
+        .mod-amount {
+            background-color: #f8fff9 !important;
+            border-color: #d1e7dd !important;
+            font-weight: 600;
         }
 
-        /* --- Paper Layout --- */
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            background: #f8f9fa;
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .total-display {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        /* --- Paper --- */
         .paper-container {
-            padding-top: 70px;
+            padding-top: 80px;
             padding-bottom: 50px;
             display: flex;
             flex-direction: column;
@@ -186,7 +248,6 @@
             width: var(--paper-width);
             min-height: 297mm;
             padding: 25mm;
-            /* Standard margin on screen */
             box-sizing: border-box;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             position: relative;
@@ -194,7 +255,152 @@
             flex-direction: column;
         }
 
-        /* --- Title Page Styling (Centered Block) --- */
+        /* --- Document Content --- */
+        h3.section-header {
+            font-size: 16px;
+            background-color: #e9ecef;
+            padding: 8px 10px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border: 1px solid #000;
+            text-transform: uppercase;
+            font-weight: bold;
+            -webkit-print-color-adjust: exact;
+            break-after: avoid;
+        }
+
+        p,
+        li {
+            font-size: 15px;
+            line-height: 1.9;
+            text-align: justify;
+            margin-bottom: 12px;
+        }
+
+        /* Tables */
+        table.report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid #000;
+            break-inside: auto;
+            /* Auto layout to allow expansion when cols are hidden, fixed via JS for resizing */
+            table-layout: auto;
+        }
+
+        table.report-table th,
+        table.report-table td {
+            border: 1px solid #000;
+            padding: 8px 10px;
+            vertical-align: middle;
+            line-height: 1.4;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+
+        table.report-table th {
+            background-color: #e9ecef !important;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Alignment */
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .font-bold {
+            font-weight: bold;
+        }
+
+        .hidden-col {
+            display: none !important;
+        }
+
+        .amount-col {
+            text-align: right;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .glance-table td:nth-child(1) {
+            text-align: center;
+            width: 50px;
+        }
+
+        .glance-table td:nth-child(2) {
+            text-align: left;
+            width: 40%;
+        }
+
+        .glance-table td:nth-child(3) {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .process-list {
+            margin-left: 20px;
+            padding-left: 0;
+        }
+
+        .process-title {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* Invoices */
+        .invoice-box {
+            border: 1px solid #000;
+            padding: 30px;
+            box-sizing: border-box;
+            background: white;
+        }
+
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .inv-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .inv-table th {
+            border: none;
+            border-bottom: 1px solid #000;
+            background: #f0f0f0;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .inv-table td {
+            border: none;
+            border-bottom: 1px solid #eee;
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        .inv-table tr:last-child td {
+            border-bottom: none;
+            border-top: 2px solid #000;
+            padding-top: 15px;
+        }
+
+        /* Title Page */
         .paper.title-page-paper {
             display: flex;
             align-items: center;
@@ -253,153 +459,7 @@
             margin-top: 10px;
         }
 
-        /* --- Content Styling --- */
-        h3.section-header {
-            font-size: 16px;
-            background-color: #e9ecef;
-            padding: 8px 10px;
-            margin-top: 25px;
-            margin-bottom: 15px;
-            border: 1px solid #000;
-            text-transform: uppercase;
-            font-weight: bold;
-            -webkit-print-color-adjust: exact;
-            break-after: avoid;
-        }
-
-        p,
-        li {
-            font-size: 15px;
-            line-height: 1.9;
-            text-align: justify;
-            margin-bottom: 12px;
-        }
-
-        /* --- Tables & Resizable Columns --- */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 14px;
-            border: 1px solid #000;
-            break-inside: auto;
-            table-layout: fixed;
-            /* Helpful for resizing */
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 8px 10px;
-            vertical-align: middle;
-            line-height: 1.4;
-            overflow: hidden;
-            /* Prevent text spill */
-            word-wrap: break-word;
-        }
-
-        th {
-            background-color: #e9ecef !important;
-            font-weight: bold;
-            text-align: center;
-            -webkit-print-color-adjust: exact;
-            position: relative;
-            /* For resizer positioning */
-        }
-
-        /* The Resize Handle */
-        .resizer {
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 5px;
-            cursor: col-resize;
-            user-select: none;
-            height: 100%;
-            z-index: 10;
-        }
-
-        /* Highlight on hover to indicate it's interactable */
-        .resizer:hover,
-        .resizing {
-            border-right: 2px solid #0d6efd;
-            /* Blue line when hovering/dragging */
-        }
-
-        /* Specific Alignment Classes */
-        .text-center {
-            text-align: center;
-        }
-
-        .text-right {
-            text-align: right;
-        }
-
-        .text-left {
-            text-align: left;
-        }
-
-        .font-bold {
-            font-weight: bold;
-        }
-
-        .hidden-col {
-            display: none !important;
-        }
-
-        .amount-col {
-            text-align: right;
-            font-family: monospace;
-            font-size: 14px;
-        }
-
-        /* Project at a Glance Specifics */
-        .glance-table td:nth-child(1) {
-            text-align: center;
-            width: 50px;
-        }
-
-        .glance-table td:nth-child(2) {
-            text-align: left;
-            width: 40%;
-        }
-
-        .glance-table td:nth-child(3) {
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .process-list {
-            margin-left: 20px;
-            padding-left: 0;
-        }
-
-        .process-list li {
-            margin-bottom: 10px;
-        }
-
-        .process-title {
-            font-weight: bold;
-            text-decoration: underline;
-        }
-
-        /* --- Invoices --- */
-        .invoice-box {
-            border: 1px solid #000;
-            padding: 30px;
-            box-sizing: border-box;
-            background: white;
-        }
-
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        /* --- Signature --- */
+        /* Signature */
         .signature-block {
             margin-top: 50px;
             display: flex;
@@ -419,7 +479,22 @@
             font-weight: bold;
         }
 
-        /* --- Editable --- */
+        /* Resizer & Edit */
+        .resizer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            cursor: col-resize;
+            user-select: none;
+            height: 100%;
+            z-index: 10;
+        }
+
+        .resizer:hover {
+            border-right: 2px solid #0d6efd;
+        }
+
         [contenteditable="true"]:hover {
             background-color: #ffffcc;
             outline: 1px dashed #ccc;
@@ -431,18 +506,17 @@
         }
 
         .delete-btn {
-            color: red;
+            color: #dc3545;
             cursor: pointer;
             font-weight: bold;
             margin-left: 5px;
         }
 
-        /* --- PRINT CSS --- */
+        /* Print */
         @media print {
             @page {
                 size: A4;
                 margin: 25mm;
-                /* Standard 1 inch margin */
             }
 
             body {
@@ -521,14 +595,6 @@
                 page-break-inside: avoid;
                 page-break-after: auto;
             }
-
-            thead {
-                display: table-header-group;
-            }
-
-            tfoot {
-                display: table-footer-group;
-            }
         }
     </style>
 </head>
@@ -536,16 +602,17 @@
 <body>
 
     <div class="control-panel no-print">
-        <div style="font-weight: bold;">
-            <i class="fas fa-file-alt"></i> PMEGP Detailed Project Report
+        <div style="font-weight: bold; font-size: 18px; color: #333;">
+            <i class="fas fa-file-alt" style="margin-right: 8px; color: var(--primary-color);"></i> PMEGP Report
+            Generator
         </div>
 
         <div style="display: flex; align-items: center;">
-            <button onclick="openInvoiceModal()" class="btn btn-danger" style="margin-right: 15px;">
-                <i class="fas fa-plus-circle"></i> Create Invoice
+            <button onclick="openInvoiceModal()" class="btn btn-danger" style="margin-right: 20px;">
+                <i class="fas fa-plus-circle" style="margin-right: 5px;"></i> Create Invoice
             </button>
 
-            <label for="loanTenure" style="margin-right: 5px; font-weight: 600;">Tenure:</label>
+            <label for="loanTenure" style="margin-right: 8px; font-weight: 600; color: #555;">Tenure:</label>
             <select id="loanTenure" class="form-select" onchange="calculateAll()">
                 <option value="3">3 Years</option>
                 <option value="4">4 Years</option>
@@ -555,15 +622,16 @@
             </select>
 
             <button onclick="calculateAll()" class="btn">
-                <i class="fas fa-sync-alt"></i> Refresh
+                <i class="fas fa-sync-alt" style="margin-right: 5px;"></i> Refresh
             </button>
             <div style="width: 10px;"></div>
             <button onclick="window.print()" class="btn btn-primary">
-                <i class="fas fa-download"></i> PDF
+                <i class="fas fa-file-pdf" style="margin-right: 5px;"></i> Save PDF
             </button>
         </div>
     </div>
 
+    <!-- MODERN INVOICE MODAL -->
     <div id="invoiceModal" class="modal-overlay">
         <div class="modal-content">
             <div class="modal-header">
@@ -571,65 +639,69 @@
                 <div class="close-modal" onclick="closeInvoiceModal()">&times;</div>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label>Vendor Name / Business Name</label>
-                    <input type="text" id="invVendor" class="form-control" placeholder="e.g. ABC Technologies">
-                </div>
-                <div class="form-group">
-                    <label>Vendor Details (Address / GSTIN)</label>
-                    <input type="text" id="invVendorDetails" class="form-control"
-                        placeholder="e.g. New Delhi | GSTIN: 07AA...">
+                <div class="grid-row">
+                    <div class="form-group">
+                        <label>Vendor Name</label>
+                        <input type="text" id="invVendor" class="form-control"
+                            placeholder="e.g. ABC Technologies Pvt Ltd">
+                    </div>
+                    <div class="form-group">
+                        <label>Vendor Details</label>
+                        <input type="text" id="invVendorDetails" class="form-control"
+                            placeholder="e.g. Address, GSTIN, Contact">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Document Subtitle</label>
                     <input type="text" id="invSubtitle" class="form-control"
                         placeholder="e.g. (Supporting Document: Machinery)">
                 </div>
-                <div class="form-group" style="display: flex; gap: 10px;">
-                    <div style="flex:1">
+                <div class="grid-row">
+                    <div class="form-group">
                         <label>Date</label>
                         <input type="text" id="invDate" class="form-control" placeholder="DD-MMM-YYYY">
                     </div>
-                    <div style="flex:1">
+                    <div class="form-group">
                         <label>Ref No (Optional)</label>
                         <input type="text" id="invRef" class="form-control" placeholder="INV-001">
                     </div>
                 </div>
 
-                <hr style="margin: 20px 0;">
-                <label style="font-weight:bold; margin-bottom: 10px; display:block;">Invoice Items</label>
-                <table id="modalItemsTable">
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:10px;">
+                    <label style="font-weight:bold; color:#212529;">Invoice Items</label>
+                    <small style="color:#6c757d; font-size:12px;">Type in Rate OR Amount to auto-calculate</small>
+                </div>
+
+                <table class="invoice-items-table" id="modalItemsTable">
                     <thead>
                         <tr>
                             <th>Description</th>
-                            <th width="60">Qty</th>
-                            <th width="90">Rate</th>
+                            <th width="70">Qty</th>
+                            <th width="100">Rate (₹)</th>
                             <th width="60">GST%</th>
-                            <th width="20"></th>
+                            <th width="120" style="text-align:right">Amount (₹)</th>
+                            <th width="30"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><input type="text" class="form-control" placeholder="Item Name"></td>
-                            <td><input type="number" class="form-control" value="1"></td>
-                            <td><input type="number" class="form-control" value="0"></td>
-                            <td><input type="number" class="form-control" value="18"></td>
-                            <td></td>
-                        </tr>
+                        <!-- Rows injected via JS -->
                     </tbody>
                 </table>
-                <button type="button" class="btn-add" onclick="addModalRow()">+ Add Item</button>
+                <button type="button" class="btn-add" onclick="addModalRow()">+ Add Line Item</button>
             </div>
             <div class="modal-footer">
-                <button class="btn" onclick="closeInvoiceModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="generateInvoice()">Generate & Add Page</button>
+                <div class="total-display">Total: ₹ <span id="modalGrandTotal">0</span></div>
+                <div>
+                    <button class="btn" onclick="closeInvoiceModal()">Cancel</button>
+                    <button class="btn btn-primary" onclick="generateInvoice()">Generate & Add to Report</button>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="paper-container" id="mainContainer">
 
-        <!-- TITLE PAGE (Separate Page) -->
+        <!-- TITLE PAGE -->
         <div class="paper title-page-paper">
             <div class="title-page-container">
                 <div style="margin-top: 20px;">
@@ -646,7 +718,7 @@
                 </div>
 
                 <div
-                    style="display: flex; justify-content: space-between; align-items: flex-end; padding: 0 20px; text-align: left; margin-bottom: 20px;">
+                    style="display: flex; justify-content: space-between; align-items: flex-start; padding: 0 20px; text-align: left; margin-bottom: 20px;">
                     <div style="width: 45%;">
                         <strong>Submitted By:</strong><br><br>
                         <div contenteditable="true" style="line-height: 1.6;">
@@ -668,12 +740,11 @@
             </div>
         </div>
 
-        <!-- REPORT CONTENT (Continuous Flow) -->
+        <!-- REPORT CONTENT -->
         <div class="paper report-content">
-
             <!-- Section 1 -->
             <h3 class="section-header" contenteditable="true">1. Project at a Glance</h3>
-            <table class="glance-table">
+            <table class="report-table glance-table">
                 <tr>
                     <td>1</td>
                     <td contenteditable="true">Name of Entrepreneur</td>
@@ -777,7 +848,7 @@
 
             <!-- Section 4 -->
             <h3 class="section-header" contenteditable="true">4. Cost of Project</h3>
-            <table id="costTable">
+            <table class="report-table" id="costTable">
                 <thead>
                     <tr>
                         <th width="10%">S.No.</th>
@@ -859,7 +930,7 @@
 
             <!-- Section 5 -->
             <h3 class="section-header" contenteditable="true">5. Means of Finance</h3>
-            <table>
+            <table class="report-table">
                 <thead>
                     <tr>
                         <th>Particulars</th>
@@ -893,7 +964,7 @@
             <h3 class="section-header" contenteditable="true">6. Projected Profitability Statement (<span
                     id="profitYearsTitle">5</span> Years)</h3>
             <p style="font-size: 13px; font-style: italic; text-align: right;">(Figures in ₹)</p>
-            <table id="profitTable">
+            <table class="report-table" id="profitTable">
                 <thead>
                     <tr>
                         <th>Particulars</th>
@@ -1018,67 +1089,124 @@
 
             <!-- Section 7 -->
             <h3 class="section-header" contenteditable="true">7. Projected Balance Sheet</h3>
-            <table id="bsTable">
+            <table class="report-table" id="bsTable">
                 <thead>
                     <tr>
-                        <th>Liabilities</th>
+                        <th>Liabilities (Sources of Funds)</th>
                         <th>Yr 1</th>
-                        <th class="y5-col">Yr <span id="bsEndYear">5</span></th>
-                        <th>Assets</th>
-                        <th>Yr 1</th>
-                        <th class="y5-col">Yr <span id="bsEndYear2">5</span></th>
+                        <th>Yr 2</th>
+                        <th>Yr 3</th>
+                        <th class="y4-col">Yr 4</th>
+                        <th class="y5-col">Yr 5</th>
+                        <th class="y6-col hidden-col">Yr 6</th>
+                        <th class="y7-col hidden-col">Yr 7</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="6" style="background: #f0f0f0; font-weight: bold;">LIABILITIES</td>
+                        <td colspan="8" style="background: #f0f0f0; font-weight: bold;">LIABILITIES</td>
                     </tr>
                     <tr>
-                        <td>Capital</td>
+                        <td>Capital (Opening + Profit)</td>
                         <td class="amount-col cap-1">4,94,000</td>
-                        <td class="amount-col cap-final y5-col">25,00,000</td>
-                        <td>Fixed Assets</td>
-                        <td class="amount-col">4,30,000</td>
-                        <td class="amount-col y5-col">4,30,000</td>
+                        <td class="amount-col cap-2">0</td>
+                        <td class="amount-col cap-3">0</td>
+                        <td class="amount-col cap-4 y4-col">0</td>
+                        <td class="amount-col cap-5 y5-col">25,00,000</td>
+                        <td class="amount-col cap-6 y6-col hidden-col">0</td>
+                        <td class="amount-col cap-7 y7-col hidden-col">0</td>
                     </tr>
                     <tr>
                         <td>Term Loan</td>
                         <td class="amount-col tl-1">3,20,000</td>
-                        <td class="amount-col tl-final y5-col">0</td>
-                        <td>Less: Dep</td>
-                        <td class="amount-col">65,000</td>
-                        <td class="amount-col acc-dep-final y5-col">2,41,000</td>
+                        <td class="amount-col tl-2">0</td>
+                        <td class="amount-col tl-3">0</td>
+                        <td class="amount-col tl-4 y4-col">0</td>
+                        <td class="amount-col tl-5 y5-col">0</td>
+                        <td class="amount-col tl-6 y6-col hidden-col">0</td>
+                        <td class="amount-col tl-7 y7-col hidden-col">0</td>
                     </tr>
                     <tr>
-                        <td>Creditors</td>
+                        <td>Current Liabilities (Creditors)</td>
                         <td class="amount-col">20,000</td>
-                        <td class="amount-col cred-final y5-col">35,000</td>
-                        <td>Net Fixed Assets</td>
-                        <td class="amount-col">3,65,000</td>
-                        <td class="amount-col nfa-final y5-col">1,89,000</td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td class="y5-col"></td>
-                        <td>Current Assets</td>
-                        <td class="amount-col">4,69,000</td>
-                        <td class="amount-col ca-final y5-col">23,46,000</td>
+                        <td class="amount-col">22,000</td>
+                        <td class="amount-col">25,000</td>
+                        <td class="amount-col y4-col">30,000</td>
+                        <td class="amount-col y5-col">35,000</td>
+                        <td class="amount-col y6-col hidden-col">40,000</td>
+                        <td class="amount-col y7-col hidden-col">45,000</td>
                     </tr>
                     <tr style="font-weight: bold; background: #e9ecef;">
-                        <td>TOTAL</td>
-                        <td class="amount-col bs-tot-1">8,34,000</td>
-                        <td class="amount-col bs-tot-final y5-col">25,35,000</td>
-                        <td>TOTAL</td>
-                        <td class="amount-col bs-tot-1">8,34,000</td>
-                        <td class="amount-col bs-tot-final y5-col">25,35,000</td>
+                        <td>Total Liabilities</td>
+                        <td class="amount-col tot-liab-1">0</td>
+                        <td class="amount-col tot-liab-2">0</td>
+                        <td class="amount-col tot-liab-3">0</td>
+                        <td class="amount-col tot-liab-4 y4-col">0</td>
+                        <td class="amount-col tot-liab-5 y5-col">0</td>
+                        <td class="amount-col tot-liab-6 y6-col hidden-col">0</td>
+                        <td class="amount-col tot-liab-7 y7-col hidden-col">0</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="8" style="background: #f0f0f0; font-weight: bold;">ASSETS (Application of Funds)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Gross Fixed Assets</td>
+                        <td class="amount-col gfa">4,30,000</td>
+                        <td class="amount-col gfa">4,30,000</td>
+                        <td class="amount-col gfa">4,30,000</td>
+                        <td class="amount-col gfa y4-col">4,30,000</td>
+                        <td class="amount-col gfa y5-col">4,30,000</td>
+                        <td class="amount-col gfa y6-col hidden-col">4,30,000</td>
+                        <td class="amount-col gfa y7-col hidden-col">4,30,000</td>
+                    </tr>
+                    <tr>
+                        <td>Less: Accum. Depreciation</td>
+                        <td class="amount-col acc-dep-1">65,000</td>
+                        <td class="amount-col acc-dep-2">0</td>
+                        <td class="amount-col acc-dep-3">0</td>
+                        <td class="amount-col acc-dep-4 y4-col">0</td>
+                        <td class="amount-col acc-dep-5 y5-col">0</td>
+                        <td class="amount-col acc-dep-6 y6-col hidden-col">0</td>
+                        <td class="amount-col acc-dep-7 y7-col hidden-col">0</td>
+                    </tr>
+                    <tr>
+                        <td>Net Fixed Assets</td>
+                        <td class="amount-col nfa-1">0</td>
+                        <td class="amount-col nfa-2">0</td>
+                        <td class="amount-col nfa-3">0</td>
+                        <td class="amount-col nfa-4 y4-col">0</td>
+                        <td class="amount-col nfa-5 y5-col">0</td>
+                        <td class="amount-col nfa-6 y6-col hidden-col">0</td>
+                        <td class="amount-col nfa-7 y7-col hidden-col">0</td>
+                    </tr>
+                    <tr>
+                        <td>Cash Balance & Stock</td>
+                        <td class="amount-col ca-1">0</td>
+                        <td class="amount-col ca-2">0</td>
+                        <td class="amount-col ca-3">0</td>
+                        <td class="amount-col ca-4 y4-col">0</td>
+                        <td class="amount-col ca-5 y5-col">0</td>
+                        <td class="amount-col ca-6 y6-col hidden-col">0</td>
+                        <td class="amount-col ca-7 y7-col hidden-col">0</td>
+                    </tr>
+                    <tr style="font-weight: bold; background: #e9ecef;">
+                        <td>Total Assets</td>
+                        <td class="amount-col tot-asset-1">0</td>
+                        <td class="amount-col tot-asset-2">0</td>
+                        <td class="amount-col tot-asset-3">0</td>
+                        <td class="amount-col tot-asset-4 y4-col">0</td>
+                        <td class="amount-col tot-asset-5 y5-col">0</td>
+                        <td class="amount-col tot-asset-6 y6-col hidden-col">0</td>
+                        <td class="amount-col tot-asset-7 y7-col hidden-col">0</td>
                     </tr>
                 </tbody>
             </table>
 
             <!-- Section 8 -->
             <h3 class="section-header" contenteditable="true">8. Calculation of D.S.C.R.</h3>
-            <table id="dscrTable">
+            <table class="report-table" id="dscrTable">
                 <thead>
                     <tr>
                         <th>Particulars</th>
@@ -1129,12 +1257,11 @@
                 </tbody>
             </table>
 
-            <!-- Section 9: Repayment Schedule -->
+            <!-- Section 9 -->
             <h3 class="section-header" contenteditable="true">9. Repayment Schedule (Bank Loan)</h3>
             <p style="font-size: 13px; font-style: italic; text-align: right;">Assumed Interest Rate: 10% p.a. | Tenure:
-                <span id="repayTenureText">5</span> Years
-            </p>
-            <table id="repaymentTable">
+                <span id="repayTenureText">5</span> Years</p>
+            <table class="report-table" id="repaymentTable">
                 <thead>
                     <tr>
                         <th>Year</th>
@@ -1145,7 +1272,7 @@
                     </tr>
                 </thead>
                 <tbody id="repaymentBody">
-                    <!-- Rows generated by JS -->
+                    <!-- JS generated -->
                 </tbody>
             </table>
 
@@ -1176,8 +1303,8 @@
             <div class="invoice-box" contenteditable="true">
                 <div class="invoice-header">
                     <div class="text-left">
-                        <h2 style="margin:0;">Bio-Tech Lab Solutions</h2>
-                        <small>Haridwar, UK | GSTIN: 05AAACB1234D1Z5</small>
+                        <h2 style="margin:0;">Bio-Tech Lab Solutions</h2><small>Haridwar, UK | GSTIN:
+                            05AAACB1234D1Z5</small>
                     </div>
                     <div class="text-right"><strong>PROFORMA INVOICE</strong><br>Date: 15-Oct-2023</div>
                 </div>
@@ -1193,49 +1320,48 @@
                     </tr>
                     <tr>
                         <td>Laminar Air Flow Cabinet (SS 304)</td>
-                        <td class="inv-qty">1</td>
-                        <td class="inv-rate text-right">55,085</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">65,000</td>
+                        <td class="inv-qty" contenteditable="true">1</td>
+                        <td class="inv-rate text-right" contenteditable="true">55,085</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">65,000</td>
                     </tr>
                     <tr>
                         <td>Vertical Autoclave (High Pressure)</td>
-                        <td class="inv-qty">1</td>
-                        <td class="inv-rate text-right">38,135</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">45,000</td>
+                        <td class="inv-qty" contenteditable="true">1</td>
+                        <td class="inv-rate text-right" contenteditable="true">38,135</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">45,000</td>
                     </tr>
                     <tr>
                         <td>Commercial Dehydrator (12 Tray)</td>
-                        <td class="inv-qty">1</td>
-                        <td class="inv-rate text-right">21,186</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">25,000</td>
+                        <td class="inv-qty" contenteditable="true">1</td>
+                        <td class="inv-rate text-right" contenteditable="true">21,186</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">25,000</td>
                     </tr>
                     <tr>
                         <td>IoT Sensors & Humidifiers Set</td>
-                        <td class="inv-qty">1</td>
-                        <td class="inv-rate text-right">16,949</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">20,000</td>
+                        <td class="inv-qty" contenteditable="true">1</td>
+                        <td class="inv-rate text-right" contenteditable="true">16,949</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">20,000</td>
                     </tr>
                     <tr style="font-weight: bold;">
-                        <td colspan="4" class="text-right">Total (Incl. GST)</td>
+                        <td colspan="4" class="text-right">Total</td>
                         <td class="inv-total text-right">1,55,000</td>
                     </tr>
                 </table>
             </div>
         </div>
 
-        <!-- INVOICE 2 -->
         <div class="paper invoice-page" id="invoice2">
             <p style="text-align: center;" contenteditable="true">(Supporting Document 2: Electricals)</p>
             <br>
             <div class="invoice-box" contenteditable="true">
                 <div class="invoice-header">
                     <div class="text-left">
-                        <h2 style="margin:0;">PowerGen & Electronics</h2>
-                        <small>Hamirpur, HP | GSTIN: 05BBBCZ9876K1Z9</small>
+                        <h2 style="margin:0;">PowerGen & Electronics</h2><small>Hamirpur, HP | GSTIN:
+                            05BBBCZ9876K1Z9</small>
                     </div>
                     <div class="text-right"><strong>QUOTATION</strong><br>Date: 18-Oct-2023</div>
                 </div>
@@ -1251,31 +1377,31 @@
                     </tr>
                     <tr>
                         <td>7.5 KVA Silent Diesel Generator</td>
-                        <td class="inv-qty">1</td>
-                        <td class="inv-rate text-right">72,034</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">85,000</td>
+                        <td class="inv-qty" contenteditable="true">1</td>
+                        <td class="inv-rate text-right" contenteditable="true">72,034</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">85,000</td>
                     </tr>
                     <tr>
                         <td>LED Grow Lights (Full Spectrum)</td>
-                        <td class="inv-qty">10</td>
-                        <td class="inv-rate text-right">1,017</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">12,000</td>
+                        <td class="inv-qty" contenteditable="true">10</td>
+                        <td class="inv-rate text-right" contenteditable="true">1,017</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">12,000</td>
                     </tr>
                     <tr>
                         <td>Refrigerator 90L</td>
-                        <td class="inv-qty">1</td>
-                        <td class="inv-rate text-right">12,712</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">15,000</td>
+                        <td class="inv-qty" contenteditable="true">1</td>
+                        <td class="inv-rate text-right" contenteditable="true">12,712</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">15,000</td>
                     </tr>
                     <tr>
                         <td>Airtight Inline Fan with HEPA</td>
-                        <td class="inv-qty">1</td>
-                        <td class="inv-rate text-right">6,780</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">8,000</td>
+                        <td class="inv-qty" contenteditable="true">1</td>
+                        <td class="inv-rate text-right" contenteditable="true">6,780</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">8,000</td>
                     </tr>
                     <tr style="font-weight: bold;">
                         <td colspan="4" class="text-right">Total</td>
@@ -1285,15 +1411,13 @@
             </div>
         </div>
 
-        <!-- INVOICE 3 -->
         <div class="paper invoice-page" id="invoice3">
             <p style="text-align: center;" contenteditable="true">(Supporting Document 3: Civil & Fabrication)</p>
             <br>
             <div class="invoice-box" contenteditable="true">
                 <div class="invoice-header">
                     <div class="text-left">
-                        <h2 style="margin:0;">Doon Interiors</h2>
-                        <small>Hamirpur, HP | GSTIN: 05DDDFA4567M1Z2</small>
+                        <h2 style="margin:0;">Doon Interiors</h2><small>Hamirpur, HP | GSTIN: 05DDDFA4567M1Z2</small>
                     </div>
                     <div class="text-right"><strong>ESTIMATE</strong><br>Date: 20-Oct-2023</div>
                 </div>
@@ -1309,24 +1433,24 @@
                     </tr>
                     <tr>
                         <td>Renovation & PUF Insulation</td>
-                        <td class="inv-qty">1</td>
-                        <td class="inv-rate text-right">50,847</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">60,000</td>
+                        <td class="inv-qty" contenteditable="true">1</td>
+                        <td class="inv-rate text-right" contenteditable="true">50,847</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">60,000</td>
                     </tr>
                     <tr>
                         <td>Heavy Duty Steel Racks</td>
-                        <td class="inv-qty">8</td>
-                        <td class="inv-rate text-right">6,780</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">64,000</td>
+                        <td class="inv-qty" contenteditable="true">8</td>
+                        <td class="inv-rate text-right" contenteditable="true">6,780</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">64,000</td>
                     </tr>
                     <tr>
                         <td>Work Tables & Furniture</td>
-                        <td class="inv-qty">1</td>
-                        <td class="inv-rate text-right">17,797</td>
-                        <td class="inv-gst text-center">18</td>
-                        <td class="inv-amt text-right">21,000</td>
+                        <td class="inv-qty" contenteditable="true">1</td>
+                        <td class="inv-rate text-right" contenteditable="true">17,797</td>
+                        <td class="inv-gst text-center" contenteditable="true">18</td>
+                        <td class="inv-amt text-right" contenteditable="true">21,000</td>
                     </tr>
                     <tr style="font-weight: bold;">
                         <td colspan="4" class="text-right">Total</td>
@@ -1341,15 +1465,29 @@
     <script>
         function parseNum(str) {
             if (!str) return 0;
-            return parseFloat(str.replace(/,/g, '').replace(/[^0-9.]/g, "")) || 0;
+            let cleanStr = str.toString().trim();
+            if (cleanStr.toUpperCase().includes('L')) {
+                let numPart = cleanStr.replace(/[^\d.]/g, '');
+                return parseFloat(numPart) * 100000;
+            }
+            return parseFloat(cleanStr.replace(/,/g, '').replace(/[^\d.-]/g, "")) || 0;
         }
 
         function formatNum(num) {
+            const tenure = parseInt(document.getElementById('loanTenure').value);
+            // "L" Format if Tenure > 5 AND Value >= 100000
+            if (tenure > 5 && num >= 100000) {
+                let val = num / 100000;
+                return val.toFixed(2) + "L";
+            }
             return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(num);
         }
 
         // --- INV GENERATOR LOGIC ---
         function openInvoiceModal() {
+            if (document.querySelectorAll('#modalItemsTable tbody tr').length === 0) {
+                addModalRow();
+            }
             document.getElementById('invoiceModal').style.display = 'flex';
         }
         function closeInvoiceModal() {
@@ -1361,12 +1499,54 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td><input type="text" class="form-control" placeholder="Item Name"></td>
-                <td><input type="number" class="form-control" value="1"></td>
-                <td><input type="number" class="form-control" value="0"></td>
-                <td><input type="number" class="form-control" value="18"></td>
-                <td><span class="delete-btn" onclick="this.closest('tr').remove()">×</span></td>
+                <td><input type="number" class="form-control mod-qty" value="1"></td>
+                <td><input type="number" class="form-control mod-rate" value="0"></td>
+                <td><input type="number" class="form-control mod-gst" value="18"></td>
+                <td style="text-align:right; padding-right:15px; font-weight:bold; color:#495057;">
+                    <input type="number" class="form-control mod-amount" value="0" style="text-align:right; font-weight:bold; background-color:#f8fff9; border-color:#d1e7dd;">
+                </td>
+                <td><span class="delete-btn" onclick="this.closest('tr').remove(); updateModalTotal()">×</span></td>
             `;
             tbody.appendChild(row);
+
+            row.querySelectorAll('input').forEach(input => {
+                input.addEventListener('input', (e) => updateModalRow(e.target));
+            });
+        }
+
+        function updateModalRow(sourceInput) {
+            const row = sourceInput.closest('tr');
+            const qtyInput = row.querySelector('.mod-qty');
+            const rateInput = row.querySelector('.mod-rate');
+            const gstInput = row.querySelector('.mod-gst');
+            const amtInput = row.querySelector('.mod-amount');
+
+            const qty = parseFloat(qtyInput.value) || 0;
+            const rate = parseFloat(rateInput.value) || 0;
+            const gst = parseFloat(gstInput.value) || 0;
+            const amt = parseFloat(amtInput.value) || 0;
+
+            if (sourceInput.classList.contains('mod-amount')) {
+                // Reverse Calc
+                if (qty > 0) {
+                    const newRate = amt / (qty * (1 + gst / 100));
+                    rateInput.value = newRate.toFixed(2);
+                }
+            } else {
+                // Forward Calc
+                const newAmt = (qty * rate) * (1 + gst / 100);
+                amtInput.value = newAmt.toFixed(2);
+            }
+
+            updateModalTotal();
+        }
+
+        function updateModalTotal() {
+            let total = 0;
+            document.querySelectorAll('.mod-amount').forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+            document.getElementById('modalGrandTotal').innerText = formatNum(total);
         }
 
         function generateInvoice() {
@@ -1386,9 +1566,8 @@
                 const qty = parseFloat(inputs[1].value) || 0;
                 const rate = parseFloat(inputs[2].value) || 0;
                 const gst = parseFloat(inputs[3].value) || 0;
+                const amt = parseFloat(inputs[4].value) || 0;
 
-                // Calc
-                const amt = (qty * rate) * (1 + gst / 100);
                 totalAmt += amt;
 
                 rowsHtml += `
@@ -1397,7 +1576,7 @@
                         <td class="inv-qty" contenteditable="true">${qty}</td>
                         <td class="inv-rate text-right" contenteditable="true">${formatNum(rate)}</td>
                         <td class="inv-gst text-center" contenteditable="true">${gst}</td>
-                        <td class="inv-amt text-right">${formatNum(amt)}</td>
+                        <td class="inv-amt text-right" contenteditable="true">${formatNum(amt)}</td>
                     </tr>
                 `;
             });
@@ -1428,51 +1607,65 @@
 
             document.getElementById('mainContainer').appendChild(page);
             closeInvoiceModal();
-            // Re-attach listeners to new elements
             attachInvoiceListeners();
-            // Also enable resizing on new table
             makeTablesResizable();
         }
 
-        // --- INVOICE CALCULATION LOGIC ---
+        // --- INVOICE CALCULATION LOGIC (For Generated Pages) ---
         function attachInvoiceListeners() {
             document.querySelectorAll('.inv-table').forEach(table => {
                 table.addEventListener('input', function (e) {
-                    // Check if edit is in relevant column
                     if (e.target.classList.contains('inv-qty') ||
                         e.target.classList.contains('inv-rate') ||
-                        e.target.classList.contains('inv-gst')) {
-                        recalcInvoice(table);
+                        e.target.classList.contains('inv-gst') ||
+                        e.target.classList.contains('inv-amt')) {
+                        recalcInvoice(table, e.target);
                     }
                 });
             });
         }
 
-        function recalcInvoice(table) {
+        function recalcInvoice(table, sourceElement) {
             let total = 0;
             const rows = table.querySelectorAll('tr');
             // Skip header (index 0) and footer (last)
             for (let i = 1; i < rows.length - 1; i++) {
                 const row = rows[i];
-                const qty = parseNum(row.querySelector('.inv-qty').innerText);
-                const rate = parseNum(row.querySelector('.inv-rate').innerText);
-                const gst = parseNum(row.querySelector('.inv-gst').innerText);
+                const qtyCell = row.querySelector('.inv-qty');
+                const rateCell = row.querySelector('.inv-rate');
+                const gstCell = row.querySelector('.inv-gst');
+                const amtCell = row.querySelector('.inv-amt');
 
-                const amt = (qty * rate) * (1 + gst / 100);
-                row.querySelector('.inv-amt').innerText = formatNum(amt);
-                total += amt;
+                const qty = parseNum(qtyCell.innerText);
+                const rate = parseNum(rateCell.innerText);
+                const gst = parseNum(gstCell.innerText);
+                const amt = parseNum(amtCell.innerText);
+
+                if (sourceElement && sourceElement === amtCell) {
+                    // Reverse Calc for this row
+                    if (qty > 0) {
+                        const newRate = amt / (qty * (1 + gst / 100));
+                        rateCell.innerText = formatNum(newRate);
+                    }
+                } else if (sourceElement && (sourceElement === qtyCell || sourceElement === rateCell || sourceElement === gstCell)) {
+                    // Forward Calc for this row
+                    const newAmt = (qty * rate) * (1 + gst / 100);
+                    amtCell.innerText = formatNum(newAmt);
+                } else if (!sourceElement) {
+                    // Recalculate forward
+                    const newAmt = (qty * rate) * (1 + gst / 100);
+                    amtCell.innerText = formatNum(newAmt);
+                }
+
+                total += parseNum(amtCell.innerText);
             }
-            // Update Footer Total
             table.querySelector('.inv-total').innerText = formatNum(total);
         }
 
-        // --- COLUMN RESIZING LOGIC ---
+        // --- RESIZABLE COLUMNS ---
         function makeTablesResizable() {
             document.querySelectorAll('table').forEach(function (table) {
-                // Remove existing resizers if any
                 table.querySelectorAll('.resizer').forEach(el => el.remove());
-
-                // Apply to each TH
                 table.querySelectorAll('th').forEach(function (th) {
                     th.style.position = 'relative';
                     const resizer = document.createElement('div');
@@ -1484,34 +1677,27 @@
         }
 
         function createResizableColumn(th, resizer) {
-            let x = 0;
-            let w = 0;
-
+            let x = 0; let w = 0;
             const mouseDownHandler = function (e) {
                 x = e.clientX;
-                const styles = window.getComputedStyle(th);
-                w = parseInt(styles.width, 10);
-
+                w = parseInt(window.getComputedStyle(th).width, 10);
                 document.addEventListener('mousemove', mouseMoveHandler);
                 document.addEventListener('mouseup', mouseUpHandler);
                 resizer.classList.add('resizing');
             };
-
             const mouseMoveHandler = function (e) {
                 const dx = e.clientX - x;
                 th.style.width = `${w + dx}px`;
             };
-
             const mouseUpHandler = function () {
                 document.removeEventListener('mousemove', mouseMoveHandler);
                 document.removeEventListener('mouseup', mouseUpHandler);
                 resizer.classList.remove('resizing');
             };
-
             resizer.addEventListener('mousedown', mouseDownHandler);
         }
 
-        // --- EXISTING REPORT LOGIC ---
+        // --- REPORT CALCULATION ---
         function addCostRow() {
             const tableBody = document.querySelector("#costTable tbody");
             const rowCount = tableBody.rows.length + 1;
@@ -1520,21 +1706,25 @@
             const wcRow = tableBody.lastElementChild;
             tableBody.insertBefore(row, wcRow);
             wcRow.cells[0].innerText = rowCount + 1;
-            row.querySelector('.cost-item').parentElement.addEventListener('blur', function (e) {
-                calculateAll(e.target);
-            });
+            row.querySelector('.cost-item').parentElement.addEventListener('blur', function (e) { calculateAll(e.target); });
         }
 
         function calculateAll(sourceElement) {
             const FIXED_TOTAL = 600000;
-
-            // --- Tenure Logic ---
             const tenure = parseInt(document.getElementById('loanTenure').value);
+
+            // 1. Text Updates
             document.getElementById('glanceTenure').innerText = tenure;
             document.getElementById('repayTenureText').innerText = tenure;
             document.getElementById('profitYearsTitle').innerText = tenure;
-            document.getElementById('bsEndYear').innerText = tenure;
-            document.getElementById('bsEndYear2').innerText = tenure;
+            if (document.getElementById('bsEndYear')) document.getElementById('bsEndYear').innerText = tenure;
+            if (document.getElementById('bsEndYear2')) document.getElementById('bsEndYear2').innerText = tenure;
+
+            // 2. Column Visibility & Auto-Resizing Fix
+            // Clear width styles when tenure changes to allow reflow
+            if (!sourceElement) { // If global refresh (tenure change)
+                document.querySelectorAll('th').forEach(th => th.style.width = '');
+            }
 
             for (let i = 4; i <= 7; i++) {
                 const cols = document.querySelectorAll(`.y${i}-col`);
@@ -1543,17 +1733,12 @@
                     else col.classList.add('hidden-col');
                 });
             }
-            const headerColSpans = document.querySelectorAll('#profitTable td[colspan]');
-            headerColSpans.forEach(td => td.setAttribute('colspan', tenure + 1));
+            document.querySelectorAll('#profitTable td[colspan]').forEach(td => td.setAttribute('colspan', tenure + 1));
             const dscrColSpan = document.querySelector('#dscrTable td[colspan]');
             if (dscrColSpan) dscrColSpan.setAttribute('colspan', tenure + 1);
 
-
-            // --- Cost & Finance ---
-            let totalCost = 0;
-            let sumOthers = 0;
-            const wcRow = document.querySelector("#costTable tbody tr:last-child");
-            const wcAmountCell = wcRow.querySelector('.wc-item');
+            // 3. Cost & Finance Balancing
+            const wcAmountCell = document.querySelector('.wc-item');
             const costItems = document.querySelectorAll('.cost-item');
 
             let shouldBalance = true;
@@ -1561,18 +1746,17 @@
                 shouldBalance = false;
             }
 
-            if (shouldBalance) {
+            if (shouldBalance && wcAmountCell) {
+                let sumOthers = 0;
                 costItems.forEach(item => {
-                    if (!item.classList.contains('wc-item')) {
-                        sumOthers += parseNum(item.innerText);
-                    }
+                    if (!item.classList.contains('wc-item')) sumOthers += parseNum(item.innerText);
                 });
                 let newWC = FIXED_TOTAL - sumOthers;
                 if (newWC < 0) newWC = 0;
-                if (wcAmountCell) wcAmountCell.innerText = formatNum(newWC);
+                wcAmountCell.innerText = formatNum(newWC);
             }
 
-            totalCost = 0;
+            let totalCost = 0;
             document.querySelectorAll('.cost-item').forEach(i => totalCost += parseNum(i.innerText));
             document.getElementById('totalProjectCost').innerText = formatNum(totalCost);
             document.getElementById('glanceCost').innerText = formatNum(totalCost);
@@ -1585,7 +1769,7 @@
             document.getElementById('glanceLoan').innerText = formatNum(loan);
             document.getElementById('glanceSubsidy').innerText = formatNum(subsidy);
 
-            // --- Projections Loop ---
+            // 4. Projections
             let yearsArr = Array.from({ length: tenure }, (_, i) => i + 1);
             let loanBal = loan, loanPrincipal = loan / tenure, dscrSum = 0;
             let qty = parseNum(document.querySelector('.prod-qty').innerText);
@@ -1594,7 +1778,7 @@
 
             let accumCapital = own;
             let accumDepreciation = 0;
-            let currentWC = parseNum(document.querySelector('.wc-item').innerText);
+            let currentWC = parseNum(wcAmountCell.innerText);
             let grossBlock = totalCost - currentWC;
 
             const repayBody = document.getElementById('repaymentBody');
@@ -1621,10 +1805,6 @@
 
                     let elecCell = document.querySelector(`.y${y}-elec`);
                     if (elecCell) elecCell.innerText = formatNum(parseNum(document.querySelector(`.y${y - 1}-elec`).innerText) * 1.10);
-                } else {
-                    let qty = parseNum(document.querySelector('.prod-qty').innerText);
-                    let price = parseNum(document.querySelector('.unit-price').innerText);
-                    document.querySelector('.y1-rev').innerText = formatNum(qty * price);
                 }
 
                 let s = parseNum(document.querySelector(y === 1 ? '.y1-rev' : `.y${y}-rev`).innerText);
@@ -1668,40 +1848,60 @@
 
                 dscrSum += dscr;
 
-                if (y === tenure) {
-                    accumCapital += (np * tenure);
-                    accumDepreciation += (dep * tenure);
-                    let netBlock = grossBlock - accumDepreciation;
+                // BS Updates
+                accumCapital += np;
+                accumDepreciation += dep;
+                let netBlock = grossBlock - accumDepreciation;
 
-                    let capFinal = document.querySelector('.cap-final');
-                    if (capFinal) capFinal.innerText = formatNum(own + (np * tenure * 0.8));
+                let capCell = document.querySelector(`.cap-${y}`);
+                if (capCell) capCell.innerText = formatNum(accumCapital);
+                let tlCell = document.querySelector(`.tl-${y}`);
+                if (tlCell) tlCell.innerText = formatNum(closingBal);
 
-                    let tlFinal = document.querySelector('.tl-final');
-                    if (tlFinal) tlFinal.innerText = "0";
-                }
+                let creditors = 20000 + (y * 3000);
+                let totalLiab = accumCapital + closingBal + creditors;
+                let totLiabCell = document.querySelector(`.tot-liab-${y}`);
+                if (totLiabCell) totLiabCell.innerText = formatNum(totalLiab);
+
+                document.querySelectorAll('.gfa').forEach(el => el.innerText = formatNum(grossBlock));
+
+                let accDepCell = document.querySelector(`.acc-dep-${y}`);
+                if (accDepCell) accDepCell.innerText = formatNum(accumDepreciation);
+                let nfaCell = document.querySelector(`.nfa-${y}`);
+                if (nfaCell) nfaCell.innerText = formatNum(netBlock);
+
+                let currAssets = totalLiab - netBlock;
+                let caCell = document.querySelector(`.ca-${y}`);
+                if (caCell) caCell.innerText = formatNum(currAssets);
+                let totAssetCell = document.querySelector(`.tot-asset-${y}`);
+                if (totAssetCell) totAssetCell.innerText = formatNum(totalLiab);
             });
 
             let avgDscr = dscrSum / tenure;
             document.getElementById('avgDSCR').innerText = avgDscr.toFixed(2);
             document.getElementById('glanceDSCR').innerText = avgDscr.toFixed(2);
+
+            // 5. Update Invoice Formats
+            document.querySelectorAll('.inv-table').forEach(table => recalcInvoice(table));
         }
 
         document.addEventListener('DOMContentLoaded', function () {
             calculateAll();
             attachInvoiceListeners();
             makeTablesResizable();
-        });
 
-        document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-            el.addEventListener('blur', function (e) {
-                if (this.classList.contains('cost-item') ||
-                    this.classList.contains('prod-qty') ||
-                    this.classList.contains('unit-price') ||
-                    this.classList.contains('y1-exp')) {
-                    calculateAll(e.target);
-                }
+            // Add listener to default rows
+            document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+                el.addEventListener('blur', function (e) {
+                    if (this.classList.contains('cost-item') ||
+                        this.classList.contains('prod-qty') ||
+                        this.classList.contains('unit-price') ||
+                        this.classList.contains('y1-exp')) {
+                        calculateAll(e.target);
+                    }
+                });
+                el.addEventListener('keypress', (e) => { if (e.key === 'Enter') e.target.blur(); });
             });
-            el.addEventListener('keypress', (e) => { if (e.key === 'Enter') e.target.blur(); });
         });
     </script>
 </body>
