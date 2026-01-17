@@ -79,10 +79,6 @@
             cursor: pointer;
         }
 
-        .btn-add:hover {
-            background-color: #157347;
-        }
-
         /* --- Paper Layout --- */
         .paper-container {
             padding-top: 70px;
@@ -96,6 +92,7 @@
         .paper {
             background: white;
             width: var(--paper-width);
+            /* Min-height allows it to grow on screen, but Print CSS handles it differently */
             min-height: 297mm;
             padding: 20mm;
             box-sizing: border-box;
@@ -103,13 +100,13 @@
             position: relative;
             display: flex;
             flex-direction: column;
-            page-break-after: always;
         }
 
         /* --- Title Page Styling --- */
         .title-page-container {
             border: 3px double #000;
-            padding: 40px;
+            padding: 30px;
+            /* Reduced padding to fit single page */
             height: 100%;
             flex-grow: 1;
             display: flex;
@@ -117,10 +114,11 @@
             justify-content: space-between;
             text-align: center;
             box-sizing: border-box;
+            /* No fixed min-height here to allow flex to work within page constraints */
         }
 
         .title-header {
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .main-title {
@@ -139,7 +137,7 @@
         .project-box {
             border-top: 2px solid #000;
             border-bottom: 2px solid #000;
-            padding: 30px 0;
+            padding: 25px 0;
             margin: 20px 0;
         }
 
@@ -150,37 +148,52 @@
             line-height: 1.4;
         }
 
-        /* --- Typography --- */
-        h1,
-        h2,
-        h3,
-        h4,
-        p,
-        span,
-        td,
-        div {
-            cursor: text;
-        }
-
+        /* --- Content Styling --- */
         h3.section-header {
-            font-size: 16px;
+            font-size: 15px;
             background-color: #e9ecef;
-            padding: 8px 10px;
-            margin-top: 30px;
-            margin-bottom: 15px;
+            padding: 5px 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
             border: 1px solid #000;
             text-transform: uppercase;
             font-weight: bold;
             -webkit-print-color-adjust: exact;
+            break-after: avoid;
         }
 
         p {
             font-size: 14px;
-            line-height: 1.6;
+            line-height: 1.5;
             text-align: justify;
             margin-bottom: 10px;
         }
 
+        /* --- Tables --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            font-size: 13px;
+            border: 1px solid #000;
+            break-inside: auto;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #e9ecef !important;
+            font-weight: bold;
+            text-align: center;
+            -webkit-print-color-adjust: exact;
+        }
+
+        /* Specific Alignment Classes */
         .text-center {
             text-align: center;
         }
@@ -197,42 +210,13 @@
             font-weight: bold;
         }
 
-        /* --- Tables --- */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 13px;
-            border: 1px solid #000;
-        }
-
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 8px;
-            vertical-align: middle;
-        }
-
-        th {
-            background-color: #e9ecef !important;
-            font-weight: bold;
-            text-align: center;
-            -webkit-print-color-adjust: exact;
-        }
-
-        td {
-            text-align: left;
-            /* Default alignment */
-        }
-
         .amount-col {
             text-align: right;
             font-family: monospace;
             font-size: 14px;
-            padding-right: 10px;
         }
 
-        /* Glance Table Specifics */
+        /* Project at a Glance Specifics */
         .glance-table td:nth-child(1) {
             text-align: center;
         }
@@ -245,18 +229,19 @@
         /* Particulars */
         .glance-table td:nth-child(3) {
             text-align: center;
+            font-weight: bold;
         }
 
         /* Details */
 
-        /* --- Components --- */
+        /* --- Process List --- */
         .process-list {
             margin-left: 20px;
             padding-left: 0;
         }
 
         .process-list li {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             font-size: 14px;
             text-align: justify;
         }
@@ -266,12 +251,12 @@
             text-decoration: underline;
         }
 
-        /* --- Invoice Styling --- */
+        /* --- Invoices --- */
         .invoice-box {
-            border: 1px solid #ccc;
+            border: 1px solid #000;
             padding: 30px;
-            height: 100%;
             box-sizing: border-box;
+            background: white;
         }
 
         .invoice-header {
@@ -282,13 +267,27 @@
             margin-bottom: 20px;
         }
 
-        .invoice-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #444;
+        /* --- Signature Block --- */
+        .signature-block {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            break-inside: avoid;
         }
 
-        /* --- Editable Visual Cues --- */
+        .sign-box {
+            width: 200px;
+            text-align: center;
+        }
+
+        .sign-line {
+            border-top: 1px solid #000;
+            padding-top: 5px;
+            margin-top: 40px;
+            font-weight: bold;
+        }
+
+        /* --- Editable --- */
         [contenteditable="true"]:hover {
             background-color: #ffffcc;
             outline: 1px dashed #ccc;
@@ -299,27 +298,6 @@
             outline: 2px solid #0d6efd;
         }
 
-        /* --- Signature --- */
-        .signature-block {
-            margin-top: 60px;
-            display: flex;
-            justify-content: space-between;
-            page-break-inside: avoid;
-        }
-
-        .sign-box {
-            width: 200px;
-        }
-
-        .sign-line {
-            border-top: 1px solid #000;
-            padding-top: 5px;
-            margin-top: 50px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        /* Delete button for rows */
         .delete-btn {
             color: red;
             cursor: pointer;
@@ -327,10 +305,12 @@
             margin-left: 5px;
         }
 
-        /* --- Print Styles --- */
+        /* --- PRINT CSS --- */
         @media print {
             body {
                 background: white;
+                margin: 0;
+                padding: 0;
             }
 
             .control-panel,
@@ -341,38 +321,81 @@
             }
 
             .paper-container {
+                display: block;
                 margin: 0;
                 padding: 0;
             }
 
-            .paper {
-                width: 100%;
-                margin: 0;
+            /* Main document papers flow continuously */
+            .paper.report-content {
                 box-shadow: none;
+                margin: 0;
                 padding: 0;
-                min-height: auto;
+                /* Let @page margin handle it */
+                width: 100%;
+                min-height: 0;
+                border: none;
+                page-break-after: auto;
+                /* Allow continuous flow */
+                display: block;
+            }
+
+            /* Title page needs strict full page */
+            .paper.title-page-paper {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 98vh;
+                /* Force it to fit within one viewport height on print */
                 page-break-after: always;
+                border: none;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* Invoice pages need strict breaks */
+            .paper.invoice-page {
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                min-height: 100vh;
+                page-break-before: always;
                 border: none;
             }
 
-            /* Ensure Invoice pages break correctly */
-            .invoice-page {
-                page-break-after: always;
-            }
-
+            /* Global Print Resets */
             [contenteditable="true"]:hover,
             [contenteditable="true"]:focus {
-                background-color: transparent;
+                background: none;
                 outline: none;
             }
 
+            /* Table Handling */
             table {
                 page-break-inside: auto;
+                width: 100%;
             }
 
             tr {
                 page-break-inside: avoid;
                 page-break-after: auto;
+            }
+
+            thead {
+                display: table-header-group;
+            }
+
+            tfoot {
+                display: table-footer-group;
+            }
+
+            /* Page Setup */
+            @page {
+                size: A4;
+                margin: 15mm 20mm;
+                /* Top/Bottom 15mm, Left/Right 20mm */
             }
         }
     </style>
@@ -386,7 +409,7 @@
         </div>
         <div style="display: flex; gap: 10px;">
             <button onclick="calculateAll()" class="btn">
-                <i class="fas fa-sync-alt"></i> Recalculate Totals
+                <i class="fas fa-sync-alt"></i> Recalculate
             </button>
             <button onclick="window.print()" class="btn btn-primary">
                 <i class="fas fa-download"></i> Download PDF
@@ -396,8 +419,8 @@
 
     <div class="paper-container">
 
-        <!-- TITLE PAGE -->
-        <div class="paper">
+        <!-- TITLE PAGE (Separate Page) -->
+        <div class="paper title-page-paper">
             <div class="title-page-container">
                 <div class="title-header">
                     <div class="main-title" contenteditable="true">Detailed Project Report</div>
@@ -411,11 +434,11 @@
                 </div>
 
                 <div
-                    style="display: flex; justify-content: space-between; align-items: flex-start; padding: 0 10px; text-align: left;">
+                    style="display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; text-align: left; margin-bottom: 20px;">
                     <div style="width: 45%;">
                         <strong>Submitted By:</strong><br><br>
                         <div contenteditable="true" style="line-height: 1.5;">
-                            <span style="font-size: 18px; font-weight: bold;">Mrs. Rajani Sheetal</span><br>
+                            <span style="font-size: 18px; font-weight: bold;">Mrs. Rajni Sheetal</span><br>
                             Proprietor<br>
                             Hamirpur, Himachal Pradesh
                         </div>
@@ -433,14 +456,16 @@
             </div>
         </div>
 
-        <!-- PAGE 1: At a Glance -->
-        <div class="paper">
+        <!-- REPORT CONTENT (Continuous Flow) -->
+        <div class="paper report-content">
+
+            <!-- Section 1 -->
             <h3 class="section-header" contenteditable="true">1. Project at a Glance</h3>
             <table class="glance-table">
                 <tr>
                     <td width="5%">1</td>
                     <td width="40%" contenteditable="true">Name of Entrepreneur</td>
-                    <td width="55%" contenteditable="true">Mrs. Rajani Sheetal</td>
+                    <td width="55%" contenteditable="true">Mrs. Rajni Sheetal</td>
                 </tr>
                 <tr>
                     <td>2</td>
@@ -464,18 +489,18 @@
                 </tr>
                 <tr>
                     <td>6</td>
-                    <td contenteditable="true" style="vertical-align: middle;">Total Cost of Project</td>
-                    <td contenteditable="true" style="font-weight: bold;" id="glanceCost">6,00,000</td>
+                    <td contenteditable="true">Total Cost of Project</td>
+                    <td contenteditable="true" id="glanceCost">6,05,000</td>
                 </tr>
                 <tr>
                     <td>7</td>
                     <td contenteditable="true">Bank Loan (Term Loan + WC)</td>
-                    <td contenteditable="true" id="glanceLoan">3,60,000</td>
+                    <td contenteditable="true" id="glanceLoan">3,63,000</td>
                 </tr>
                 <tr>
                     <td>8</td>
                     <td contenteditable="true">Subsidy (PMEGP)</td>
-                    <td contenteditable="true" id="glanceSubsidy">2,10,000</td>
+                    <td contenteditable="true" id="glanceSubsidy">2,11,750</td>
                 </tr>
                 <tr>
                     <td>9</td>
@@ -494,6 +519,7 @@
                 </tr>
             </table>
 
+            <!-- Section 2 -->
             <h3 class="section-header" contenteditable="true">2. Introduction & Market Potential</h3>
             <p contenteditable="true"><strong>Introduction:</strong> Cordyceps Militaris is a high-value medicinal
                 mushroom known for its immune-boosting and energy-enhancing properties. Unlike the wild variety, it can
@@ -504,31 +530,25 @@
                 market (₹80,000 - ₹1,00,000 per kg). The product has huge export potential as well as domestic demand in
                 the ayurvedic and supplement industry.</p>
 
+            <!-- Section 3 -->
             <h3 class="section-header" contenteditable="true">3. Manufacturing Process</h3>
-            <p contenteditable="true">The cultivation of Cordyceps Militaris involves a highly technical and sterile
-                process as detailed below:</p>
+            <p contenteditable="true">The cultivation process is technical and sterile:</p>
             <ol class="process-list" contenteditable="true">
                 <li><span class="process-title">Substrate Preparation:</span> A mixture of brown rice and liquid
-                    nutrients (containing peptone, yeast extract, dextrose, etc.) is prepared and filled into glass jars
-                    (approx. 30-40g rice per jar).</li>
-                <li><span class="process-title">Sterilization:</span> The filled jars are sealed and sterilized in a
-                    Vertical Autoclave at 121°C (15 psi pressure) for 20-30 minutes to eliminate any contaminants.</li>
-                <li><span class="process-title">Inoculation:</span> Once cooled, the jars are moved to a Laminar Air
-                    Flow (LAF) cabinet. Liquid spawn (Mother Culture) is injected into each jar under strictly aseptic
-                    conditions.</li>
-                <li><span class="process-title">Dark Incubation:</span> The jars are kept in a dark room at 20°C for 5-7
-                    days until the mycelium fully colonizes the rice substrate (turning it white).</li>
-                <li><span class="process-title">Light Incubation (Fruiting):</span> Jars are moved to the growing room
-                    with controlled LED lights (12 hours ON/OFF cycle), temperature (18-20°C), and humidity (80-90%).
-                    Fruiting bodies develop over 50-60 days.</li>
-                <li><span class="process-title">Harvesting & Drying:</span> Mature fruit bodies are harvested and
-                    immediately dried using a Commercial Dehydrator to reduce moisture content below 5% for long shelf
-                    life.</li>
+                    nutrients is filled into glass jars.</li>
+                <li><span class="process-title">Sterilization:</span> Jars are autoclaved at 121°C to eliminate
+                    contaminants.</li>
+                <li><span class="process-title">Inoculation:</span> Liquid spawn is injected into jars under a Laminar
+                    Air Flow (LAF) cabinet.</li>
+                <li><span class="process-title">Dark Incubation:</span> Jars are kept in the dark at 20°C for 5-7 days
+                    for mycelium growth.</li>
+                <li><span class="process-title">Fruiting (Light Cycle):</span> Jars are moved to a grow room with LED
+                    lights (12hr cycle) & controlled humidity for 50-60 days.</li>
+                <li><span class="process-title">Harvesting & Drying:</span> Fruit bodies are harvested and dried in a
+                    dehydrator to <5% moisture.</li>
             </ol>
-        </div>
 
-        <!-- PAGE 2: Costs & Means of Finance -->
-        <div class="paper">
+            <!-- Section 4 -->
             <h3 class="section-header" contenteditable="true">4. Cost of Project</h3>
             <table id="costTable">
                 <thead>
@@ -541,7 +561,7 @@
                 <tbody>
                     <tr>
                         <td class="text-center">1</td>
-                        <td contenteditable="true">Civil Works / Lab Renovation (PUF Insulation)</td>
+                        <td contenteditable="true">Civil Works / Lab Renovation</td>
                         <td class="amount-col" contenteditable="true"><span class="cost-item">60,000</span></td>
                     </tr>
                     <tr>
@@ -566,7 +586,7 @@
                     </tr>
                     <tr>
                         <td class="text-center">6</td>
-                        <td contenteditable="true">Sensors, Humidifiers & IoT Controllers</td>
+                        <td contenteditable="true">Sensors, Humidifiers & IoT</td>
                         <td class="amount-col" contenteditable="true"><span class="cost-item">20,000</span></td>
                     </tr>
                     <tr>
@@ -581,23 +601,22 @@
                     </tr>
                     <tr>
                         <td class="text-center">9</td>
-                        <td contenteditable="true">Working Capital Margin (1st Cycle)</td>
+                        <td contenteditable="true">Working Capital Margin</td>
                         <td class="amount-col" contenteditable="true"><span class="cost-item">1,50,000</span></td>
                     </tr>
-                    <!-- New Items -->
                     <tr>
                         <td class="text-center">10</td>
-                        <td contenteditable="true">Refrigerator (90L for Culture Storage)</td>
+                        <td contenteditable="true">Refrigerator (90L)</td>
                         <td class="amount-col" contenteditable="true"><span class="cost-item">15,000</span></td>
                     </tr>
                     <tr>
                         <td class="text-center">11</td>
-                        <td contenteditable="true">Airtight Inline Fan with HEPA Filter</td>
+                        <td contenteditable="true">Airtight Fan with HEPA Filter</td>
                         <td class="amount-col" contenteditable="true"><span class="cost-item">8,000</span></td>
                     </tr>
                     <tr>
                         <td class="text-center">12</td>
-                        <td contenteditable="true">LED Grow Lights (Full Spectrum)</td>
+                        <td contenteditable="true">LED Grow Lights</td>
                         <td class="amount-col" contenteditable="true"><span class="cost-item">12,000</span></td>
                     </tr>
                 </tbody>
@@ -608,10 +627,9 @@
                     </tr>
                 </tfoot>
             </table>
-            <div class="text-right no-print">
-                <button class="btn-add" onclick="addCostRow()">+ Add New Product</button>
-            </div>
+            <div class="text-right no-print"><button class="btn-add" onclick="addCostRow()">+ Add Item</button></div>
 
+            <!-- Section 5 -->
             <h3 class="section-header" contenteditable="true">5. Means of Finance</h3>
             <table>
                 <thead>
@@ -640,6 +658,7 @@
                 </tbody>
             </table>
 
+            <!-- Section 6 -->
             <h3 class="section-header" contenteditable="true">6. Projected Profitability Statement (5 Years)</h3>
             <p style="font-size: 11px; font-style: italic; text-align: right;">(Figures in ₹)</p>
             <table id="profitTable">
@@ -658,7 +677,7 @@
                         <td colspan="6" style="background: #eee; font-weight: bold;">A) PRODUCTION & SALES</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Estimated Annual Production (KG)</td>
+                        <td>Production (KG)</td>
                         <td class="amount-col" contenteditable="true"><span class="prod-qty">10</span></td>
                         <td class="amount-col prod-qty-2">11</td>
                         <td class="amount-col prod-qty-3">12</td>
@@ -666,7 +685,7 @@
                         <td class="amount-col prod-qty-5">15</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Selling Price (₹ per KG)</td>
+                        <td>Price (₹/KG)</td>
                         <td class="amount-col" contenteditable="true"><span class="unit-price">80,000</span></td>
                         <td class="amount-col unit-price-2">82,400</td>
                         <td class="amount-col unit-price-3">84,872</td>
@@ -674,7 +693,7 @@
                         <td class="amount-col unit-price-5">90,041</td>
                     </tr>
                     <tr style="font-weight: bold; background: #e7f1ff;">
-                        <td class="text-left">Total Revenue</td>
+                        <td>Total Revenue</td>
                         <td class="amount-col y1-rev">8,00,000</td>
                         <td class="amount-col y2-rev">9,06,400</td>
                         <td class="amount-col y3-rev">10,18,464</td>
@@ -685,7 +704,7 @@
                         <td colspan="6" style="background: #eee; font-weight: bold;">B) EXPENDITURE</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Raw Material Consumed</td>
+                        <td>Raw Material</td>
                         <td class="amount-col" contenteditable="true"><span class="y1-exp">1,50,000</span></td>
                         <td class="amount-col y2-exp">1,65,000</td>
                         <td class="amount-col y3-exp">1,81,500</td>
@@ -693,7 +712,7 @@
                         <td class="amount-col y5-exp">2,19,615</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Electricity & Fuel</td>
+                        <td>Electricity/Fuel</td>
                         <td class="amount-col" contenteditable="true"><span class="y1-elec">85,000</span></td>
                         <td class="amount-col y2-elec">93,500</td>
                         <td class="amount-col y3-elec">1,02,850</td>
@@ -701,7 +720,7 @@
                         <td class="amount-col y5-elec">1,24,449</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Wear & Tear of Assets</td>
+                        <td>Wear & Tear</td>
                         <td class="amount-col">65,000</td>
                         <td class="amount-col">55,250</td>
                         <td class="amount-col">46,962</td>
@@ -709,7 +728,7 @@
                         <td class="amount-col">33,930</td>
                     </tr>
                     <tr style="font-weight: bold;">
-                        <td class="text-left">Total Expenditure (B)</td>
+                        <td>Total Exp (B)</td>
                         <td class="amount-col tot-exp-1">3,00,000</td>
                         <td class="amount-col tot-exp-2">3,13,750</td>
                         <td class="amount-col tot-exp-3">3,31,312</td>
@@ -717,7 +736,7 @@
                         <td class="amount-col tot-exp-5">3,77,994</td>
                     </tr>
                     <tr style="background: #e7f1ff; font-weight: bold;">
-                        <td class="text-left">Gross Profit (A-B)</td>
+                        <td>Gross Profit</td>
                         <td class="amount-col gp-1">5,00,000</td>
                         <td class="amount-col gp-2">5,92,650</td>
                         <td class="amount-col gp-3">6,87,152</td>
@@ -725,7 +744,7 @@
                         <td class="amount-col gp-5">9,72,621</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true" class="text-left">Less: Interest on Term Loan</td>
+                        <td>Less: Interest</td>
                         <td class="amount-col int-1">36,000</td>
                         <td class="amount-col int-2">28,800</td>
                         <td class="amount-col int-3">21,600</td>
@@ -733,7 +752,7 @@
                         <td class="amount-col int-5">7,200</td>
                     </tr>
                     <tr style="background: #d1e7dd; font-weight: bold;">
-                        <td class="text-left">NET PROFIT</td>
+                        <td>NET PROFIT</td>
                         <td class="amount-col np-1">4,64,000</td>
                         <td class="amount-col np-2">5,63,850</td>
                         <td class="amount-col np-3">6,65,552</td>
@@ -742,10 +761,8 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
 
-        <!-- PAGE 3: Balance Sheet & DSCR -->
-        <div class="paper">
+            <!-- Section 7 -->
             <h3 class="section-header" contenteditable="true">7. Projected Balance Sheet</h3>
             <table id="bsTable">
                 <thead>
@@ -760,26 +777,26 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td contenteditable="true">Capital (Opening + Profit)</td>
+                        <td>Capital</td>
                         <td class="amount-col cap-1">4,94,000</td>
                         <td class="amount-col cap-5">25,00,000</td>
-                        <td contenteditable="true">Fixed Assets (Gross)</td>
+                        <td>Fixed Assets</td>
                         <td class="amount-col">4,30,000</td>
                         <td class="amount-col">4,30,000</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Term Loan</td>
+                        <td>Term Loan</td>
                         <td class="amount-col tl-1">3,20,000</td>
                         <td class="amount-col tl-5">0</td>
-                        <td contenteditable="true">Less: Depreciation</td>
+                        <td>Less: Dep</td>
                         <td class="amount-col">65,000</td>
                         <td class="amount-col">2,41,000</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Sundry Creditors</td>
+                        <td>Creditors</td>
                         <td class="amount-col">20,000</td>
                         <td class="amount-col">35,000</td>
-                        <td><strong>Net Fixed Assets</strong></td>
+                        <td>Net Fixed Assets</td>
                         <td class="amount-col">3,65,000</td>
                         <td class="amount-col">1,89,000</td>
                     </tr>
@@ -787,7 +804,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td contenteditable="true">Current Assets (Stock/Cash)</td>
+                        <td>Current Assets</td>
                         <td class="amount-col">4,69,000</td>
                         <td class="amount-col">23,46,000</td>
                     </tr>
@@ -802,21 +819,22 @@
                 </tbody>
             </table>
 
+            <!-- Section 8 -->
             <h3 class="section-header" contenteditable="true">8. Calculation of D.S.C.R.</h3>
             <table>
                 <thead>
                     <tr>
                         <th>Particulars</th>
-                        <th>Year 1</th>
-                        <th>Year 2</th>
-                        <th>Year 3</th>
-                        <th>Year 4</th>
-                        <th>Year 5</th>
+                        <th>Yr 1</th>
+                        <th>Yr 2</th>
+                        <th>Yr 3</th>
+                        <th>Yr 4</th>
+                        <th>Yr 5</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td contenteditable="true">Net Profit + Dep + Int</td>
+                        <td>Net Profit+Dep+Int</td>
                         <td class="amount-col cash-1">5,65,000</td>
                         <td class="amount-col cash-2">6,47,900</td>
                         <td class="amount-col cash-3">7,34,114</td>
@@ -824,7 +842,7 @@
                         <td class="amount-col cash-5">10,06,551</td>
                     </tr>
                     <tr>
-                        <td contenteditable="true">Total Repayment (Int + Principal)</td>
+                        <td>Repayment</td>
                         <td class="amount-col rep-1">1,08,000</td>
                         <td class="amount-col rep-2">1,08,000</td>
                         <td class="amount-col rep-3">1,08,000</td>
@@ -832,7 +850,7 @@
                         <td class="amount-col rep-5">1,08,000</td>
                     </tr>
                     <tr style="font-weight: bold; background: #e2e3e5;">
-                        <td>DSCR Ratio</td>
+                        <td>DSCR</td>
                         <td class="amount-col dscr-1">5.23</td>
                         <td class="amount-col dscr-2">5.99</td>
                         <td class="amount-col dscr-3">6.79</td>
@@ -841,58 +859,45 @@
                     </tr>
                     <tr>
                         <td colspan="6" class="text-center"><strong>Average DSCR: <span
-                                    id="avgDSCR">6.99</span></strong> (Benchmark > 2.0 is Good)</td>
+                                    id="avgDSCR">6.99</span></strong></td>
                     </tr>
                 </tbody>
             </table>
 
             <div class="signature-block">
                 <div class="sign-box">
-                    <div class="sign-line" contenteditable="true">
-                        Date:
-                    </div>
+                    <div class="sign-line" contenteditable="true">Date:</div>
                 </div>
                 <div class="sign-box">
-                    <div class="sign-line" contenteditable="true">
-                        Place:
-                    </div>
+                    <div class="sign-line" contenteditable="true">Place:</div>
                 </div>
                 <div class="sign-box">
-                    <div class="sign-line" contenteditable="true">
-                        Mrs. Rajani Sheetal<br>(Proprietor)
-                    </div>
+                    <div class="sign-line" contenteditable="true">Mrs. Rajni Sheetal<br>(Proprietor)</div>
                 </div>
             </div>
 
             <div style="margin-top: 30px; font-size: 10px; color: #666; text-align: justify; font-weight: bold;"
                 contenteditable="true">
-                <strong>DISCLAIMER:</strong> This report is prepared based on market assumptions. Actual results may
-                vary. This document is for bank appraisal purposes under PMEGP scheme.
+                DISCLAIMER: This report is prepared based on market assumptions. Actual results may vary. This document
+                is for bank appraisal purposes under PMEGP scheme.
             </div>
         </div>
 
-        <!-- PAGE 4: Invoice 1 -->
-        <div class="paper">
+        <!-- INVOICE 1 -->
+        <div class="paper invoice-page">
             <h1 style="text-align: center; border-bottom: none;">QUOTATIONS / INVOICES</h1>
             <p style="text-align: center;">(Supporting Document 1: Machinery)</p>
             <br>
-
             <div class="invoice-box" contenteditable="true">
                 <div class="invoice-header">
-                    <div style="text-align: left;">
-                        <h2 style="margin:0; text-align:left;">Bio-Tech Lab Solutions</h2>
-                        <small>12, Industrial Estate, Haridwar, UK</small><br>
-                        <small>GSTIN: 05AAACB1234D1Z5</small>
+                    <div class="text-left">
+                        <h2 style="margin:0;">Bio-Tech Lab Solutions</h2>
+                        <small>Haridwar, UK | GSTIN: 05AAACB1234D1Z5</small>
                     </div>
-                    <div style="text-align: right;">
-                        <strong>PROFORMA INVOICE</strong><br>
-                        Date: 15-Oct-2023<br>
-                        Ref: QT/23-24/101
-                    </div>
+                    <div class="text-right"><strong>PROFORMA INVOICE</strong><br>Date: 15-Oct-2023</div>
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <strong>To:</strong> Mrs. Rajani Sheetal, Hamirpur
-                </div>
+                <div><strong>To:</strong> Mrs. Rajni Sheetal, Hamirpur</div>
+                <br>
                 <table>
                     <tr style="background:#f0f0f0;">
                         <th>Description</th>
@@ -913,7 +918,7 @@
                         <td class="text-right">45,000</td>
                     </tr>
                     <tr>
-                        <td>Commercial Food Dehydrator (12 Tray)</td>
+                        <td>Commercial Dehydrator (12 Tray)</td>
                         <td>1</td>
                         <td class="text-right">25,000</td>
                         <td class="text-right">25,000</td>
@@ -929,30 +934,23 @@
                         <td class="text-right">1,55,000</td>
                     </tr>
                 </table>
-                <small style="float:right;">For Bio-Tech Lab Solutions</small>
             </div>
         </div>
 
-        <!-- PAGE 5: Invoice 2 -->
-        <div class="paper">
-            <p style="text-align: center;">(Supporting Document 2: Electricals & Storage)</p>
+        <!-- INVOICE 2 -->
+        <div class="paper invoice-page">
+            <p style="text-align: center;">(Supporting Document 2: Electricals)</p>
             <br>
             <div class="invoice-box" contenteditable="true">
                 <div class="invoice-header">
-                    <div style="text-align: left;">
-                        <h2 style="margin:0; text-align:left;">PowerGen & Electronics</h2>
-                        <small>Rajpur Road, Hamirpur</small><br>
-                        <small>GSTIN: 05BBBCZ9876K1Z9</small>
+                    <div class="text-left">
+                        <h2 style="margin:0;">PowerGen & Electronics</h2>
+                        <small>Hamirpur, HP | GSTIN: 05BBBCZ9876K1Z9</small>
                     </div>
-                    <div style="text-align: right;">
-                        <strong>QUOTATION</strong><br>
-                        Date: 18-Oct-2023<br>
-                        Ref: PG/GEN/55
-                    </div>
+                    <div class="text-right"><strong>QUOTATION</strong><br>Date: 18-Oct-2023</div>
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <strong>To:</strong> Mrs. Rajani Sheetal, Hamirpur
-                </div>
+                <div><strong>To:</strong> Mrs. Rajni Sheetal, Hamirpur</div>
+                <br>
                 <table>
                     <tr style="background:#f0f0f0;">
                         <th>Description</th>
@@ -967,19 +965,19 @@
                         <td class="text-right">85,000</td>
                     </tr>
                     <tr>
-                        <td>LED Grow Lights (Full Spectrum - 4ft)</td>
+                        <td>LED Grow Lights (Full Spectrum)</td>
                         <td>10</td>
                         <td class="text-right">1,200</td>
                         <td class="text-right">12,000</td>
                     </tr>
                     <tr>
-                        <td>Refrigerator 90L (Single Door)</td>
+                        <td>Refrigerator 90L</td>
                         <td>1</td>
                         <td class="text-right">15,000</td>
                         <td class="text-right">15,000</td>
                     </tr>
                     <tr>
-                        <td>Airtight Inline Fan with HEPA Filter</td>
+                        <td>Airtight Inline Fan with HEPA</td>
                         <td>1</td>
                         <td class="text-right">8,000</td>
                         <td class="text-right">8,000</td>
@@ -989,30 +987,23 @@
                         <td class="text-right">1,20,000</td>
                     </tr>
                 </table>
-                <small style="float:right;">For PowerGen & Electronics</small>
             </div>
         </div>
 
-        <!-- PAGE 6: Invoice 3 -->
-        <div class="paper">
+        <!-- INVOICE 3 -->
+        <div class="paper invoice-page">
             <p style="text-align: center;">(Supporting Document 3: Civil & Fabrication)</p>
             <br>
             <div class="invoice-box" contenteditable="true">
                 <div class="invoice-header">
-                    <div style="text-align: left;">
-                        <h2 style="margin:0; text-align:left;">Doon Interiors & Fabricators</h2>
-                        <small>Saharanpur Road, Hamirpur</small><br>
-                        <small>GSTIN: 05DDDFA4567M1Z2</small>
+                    <div class="text-left">
+                        <h2 style="margin:0;">Doon Interiors</h2>
+                        <small>Hamirpur, HP | GSTIN: 05DDDFA4567M1Z2</small>
                     </div>
-                    <div style="text-align: right;">
-                        <strong>ESTIMATE</strong><br>
-                        Date: 20-Oct-2023<br>
-                        Ref: DIF/INT/90
-                    </div>
+                    <div class="text-right"><strong>ESTIMATE</strong><br>Date: 20-Oct-2023</div>
                 </div>
-                <div style="margin-bottom: 10px;">
-                    <strong>To:</strong> Mrs. Rajani Sheetal, Hamirpur
-                </div>
+                <div><strong>To:</strong> Mrs. Rajni Sheetal, Hamirpur</div>
+                <br>
                 <table>
                     <tr style="background:#f0f0f0;">
                         <th>Description</th>
@@ -1021,19 +1012,19 @@
                         <th>Amount</th>
                     </tr>
                     <tr>
-                        <td>Renovation & PUF Panel Insulation (10x20 Room)</td>
+                        <td>Renovation & PUF Insulation</td>
                         <td>1</td>
                         <td class="text-right">60,000</td>
                         <td class="text-right">60,000</td>
                     </tr>
                     <tr>
-                        <td>Heavy Duty Steel Racks (Custom Size)</td>
+                        <td>Heavy Duty Steel Racks</td>
                         <td>8</td>
                         <td class="text-right">8,000</td>
                         <td class="text-right">64,000</td>
                     </tr>
                     <tr>
-                        <td>Work Tables & Lab Furniture</td>
+                        <td>Work Tables & Furniture</td>
                         <td>1</td>
                         <td class="text-right">21,000</td>
                         <td class="text-right">21,000</td>
@@ -1043,7 +1034,6 @@
                         <td class="text-right">1,45,000</td>
                     </tr>
                 </table>
-                <small style="float:right;">For Doon Interiors</small>
             </div>
         </div>
 
@@ -1056,119 +1046,75 @@
         }
 
         function formatNum(num) {
-            return new Intl.NumberFormat('en-IN', {
-                maximumFractionDigits: 0
-            }).format(num);
+            return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(num);
         }
 
         function addCostRow() {
             const tableBody = document.querySelector("#costTable tbody");
             const rowCount = tableBody.rows.length + 1;
             const row = document.createElement("tr");
-
-            row.innerHTML = `
-                <td class="text-center">${rowCount}</td>
-                <td contenteditable="true">New Item Description</td>
-                <td class="amount-col" contenteditable="true">
-                    <span class="cost-item">0</span>
-                    <span class="delete-btn no-print" onclick="this.parentElement.parentElement.remove(); calculateAll();">×</span>
-                </td>
-            `;
+            row.innerHTML = `<td class="text-center">${rowCount}</td><td contenteditable="true">New Item</td><td class="amount-col" contenteditable="true"><span class="cost-item">0</span><span class="delete-btn" onclick="this.parentElement.parentElement.remove(); calculateAll();">×</span></td>`;
             tableBody.appendChild(row);
-
-            // Add listeners to new editable cell
-            const newCell = row.querySelector('.cost-item').parentElement;
-            newCell.addEventListener('blur', calculateAll);
+            row.querySelector('.cost-item').parentElement.addEventListener('blur', calculateAll);
         }
 
         function calculateAll() {
-            // 1. Get Base Costs
+            // 1. Costs
             let totalCost = 0;
             document.querySelectorAll('.cost-item').forEach(i => totalCost += parseNum(i.innerText));
             document.getElementById('totalProjectCost').innerText = formatNum(totalCost);
-            // Sync with Glance
             document.getElementById('glanceCost').innerText = formatNum(totalCost);
 
-            // 2. Means of Finance
-            let own = totalCost * 0.05;
-            let subsidy = totalCost * 0.35;
-            let loan = totalCost - own - subsidy;
-
+            // 2. Finance
+            let own = totalCost * 0.05, subsidy = totalCost * 0.35, loan = totalCost - own - subsidy;
             document.getElementById('mofOwn').innerText = formatNum(own);
             document.getElementById('mofSubsidy').innerText = formatNum(subsidy);
             document.getElementById('mofLoan').innerText = formatNum(loan);
             document.getElementById('mofTotal').innerText = formatNum(totalCost);
-
             document.getElementById('glanceLoan').innerText = formatNum(loan);
             document.getElementById('glanceSubsidy').innerText = formatNum(subsidy);
 
             // 3. Projections
+            let years = [1, 2, 3, 4, 5], loanBal = loan, loanPrincipal = loan / 5, dscrSum = 0;
             let qty = parseNum(document.querySelector('.prod-qty').innerText);
             let price = parseNum(document.querySelector('.unit-price').innerText);
+            document.querySelector('.y1-rev').innerText = formatNum(qty * price);
 
-            // Year 1 Revenue
-            let y1Rev = qty * price;
-            document.querySelector('.y1-rev').innerText = formatNum(y1Rev);
-
-            let rawMatBase = parseNum(document.querySelector('.y1-exp').innerText);
-            let elecBase = parseNum(document.querySelector('.y1-elec').innerText);
-
-            // Growth Rates
-            let years = [1, 2, 3, 4, 5];
-            let loanPrincipal = loan / 5; // Equal principal repayment
-            let loanBal = loan;
-            let dscrSum = 0;
-
-            years.forEach((y, i) => {
+            years.forEach(y => {
                 if (y > 1) {
-                    // Update Production & Price (Growth)
                     let prevQty = parseNum(document.querySelector(y === 2 ? '.prod-qty' : `.prod-qty-${y - 1}`).innerText);
                     let prevPrice = parseNum(document.querySelector(y === 2 ? '.unit-price' : `.unit-price-${y - 1}`).innerText);
-
-                    let newQty = prevQty * 1.10; // 10% volume growth? Or flat? Let's say 10% growth
-                    let newPrice = prevPrice * 1.03; // 3% price hike
-
+                    let newQty = prevQty * 1.10, newPrice = prevPrice * 1.03;
                     document.querySelector(`.prod-qty-${y}`).innerText = formatNum(Math.round(newQty));
                     document.querySelector(`.unit-price-${y}`).innerText = formatNum(Math.round(newPrice));
+                    document.querySelector(`.y${y}-rev`).innerText = formatNum(Math.round(newQty * newPrice));
 
-                    let newRev = Math.round(newQty) * Math.round(newPrice);
-                    document.querySelector(`.y${y}-rev`).innerText = formatNum(newRev);
-
-                    // Update Costs
                     document.querySelector(`.y${y}-exp`).innerText = formatNum(parseNum(document.querySelector(`.y${y - 1}-exp`).innerText) * 1.10);
                     document.querySelector(`.y${y}-elec`).innerText = formatNum(parseNum(document.querySelector(`.y${y - 1}-elec`).innerText) * 1.10);
                 }
 
-                // Calculate Totals for this year
                 let s = parseNum(document.querySelector(`.y${y}-rev`).innerText);
-                let e1 = parseNum(document.querySelector(`.y${y}-exp`).innerText);
-                let e2 = parseNum(document.querySelector(`.y${y}-elec`).innerText);
-
+                let exp = parseNum(document.querySelector(`.y${y}-exp`).innerText) + parseNum(document.querySelector(`.y${y}-elec`).innerText);
                 let dep = y === 1 ? 65000 : y === 2 ? 55250 : y === 3 ? 46962 : y === 4 ? 39918 : 33930;
-
-                let totExp = e1 + e2 + dep; // Salary removed
+                let totExp = exp + dep;
                 document.querySelector(`.tot-exp-${y}`).innerText = formatNum(totExp);
 
                 let gp = s - totExp;
                 document.querySelector(`.gp-${y}`).innerText = formatNum(gp);
 
-                // Interest Calculation
-                let interest = loanBal * 0.10;
-                document.querySelector(`.int-${y}`).innerText = formatNum(interest);
+                let int = loanBal * 0.10;
+                document.querySelector(`.int-${y}`).innerText = formatNum(int);
                 loanBal -= loanPrincipal;
 
-                let np = gp - interest;
+                let np = gp - int;
                 document.querySelector(`.np-${y}`).innerText = formatNum(np);
 
-                // DSCR Calc
-                let cashAccrual = np + dep + interest;
-                let totalRepay = loanPrincipal + interest;
-                let dscr = cashAccrual / totalRepay;
+                let cash = np + dep + int, repay = loanPrincipal + int;
+                let dscr = cash / repay;
 
-                document.querySelector(`.cash-${y}`).innerText = formatNum(cashAccrual);
-                document.querySelector(`.rep-${y}`).innerText = formatNum(totalRepay);
+                document.querySelector(`.cash-${y}`).innerText = formatNum(cash);
+                document.querySelector(`.rep-${y}`).innerText = formatNum(repay);
                 document.querySelector(`.dscr-${y}`).innerText = dscr.toFixed(2);
-
                 dscrSum += dscr;
             });
 
@@ -1177,20 +1123,10 @@
             document.getElementById('glanceDSCR').innerText = avgDscr.toFixed(2);
         }
 
-        // Init
         document.addEventListener('DOMContentLoaded', calculateAll);
         document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-            el.addEventListener('blur', function () {
-                if (this.classList.contains('cost-item') ||
-                    this.classList.contains('prod-qty') ||
-                    this.classList.contains('unit-price') ||
-                    this.classList.contains('y1-exp')) {
-                    calculateAll();
-                }
-            });
-            el.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') e.target.blur();
-            });
+            el.addEventListener('blur', function () { if (this.classList.contains('cost-item') || this.classList.contains('prod-qty') || this.classList.contains('unit-price') || this.classList.contains('y1-exp')) calculateAll(); });
+            el.addEventListener('keypress', (e) => { if (e.key === 'Enter') e.target.blur(); });
         });
     </script>
 </body>
