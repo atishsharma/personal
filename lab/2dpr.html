@@ -71,6 +71,16 @@
             background-color: #0b5ed7;
         }
 
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #bb2d3b;
+        }
+
         .btn-add {
             background-color: #198754;
             color: white;
@@ -79,6 +89,86 @@
             font-size: 12px;
             margin-top: 5px;
             cursor: pointer;
+        }
+
+        select.form-select {
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            font-size: 13px;
+            margin-right: 10px;
+        }
+
+        /* --- Modal Styling --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 600px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            font-family: sans-serif;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .close-modal {
+            cursor: pointer;
+            font-size: 20px;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+            text-align: right;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
         }
 
         /* --- Paper Layout --- */
@@ -95,7 +185,8 @@
             background: white;
             width: var(--paper-width);
             min-height: 297mm;
-            padding: 20mm;
+            padding: 25mm;
+            /* Standard margin on screen */
             box-sizing: border-box;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             position: relative;
@@ -184,7 +275,7 @@
             margin-bottom: 12px;
         }
 
-        /* --- Tables --- */
+        /* --- Tables & Resizable Columns --- */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -192,6 +283,8 @@
             font-size: 14px;
             border: 1px solid #000;
             break-inside: auto;
+            table-layout: fixed;
+            /* Helpful for resizing */
         }
 
         th,
@@ -200,6 +293,9 @@
             padding: 8px 10px;
             vertical-align: middle;
             line-height: 1.4;
+            overflow: hidden;
+            /* Prevent text spill */
+            word-wrap: break-word;
         }
 
         th {
@@ -207,6 +303,27 @@
             font-weight: bold;
             text-align: center;
             -webkit-print-color-adjust: exact;
+            position: relative;
+            /* For resizer positioning */
+        }
+
+        /* The Resize Handle */
+        .resizer {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            cursor: col-resize;
+            user-select: none;
+            height: 100%;
+            z-index: 10;
+        }
+
+        /* Highlight on hover to indicate it's interactable */
+        .resizer:hover,
+        .resizing {
+            border-right: 2px solid #0d6efd;
+            /* Blue line when hovering/dragging */
         }
 
         /* Specific Alignment Classes */
@@ -224,6 +341,10 @@
 
         .font-bold {
             font-weight: bold;
+        }
+
+        .hidden-col {
+            display: none !important;
         }
 
         .amount-col {
@@ -248,7 +369,6 @@
             font-weight: bold;
         }
 
-        /* --- Process List --- */
         .process-list {
             margin-left: 20px;
             padding-left: 0;
@@ -279,7 +399,7 @@
             margin-bottom: 20px;
         }
 
-        /* --- Signature Block --- */
+        /* --- Signature --- */
         .signature-block {
             margin-top: 50px;
             display: flex;
@@ -319,16 +439,25 @@
 
         /* --- PRINT CSS --- */
         @media print {
+            @page {
+                size: A4;
+                margin: 25mm;
+                /* Standard 1 inch margin */
+            }
+
             body {
                 background: white;
                 margin: 0;
                 padding: 0;
+                -webkit-print-color-adjust: exact;
             }
 
             .control-panel,
             .no-print,
             .btn-add,
-            .delete-btn {
+            .delete-btn,
+            .modal-overlay,
+            .resizer {
                 display: none !important;
             }
 
@@ -338,38 +467,42 @@
                 padding: 0;
             }
 
-            .paper.report-content {
+            .paper {
                 box-shadow: none;
                 margin: 0;
                 padding: 0;
                 width: 100%;
                 min-height: 0;
                 border: none;
-                page-break-after: auto;
-                display: block;
             }
 
             .paper.title-page-paper {
-                box-shadow: none;
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                height: 100vh;
-                page-break-after: always;
-                border: none;
+                height: 247mm;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                page-break-after: always;
+                overflow: hidden;
+            }
+
+            .paper.title-page-paper .title-page-container {
+                width: 100%;
+                height: 100%;
+                border: 3px double #000;
+                padding: 20px;
+                box-shadow: none;
+            }
+
+            .paper.report-content {
+                display: block;
+                page-break-after: auto;
             }
 
             .paper.invoice-page {
-                box-shadow: none;
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                min-height: 100vh;
-                page-break-before: always;
-                border: none;
+                height: auto;
+                min-height: 240mm;
+                page-break-after: always;
+                page-break-inside: avoid;
             }
 
             [contenteditable="true"]:hover,
@@ -381,6 +514,7 @@
             table {
                 page-break-inside: auto;
                 width: 100%;
+                margin-bottom: 10px;
             }
 
             tr {
@@ -395,11 +529,6 @@
             tfoot {
                 display: table-footer-group;
             }
-
-            @page {
-                size: A4;
-                margin: 15mm 20mm;
-            }
         }
     </style>
 </head>
@@ -410,17 +539,95 @@
         <div style="font-weight: bold;">
             <i class="fas fa-file-alt"></i> PMEGP Detailed Project Report
         </div>
-        <div style="display: flex; gap: 10px;">
-            <button onclick="calculateAll()" class="btn">
-                <i class="fas fa-sync-alt"></i> Recalculate
+
+        <div style="display: flex; align-items: center;">
+            <button onclick="openInvoiceModal()" class="btn btn-danger" style="margin-right: 15px;">
+                <i class="fas fa-plus-circle"></i> Create Invoice
             </button>
+
+            <label for="loanTenure" style="margin-right: 5px; font-weight: 600;">Tenure:</label>
+            <select id="loanTenure" class="form-select" onchange="calculateAll()">
+                <option value="3">3 Years</option>
+                <option value="4">4 Years</option>
+                <option value="5" selected>5 Years</option>
+                <option value="6">6 Years</option>
+                <option value="7">7 Years</option>
+            </select>
+
+            <button onclick="calculateAll()" class="btn">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
+            <div style="width: 10px;"></div>
             <button onclick="window.print()" class="btn btn-primary">
-                <i class="fas fa-download"></i> Download PDF
+                <i class="fas fa-download"></i> PDF
             </button>
         </div>
     </div>
 
-    <div class="paper-container">
+    <div id="invoiceModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Create New Invoice</div>
+                <div class="close-modal" onclick="closeInvoiceModal()">&times;</div>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Vendor Name / Business Name</label>
+                    <input type="text" id="invVendor" class="form-control" placeholder="e.g. ABC Technologies">
+                </div>
+                <div class="form-group">
+                    <label>Vendor Details (Address / GSTIN)</label>
+                    <input type="text" id="invVendorDetails" class="form-control"
+                        placeholder="e.g. New Delhi | GSTIN: 07AA...">
+                </div>
+                <div class="form-group">
+                    <label>Document Subtitle</label>
+                    <input type="text" id="invSubtitle" class="form-control"
+                        placeholder="e.g. (Supporting Document: Machinery)">
+                </div>
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <div style="flex:1">
+                        <label>Date</label>
+                        <input type="text" id="invDate" class="form-control" placeholder="DD-MMM-YYYY">
+                    </div>
+                    <div style="flex:1">
+                        <label>Ref No (Optional)</label>
+                        <input type="text" id="invRef" class="form-control" placeholder="INV-001">
+                    </div>
+                </div>
+
+                <hr style="margin: 20px 0;">
+                <label style="font-weight:bold; margin-bottom: 10px; display:block;">Invoice Items</label>
+                <table id="modalItemsTable">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th width="60">Qty</th>
+                            <th width="90">Rate</th>
+                            <th width="60">GST%</th>
+                            <th width="20"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" class="form-control" placeholder="Item Name"></td>
+                            <td><input type="number" class="form-control" value="1"></td>
+                            <td><input type="number" class="form-control" value="0"></td>
+                            <td><input type="number" class="form-control" value="18"></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn-add" onclick="addModalRow()">+ Add Item</button>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeInvoiceModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="generateInvoice()">Generate & Add Page</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="paper-container" id="mainContainer">
 
         <!-- TITLE PAGE (Separate Page) -->
         <div class="paper title-page-paper">
@@ -510,7 +717,7 @@
                 <tr>
                     <td>9</td>
                     <td contenteditable="true">Total Cost of Project</td>
-                    <td contenteditable="true" id="glanceCost">6,00,000</td>
+                    <td contenteditable="true" id="glanceCost">6,05,000</td>
                 </tr>
                 <tr>
                     <td>10</td>
@@ -530,7 +737,7 @@
                 <tr>
                     <td>13</td>
                     <td contenteditable="true">Pay Back Period</td>
-                    <td contenteditable="true">5 Years</td>
+                    <td contenteditable="true"><span id="glanceTenure">5</span> Years</td>
                 </tr>
                 <tr>
                     <td>14</td>
@@ -644,7 +851,7 @@
                 <tfoot>
                     <tr style="background: #f0f0f0; font-weight: bold;">
                         <td colspan="2" class="text-right">Total Project Cost</td>
-                        <td class="amount-col" id="totalProjectCost">6,00,000</td>
+                        <td class="amount-col" id="totalProjectCost">6,05,000</td>
                     </tr>
                 </tfoot>
             </table>
@@ -662,19 +869,19 @@
                 <tbody>
                     <tr>
                         <td contenteditable="true">Own Contribution (5%)</td>
-                        <td class="amount-col" id="mofOwn">30,000</td>
+                        <td class="amount-col" id="mofOwn">30,250</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">PMEGP Subsidy (35% Backend)</td>
-                        <td class="amount-col" id="mofSubsidy">2,10,000</td>
+                        <td class="amount-col" id="mofSubsidy">2,11,750</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">Bank Term Loan (Balancing)</td>
-                        <td class="amount-col" id="mofLoan">3,60,000</td>
+                        <td class="amount-col" id="mofLoan">3,63,000</td>
                     </tr>
                     <tr style="background: #f0f0f0; font-weight: bold;">
                         <td class="text-right">Total</td>
-                        <td class="amount-col" id="mofTotal">6,00,000</td>
+                        <td class="amount-col" id="mofTotal">6,05,000</td>
                     </tr>
                 </tbody>
             </table>
@@ -683,7 +890,8 @@
             </p>
 
             <!-- Section 6 -->
-            <h3 class="section-header" contenteditable="true">6. Projected Profitability Statement (5 Years)</h3>
+            <h3 class="section-header" contenteditable="true">6. Projected Profitability Statement (<span
+                    id="profitYearsTitle">5</span> Years)</h3>
             <p style="font-size: 13px; font-style: italic; text-align: right;">(Figures in ₹)</p>
             <table id="profitTable">
                 <thead>
@@ -692,96 +900,118 @@
                         <th>Year 1</th>
                         <th>Year 2</th>
                         <th>Year 3</th>
-                        <th>Year 4</th>
-                        <th>Year 5</th>
+                        <th class="y4-col">Year 4</th>
+                        <th class="y5-col">Year 5</th>
+                        <th class="y6-col hidden-col">Year 6</th>
+                        <th class="y7-col hidden-col">Year 7</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="6" style="background: #eee; font-weight: bold;">A) PRODUCTION & SALES</td>
+                        <td colspan="8" style="background: #eee; font-weight: bold;">A) PRODUCTION & SALES</td>
                     </tr>
                     <tr>
                         <td>Production (KG)</td>
                         <td class="amount-col" contenteditable="true"><span class="prod-qty">10</span></td>
                         <td class="amount-col prod-qty-2">11</td>
                         <td class="amount-col prod-qty-3">12</td>
-                        <td class="amount-col prod-qty-4">13</td>
-                        <td class="amount-col prod-qty-5">15</td>
+                        <td class="amount-col prod-qty-4 y4-col">13</td>
+                        <td class="amount-col prod-qty-5 y5-col">15</td>
+                        <td class="amount-col prod-qty-6 y6-col hidden-col">16</td>
+                        <td class="amount-col prod-qty-7 y7-col hidden-col">18</td>
                     </tr>
                     <tr>
                         <td>Price (₹/KG)</td>
                         <td class="amount-col" contenteditable="true"><span class="unit-price">80,000</span></td>
                         <td class="amount-col unit-price-2">82,400</td>
                         <td class="amount-col unit-price-3">84,872</td>
-                        <td class="amount-col unit-price-4">87,418</td>
-                        <td class="amount-col unit-price-5">90,041</td>
+                        <td class="amount-col unit-price-4 y4-col">87,418</td>
+                        <td class="amount-col unit-price-5 y5-col">90,041</td>
+                        <td class="amount-col unit-price-6 y6-col hidden-col">92,742</td>
+                        <td class="amount-col unit-price-7 y7-col hidden-col">95,524</td>
                     </tr>
                     <tr style="font-weight: bold; background: #e7f1ff;">
                         <td>Total Revenue</td>
                         <td class="amount-col y1-rev">8,00,000</td>
                         <td class="amount-col y2-rev">9,06,400</td>
                         <td class="amount-col y3-rev">10,18,464</td>
-                        <td class="amount-col y4-rev">11,36,434</td>
-                        <td class="amount-col y5-rev">13,50,615</td>
+                        <td class="amount-col y4-rev y4-col">11,36,434</td>
+                        <td class="amount-col y5-rev y5-col">13,50,615</td>
+                        <td class="amount-col y6-rev y6-col hidden-col">0</td>
+                        <td class="amount-col y7-rev y7-col hidden-col">0</td>
                     </tr>
                     <tr>
-                        <td colspan="6" style="background: #eee; font-weight: bold;">B) EXPENDITURE</td>
+                        <td colspan="8" style="background: #eee; font-weight: bold;">B) EXPENDITURE</td>
                     </tr>
                     <tr>
                         <td>Raw Material</td>
                         <td class="amount-col" contenteditable="true"><span class="y1-exp">1,50,000</span></td>
                         <td class="amount-col y2-exp">1,65,000</td>
                         <td class="amount-col y3-exp">1,81,500</td>
-                        <td class="amount-col y4-exp">1,99,650</td>
-                        <td class="amount-col y5-exp">2,19,615</td>
+                        <td class="amount-col y4-exp y4-col">1,99,650</td>
+                        <td class="amount-col y5-exp y5-col">2,19,615</td>
+                        <td class="amount-col y6-exp y6-col hidden-col">0</td>
+                        <td class="amount-col y7-exp y7-col hidden-col">0</td>
                     </tr>
                     <tr>
                         <td>Electricity/Fuel</td>
                         <td class="amount-col" contenteditable="true"><span class="y1-elec">85,000</span></td>
                         <td class="amount-col y2-elec">93,500</td>
                         <td class="amount-col y3-elec">1,02,850</td>
-                        <td class="amount-col y4-elec">1,13,135</td>
-                        <td class="amount-col y5-elec">1,24,449</td>
+                        <td class="amount-col y4-elec y4-col">1,13,135</td>
+                        <td class="amount-col y5-elec y5-col">1,24,449</td>
+                        <td class="amount-col y6-elec y6-col hidden-col">0</td>
+                        <td class="amount-col y7-elec y7-col hidden-col">0</td>
                     </tr>
                     <tr>
                         <td>Wear & Tear</td>
                         <td class="amount-col">65,000</td>
                         <td class="amount-col">55,250</td>
                         <td class="amount-col">46,962</td>
-                        <td class="amount-col">39,918</td>
-                        <td class="amount-col">33,930</td>
+                        <td class="amount-col y4-col">39,918</td>
+                        <td class="amount-col y5-col">33,930</td>
+                        <td class="amount-col y6-col hidden-col">28,840</td>
+                        <td class="amount-col y7-col hidden-col">24,514</td>
                     </tr>
                     <tr style="font-weight: bold;">
                         <td>Total Exp (B)</td>
                         <td class="amount-col tot-exp-1">3,00,000</td>
                         <td class="amount-col tot-exp-2">3,13,750</td>
                         <td class="amount-col tot-exp-3">3,31,312</td>
-                        <td class="amount-col tot-exp-4">3,52,703</td>
-                        <td class="amount-col tot-exp-5">3,77,994</td>
+                        <td class="amount-col tot-exp-4 y4-col">3,52,703</td>
+                        <td class="amount-col tot-exp-5 y5-col">3,77,994</td>
+                        <td class="amount-col tot-exp-6 y6-col hidden-col">0</td>
+                        <td class="amount-col tot-exp-7 y7-col hidden-col">0</td>
                     </tr>
                     <tr style="background: #e7f1ff; font-weight: bold;">
                         <td>Gross Profit</td>
                         <td class="amount-col gp-1">5,00,000</td>
                         <td class="amount-col gp-2">5,92,650</td>
                         <td class="amount-col gp-3">6,87,152</td>
-                        <td class="amount-col gp-4">7,83,731</td>
-                        <td class="amount-col gp-5">9,72,621</td>
+                        <td class="amount-col gp-4 y4-col">7,83,731</td>
+                        <td class="amount-col gp-5 y5-col">9,72,621</td>
+                        <td class="amount-col gp-6 y6-col hidden-col">0</td>
+                        <td class="amount-col gp-7 y7-col hidden-col">0</td>
                     </tr>
                     <tr>
                         <td>Less: Interest</td>
                         <td class="amount-col int-1">36,000</td>
                         <td class="amount-col int-2">28,800</td>
                         <td class="amount-col int-3">21,600</td>
-                        <td class="amount-col int-4">14,400</td>
-                        <td class="amount-col int-5">7,200</td>
+                        <td class="amount-col int-4 y4-col">14,400</td>
+                        <td class="amount-col int-5 y5-col">7,200</td>
+                        <td class="amount-col int-6 y6-col hidden-col">0</td>
+                        <td class="amount-col int-7 y7-col hidden-col">0</td>
                     </tr>
                     <tr style="background: #d1e7dd; font-weight: bold;">
                         <td>NET PROFIT</td>
                         <td class="amount-col np-1">4,64,000</td>
                         <td class="amount-col np-2">5,63,850</td>
                         <td class="amount-col np-3">6,65,552</td>
-                        <td class="amount-col np-4">7,69,331</td>
-                        <td class="amount-col np-5">9,65,421</td>
+                        <td class="amount-col np-4 y4-col">7,69,331</td>
+                        <td class="amount-col np-5 y5-col">9,65,421</td>
+                        <td class="amount-col np-6 y6-col hidden-col">0</td>
+                        <td class="amount-col np-7 y7-col hidden-col">0</td>
                     </tr>
                 </tbody>
             </table>
@@ -792,11 +1022,11 @@
                 <thead>
                     <tr>
                         <th>Liabilities</th>
-                        <th>Year 1</th>
-                        <th>Year 2</th>
-                        <th>Year 3</th>
-                        <th>Year 4</th>
-                        <th>Year 5</th>
+                        <th>Yr 1</th>
+                        <th class="y5-col">Yr <span id="bsEndYear">5</span></th>
+                        <th>Assets</th>
+                        <th>Yr 1</th>
+                        <th class="y5-col">Yr <span id="bsEndYear2">5</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -806,93 +1036,59 @@
                     <tr>
                         <td>Capital</td>
                         <td class="amount-col cap-1">4,94,000</td>
-                        <td class="amount-col cap-2">0</td>
-                        <td class="amount-col cap-3">0</td>
-                        <td class="amount-col cap-4">0</td>
-                        <td class="amount-col cap-5">25,00,000</td>
+                        <td class="amount-col cap-final y5-col">25,00,000</td>
+                        <td>Fixed Assets</td>
+                        <td class="amount-col">4,30,000</td>
+                        <td class="amount-col y5-col">4,30,000</td>
                     </tr>
                     <tr>
                         <td>Term Loan</td>
                         <td class="amount-col tl-1">3,20,000</td>
-                        <td class="amount-col tl-2">0</td>
-                        <td class="amount-col tl-3">0</td>
-                        <td class="amount-col tl-4">0</td>
-                        <td class="amount-col tl-5">0</td>
+                        <td class="amount-col tl-final y5-col">0</td>
+                        <td>Less: Dep</td>
+                        <td class="amount-col">65,000</td>
+                        <td class="amount-col acc-dep-final y5-col">2,41,000</td>
                     </tr>
                     <tr>
-                        <td>Current Liabilities</td>
+                        <td>Creditors</td>
                         <td class="amount-col">20,000</td>
-                        <td class="amount-col">22,000</td>
-                        <td class="amount-col">25,000</td>
-                        <td class="amount-col">30,000</td>
-                        <td class="amount-col">35,000</td>
-                    </tr>
-                    <tr style="font-weight: bold; background: #e9ecef;">
-                        <td>Total Liabilities</td>
-                        <td class="amount-col tot-liab-1">0</td>
-                        <td class="amount-col tot-liab-2">0</td>
-                        <td class="amount-col tot-liab-3">0</td>
-                        <td class="amount-col tot-liab-4">0</td>
-                        <td class="amount-col tot-liab-5">0</td>
-                    </tr>
-
-                    <tr>
-                        <td colspan="6" style="background: #f0f0f0; font-weight: bold;">ASSETS</td>
-                    </tr>
-                    <tr>
-                        <td>Gross Fixed Assets</td>
-                        <td class="amount-col gfa">4,30,000</td>
-                        <td class="amount-col gfa">4,30,000</td>
-                        <td class="amount-col gfa">4,30,000</td>
-                        <td class="amount-col gfa">4,30,000</td>
-                        <td class="amount-col gfa">4,30,000</td>
-                    </tr>
-                    <tr>
-                        <td>Less: Accum. Depreciation</td>
-                        <td class="amount-col acc-dep-1">65,000</td>
-                        <td class="amount-col acc-dep-2">0</td>
-                        <td class="amount-col acc-dep-3">0</td>
-                        <td class="amount-col acc-dep-4">0</td>
-                        <td class="amount-col acc-dep-5">2,41,000</td>
-                    </tr>
-                    <tr>
+                        <td class="amount-col cred-final y5-col">35,000</td>
                         <td>Net Fixed Assets</td>
-                        <td class="amount-col nfa-1">0</td>
-                        <td class="amount-col nfa-2">0</td>
-                        <td class="amount-col nfa-3">0</td>
-                        <td class="amount-col nfa-4">0</td>
-                        <td class="amount-col nfa-5">0</td>
+                        <td class="amount-col">3,65,000</td>
+                        <td class="amount-col nfa-final y5-col">1,89,000</td>
                     </tr>
                     <tr>
+                        <td></td>
+                        <td></td>
+                        <td class="y5-col"></td>
                         <td>Current Assets</td>
-                        <td class="amount-col ca-1">0</td>
-                        <td class="amount-col ca-2">0</td>
-                        <td class="amount-col ca-3">0</td>
-                        <td class="amount-col ca-4">0</td>
-                        <td class="amount-col ca-5">0</td>
+                        <td class="amount-col">4,69,000</td>
+                        <td class="amount-col ca-final y5-col">23,46,000</td>
                     </tr>
                     <tr style="font-weight: bold; background: #e9ecef;">
-                        <td>Total Assets</td>
-                        <td class="amount-col tot-asset-1">0</td>
-                        <td class="amount-col tot-asset-2">0</td>
-                        <td class="amount-col tot-asset-3">0</td>
-                        <td class="amount-col tot-asset-4">0</td>
-                        <td class="amount-col tot-asset-5">0</td>
+                        <td>TOTAL</td>
+                        <td class="amount-col bs-tot-1">8,34,000</td>
+                        <td class="amount-col bs-tot-final y5-col">25,35,000</td>
+                        <td>TOTAL</td>
+                        <td class="amount-col bs-tot-1">8,34,000</td>
+                        <td class="amount-col bs-tot-final y5-col">25,35,000</td>
                     </tr>
                 </tbody>
             </table>
 
             <!-- Section 8 -->
             <h3 class="section-header" contenteditable="true">8. Calculation of D.S.C.R.</h3>
-            <table>
+            <table id="dscrTable">
                 <thead>
                     <tr>
                         <th>Particulars</th>
                         <th>Yr 1</th>
                         <th>Yr 2</th>
                         <th>Yr 3</th>
-                        <th>Yr 4</th>
-                        <th>Yr 5</th>
+                        <th class="y4-col">Yr 4</th>
+                        <th class="y5-col">Yr 5</th>
+                        <th class="y6-col hidden-col">Yr 6</th>
+                        <th class="y7-col hidden-col">Yr 7</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -901,27 +1097,33 @@
                         <td class="amount-col cash-1">5,65,000</td>
                         <td class="amount-col cash-2">6,47,900</td>
                         <td class="amount-col cash-3">7,34,114</td>
-                        <td class="amount-col cash-4">8,23,649</td>
-                        <td class="amount-col cash-5">10,06,551</td>
+                        <td class="amount-col cash-4 y4-col">8,23,649</td>
+                        <td class="amount-col cash-5 y5-col">10,06,551</td>
+                        <td class="amount-col cash-6 y6-col hidden-col">0</td>
+                        <td class="amount-col cash-7 y7-col hidden-col">0</td>
                     </tr>
                     <tr>
                         <td>Repayment</td>
                         <td class="amount-col rep-1">1,08,000</td>
                         <td class="amount-col rep-2">1,08,000</td>
                         <td class="amount-col rep-3">1,08,000</td>
-                        <td class="amount-col rep-4">1,08,000</td>
-                        <td class="amount-col rep-5">1,08,000</td>
+                        <td class="amount-col rep-4 y4-col">1,08,000</td>
+                        <td class="amount-col rep-5 y5-col">1,08,000</td>
+                        <td class="amount-col rep-6 y6-col hidden-col">0</td>
+                        <td class="amount-col rep-7 y7-col hidden-col">0</td>
                     </tr>
                     <tr style="font-weight: bold; background: #e2e3e5;">
                         <td>DSCR</td>
                         <td class="amount-col dscr-1">5.23</td>
                         <td class="amount-col dscr-2">5.99</td>
                         <td class="amount-col dscr-3">6.79</td>
-                        <td class="amount-col dscr-4">7.62</td>
-                        <td class="amount-col dscr-5">9.32</td>
+                        <td class="amount-col dscr-4 y4-col">7.62</td>
+                        <td class="amount-col dscr-5 y5-col">9.32</td>
+                        <td class="amount-col dscr-6 y6-col hidden-col">0</td>
+                        <td class="amount-col dscr-7 y7-col hidden-col">0</td>
                     </tr>
                     <tr>
-                        <td colspan="6" class="text-center"><strong>Average DSCR: <span
+                        <td colspan="8" class="text-center"><strong>Average DSCR: <span
                                     id="avgDSCR">6.99</span></strong></td>
                     </tr>
                 </tbody>
@@ -930,7 +1132,8 @@
             <!-- Section 9: Repayment Schedule -->
             <h3 class="section-header" contenteditable="true">9. Repayment Schedule (Bank Loan)</h3>
             <p style="font-size: 13px; font-style: italic; text-align: right;">Assumed Interest Rate: 10% p.a. | Tenure:
-                5 Years</p>
+                <span id="repayTenureText">5</span> Years
+            </p>
             <table id="repaymentTable">
                 <thead>
                     <tr>
@@ -941,42 +1144,8 @@
                         <th>Closing Balance</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-center">1</td>
-                        <td class="amount-col ob-1">0</td>
-                        <td class="amount-col princ-1">0</td>
-                        <td class="amount-col int-1">0</td>
-                        <td class="amount-col cb-1">0</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">2</td>
-                        <td class="amount-col ob-2">0</td>
-                        <td class="amount-col princ-2">0</td>
-                        <td class="amount-col int-2">0</td>
-                        <td class="amount-col cb-2">0</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">3</td>
-                        <td class="amount-col ob-3">0</td>
-                        <td class="amount-col princ-3">0</td>
-                        <td class="amount-col int-3">0</td>
-                        <td class="amount-col cb-3">0</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">4</td>
-                        <td class="amount-col ob-4">0</td>
-                        <td class="amount-col princ-4">0</td>
-                        <td class="amount-col int-4">0</td>
-                        <td class="amount-col cb-4">0</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">5</td>
-                        <td class="amount-col ob-5">0</td>
-                        <td class="amount-col princ-5">0</td>
-                        <td class="amount-col int-5">0</td>
-                        <td class="amount-col cb-5">0</td>
-                    </tr>
+                <tbody id="repaymentBody">
+                    <!-- Rows generated by JS -->
                 </tbody>
             </table>
 
@@ -1000,9 +1169,9 @@
         </div>
 
         <!-- INVOICE 1 -->
-        <div class="paper invoice-page">
+        <div class="paper invoice-page" id="invoice1">
             <h1 style="text-align: center; border-bottom: none;">QUOTATIONS / INVOICES</h1>
-            <p style="text-align: center;">(Supporting Document 1: Machinery)</p>
+            <p style="text-align: center;" contenteditable="true">(Supporting Document 1: Machinery)</p>
             <br>
             <div class="invoice-box" contenteditable="true">
                 <div class="invoice-header">
@@ -1014,48 +1183,53 @@
                 </div>
                 <div><strong>To:</strong> Mrs. Rajni Sheetal, Hamirpur</div>
                 <br>
-                <table>
+                <table class="inv-table">
                     <tr style="background:#f0f0f0;">
                         <th>Description</th>
-                        <th>Qty</th>
-                        <th>Rate</th>
-                        <th>Amount</th>
+                        <th width="60">Qty</th>
+                        <th width="80">Rate</th>
+                        <th width="60">GST%</th>
+                        <th width="90">Amount</th>
                     </tr>
                     <tr>
                         <td>Laminar Air Flow Cabinet (SS 304)</td>
-                        <td>1</td>
-                        <td class="text-right">65,000</td>
-                        <td class="text-right">65,000</td>
+                        <td class="inv-qty">1</td>
+                        <td class="inv-rate text-right">55,085</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">65,000</td>
                     </tr>
                     <tr>
                         <td>Vertical Autoclave (High Pressure)</td>
-                        <td>1</td>
-                        <td class="text-right">45,000</td>
-                        <td class="text-right">45,000</td>
+                        <td class="inv-qty">1</td>
+                        <td class="inv-rate text-right">38,135</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">45,000</td>
                     </tr>
                     <tr>
                         <td>Commercial Dehydrator (12 Tray)</td>
-                        <td>1</td>
-                        <td class="text-right">25,000</td>
-                        <td class="text-right">25,000</td>
+                        <td class="inv-qty">1</td>
+                        <td class="inv-rate text-right">21,186</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">25,000</td>
                     </tr>
                     <tr>
                         <td>IoT Sensors & Humidifiers Set</td>
-                        <td>1</td>
-                        <td class="text-right">20,000</td>
-                        <td class="text-right">20,000</td>
+                        <td class="inv-qty">1</td>
+                        <td class="inv-rate text-right">16,949</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">20,000</td>
                     </tr>
                     <tr style="font-weight: bold;">
-                        <td colspan="3" class="text-right">Total</td>
-                        <td class="text-right">1,55,000</td>
+                        <td colspan="4" class="text-right">Total (Incl. GST)</td>
+                        <td class="inv-total text-right">1,55,000</td>
                     </tr>
                 </table>
             </div>
         </div>
 
         <!-- INVOICE 2 -->
-        <div class="paper invoice-page">
-            <p style="text-align: center;">(Supporting Document 2: Electricals)</p>
+        <div class="paper invoice-page" id="invoice2">
+            <p style="text-align: center;" contenteditable="true">(Supporting Document 2: Electricals)</p>
             <br>
             <div class="invoice-box" contenteditable="true">
                 <div class="invoice-header">
@@ -1067,48 +1241,53 @@
                 </div>
                 <div><strong>To:</strong> Mrs. Rajni Sheetal, Hamirpur</div>
                 <br>
-                <table>
+                <table class="inv-table">
                     <tr style="background:#f0f0f0;">
                         <th>Description</th>
-                        <th>Qty</th>
-                        <th>Rate</th>
-                        <th>Amount</th>
+                        <th width="60">Qty</th>
+                        <th width="80">Rate</th>
+                        <th width="60">GST%</th>
+                        <th width="90">Amount</th>
                     </tr>
                     <tr>
                         <td>7.5 KVA Silent Diesel Generator</td>
-                        <td>1</td>
-                        <td class="text-right">85,000</td>
-                        <td class="text-right">85,000</td>
+                        <td class="inv-qty">1</td>
+                        <td class="inv-rate text-right">72,034</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">85,000</td>
                     </tr>
                     <tr>
                         <td>LED Grow Lights (Full Spectrum)</td>
-                        <td>10</td>
-                        <td class="text-right">1,200</td>
-                        <td class="text-right">12,000</td>
+                        <td class="inv-qty">10</td>
+                        <td class="inv-rate text-right">1,017</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">12,000</td>
                     </tr>
                     <tr>
                         <td>Refrigerator 90L</td>
-                        <td>1</td>
-                        <td class="text-right">15,000</td>
-                        <td class="text-right">15,000</td>
+                        <td class="inv-qty">1</td>
+                        <td class="inv-rate text-right">12,712</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">15,000</td>
                     </tr>
                     <tr>
                         <td>Airtight Inline Fan with HEPA</td>
-                        <td>1</td>
-                        <td class="text-right">8,000</td>
-                        <td class="text-right">8,000</td>
+                        <td class="inv-qty">1</td>
+                        <td class="inv-rate text-right">6,780</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">8,000</td>
                     </tr>
                     <tr style="font-weight: bold;">
-                        <td colspan="3" class="text-right">Total</td>
-                        <td class="text-right">1,20,000</td>
+                        <td colspan="4" class="text-right">Total</td>
+                        <td class="inv-total text-right">1,20,000</td>
                     </tr>
                 </table>
             </div>
         </div>
 
         <!-- INVOICE 3 -->
-        <div class="paper invoice-page">
-            <p style="text-align: center;">(Supporting Document 3: Civil & Fabrication)</p>
+        <div class="paper invoice-page" id="invoice3">
+            <p style="text-align: center;" contenteditable="true">(Supporting Document 3: Civil & Fabrication)</p>
             <br>
             <div class="invoice-box" contenteditable="true">
                 <div class="invoice-header">
@@ -1120,34 +1299,38 @@
                 </div>
                 <div><strong>To:</strong> Mrs. Rajni Sheetal, Hamirpur</div>
                 <br>
-                <table>
+                <table class="inv-table">
                     <tr style="background:#f0f0f0;">
                         <th>Description</th>
-                        <th>Qty</th>
-                        <th>Rate</th>
-                        <th>Amount</th>
+                        <th width="60">Qty</th>
+                        <th width="80">Rate</th>
+                        <th width="60">GST%</th>
+                        <th width="90">Amount</th>
                     </tr>
                     <tr>
                         <td>Renovation & PUF Insulation</td>
-                        <td>1</td>
-                        <td class="text-right">60,000</td>
-                        <td class="text-right">60,000</td>
+                        <td class="inv-qty">1</td>
+                        <td class="inv-rate text-right">50,847</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">60,000</td>
                     </tr>
                     <tr>
                         <td>Heavy Duty Steel Racks</td>
-                        <td>8</td>
-                        <td class="text-right">8,000</td>
-                        <td class="text-right">64,000</td>
+                        <td class="inv-qty">8</td>
+                        <td class="inv-rate text-right">6,780</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">64,000</td>
                     </tr>
                     <tr>
                         <td>Work Tables & Furniture</td>
-                        <td>1</td>
-                        <td class="text-right">21,000</td>
-                        <td class="text-right">21,000</td>
+                        <td class="inv-qty">1</td>
+                        <td class="inv-rate text-right">17,797</td>
+                        <td class="inv-gst text-center">18</td>
+                        <td class="inv-amt text-right">21,000</td>
                     </tr>
                     <tr style="font-weight: bold;">
-                        <td colspan="3" class="text-right">Total</td>
-                        <td class="text-right">1,45,000</td>
+                        <td colspan="4" class="text-right">Total</td>
+                        <td class="inv-total text-right">1,45,000</td>
                     </tr>
                 </table>
             </div>
@@ -1165,18 +1348,178 @@
             return new Intl.NumberFormat('en-IN', { maximumFractionDigits: 0 }).format(num);
         }
 
+        // --- INV GENERATOR LOGIC ---
+        function openInvoiceModal() {
+            document.getElementById('invoiceModal').style.display = 'flex';
+        }
+        function closeInvoiceModal() {
+            document.getElementById('invoiceModal').style.display = 'none';
+        }
+
+        function addModalRow() {
+            const tbody = document.querySelector('#modalItemsTable tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td><input type="text" class="form-control" placeholder="Item Name"></td>
+                <td><input type="number" class="form-control" value="1"></td>
+                <td><input type="number" class="form-control" value="0"></td>
+                <td><input type="number" class="form-control" value="18"></td>
+                <td><span class="delete-btn" onclick="this.closest('tr').remove()">×</span></td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        function generateInvoice() {
+            const vendor = document.getElementById('invVendor').value || "Vendor Name";
+            const details = document.getElementById('invVendorDetails').value || "Address | GSTIN";
+            const subtitle = document.getElementById('invSubtitle').value || "(Supporting Document)";
+            const date = document.getElementById('invDate').value || "DD-MM-YYYY";
+
+            // Build Table Rows
+            const rows = document.querySelectorAll('#modalItemsTable tbody tr');
+            let rowsHtml = '';
+            let totalAmt = 0;
+
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                const desc = inputs[0].value;
+                const qty = parseFloat(inputs[1].value) || 0;
+                const rate = parseFloat(inputs[2].value) || 0;
+                const gst = parseFloat(inputs[3].value) || 0;
+
+                // Calc
+                const amt = (qty * rate) * (1 + gst / 100);
+                totalAmt += amt;
+
+                rowsHtml += `
+                    <tr>
+                        <td>${desc}</td>
+                        <td class="inv-qty" contenteditable="true">${qty}</td>
+                        <td class="inv-rate text-right" contenteditable="true">${formatNum(rate)}</td>
+                        <td class="inv-gst text-center" contenteditable="true">${gst}</td>
+                        <td class="inv-amt text-right">${formatNum(amt)}</td>
+                    </tr>
+                `;
+            });
+
+            // Create Page
+            const page = document.createElement('div');
+            page.className = 'paper invoice-page';
+            page.innerHTML = `
+                <p style="text-align: center;" contenteditable="true">${subtitle}</p>
+                <br>
+                <div class="invoice-box" contenteditable="true">
+                    <div class="invoice-header">
+                        <div class="text-left">
+                            <h2 style="margin:0;">${vendor}</h2>
+                            <small>${details}</small>
+                        </div>
+                        <div class="text-right"><strong>INVOICE</strong><br>Date: ${date}</div>
+                    </div>
+                    <div><strong>To:</strong> Mrs. Rajni Sheetal, Hamirpur</div>
+                    <br>
+                    <table class="inv-table">
+                        <tr style="background:#f0f0f0;"><th>Description</th><th width="60">Qty</th><th width="80">Rate</th><th width="60">GST%</th><th width="90">Amount</th></tr>
+                        ${rowsHtml}
+                        <tr style="font-weight: bold;"><td colspan="4" class="text-right">Total</td><td class="inv-total text-right">${formatNum(totalAmt)}</td></tr>
+                    </table>
+                </div>
+            `;
+
+            document.getElementById('mainContainer').appendChild(page);
+            closeInvoiceModal();
+            // Re-attach listeners to new elements
+            attachInvoiceListeners();
+            // Also enable resizing on new table
+            makeTablesResizable();
+        }
+
+        // --- INVOICE CALCULATION LOGIC ---
+        function attachInvoiceListeners() {
+            document.querySelectorAll('.inv-table').forEach(table => {
+                table.addEventListener('input', function (e) {
+                    // Check if edit is in relevant column
+                    if (e.target.classList.contains('inv-qty') ||
+                        e.target.classList.contains('inv-rate') ||
+                        e.target.classList.contains('inv-gst')) {
+                        recalcInvoice(table);
+                    }
+                });
+            });
+        }
+
+        function recalcInvoice(table) {
+            let total = 0;
+            const rows = table.querySelectorAll('tr');
+            // Skip header (index 0) and footer (last)
+            for (let i = 1; i < rows.length - 1; i++) {
+                const row = rows[i];
+                const qty = parseNum(row.querySelector('.inv-qty').innerText);
+                const rate = parseNum(row.querySelector('.inv-rate').innerText);
+                const gst = parseNum(row.querySelector('.inv-gst').innerText);
+
+                const amt = (qty * rate) * (1 + gst / 100);
+                row.querySelector('.inv-amt').innerText = formatNum(amt);
+                total += amt;
+            }
+            // Update Footer Total
+            table.querySelector('.inv-total').innerText = formatNum(total);
+        }
+
+        // --- COLUMN RESIZING LOGIC ---
+        function makeTablesResizable() {
+            document.querySelectorAll('table').forEach(function (table) {
+                // Remove existing resizers if any
+                table.querySelectorAll('.resizer').forEach(el => el.remove());
+
+                // Apply to each TH
+                table.querySelectorAll('th').forEach(function (th) {
+                    th.style.position = 'relative';
+                    const resizer = document.createElement('div');
+                    resizer.classList.add('resizer');
+                    th.appendChild(resizer);
+                    createResizableColumn(th, resizer);
+                });
+            });
+        }
+
+        function createResizableColumn(th, resizer) {
+            let x = 0;
+            let w = 0;
+
+            const mouseDownHandler = function (e) {
+                x = e.clientX;
+                const styles = window.getComputedStyle(th);
+                w = parseInt(styles.width, 10);
+
+                document.addEventListener('mousemove', mouseMoveHandler);
+                document.addEventListener('mouseup', mouseUpHandler);
+                resizer.classList.add('resizing');
+            };
+
+            const mouseMoveHandler = function (e) {
+                const dx = e.clientX - x;
+                th.style.width = `${w + dx}px`;
+            };
+
+            const mouseUpHandler = function () {
+                document.removeEventListener('mousemove', mouseMoveHandler);
+                document.removeEventListener('mouseup', mouseUpHandler);
+                resizer.classList.remove('resizing');
+            };
+
+            resizer.addEventListener('mousedown', mouseDownHandler);
+        }
+
+        // --- EXISTING REPORT LOGIC ---
         function addCostRow() {
             const tableBody = document.querySelector("#costTable tbody");
             const rowCount = tableBody.rows.length + 1;
             const row = document.createElement("tr");
             row.innerHTML = `<td class="text-center">${rowCount}</td><td contenteditable="true">New Item</td><td class="amount-col" contenteditable="true"><span class="cost-item">0</span><span class="delete-btn" onclick="this.parentElement.parentElement.remove(); calculateAll(this);">×</span></td>`;
-            // Insert before the last row (which is now Working Capital)
             const wcRow = tableBody.lastElementChild;
             tableBody.insertBefore(row, wcRow);
-
-            // Renumber the WC row
             wcRow.cells[0].innerText = rowCount + 1;
-
             row.querySelector('.cost-item').parentElement.addEventListener('blur', function (e) {
                 calculateAll(e.target);
             });
@@ -1184,51 +1527,56 @@
 
         function calculateAll(sourceElement) {
             const FIXED_TOTAL = 600000;
+
+            // --- Tenure Logic ---
+            const tenure = parseInt(document.getElementById('loanTenure').value);
+            document.getElementById('glanceTenure').innerText = tenure;
+            document.getElementById('repayTenureText').innerText = tenure;
+            document.getElementById('profitYearsTitle').innerText = tenure;
+            document.getElementById('bsEndYear').innerText = tenure;
+            document.getElementById('bsEndYear2').innerText = tenure;
+
+            for (let i = 4; i <= 7; i++) {
+                const cols = document.querySelectorAll(`.y${i}-col`);
+                cols.forEach(col => {
+                    if (i <= tenure) col.classList.remove('hidden-col');
+                    else col.classList.add('hidden-col');
+                });
+            }
+            const headerColSpans = document.querySelectorAll('#profitTable td[colspan]');
+            headerColSpans.forEach(td => td.setAttribute('colspan', tenure + 1));
+            const dscrColSpan = document.querySelector('#dscrTable td[colspan]');
+            if (dscrColSpan) dscrColSpan.setAttribute('colspan', tenure + 1);
+
+
+            // --- Cost & Finance ---
             let totalCost = 0;
             let sumOthers = 0;
             const wcRow = document.querySelector("#costTable tbody tr:last-child");
-            const wcAmountCell = wcRow.querySelector('.wc-item'); // Assuming we add this class or just find last row cell
-            // In the HTML I added 'wc-item' class to the Working Capital cell: <span class="cost-item wc-item">1,45,000</span>
-
+            const wcAmountCell = wcRow.querySelector('.wc-item');
             const costItems = document.querySelectorAll('.cost-item');
 
-            // Determine if we need to balance Working Capital
-            // We balance if the source of edit is NOT the Working Capital itself
             let shouldBalance = true;
-            if (sourceElement && sourceElement.querySelector) {
-                if (sourceElement.querySelector('.wc-item')) {
-                    shouldBalance = false;
-                }
-            } else if (sourceElement && sourceElement.classList && sourceElement.classList.contains('wc-item')) {
-                shouldBalance = false;
-            } else if (sourceElement && sourceElement.parentElement && sourceElement.parentElement.querySelector('.wc-item')) {
+            if (sourceElement && (sourceElement.classList.contains('wc-item') || sourceElement.querySelector('.wc-item'))) {
                 shouldBalance = false;
             }
 
             if (shouldBalance) {
-                // Sum all items EXCEPT the last one (Working Capital)
-                // Note: costItems includes the WC item, so we iterate carefully
                 costItems.forEach(item => {
                     if (!item.classList.contains('wc-item')) {
                         sumOthers += parseNum(item.innerText);
                     }
                 });
-
                 let newWC = FIXED_TOTAL - sumOthers;
-                if (newWC < 0) newWC = 0; // Prevent negative, though this means Total will exceed 6L
-
-                if (wcAmountCell) {
-                    wcAmountCell.innerText = formatNum(newWC);
-                }
+                if (newWC < 0) newWC = 0;
+                if (wcAmountCell) wcAmountCell.innerText = formatNum(newWC);
             }
 
-            // 1. Recalculate Total Costs (Now that WC is updated)
             totalCost = 0;
             document.querySelectorAll('.cost-item').forEach(i => totalCost += parseNum(i.innerText));
             document.getElementById('totalProjectCost').innerText = formatNum(totalCost);
             document.getElementById('glanceCost').innerText = formatNum(totalCost);
 
-            // 2. Finance
             let own = totalCost * 0.05, subsidy = totalCost * 0.35, loan = totalCost - own - subsidy;
             document.getElementById('mofOwn').innerText = formatNum(own);
             document.getElementById('mofSubsidy').innerText = formatNum(subsidy);
@@ -1237,107 +1585,111 @@
             document.getElementById('glanceLoan').innerText = formatNum(loan);
             document.getElementById('glanceSubsidy').innerText = formatNum(subsidy);
 
-            // 3. Projections & Repayment
-            let years = [1, 2, 3, 4, 5], loanBal = loan, loanPrincipal = loan / 5, dscrSum = 0;
+            // --- Projections Loop ---
+            let yearsArr = Array.from({ length: tenure }, (_, i) => i + 1);
+            let loanBal = loan, loanPrincipal = loan / tenure, dscrSum = 0;
             let qty = parseNum(document.querySelector('.prod-qty').innerText);
             let price = parseNum(document.querySelector('.unit-price').innerText);
             document.querySelector('.y1-rev').innerText = formatNum(qty * price);
 
             let accumCapital = own;
             let accumDepreciation = 0;
-            let grossBlock = 430000; // Fixed Assets approx (Total - WC)
-            // Dynamically calculate gross block for balance sheet
-            // Gross Block = Total Cost - Working Capital
             let currentWC = parseNum(document.querySelector('.wc-item').innerText);
-            grossBlock = totalCost - currentWC;
+            let grossBlock = totalCost - currentWC;
 
-            let repayLoanBal = loan;
+            const repayBody = document.getElementById('repaymentBody');
+            repayBody.innerHTML = '';
 
-            years.forEach((y, i) => {
-                // Growth Logic
+            yearsArr.forEach((y) => {
                 if (y > 1) {
                     let prevQty = parseNum(document.querySelector(y === 2 ? '.prod-qty' : `.prod-qty-${y - 1}`).innerText);
                     let prevPrice = parseNum(document.querySelector(y === 2 ? '.unit-price' : `.unit-price-${y - 1}`).innerText);
-                    let newQty = prevQty * 1.10, newPrice = prevPrice * 1.03;
-                    document.querySelector(`.prod-qty-${y}`).innerText = formatNum(Math.round(newQty));
-                    document.querySelector(`.unit-price-${y}`).innerText = formatNum(Math.round(newPrice));
-                    document.querySelector(`.y${y}-rev`).innerText = formatNum(Math.round(newQty * newPrice));
+                    let newQty = prevQty * 1.10;
+                    let newPrice = prevPrice * 1.03;
 
-                    document.querySelector(`.y${y}-exp`).innerText = formatNum(parseNum(document.querySelector(`.y${y - 1}-exp`).innerText) * 1.10);
-                    document.querySelector(`.y${y}-elec`).innerText = formatNum(parseNum(document.querySelector(`.y${y - 1}-elec`).innerText) * 1.10);
+                    let qtyCell = document.querySelector(`.prod-qty-${y}`);
+                    if (qtyCell) qtyCell.innerText = formatNum(Math.round(newQty));
+
+                    let priceCell = document.querySelector(`.unit-price-${y}`);
+                    if (priceCell) priceCell.innerText = formatNum(Math.round(newPrice));
+
+                    let revCell = document.querySelector(`.y${y}-rev`);
+                    if (revCell) revCell.innerText = formatNum(Math.round(newQty * newPrice));
+
+                    let expCell = document.querySelector(`.y${y}-exp`);
+                    if (expCell) expCell.innerText = formatNum(parseNum(document.querySelector(`.y${y - 1}-exp`).innerText) * 1.10);
+
+                    let elecCell = document.querySelector(`.y${y}-elec`);
+                    if (elecCell) elecCell.innerText = formatNum(parseNum(document.querySelector(`.y${y - 1}-elec`).innerText) * 1.10);
+                } else {
+                    let qty = parseNum(document.querySelector('.prod-qty').innerText);
+                    let price = parseNum(document.querySelector('.unit-price').innerText);
+                    document.querySelector('.y1-rev').innerText = formatNum(qty * price);
                 }
 
-                // P&L Calcs
-                let s = parseNum(document.querySelector(`.y${y}-rev`).innerText);
-                let exp = parseNum(document.querySelector(`.y${y}-exp`).innerText) + parseNum(document.querySelector(`.y${y}-elec`).innerText);
-                let dep = y === 1 ? 65000 : y === 2 ? 55250 : y === 3 ? 46962 : y === 4 ? 39918 : 33930;
+                let s = parseNum(document.querySelector(y === 1 ? '.y1-rev' : `.y${y}-rev`).innerText);
+                let exp = parseNum(document.querySelector(y === 1 ? '.y1-exp' : `.y${y}-exp`).innerText) +
+                    parseNum(document.querySelector(y === 1 ? '.y1-elec' : `.y${y}-elec`).innerText);
+
+                let dep = y === 1 ? 65000 : y === 2 ? 55250 : y === 3 ? 46962 : y === 4 ? 39918 : y === 5 ? 33930 : y === 6 ? 28840 : 24514;
+
                 let totExp = exp + dep;
-                document.querySelector(`.tot-exp-${y}`).innerText = formatNum(totExp);
+                let totExpCell = document.querySelector(`.tot-exp-${y}`);
+                if (totExpCell) totExpCell.innerText = formatNum(totExp);
 
                 let gp = s - totExp;
-                document.querySelector(`.gp-${y}`).innerText = formatNum(gp);
+                let gpCell = document.querySelector(`.gp-${y}`);
+                if (gpCell) gpCell.innerText = formatNum(gp);
 
-                // Interest & Loan Logic
-                let int = loanBal * 0.10; // 10% Interest
-
-                // Update Profitability Table Interest
+                let int = loanBal * 0.10;
                 let intCell = document.querySelector(`.int-${y}`);
                 if (intCell) intCell.innerText = formatNum(int);
 
-                // Update Repayment Schedule Table
-                document.querySelector(`.ob-${y}`).innerText = formatNum(loanBal);
-                document.querySelector(`.princ-${y}`).innerText = formatNum(loanPrincipal);
-
-                let intCells = document.querySelectorAll(`.int-${y}`);
-                intCells.forEach(cell => cell.innerText = formatNum(int));
-
                 let closingBal = Math.max(0, loanBal - loanPrincipal);
-                document.querySelector(`.cb-${y}`).innerText = formatNum(closingBal);
+                let row = document.createElement('tr');
+                row.innerHTML = `<td class="text-center">${y}</td><td class="amount-col">${formatNum(loanBal)}</td><td class="amount-col">${formatNum(loanPrincipal)}</td><td class="amount-col">${formatNum(int)}</td><td class="amount-col">${formatNum(closingBal)}</td>`;
+                repayBody.appendChild(row);
 
-                // Reduce Loan for next iteration
-                let currentLoanBal = loanBal;
                 loanBal -= loanPrincipal;
 
                 let np = gp - int;
-                document.querySelector(`.np-${y}`).innerText = formatNum(np);
+                let npCell = document.querySelector(`.np-${y}`);
+                if (npCell) npCell.innerText = formatNum(np);
 
                 let cash = np + dep + int, repay = loanPrincipal + int;
                 let dscr = cash / repay;
-                document.querySelector(`.cash-${y}`).innerText = formatNum(cash);
-                document.querySelector(`.rep-${y}`).innerText = formatNum(repay);
-                document.querySelector(`.dscr-${y}`).innerText = dscr.toFixed(2);
+
+                let cashCell = document.querySelector(`.cash-${y}`);
+                if (cashCell) cashCell.innerText = formatNum(cash);
+                let repCell = document.querySelector(`.rep-${y}`);
+                if (repCell) repCell.innerText = formatNum(repay);
+                let dscrCell = document.querySelector(`.dscr-${y}`);
+                if (dscrCell) dscrCell.innerText = dscr.toFixed(2);
+
                 dscrSum += dscr;
 
-                // --- Balance Sheet Updates ---
-                accumCapital += np;
-                accumDepreciation += dep;
-                let netBlock = grossBlock - accumDepreciation;
+                if (y === tenure) {
+                    accumCapital += (np * tenure);
+                    accumDepreciation += (dep * tenure);
+                    let netBlock = grossBlock - accumDepreciation;
 
-                document.querySelector(`.cap-${y}`).innerText = formatNum(accumCapital);
-                document.querySelector(`.tl-${y}`).innerText = formatNum(closingBal);
-                let creditors = 20000 + (y * 3000);
+                    let capFinal = document.querySelector('.cap-final');
+                    if (capFinal) capFinal.innerText = formatNum(own + (np * tenure * 0.8));
 
-                let totalLiab = accumCapital + closingBal + creditors;
-                document.querySelector(`.tot-liab-${y}`).innerText = formatNum(totalLiab);
-
-                document.querySelector(`.gfa`).innerText = formatNum(grossBlock); // Update all GFA cells
-                document.querySelectorAll('.gfa').forEach(el => el.innerText = formatNum(grossBlock));
-
-                document.querySelector(`.acc-dep-${y}`).innerText = formatNum(accumDepreciation);
-                document.querySelector(`.nfa-${y}`).innerText = formatNum(netBlock);
-
-                let currAssets = totalLiab - netBlock;
-                document.querySelector(`.ca-${y}`).innerText = formatNum(currAssets);
-                document.querySelector(`.tot-asset-${y}`).innerText = formatNum(totalLiab);
+                    let tlFinal = document.querySelector('.tl-final');
+                    if (tlFinal) tlFinal.innerText = "0";
+                }
             });
 
-            let avgDscr = dscrSum / 5;
+            let avgDscr = dscrSum / tenure;
             document.getElementById('avgDSCR').innerText = avgDscr.toFixed(2);
             document.getElementById('glanceDSCR').innerText = avgDscr.toFixed(2);
         }
 
         document.addEventListener('DOMContentLoaded', function () {
             calculateAll();
+            attachInvoiceListeners();
+            makeTablesResizable();
         });
 
         document.querySelectorAll('[contenteditable="true"]').forEach(el => {
@@ -1346,7 +1698,7 @@
                     this.classList.contains('prod-qty') ||
                     this.classList.contains('unit-price') ||
                     this.classList.contains('y1-exp')) {
-                    calculateAll(e.target); // Pass the element that was edited
+                    calculateAll(e.target);
                 }
             });
             el.addEventListener('keypress', (e) => { if (e.key === 'Enter') e.target.blur(); });
