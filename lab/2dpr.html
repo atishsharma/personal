@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PMEGP Detailed Project Report - Cordyceps</title>
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tinos:wght@400;700&display=swap');
@@ -92,7 +94,6 @@
         .paper {
             background: white;
             width: var(--paper-width);
-            /* Min-height allows it to grow on screen, but Print CSS handles it differently */
             min-height: 297mm;
             padding: 20mm;
             box-sizing: border-box;
@@ -102,59 +103,72 @@
             flex-direction: column;
         }
 
-        /* --- Title Page Styling --- */
+        /* --- Title Page Styling (Centered Block) --- */
+        .paper.title-page-paper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .title-page-container {
             border: 3px double #000;
-            padding: 30px;
-            /* Reduced padding to fit single page */
-            height: 100%;
-            flex-grow: 1;
+            padding: 40px;
+            width: 90%;
+            height: 85%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             text-align: center;
             box-sizing: border-box;
-            /* No fixed min-height here to allow flex to work within page constraints */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
         }
 
-        .title-header {
-            margin-top: 10px;
+        .main-title-box {
+            border: 4px solid #000;
+            padding: 20px 40px;
+            display: inline-block;
+            margin-bottom: 20px;
+            background-color: #fff;
         }
 
         .main-title {
-            font-size: 32px;
+            font-size: 34px;
             font-weight: bold;
             text-transform: uppercase;
-            text-decoration: underline;
-            margin-bottom: 15px;
+            margin: 0;
+            letter-spacing: 1.5px;
+            text-decoration: none;
         }
 
         .sub-title {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
+            margin-top: 15px;
+            color: #333;
         }
 
         .project-box {
             border-top: 2px solid #000;
             border-bottom: 2px solid #000;
-            padding: 25px 0;
-            margin: 20px 0;
+            padding: 40px 0;
+            margin: 30px 0;
         }
 
         .project-name {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: bold;
             text-transform: uppercase;
             line-height: 1.4;
+            margin-top: 10px;
         }
 
         /* --- Content Styling --- */
         h3.section-header {
-            font-size: 15px;
+            font-size: 16px;
             background-color: #e9ecef;
-            padding: 5px 10px;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            padding: 8px 10px;
+            margin-top: 25px;
+            margin-bottom: 15px;
             border: 1px solid #000;
             text-transform: uppercase;
             font-weight: bold;
@@ -162,19 +176,20 @@
             break-after: avoid;
         }
 
-        p {
-            font-size: 14px;
-            line-height: 1.5;
+        p,
+        li {
+            font-size: 15px;
+            line-height: 1.9;
             text-align: justify;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         /* --- Tables --- */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
-            font-size: 13px;
+            margin-bottom: 20px;
+            font-size: 14px;
             border: 1px solid #000;
             break-inside: auto;
         }
@@ -182,8 +197,9 @@
         th,
         td {
             border: 1px solid #000;
-            padding: 6px 8px;
+            padding: 8px 10px;
             vertical-align: middle;
+            line-height: 1.4;
         }
 
         th {
@@ -219,20 +235,18 @@
         /* Project at a Glance Specifics */
         .glance-table td:nth-child(1) {
             text-align: center;
+            width: 50px;
         }
 
-        /* S.No */
         .glance-table td:nth-child(2) {
             text-align: left;
+            width: 40%;
         }
 
-        /* Particulars */
         .glance-table td:nth-child(3) {
             text-align: center;
             font-weight: bold;
         }
-
-        /* Details */
 
         /* --- Process List --- */
         .process-list {
@@ -241,9 +255,7 @@
         }
 
         .process-list li {
-            margin-bottom: 8px;
-            font-size: 14px;
-            text-align: justify;
+            margin-bottom: 10px;
         }
 
         .process-title {
@@ -269,7 +281,7 @@
 
         /* --- Signature Block --- */
         .signature-block {
-            margin-top: 40px;
+            margin-top: 50px;
             display: flex;
             justify-content: space-between;
             break-inside: avoid;
@@ -326,35 +338,30 @@
                 padding: 0;
             }
 
-            /* Main document papers flow continuously */
             .paper.report-content {
                 box-shadow: none;
                 margin: 0;
                 padding: 0;
-                /* Let @page margin handle it */
                 width: 100%;
                 min-height: 0;
                 border: none;
                 page-break-after: auto;
-                /* Allow continuous flow */
                 display: block;
             }
 
-            /* Title page needs strict full page */
             .paper.title-page-paper {
                 box-shadow: none;
                 margin: 0;
                 padding: 0;
                 width: 100%;
-                height: 98vh;
-                /* Force it to fit within one viewport height on print */
+                height: 100vh;
                 page-break-after: always;
                 border: none;
                 display: flex;
-                flex-direction: column;
+                align-items: center;
+                justify-content: center;
             }
 
-            /* Invoice pages need strict breaks */
             .paper.invoice-page {
                 box-shadow: none;
                 margin: 0;
@@ -365,14 +372,12 @@
                 border: none;
             }
 
-            /* Global Print Resets */
             [contenteditable="true"]:hover,
             [contenteditable="true"]:focus {
                 background: none;
                 outline: none;
             }
 
-            /* Table Handling */
             table {
                 page-break-inside: auto;
                 width: 100%;
@@ -391,11 +396,9 @@
                 display: table-footer-group;
             }
 
-            /* Page Setup */
             @page {
                 size: A4;
                 margin: 15mm 20mm;
-                /* Top/Bottom 15mm, Left/Right 20mm */
             }
         }
     </style>
@@ -422,22 +425,24 @@
         <!-- TITLE PAGE (Separate Page) -->
         <div class="paper title-page-paper">
             <div class="title-page-container">
-                <div class="title-header">
-                    <div class="main-title" contenteditable="true">Detailed Project Report</div>
+                <div style="margin-top: 20px;">
+                    <div class="main-title-box">
+                        <div class="main-title" contenteditable="true">Detailed Project Report</div>
+                    </div>
                     <div class="sub-title" contenteditable="true">Submitted for Financial Assistance<br>Under PMEGP
                         Scheme</div>
                 </div>
 
                 <div class="project-box">
-                    <div style="font-size: 16px; margin-bottom: 10px;">For Establishment of</div>
+                    <div style="font-size: 18px; margin-bottom: 10px;">For Establishment of</div>
                     <div class="project-name" contenteditable="true">Cordyceps Militaris<br>Cultivation Unit</div>
                 </div>
 
                 <div
-                    style="display: flex; justify-content: space-between; align-items: flex-end; padding: 0 10px; text-align: left; margin-bottom: 20px;">
+                    style="display: flex; justify-content: space-between; align-items: flex-end; padding: 0 20px; text-align: left; margin-bottom: 20px;">
                     <div style="width: 45%;">
                         <strong>Submitted By:</strong><br><br>
-                        <div contenteditable="true" style="line-height: 1.5;">
+                        <div contenteditable="true" style="line-height: 1.6;">
                             <span style="font-size: 18px; font-weight: bold;">Mrs. Rajni Sheetal</span><br>
                             Proprietor<br>
                             Hamirpur, Himachal Pradesh
@@ -446,7 +451,7 @@
 
                     <div style="width: 45%; text-align: right;">
                         <strong>Submitted To:</strong><br><br>
-                        <div contenteditable="true" style="line-height: 1.5;">
+                        <div contenteditable="true" style="line-height: 1.6;">
                             <span style="font-size: 18px; font-weight: bold;">The Branch Manager,</span><br>
                             State Bank of India,<br>
                             Hamirpur Main Branch
@@ -463,57 +468,72 @@
             <h3 class="section-header" contenteditable="true">1. Project at a Glance</h3>
             <table class="glance-table">
                 <tr>
-                    <td width="5%">1</td>
-                    <td width="40%" contenteditable="true">Name of Entrepreneur</td>
-                    <td width="55%" contenteditable="true">Mrs. Rajni Sheetal</td>
+                    <td>1</td>
+                    <td contenteditable="true">Name of Entrepreneur</td>
+                    <td contenteditable="true">Mrs. Rajni Sheetal</td>
                 </tr>
                 <tr>
                     <td>2</td>
+                    <td contenteditable="true">Name of Enterprise</td>
+                    <td contenteditable="true">M/s. Sheetal Cordyceps Farm</td>
+                </tr>
+                <tr>
+                    <td>3</td>
                     <td contenteditable="true">Constitution (Legal Status)</td>
                     <td contenteditable="true">Proprietorship</td>
                 </tr>
                 <tr>
-                    <td>3</td>
+                    <td>4</td>
                     <td contenteditable="true">Father/Spouse Name</td>
                     <td contenteditable="true">Mr. Kamal Kumar Sharma</td>
                 </tr>
                 <tr>
-                    <td>4</td>
+                    <td>5</td>
                     <td contenteditable="true">Unit Address</td>
                     <td contenteditable="true">Hamirpur, Himachal Pradesh</td>
                 </tr>
                 <tr>
-                    <td>5</td>
+                    <td>6</td>
+                    <td contenteditable="true">Contact Number</td>
+                    <td contenteditable="true">+91 98765 43210</td>
+                </tr>
+                <tr>
+                    <td>7</td>
                     <td contenteditable="true">Product</td>
                     <td contenteditable="true">Dried Cordyceps Militaris (Medicinal Mushroom)</td>
                 </tr>
                 <tr>
-                    <td>6</td>
-                    <td contenteditable="true">Total Cost of Project</td>
-                    <td contenteditable="true" id="glanceCost">6,05,000</td>
+                    <td>8</td>
+                    <td contenteditable="true">GSTIN</td>
+                    <td contenteditable="true">02AAAAA0000A1Z5</td>
                 </tr>
                 <tr>
-                    <td>7</td>
+                    <td>9</td>
+                    <td contenteditable="true">Total Cost of Project</td>
+                    <td contenteditable="true" id="glanceCost">6,00,000</td>
+                </tr>
+                <tr>
+                    <td>10</td>
                     <td contenteditable="true">Bank Loan (Term Loan + WC)</td>
                     <td contenteditable="true" id="glanceLoan">3,63,000</td>
                 </tr>
                 <tr>
-                    <td>8</td>
+                    <td>11</td>
                     <td contenteditable="true">Subsidy (PMEGP)</td>
                     <td contenteditable="true" id="glanceSubsidy">2,11,750</td>
                 </tr>
                 <tr>
-                    <td>9</td>
+                    <td>12</td>
                     <td contenteditable="true">Debt Service Coverage Ratio (DSCR)</td>
                     <td><span id="glanceDSCR">3.24</span> (Average)</td>
                 </tr>
                 <tr>
-                    <td>10</td>
+                    <td>13</td>
                     <td contenteditable="true">Pay Back Period</td>
                     <td contenteditable="true">5 Years</td>
                 </tr>
                 <tr>
-                    <td>11</td>
+                    <td>14</td>
                     <td contenteditable="true">Employment Generation</td>
                     <td contenteditable="true">3 Persons</td>
                 </tr>
@@ -601,29 +621,30 @@
                     </tr>
                     <tr>
                         <td class="text-center">9</td>
-                        <td contenteditable="true">Working Capital Margin</td>
-                        <td class="amount-col" contenteditable="true"><span class="cost-item">1,50,000</span></td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">10</td>
                         <td contenteditable="true">Refrigerator (90L)</td>
                         <td class="amount-col" contenteditable="true"><span class="cost-item">15,000</span></td>
                     </tr>
                     <tr>
-                        <td class="text-center">11</td>
+                        <td class="text-center">10</td>
                         <td contenteditable="true">Airtight Fan with HEPA Filter</td>
                         <td class="amount-col" contenteditable="true"><span class="cost-item">8,000</span></td>
                     </tr>
                     <tr>
-                        <td class="text-center">12</td>
+                        <td class="text-center">11</td>
                         <td contenteditable="true">LED Grow Lights</td>
                         <td class="amount-col" contenteditable="true"><span class="cost-item">12,000</span></td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">12</td>
+                        <td contenteditable="true">Working Capital Margin</td>
+                        <td class="amount-col" contenteditable="true"><span class="cost-item wc-item">1,45,000</span>
+                        </td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr style="background: #f0f0f0; font-weight: bold;">
                         <td colspan="2" class="text-right">Total Project Cost</td>
-                        <td class="amount-col" id="totalProjectCost">6,05,000</td>
+                        <td class="amount-col" id="totalProjectCost">6,00,000</td>
                     </tr>
                 </tfoot>
             </table>
@@ -641,26 +662,29 @@
                 <tbody>
                     <tr>
                         <td contenteditable="true">Own Contribution (5%)</td>
-                        <td class="amount-col" id="mofOwn">30,250</td>
+                        <td class="amount-col" id="mofOwn">30,000</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">PMEGP Subsidy (35% Backend)</td>
-                        <td class="amount-col" id="mofSubsidy">2,11,750</td>
+                        <td class="amount-col" id="mofSubsidy">2,10,000</td>
                     </tr>
                     <tr>
                         <td contenteditable="true">Bank Term Loan (Balancing)</td>
-                        <td class="amount-col" id="mofLoan">3,63,000</td>
+                        <td class="amount-col" id="mofLoan">3,60,000</td>
                     </tr>
                     <tr style="background: #f0f0f0; font-weight: bold;">
                         <td class="text-right">Total</td>
-                        <td class="amount-col" id="mofTotal">6,05,000</td>
+                        <td class="amount-col" id="mofTotal">6,00,000</td>
                     </tr>
                 </tbody>
             </table>
+            <p style="font-size: 13px; font-style: italic; color: #555; margin-top: -10px;">* Note: The PMEGP Subsidy is
+                front-ended but kept as a Fixed Deposit (TDR) for 3 years, to be adjusted against the loan thereafter.
+            </p>
 
             <!-- Section 6 -->
             <h3 class="section-header" contenteditable="true">6. Projected Profitability Statement (5 Years)</h3>
-            <p style="font-size: 11px; font-style: italic; text-align: right;">(Figures in ₹)</p>
+            <p style="font-size: 13px; font-style: italic; text-align: right;">(Figures in ₹)</p>
             <table id="profitTable">
                 <thead>
                     <tr>
@@ -768,53 +792,92 @@
                 <thead>
                     <tr>
                         <th>Liabilities</th>
-                        <th>Yr 1</th>
-                        <th>Yr 5</th>
-                        <th>Assets</th>
-                        <th>Yr 1</th>
-                        <th>Yr 5</th>
+                        <th>Year 1</th>
+                        <th>Year 2</th>
+                        <th>Year 3</th>
+                        <th>Year 4</th>
+                        <th>Year 5</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        <td colspan="6" style="background: #f0f0f0; font-weight: bold;">LIABILITIES</td>
+                    </tr>
+                    <tr>
                         <td>Capital</td>
                         <td class="amount-col cap-1">4,94,000</td>
+                        <td class="amount-col cap-2">0</td>
+                        <td class="amount-col cap-3">0</td>
+                        <td class="amount-col cap-4">0</td>
                         <td class="amount-col cap-5">25,00,000</td>
-                        <td>Fixed Assets</td>
-                        <td class="amount-col">4,30,000</td>
-                        <td class="amount-col">4,30,000</td>
                     </tr>
                     <tr>
                         <td>Term Loan</td>
                         <td class="amount-col tl-1">3,20,000</td>
+                        <td class="amount-col tl-2">0</td>
+                        <td class="amount-col tl-3">0</td>
+                        <td class="amount-col tl-4">0</td>
                         <td class="amount-col tl-5">0</td>
-                        <td>Less: Dep</td>
-                        <td class="amount-col">65,000</td>
-                        <td class="amount-col">2,41,000</td>
                     </tr>
                     <tr>
-                        <td>Creditors</td>
+                        <td>Current Liabilities</td>
                         <td class="amount-col">20,000</td>
+                        <td class="amount-col">22,000</td>
+                        <td class="amount-col">25,000</td>
+                        <td class="amount-col">30,000</td>
                         <td class="amount-col">35,000</td>
-                        <td>Net Fixed Assets</td>
-                        <td class="amount-col">3,65,000</td>
-                        <td class="amount-col">1,89,000</td>
+                    </tr>
+                    <tr style="font-weight: bold; background: #e9ecef;">
+                        <td>Total Liabilities</td>
+                        <td class="amount-col tot-liab-1">0</td>
+                        <td class="amount-col tot-liab-2">0</td>
+                        <td class="amount-col tot-liab-3">0</td>
+                        <td class="amount-col tot-liab-4">0</td>
+                        <td class="amount-col tot-liab-5">0</td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="6" style="background: #f0f0f0; font-weight: bold;">ASSETS</td>
                     </tr>
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Current Assets</td>
-                        <td class="amount-col">4,69,000</td>
-                        <td class="amount-col">23,46,000</td>
+                        <td>Gross Fixed Assets</td>
+                        <td class="amount-col gfa">4,30,000</td>
+                        <td class="amount-col gfa">4,30,000</td>
+                        <td class="amount-col gfa">4,30,000</td>
+                        <td class="amount-col gfa">4,30,000</td>
+                        <td class="amount-col gfa">4,30,000</td>
                     </tr>
-                    <tr style="font-weight: bold; background: #f0f0f0;">
-                        <td>TOTAL</td>
-                        <td class="amount-col bs-tot-1">8,34,000</td>
-                        <td class="amount-col bs-tot-5">25,35,000</td>
-                        <td>TOTAL</td>
-                        <td class="amount-col bs-tot-1">8,34,000</td>
-                        <td class="amount-col bs-tot-5">25,35,000</td>
+                    <tr>
+                        <td>Less: Accum. Depreciation</td>
+                        <td class="amount-col acc-dep-1">65,000</td>
+                        <td class="amount-col acc-dep-2">0</td>
+                        <td class="amount-col acc-dep-3">0</td>
+                        <td class="amount-col acc-dep-4">0</td>
+                        <td class="amount-col acc-dep-5">2,41,000</td>
+                    </tr>
+                    <tr>
+                        <td>Net Fixed Assets</td>
+                        <td class="amount-col nfa-1">0</td>
+                        <td class="amount-col nfa-2">0</td>
+                        <td class="amount-col nfa-3">0</td>
+                        <td class="amount-col nfa-4">0</td>
+                        <td class="amount-col nfa-5">0</td>
+                    </tr>
+                    <tr>
+                        <td>Current Assets</td>
+                        <td class="amount-col ca-1">0</td>
+                        <td class="amount-col ca-2">0</td>
+                        <td class="amount-col ca-3">0</td>
+                        <td class="amount-col ca-4">0</td>
+                        <td class="amount-col ca-5">0</td>
+                    </tr>
+                    <tr style="font-weight: bold; background: #e9ecef;">
+                        <td>Total Assets</td>
+                        <td class="amount-col tot-asset-1">0</td>
+                        <td class="amount-col tot-asset-2">0</td>
+                        <td class="amount-col tot-asset-3">0</td>
+                        <td class="amount-col tot-asset-4">0</td>
+                        <td class="amount-col tot-asset-5">0</td>
                     </tr>
                 </tbody>
             </table>
@@ -864,6 +927,59 @@
                 </tbody>
             </table>
 
+            <!-- Section 9: Repayment Schedule -->
+            <h3 class="section-header" contenteditable="true">9. Repayment Schedule (Bank Loan)</h3>
+            <p style="font-size: 13px; font-style: italic; text-align: right;">Assumed Interest Rate: 10% p.a. | Tenure:
+                5 Years</p>
+            <table id="repaymentTable">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Opening Balance</th>
+                        <th>Principal Repayment</th>
+                        <th>Interest Payment</th>
+                        <th>Closing Balance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center">1</td>
+                        <td class="amount-col ob-1">0</td>
+                        <td class="amount-col princ-1">0</td>
+                        <td class="amount-col int-1">0</td>
+                        <td class="amount-col cb-1">0</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">2</td>
+                        <td class="amount-col ob-2">0</td>
+                        <td class="amount-col princ-2">0</td>
+                        <td class="amount-col int-2">0</td>
+                        <td class="amount-col cb-2">0</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">3</td>
+                        <td class="amount-col ob-3">0</td>
+                        <td class="amount-col princ-3">0</td>
+                        <td class="amount-col int-3">0</td>
+                        <td class="amount-col cb-3">0</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">4</td>
+                        <td class="amount-col ob-4">0</td>
+                        <td class="amount-col princ-4">0</td>
+                        <td class="amount-col int-4">0</td>
+                        <td class="amount-col cb-4">0</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">5</td>
+                        <td class="amount-col ob-5">0</td>
+                        <td class="amount-col princ-5">0</td>
+                        <td class="amount-col int-5">0</td>
+                        <td class="amount-col cb-5">0</td>
+                    </tr>
+                </tbody>
+            </table>
+
             <div class="signature-block">
                 <div class="sign-box">
                     <div class="sign-line" contenteditable="true">Date:</div>
@@ -876,7 +992,7 @@
                 </div>
             </div>
 
-            <div style="margin-top: 30px; font-size: 10px; color: #666; text-align: justify; font-weight: bold;"
+            <div style="margin-top: 30px; font-size: 12px; color: #666; text-align: justify; font-weight: bold;"
                 contenteditable="true">
                 DISCLAIMER: This report is prepared based on market assumptions. Actual results may vary. This document
                 is for bank appraisal purposes under PMEGP scheme.
@@ -1053,14 +1169,61 @@
             const tableBody = document.querySelector("#costTable tbody");
             const rowCount = tableBody.rows.length + 1;
             const row = document.createElement("tr");
-            row.innerHTML = `<td class="text-center">${rowCount}</td><td contenteditable="true">New Item</td><td class="amount-col" contenteditable="true"><span class="cost-item">0</span><span class="delete-btn" onclick="this.parentElement.parentElement.remove(); calculateAll();">×</span></td>`;
-            tableBody.appendChild(row);
-            row.querySelector('.cost-item').parentElement.addEventListener('blur', calculateAll);
+            row.innerHTML = `<td class="text-center">${rowCount}</td><td contenteditable="true">New Item</td><td class="amount-col" contenteditable="true"><span class="cost-item">0</span><span class="delete-btn" onclick="this.parentElement.parentElement.remove(); calculateAll(this);">×</span></td>`;
+            // Insert before the last row (which is now Working Capital)
+            const wcRow = tableBody.lastElementChild;
+            tableBody.insertBefore(row, wcRow);
+
+            // Renumber the WC row
+            wcRow.cells[0].innerText = rowCount + 1;
+
+            row.querySelector('.cost-item').parentElement.addEventListener('blur', function (e) {
+                calculateAll(e.target);
+            });
         }
 
-        function calculateAll() {
-            // 1. Costs
+        function calculateAll(sourceElement) {
+            const FIXED_TOTAL = 600000;
             let totalCost = 0;
+            let sumOthers = 0;
+            const wcRow = document.querySelector("#costTable tbody tr:last-child");
+            const wcAmountCell = wcRow.querySelector('.wc-item'); // Assuming we add this class or just find last row cell
+            // In the HTML I added 'wc-item' class to the Working Capital cell: <span class="cost-item wc-item">1,45,000</span>
+
+            const costItems = document.querySelectorAll('.cost-item');
+
+            // Determine if we need to balance Working Capital
+            // We balance if the source of edit is NOT the Working Capital itself
+            let shouldBalance = true;
+            if (sourceElement && sourceElement.querySelector) {
+                if (sourceElement.querySelector('.wc-item')) {
+                    shouldBalance = false;
+                }
+            } else if (sourceElement && sourceElement.classList && sourceElement.classList.contains('wc-item')) {
+                shouldBalance = false;
+            } else if (sourceElement && sourceElement.parentElement && sourceElement.parentElement.querySelector('.wc-item')) {
+                shouldBalance = false;
+            }
+
+            if (shouldBalance) {
+                // Sum all items EXCEPT the last one (Working Capital)
+                // Note: costItems includes the WC item, so we iterate carefully
+                costItems.forEach(item => {
+                    if (!item.classList.contains('wc-item')) {
+                        sumOthers += parseNum(item.innerText);
+                    }
+                });
+
+                let newWC = FIXED_TOTAL - sumOthers;
+                if (newWC < 0) newWC = 0; // Prevent negative, though this means Total will exceed 6L
+
+                if (wcAmountCell) {
+                    wcAmountCell.innerText = formatNum(newWC);
+                }
+            }
+
+            // 1. Recalculate Total Costs (Now that WC is updated)
+            totalCost = 0;
             document.querySelectorAll('.cost-item').forEach(i => totalCost += parseNum(i.innerText));
             document.getElementById('totalProjectCost').innerText = formatNum(totalCost);
             document.getElementById('glanceCost').innerText = formatNum(totalCost);
@@ -1074,13 +1237,24 @@
             document.getElementById('glanceLoan').innerText = formatNum(loan);
             document.getElementById('glanceSubsidy').innerText = formatNum(subsidy);
 
-            // 3. Projections
+            // 3. Projections & Repayment
             let years = [1, 2, 3, 4, 5], loanBal = loan, loanPrincipal = loan / 5, dscrSum = 0;
             let qty = parseNum(document.querySelector('.prod-qty').innerText);
             let price = parseNum(document.querySelector('.unit-price').innerText);
             document.querySelector('.y1-rev').innerText = formatNum(qty * price);
 
-            years.forEach(y => {
+            let accumCapital = own;
+            let accumDepreciation = 0;
+            let grossBlock = 430000; // Fixed Assets approx (Total - WC)
+            // Dynamically calculate gross block for balance sheet
+            // Gross Block = Total Cost - Working Capital
+            let currentWC = parseNum(document.querySelector('.wc-item').innerText);
+            grossBlock = totalCost - currentWC;
+
+            let repayLoanBal = loan;
+
+            years.forEach((y, i) => {
+                // Growth Logic
                 if (y > 1) {
                     let prevQty = parseNum(document.querySelector(y === 2 ? '.prod-qty' : `.prod-qty-${y - 1}`).innerText);
                     let prevPrice = parseNum(document.querySelector(y === 2 ? '.unit-price' : `.unit-price-${y - 1}`).innerText);
@@ -1093,6 +1267,7 @@
                     document.querySelector(`.y${y}-elec`).innerText = formatNum(parseNum(document.querySelector(`.y${y - 1}-elec`).innerText) * 1.10);
                 }
 
+                // P&L Calcs
                 let s = parseNum(document.querySelector(`.y${y}-rev`).innerText);
                 let exp = parseNum(document.querySelector(`.y${y}-exp`).innerText) + parseNum(document.querySelector(`.y${y}-elec`).innerText);
                 let dep = y === 1 ? 65000 : y === 2 ? 55250 : y === 3 ? 46962 : y === 4 ? 39918 : 33930;
@@ -1102,8 +1277,25 @@
                 let gp = s - totExp;
                 document.querySelector(`.gp-${y}`).innerText = formatNum(gp);
 
-                let int = loanBal * 0.10;
-                document.querySelector(`.int-${y}`).innerText = formatNum(int);
+                // Interest & Loan Logic
+                let int = loanBal * 0.10; // 10% Interest
+
+                // Update Profitability Table Interest
+                let intCell = document.querySelector(`.int-${y}`);
+                if (intCell) intCell.innerText = formatNum(int);
+
+                // Update Repayment Schedule Table
+                document.querySelector(`.ob-${y}`).innerText = formatNum(loanBal);
+                document.querySelector(`.princ-${y}`).innerText = formatNum(loanPrincipal);
+
+                let intCells = document.querySelectorAll(`.int-${y}`);
+                intCells.forEach(cell => cell.innerText = formatNum(int));
+
+                let closingBal = Math.max(0, loanBal - loanPrincipal);
+                document.querySelector(`.cb-${y}`).innerText = formatNum(closingBal);
+
+                // Reduce Loan for next iteration
+                let currentLoanBal = loanBal;
                 loanBal -= loanPrincipal;
 
                 let np = gp - int;
@@ -1111,11 +1303,32 @@
 
                 let cash = np + dep + int, repay = loanPrincipal + int;
                 let dscr = cash / repay;
-
                 document.querySelector(`.cash-${y}`).innerText = formatNum(cash);
                 document.querySelector(`.rep-${y}`).innerText = formatNum(repay);
                 document.querySelector(`.dscr-${y}`).innerText = dscr.toFixed(2);
                 dscrSum += dscr;
+
+                // --- Balance Sheet Updates ---
+                accumCapital += np;
+                accumDepreciation += dep;
+                let netBlock = grossBlock - accumDepreciation;
+
+                document.querySelector(`.cap-${y}`).innerText = formatNum(accumCapital);
+                document.querySelector(`.tl-${y}`).innerText = formatNum(closingBal);
+                let creditors = 20000 + (y * 3000);
+
+                let totalLiab = accumCapital + closingBal + creditors;
+                document.querySelector(`.tot-liab-${y}`).innerText = formatNum(totalLiab);
+
+                document.querySelector(`.gfa`).innerText = formatNum(grossBlock); // Update all GFA cells
+                document.querySelectorAll('.gfa').forEach(el => el.innerText = formatNum(grossBlock));
+
+                document.querySelector(`.acc-dep-${y}`).innerText = formatNum(accumDepreciation);
+                document.querySelector(`.nfa-${y}`).innerText = formatNum(netBlock);
+
+                let currAssets = totalLiab - netBlock;
+                document.querySelector(`.ca-${y}`).innerText = formatNum(currAssets);
+                document.querySelector(`.tot-asset-${y}`).innerText = formatNum(totalLiab);
             });
 
             let avgDscr = dscrSum / 5;
@@ -1123,9 +1336,19 @@
             document.getElementById('glanceDSCR').innerText = avgDscr.toFixed(2);
         }
 
-        document.addEventListener('DOMContentLoaded', calculateAll);
+        document.addEventListener('DOMContentLoaded', function () {
+            calculateAll();
+        });
+
         document.querySelectorAll('[contenteditable="true"]').forEach(el => {
-            el.addEventListener('blur', function () { if (this.classList.contains('cost-item') || this.classList.contains('prod-qty') || this.classList.contains('unit-price') || this.classList.contains('y1-exp')) calculateAll(); });
+            el.addEventListener('blur', function (e) {
+                if (this.classList.contains('cost-item') ||
+                    this.classList.contains('prod-qty') ||
+                    this.classList.contains('unit-price') ||
+                    this.classList.contains('y1-exp')) {
+                    calculateAll(e.target); // Pass the element that was edited
+                }
+            });
             el.addEventListener('keypress', (e) => { if (e.key === 'Enter') e.target.blur(); });
         });
     </script>
