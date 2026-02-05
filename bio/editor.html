@@ -1,240 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Letterhead - Atish Ak Sharma</title>
-<link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
-<style>
-body{
-  font-family: Inter, Arial, sans-serif;
-  background:#f4f6fb;
-  padding:20px;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letterhead - Atish Ak Sharma</title>
+  <link rel="icon" type="image/png"
+    href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+  <style>
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background: #f4f6fb;
+      padding: 20px;
+    }
 
-.app{
-  display:grid;
-  grid-template-columns:320px 1fr;
-  gap:20px;
-}
+    .app {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+    }
 
-.panel{
-  background:#fff;
-  border-radius:12px;
-  padding:18px;
-  box-shadow:0 6px 16px rgba(0,0,0,0.08);
-}
+    .panel {
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
 
-.panel h3{
-  margin:0 0 12px;
-  font-size:16px;
-}
+    .panel h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
 
-label{
-  font-size:13px;
-  display:block;
-  margin-top:10px;
-}
+    label {
+      font-size: 13px;
+      display: block;
+      margin-top: 10px;
+    }
 
-input[type=file],textarea,select{
-  width:100%;
-  margin-top:4px;
-}
+    input[type=file],
+    textarea,
+    select {
+      width: 100%;
+      margin-top: 4px;
+    }
 
-input[type=range]{
-  width:100%;
-}
+    input[type=range] {
+      width: 100%;
+    }
 
-button{
-  width:100%;
-  margin-top:10px;
-  padding:10px;
-  border:none;
-  background:#2563eb;
-  color:white;
-  border-radius:8px;
-  font-size:14px;
-  cursor:pointer;
-}
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: none;
+      background: #2563eb;
+      color: white;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
 
-button:hover{background:#1d4ed8}
+    button:hover {
+      background: #1d4ed8
+    }
 
-.page{
-  width:210mm;
-  min-height:297mm;
-  background:#fff;
-  margin:auto;
-  padding:10mm;
-  box-shadow:0 0 12px rgba(0,0,0,0.2);
-}
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      background: #fff;
+      margin: auto;
+      padding: 10mm;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    }
 
-.header{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start; /* align logo and address from top */
-  gap:20px;
-  border-bottom:2px solid #000;
-  padding-bottom:10px;
-}
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      /* align logo and address from top */
+      gap: 20px;
+      border-bottom: 2px solid #000;
+      padding-bottom: 10px;
+    }
 
-.logo-box{
-  width:180px;
-  height:120px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+    .logo-box {
+      width: 280px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.logo-box img{
-  max-height:100%;
-  max-width:100%;
-  height:auto;
-  width:auto;
-}
+    .logo-box img {
+      max-height: 100%;
+      max-width: 100%;
+      height: auto;
+      width: auto;
+    }
 
-.address{
-  text-align:right;
-  font-size:12px;
-  line-height:1.4;
-  white-space:pre-line;
-}
+    .address {
+      text-align: right;
+      font-size: 12px;
+      line-height: 1.4;
+      white-space: pre-line;
+    }
 
-@media print{
-  body{background:white}
-  .panel{display:none}
-  .page{box-shadow:none}
-}
-</style>
+    @media print {
+      body {
+        background: white
+      }
+
+      .panel {
+        display: none
+      }
+
+      .page {
+        box-shadow: none
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="app">
+  <div class="app">
 
-<!-- CONTROL PANEL -->
-<div class="panel">
+    <!-- CONTROL PANEL -->
+    <div class="panel">
 
-  <h3>Logo</h3>
-  <p style="font-size:12px;">Using demo image: <b>logo.png</b> (replace this file in same folder)</p>
+      <h3>Logo</h3>
 
-  <label>Logo Size</label>
+      <label>Logo Size</label>
 
-  <input type="range" id="logoSize" min="40" max="200" value="100">
+      <input type="range" id="logoSize" min="40" max="200" value="100">
 
-  <label>Logo Box Width</label>
-  <input type="range" id="boxWidth" min="80" max="300" value="180">
+      <label>Logo Box Width</label>
+      <input type="range" id="boxWidth" min="80" max="300" value="180">
 
-  <label>Logo Box Height</label>
-  <input type="range" id="boxHeight" min="60" max="200" value="120">
+      <label>Logo Box Height</label>
+      <input type="range" id="boxHeight" min="60" max="200" value="120">
 
-  <h3>Address Editor</h3>
+      <h3>Address Editor</h3>
 
-  <div style="display:flex; gap:6px; margin-bottom:6px;">
-    <button type="button" onclick="formatAddress('bold')">Bold</button>
-    <button type="button" onclick="formatAddress('italic')">Italic</button>
-    <button type="button" onclick="formatAddress('underline')">Underline</button>
-  </div>
+      <div style="display:flex; gap:6px; margin-bottom:6px;">
+        <button type="button" onclick="formatAddress('bold')">B</button>
+        <button type="button" onclick="formatAddress('italic')">I</button>
+        <button type="button" onclick="formatAddress('underline')">U</button>
+      </div>
 
- <div id="addressInput" contenteditable="true" style="border:1px solid #ccc; padding:8px; min-height:140px;">
-<b><i>SWABHIMAAN BIO</i></b><br><b>Proprietor:</b> Mrs. Rajni Sheetal<br><b>Address:</b> Village Bahn, PO - Rangas,<br> Tehsil - Nadaun, District - Hamirpur,<br> Himachal Pradesh - 177048<br><b>Phone:</b> +91-7018604098
-  </div>
+      <div id="addressInput" contenteditable="true" style="border:1px solid #ccc; padding:8px; min-height:140px;">
+        <b><i>SWABHIMAAN BIO</i></b><br><b>Proprietor:</b> Mrs. Rajni Sheetal<br><b>Address:</b> Village Bahn, PO -
+        Rangas,<br> Tehsil - Nadaun, District - Hamirpur,<br> Himachal Pradesh - 177048<br><b>Phone:</b> +91-7018604098
+      </div>
 
-  <label>Alignment</label>
-  <select id="alignSelect">
-    <option value="right">Right</option>
-    <option value="left">Left</option>
-    <option value="center">Center</option>
-  </select>
+      <label>Alignment</label>
+      <select id="alignSelect">
+        <option value="right">Right</option>
+        <option value="left">Left</option>
+        <option value="center">Center</option>
+      </select>
 
-  <label><input type="checkbox" id="boldToggle"> Bold Address</label>
+      <label><input type="checkbox" id="boldToggle"> Bold Address</label>
 
-  <h3>Body Text Editor</h3>
+      <h3>Body Text Editor</h3>
 
-  <div style="display:flex; gap:6px; margin-bottom:6px;">
-    <button type="button" onclick="formatBody('bold')">Bold</button>
-    <button type="button" onclick="formatBody('italic')">Italic</button>
-    <button type="button" onclick="formatBody('underline')">Underline</button>
-  </div>
+      <div style="display:flex; gap:6px; margin-bottom:6px;">
+        <button type="button" onclick="formatBody('bold')">B</button>
+        <button type="button" onclick="formatBody('italic')">I</button>
+        <button type="button" onclick="formatBody('underline')">U</button>
+      </div>
 
-  <button onclick="window.print()">Download / Print PDF</button>
+      <button onclick="window.print()">Print PDF</button>
 
-</div>
-
-<!-- PAGE PREVIEW -->
-<div class="page">
-
-  <div class="header">
-
-    <div class="logo-box" id="logoBox">
-      <img id="logoPreview" src="logo.png" alt="Logo">
     </div>
 
-    <div class="address" id="addressPreview"></div>
+    <!-- PAGE PREVIEW -->
+    <div class="page">
+
+      <div class="header">
+
+        <div class="logo-box" id="logoBox">
+          <img id="logoPreview" src="logo.png" alt="Logo">
+        </div>
+
+        <div class="address" id="addressPreview"></div>
+
+      </div>
+
+      <div class="meta-row" style="display:flex; justify-content:space-between; margin-top:12px; font-size:14px;">
+        <div><b>Ref. No.:</b> <span contenteditable="true"
+            style="min-width:220px; display:inline-block; font-size:18px;">________________________</span></div>
+        <div><b>Date:</b> <span contenteditable="true"
+            style="min-width:180px; display:inline-block; font-size:18px;">______ /______ /_________</span></div>
+      </div>
+
+      <div id="bodyContent" contenteditable="true"
+        style="margin-top:25px; min-height:235mm; border:1px dashed #ccc; padding:10px; font-size:13px; line-height:1.6;">
+        Start typing your letter content here...
+      </div>
+
+    </div>
 
   </div>
 
-  <div class="meta-row" style="display:flex; justify-content:space-between; margin-top:12px; font-size:14px;">
-    <div><b>Ref. No.:</b> <span contenteditable="true" style="min-width:220px; display:inline-block; font-size:18px;">________________________</span></div>
-    <div><b>Date:</b> <span contenteditable="true" style="min-width:180px; display:inline-block; font-size:18px;">______ /______ /_________</span></div>
-  </div>
+  <script>
+    const logo = document.getElementById('logoPreview');
+    const logoBox = document.getElementById('logoBox');
+    const addressPreview = document.getElementById('addressPreview');
+    const addressInput = document.getElementById('addressInput');
 
-  <div id="bodyContent" contenteditable="true" style="margin-top:25px; min-height:235mm; border:1px dashed #ccc; padding:10px; font-size:13px; line-height:1.6;">
-Start typing your letter content here...
-  </div>
-
-</div>
-
-</div>
-
-<script>
-const logo = document.getElementById('logoPreview');
-const logoBox = document.getElementById('logoBox');
-const addressPreview = document.getElementById('addressPreview');
-const addressInput = document.getElementById('addressInput');
-
-// initial sync
-addressPreview.innerHTML = addressInput.innerHTML;
+    // initial sync
+    addressPreview.innerHTML = addressInput.innerHTML;
 
 
 
-// Resize logo
-document.getElementById('logoSize').addEventListener('input', e=>{
-  logo.style.height = e.target.value + 'px';
-});
+    // Resize logo
+    document.getElementById('logoSize').addEventListener('input', e => {
+      logo.style.height = e.target.value + 'px';
+    });
 
-// Resize box width
-document.getElementById('boxWidth').addEventListener('input', e=>{
-  logoBox.style.width = e.target.value + 'px';
-});
+    // Resize box width
+    document.getElementById('boxWidth').addEventListener('input', e => {
+      logoBox.style.width = e.target.value + 'px';
+    });
 
-// Resize box height
-document.getElementById('boxHeight').addEventListener('input', e=>{
-  logoBox.style.height = e.target.value + 'px';
-});
+    // Resize box height
+    document.getElementById('boxHeight').addEventListener('input', e => {
+      logoBox.style.height = e.target.value + 'px';
+    });
 
-// Address live edit
-addressInput.addEventListener('input', ()=>{
-  addressPreview.innerHTML = addressInput.innerHTML;
-});
+    // Address live edit
+    addressInput.addEventListener('input', () => {
+      addressPreview.innerHTML = addressInput.innerHTML;
+    });
 
-// Alignment
-document.getElementById('alignSelect').addEventListener('change', e=>{
-  addressPreview.style.textAlign = e.target.value;
-});
+    // Alignment
+    document.getElementById('alignSelect').addEventListener('change', e => {
+      addressPreview.style.textAlign = e.target.value;
+    });
 
-// Bold toggle
-document.getElementById('boldToggle').addEventListener('change', e=>{
-  addressPreview.style.fontWeight = e.target.checked ? '700' : '400';
-});
+    // Bold toggle
+    document.getElementById('boldToggle').addEventListener('change', e => {
+      addressPreview.style.fontWeight = e.target.checked ? '700' : '400';
+    });
 
-function formatAddress(cmd){
-  document.execCommand(cmd,false,null);
-  addressPreview.innerHTML = addressInput.innerHTML;
-}
+    function formatAddress(cmd) {
+      document.execCommand(cmd, false, null);
+      addressPreview.innerHTML = addressInput.innerHTML;
+    }
 
-function formatBody(cmd){
-  document.execCommand(cmd,false,null);
-}
-</script>
+    function formatBody(cmd) {
+      document.execCommand(cmd, false, null);
+    }
+  </script>
 
 </body>
+
 </html>
