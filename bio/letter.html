@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Letterhead Generator - Swabhimaan Bio</title><style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f2f2f2;
+  padding:30px;
+}
+
+.page{
+  width:210mm;
+  min-height:297mm;
+  background:#fff;
+  margin:auto;
+  padding:25mm;
+  box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:2px solid #000;
+  padding-bottom:10px;
+}
+
+.logo-box{
+  width:180px;
+}
+
+.logo-box img{
+  max-width:100%;
+  max-height:120px; /* will not exceed address height */
+}
+
+.address{
+  text-align:right;
+  font-size:12px;
+  line-height:1.4;
+}
+
+.address b{
+  font-size:14px;
+}
+
+.controls{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+button{
+  padding:10px 16px;
+  font-size:14px;
+  cursor:pointer;
+}
+
+input[type=range]{
+  width:200px;
+}
+
+@media print{
+  body{background:white; padding:0}
+  .controls{display:none}
+  .page{box-shadow:none; margin:0}
+}
+</style></head>
+<body><div class="controls">
+  <input type="file" id="logoInput" accept="image/*">
+  <br><br>
+  Logo Size: <input type="range" id="sizeSlider" min="40" max="180" value="120">
+  <br><br>
+  <button onclick="window.print()">Download / Print Letterhead</button>
+</div><div class="page">  <div class="header"><div class="logo-box">
+  <img id="logoPreview">
+</div>
+
+<div class="address">
+  <b>SWABHIMAAN BIO</b><br>
+  Proprietor: Mrs. Rajni Sheetal<br>
+  UDYAM ID: UDYAM-HP-03-0015730<br>
+  Village Bahn, PO-Rangas,<br>
+  Tehsil-Nadaun, District-Hamirpur,<br>
+  Himachal Pradesh - 177048
+</div>
+
+  </div></div><script>
+const logo = document.getElementById('logoPreview');
+
+// Upload logo
+document.getElementById('logoInput').addEventListener('change', function(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    logo.src = reader.result;
+  }
+  reader.readAsDataURL(file);
+});
+
+// Resize slider
+document.getElementById('sizeSlider').addEventListener('input', function(e){
+  logo.style.maxHeight = e.target.value + "px";
+});
+</script></body>
+</html>
