@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Swabhimaan Bio - Project Report</title>
-    <link rel="icon" type="image/png"
-        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,8 +13,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         body {
@@ -40,6 +37,10 @@
         .hide {
             display: none;
         }
+        
+        .prose p {
+            margin-bottom: 1.25rem;
+        }
     </style>
 </head>
 
@@ -49,23 +50,20 @@
     <nav class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md shadow-sm z-50 border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <div class="flex items-center space-x-2">
-                    <div class="bg-orange-600 p-2 rounded-lg">
-                        <i data-lucide="leaf" class="h-6 w-6 text-white"></i>
-                    </div>
-                    <span class="text-xl font-bold text-slate-900 tracking-tight">Swabhimaan Bio</span>
+                <div class="flex items-center space-x-3">
+                    <!-- Logo Image -->
+                    <img src="logo.png" 
+                         alt="Swabhimaan Bio Logo" 
+                         class="h-10 w-10 rounded-lg object-cover shadow-sm border border-slate-100"
+                         onerror="this.src='https://via.placeholder.com/40?text=SB'">
                 </div>
 
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex space-x-8">
-                    <a href="#overview"
-                        class="text-slate-600 hover:text-orange-600 font-medium transition-colors">Overview</a>
-                    <a href="#process"
-                        class="text-slate-600 hover:text-orange-600 font-medium transition-colors">Process</a>
-                    <a href="#financials"
-                        class="text-slate-600 hover:text-orange-600 font-medium transition-colors">Financials</a>
-                    <a href="#projections"
-                        class="text-slate-600 hover:text-orange-600 font-medium transition-colors">Projections</a>
+                    <a href="#overview" class="text-slate-600 hover:text-orange-600 font-medium transition-colors">Overview</a>
+                    <a href="#process" class="text-slate-600 hover:text-orange-600 font-medium transition-colors">Process</a>
+                    <a href="#financials" class="text-slate-600 hover:text-orange-600 font-medium transition-colors">Financials</a>
+                    <a href="#projections" class="text-slate-600 hover:text-orange-600 font-medium transition-colors">Projections</a>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -92,36 +90,34 @@
     <header id="overview" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 z-0">
             <img src="labphoto.jpg" alt="Mushroom Cultivation Lab" class="w-full h-full object-cover opacity-10" />
+            <div class="absolute inset-0 bg-orange-50/30"></div>
             <div class="absolute inset-0 bg-gradient-to-b from-slate-50/0 to-slate-50/100"></div>
         </div>
 
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <span class="inline-block py-1 px-3 rounded-full bg-orange-100 text-orange-700 text-sm font-semibold mb-6">
-                MSME Project Report
+                MSME Detailed Project Report
             </span>
             <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 mb-6 tracking-tight">
-                <span class="text-orange-600">Swabhimaan Bio</span><br />
-                Cordyceps Militaris <br />
+                <span class="text-orange-600">Swabhimaan Bio</span><br>
+                Cordyceps Militaris <br>
                 <span class="text-green-600">Cultivation Unit</span>
             </h1>
             <p class="max-w-2xl mx-auto text-xl text-slate-600 mb-10">
-                A high-tech approach to medicinal mushroom cultivation.
-                Blending ancient Ayurvedic wisdom with modern biotechnology.
+                A technical approach to high-value medicinal mushroom cultivation. 
+                Bridging wellness and biotechnology in Himachal Pradesh.
             </p>
 
             <div class="flex flex-wrap justify-center gap-4">
-                <div
-                    class="flex items-center space-x-2 bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200">
+                <div class="flex items-center space-x-2 bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200">
                     <i data-lucide="user" class="h-5 w-5 text-orange-500"></i>
                     <span class="font-medium">Mrs. Rajni Sheetal</span>
                 </div>
-                <div
-                    class="flex items-center space-x-2 bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200">
+                <div class="flex items-center space-x-2 bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200">
                     <i data-lucide="map-pin" class="h-5 w-5 text-orange-500"></i>
                     <span class="font-medium">Hamirpur, HP</span>
                 </div>
-                <div
-                    class="flex items-center space-x-2 bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200">
+                <div class="flex items-center space-x-2 bg-white px-6 py-3 rounded-full shadow-sm border border-slate-200">
                     <i data-lucide="building-2" class="h-5 w-5 text-orange-500"></i>
                     <span class="font-medium">Punjab National Bank</span>
                 </div>
@@ -134,26 +130,23 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Stat 1 -->
-                <div
-                    class="p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow bg-white">
+                <div class="p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow bg-white">
                     <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mb-4">
                         <i data-lucide="indian-rupee" class="h-6 w-6 text-green-600"></i>
                     </div>
                     <p class="text-slate-500 text-sm font-medium">Total Project Cost</p>
-                    <p class="text-2xl font-bold text-slate-900">₹ 7,25,000</p>
+                    <p class="text-2xl font-bold text-slate-900">₹ 6,60,000</p>
                 </div>
                 <!-- Stat 2 -->
-                <div
-                    class="p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow bg-white">
+                <div class="p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow bg-white">
                     <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-4">
                         <i data-lucide="building-2" class="h-6 w-6 text-blue-600"></i>
                     </div>
-                    <p class="text-slate-500 text-sm font-medium">Bank Loan Req</p>
-                    <p class="text-2xl font-bold text-slate-900">₹ 6,52,500</p>
+                    <p class="text-slate-500 text-sm font-medium">Bank Loan Required</p>
+                    <p class="text-2xl font-bold text-slate-900">₹ 5,28,000</p>
                 </div>
                 <!-- Stat 3 -->
-                <div
-                    class="p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow bg-white">
+                <div class="p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow bg-white">
                     <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-4">
                         <i data-lucide="package" class="h-6 w-6 text-purple-600"></i>
                     </div>
@@ -161,13 +154,12 @@
                     <p class="text-2xl font-bold text-slate-900">200 sq. ft</p>
                 </div>
                 <!-- Stat 4 -->
-                <div
-                    class="p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow bg-white">
+                <div class="p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow bg-white">
                     <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center mb-4">
                         <i data-lucide="trending-up" class="h-6 w-6 text-orange-600"></i>
                     </div>
-                    <p class="text-slate-500 text-sm font-medium">DSCR (Avg)</p>
-                    <p class="text-2xl font-bold text-slate-900">3.24</p>
+                    <p class="text-slate-500 text-sm font-medium">Avg. DSCR</p>
+                    <p class="text-2xl font-bold text-slate-900">4.18</p>
                 </div>
             </div>
         </div>
@@ -180,28 +172,33 @@
                 <div>
                     <h2 class="text-3xl font-bold text-slate-900 mb-6">Introduction & Market Potential</h2>
                     <div class="prose prose-lg text-slate-600">
-                        <p class="mb-4">
-                            <strong>Cordyceps Militaris</strong> is a high-value medicinal mushroom known for its
-                            immune-boosting and energy-enhancing properties. Unlike the wild variety, we cultivate it in
-                            strictly controlled laboratory conditions.
+                        <p>
+                            <strong>Cordyceps Militaris</strong> is a high-value medicinal mushroom known for its 
+                            immune-boosting and energy-enhancing properties. While wild varieties are rare and expensive, 
+                            advancements in biotechnology allow for cultivation in strictly controlled laboratory conditions.
                         </p>
-                        <p class="mb-4">
-                            Traditionally imported at high prices, domestic production ensures purity and affordability.
-                            The demand is surging in:
+                        <p>
+                            The demand for domestically produced, pure Cordyceps is surging due to the growth of India's 
+                            nutraceutical market and government initiatives like AYUSH. Target segments include:
                         </p>
-                        <ul class="space-y-2 mb-6">
-                            <li class="flex items-center"><i data-lucide="check-circle"
-                                    class="h-5 w-5 text-green-500 mr-2"></i> Ayurvedic Medicine Manufacturers</li>
-                            <li class="flex items-center"><i data-lucide="check-circle"
-                                    class="h-5 w-5 text-green-500 mr-2"></i> Nutraceutical & Supplement Brands</li>
-                            <li class="flex items-center"><i data-lucide="check-circle"
-                                    class="h-5 w-5 text-green-500 mr-2"></i> Online Wellness Markets</li>
+                        <ul class="space-y-3 mb-6">
+                            <li class="flex items-start">
+                                <i data-lucide="check-circle" class="h-5 w-5 text-green-500 mr-2 mt-1"></i>
+                                <span>Ayurvedic Medicine & Supplement Manufacturers</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-lucide="check-circle" class="h-5 w-5 text-green-500 mr-2 mt-1"></i>
+                                <span>Health Food Processors & Herbal Traders</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i data-lucide="check-circle" class="h-5 w-5 text-green-500 mr-2 mt-1"></i>
+                                <span>Online Wellness Platforms (D2C)</span>
+                            </li>
                         </ul>
                         <div class="bg-orange-50 border-l-4 border-orange-500 p-4">
                             <p class="text-sm text-orange-800 font-medium">
-                                Current Market Price: ₹50,000 - ₹70,000 per Kg. <br />
-                                <span class="text-xs opacity-75">Our projections use a conservative estimate to ensure
-                                    financial safety.</span>
+                                Market Price Range: ₹40,000 - ₹70,000 per Kg. <br>
+                                <span class="text-xs opacity-75">Our projections utilize conservative pricing (~₹43k/kg) to ensure financial stability and bank safety.</span>
                             </p>
                         </div>
                     </div>
@@ -218,82 +215,64 @@
     <section id="process" class="py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-slate-900">The Cultivation Process</h2>
-                <p class="mt-4 text-slate-600">A sterile, technical workflow to ensure maximum potency.</p>
+                <h2 class="text-3xl font-bold text-slate-900">The Manufacturing Process</h2>
+                <p class="mt-4 text-slate-600">A sterile, multi-stage technical workflow to ensure maximum potency.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Step 1 -->
-                <div
-                    class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
-                    <div
-                        class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
-                        <i data-lucide="package" class="h-8 w-8 text-amber-600"></i>
+                <div class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
+                    <div class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="beaker" class="h-8 w-8 text-amber-600"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">1. Substrate Prep</h3>
-                    <p class="text-slate-600">Mixing brown rice & liquid nutrients in glass jars.</p>
-                    <span
-                        class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">1</span>
+                    <p class="text-slate-600">Mixing brown rice and liquid nutrients in specialized glass jars.</p>
+                    <span class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">1</span>
                 </div>
                 <!-- Step 2 -->
-                <div
-                    class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
-                    <div
-                        class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
-                        <i data-lucide="thermometer" class="h-8 w-8 text-red-500"></i>
+                <div class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
+                    <div class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="flame" class="h-8 w-8 text-red-500"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">2. Sterilization</h3>
-                    <p class="text-slate-600">Autoclaving at 121°C to eliminate contaminants.</p>
-                    <span
-                        class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">2</span>
+                    <p class="text-slate-600">Autoclaving jars at 121°C to ensure a 100% contaminant-free medium.</p>
+                    <span class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">2</span>
                 </div>
                 <!-- Step 3 -->
-                <div
-                    class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
-                    <div
-                        class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
-                        <i data-lucide="droplets" class="h-8 w-8 text-blue-500"></i>
+                <div class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
+                    <div class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="droplet" class="h-8 w-8 text-blue-500"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">3. Inoculation</h3>
-                    <p class="text-slate-600">Injecting liquid spawn under Laminar Air Flow.</p>
-                    <span
-                        class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">3</span>
+                    <p class="text-slate-600">Injecting liquid spawn under a Laminar Air Flow cabinet.</p>
+                    <span class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">3</span>
                 </div>
                 <!-- Step 4 -->
-                <div
-                    class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
-                    <div
-                        class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
-                        <i data-lucide="wind" class="h-8 w-8 text-slate-600"></i>
+                <div class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
+                    <div class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="moon" class="h-8 w-8 text-slate-600"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">4. Incubation</h3>
-                    <p class="text-slate-600">Dark storage at 20°C for 5-7 days for mycelium growth.</p>
-                    <span
-                        class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">4</span>
+                    <p class="text-slate-600">Dark storage at 20°C for mycelium colonization (5-7 days).</p>
+                    <span class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">4</span>
                 </div>
                 <!-- Step 5 -->
-                <div
-                    class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
-                    <div
-                        class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
+                <div class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
+                    <div class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
                         <i data-lucide="sun" class="h-8 w-8 text-yellow-500"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">5. Fruiting</h3>
-                    <p class="text-slate-600">12hr LED light cycle & humidity control for 50-60 days.</p>
-                    <span
-                        class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">5</span>
+                    <p class="text-slate-600">Controlled light and humidity cycles for 50-60 days.</p>
+                    <span class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">5</span>
                 </div>
                 <!-- Step 6 -->
-                <div
-                    class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
-                    <div
-                        class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
-                        <i data-lucide="leaf" class="h-8 w-8 text-green-600"></i>
+                <div class="relative group p-8 bg-slate-50 rounded-2xl hover:bg-orange-50 transition-colors border border-slate-100">
+                    <div class="bg-white w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm mb-6 group-hover:scale-110 transition-transform">
+                        <i data-lucide="wind" class="h-8 w-8 text-green-600"></i>
                     </div>
                     <h3 class="text-xl font-bold text-slate-900 mb-2">6. Harvest & Dry</h3>
-                    <p class="text-slate-600">Dehydrating fruit bodies to &lt;5% moisture content.</p>
-                    <span
-                        class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">6</span>
+                    <p class="text-slate-600">Dehydrating fruiting bodies to <5% moisture content.</p>
+                    <span class="absolute top-6 right-6 text-4xl font-bold text-slate-200 group-hover:text-orange-200 select-none">6</span>
                 </div>
             </div>
         </div>
@@ -304,7 +283,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold">Project Economics</h2>
-                <p class="mt-4 text-slate-400">Detailed breakdown of capital and operational costs.</p>
+                <p class="mt-4 text-slate-400">Detailed breakdown of capital expenditure and finance.</p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-12">
@@ -315,30 +294,45 @@
                     </h3>
                     <div class="space-y-4">
                         <div class="flex justify-between items-start border-b border-slate-700 pb-3">
-                            <div><span class="block text-slate-200">Civil Works & Renovation</span></div>
-                            <span class="font-mono text-slate-300">₹ 75,000</span>
+                            <span class="text-slate-200">Civil Works & Lab Renovation</span>
+                            <span class="font-mono text-slate-300">₹ 77,000</span>
                         </div>
                         <div class="flex justify-between items-start border-b border-slate-700 pb-3">
-                            <div><span class="block text-slate-200">Machinery & Equipment</span><span
-                                    class="text-xs text-slate-500">(LAF, Autoclave, AC, Generator, etc.)</span></div>
-                            <span class="font-mono text-slate-300">₹ 2,88,000</span>
+                            <div>
+                                <span class="block text-slate-200">Technical Equipment</span>
+                                <span class="text-xs text-slate-500">LAF, Autoclave, Sensors, Filter</span>
+                            </div>
+                            <span class="font-mono text-slate-300">₹ 85,000</span>
                         </div>
                         <div class="flex justify-between items-start border-b border-slate-700 pb-3">
-                            <div><span class="block text-slate-200">Furniture & Racks</span></div>
-                            <span class="font-mono text-slate-300">₹ 60,000</span>
+                            <div>
+                                <span class="block text-slate-200">Utilities & Appliances</span>
+                                <span class="text-xs text-slate-500">Generator (7.5kVA), AC, Dehydrator</span>
+                            </div>
+                            <span class="font-mono text-slate-300">₹ 1,51,000</span>
                         </div>
                         <div class="flex justify-between items-start border-b border-slate-700 pb-3">
-                            <div><span class="block text-slate-200">Glass Jars & Consumables</span></div>
-                            <span class="font-mono text-slate-300">₹ 55,000</span>
+                            <div>
+                                <span class="block text-slate-200">Infrastructure & Consumables</span>
+                                <span class="text-xs text-slate-500">Racks, Grow Lights, Jars (2000 pcs)</span>
+                            </div>
+                            <span class="font-mono text-slate-300">₹ 1,52,000</span>
                         </div>
                         <div class="flex justify-between items-start border-b border-slate-700 pb-3">
-                            <div><span class="block text-slate-200">Working Capital</span></div>
-                            <span class="font-mono text-orange-400">₹ 2,52,000</span>
+                            <div>
+                                <span class="block text-slate-200">Working Capital</span>
+                                <span class="text-xs text-slate-500">Raw materials & Electricity fund</span>
+                            </div>
+                            <span class="font-mono text-orange-400">₹ 1,65,000</span>
+                        </div>
+                        <div class="flex justify-between items-start border-b border-slate-700 pb-3">
+                            <span class="text-slate-200">Miscellaneous items</span>
+                            <span class="font-mono text-slate-300">₹ 30,000</span>
                         </div>
 
                         <div class="pt-4 mt-4 border-t border-slate-600 flex justify-between items-center">
-                            <span class="font-bold text-lg">Total Cost</span>
-                            <span class="font-bold text-xl text-orange-400">₹ 7,25,000</span>
+                            <span class="font-bold text-lg">Total Project Cost</span>
+                            <span class="font-bold text-xl text-orange-400">₹ 6,60,000</span>
                         </div>
                     </div>
                 </div>
@@ -352,25 +346,32 @@
                     <div class="space-y-6">
                         <div class="bg-slate-700/50 p-6 rounded-2xl">
                             <div class="flex justify-between mb-2">
-                                <span class="text-slate-300">Promoter's Contribution (10%)</span>
-                                <span class="font-mono font-bold">₹ 72,500</span>
+                                <span class="text-slate-300">Promoter Margin (20%)</span>
+                                <span class="font-mono font-bold">₹ 1,32,000</span>
                             </div>
                             <div class="w-full bg-slate-700 rounded-full h-2">
-                                <div class="bg-orange-500 h-2 rounded-full" style="width: 10%"></div>
+                                <div class="bg-orange-500 h-2 rounded-full" style="width: 20%"></div>
                             </div>
                         </div>
 
                         <div class="bg-slate-700/50 p-6 rounded-2xl">
                             <div class="flex justify-between mb-2">
-                                <span class="text-slate-300">Bank Loan (90%)</span>
-                                <span class="font-mono font-bold text-green-400">₹ 6,52,500</span>
+                                <span class="text-slate-300">Composite Bank Loan (80%)</span>
+                                <span class="font-mono font-bold text-green-400">₹ 5,28,000</span>
                             </div>
                             <div class="w-full bg-slate-700 rounded-full h-2">
-                                <div class="bg-green-500 h-2 rounded-full" style="width: 90%"></div>
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 80%"></div>
                             </div>
-                            <p class="text-xs text-slate-400 mt-2">
-                                Split: Term Loan (₹4.71L) + Working Capital (₹1.81L)
-                            </p>
+                            <div class="mt-4 grid grid-cols-2 gap-4">
+                                <div class="bg-slate-800 p-3 rounded-xl">
+                                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">Term Loan</p>
+                                    <p class="font-mono text-sm">₹ 3,63,000</p>
+                                </div>
+                                <div class="bg-slate-800 p-3 rounded-xl">
+                                    <p class="text-xs text-slate-500 uppercase tracking-wider mb-1">WC Loan</p>
+                                    <p class="font-mono text-sm">₹ 1,65,000</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -384,17 +385,14 @@
             <div class="flex flex-col md:flex-row justify-between items-end mb-10">
                 <div>
                     <h2 class="text-3xl font-bold text-slate-900">Profitability Projections</h2>
-                    <p class="mt-2 text-slate-600">5-Year financial outlook based on progressive capacity utilization.
-                    </p>
+                    <p class="mt-2 text-slate-600">5-Year financial outlook based on progressive production capacity.</p>
                 </div>
                 <div class="mt-4 md:mt-0">
                     <div class="inline-flex bg-slate-100 rounded-lg p-1">
-                        <button id="btn-overview"
-                            class="px-4 py-2 text-sm font-medium rounded-md transition-all tab-active">
+                        <button id="btn-overview" class="px-4 py-2 text-sm font-medium rounded-md transition-all tab-active">
                             Highlights
                         </button>
-                        <button id="btn-table"
-                            class="px-4 py-2 text-sm font-medium rounded-md transition-all tab-inactive">
+                        <button id="btn-table" class="px-4 py-2 text-sm font-medium rounded-md transition-all tab-inactive">
                             Detailed Table
                         </button>
                     </div>
@@ -409,19 +407,19 @@
                         <h4 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-200 pb-2">Year 1</h4>
                         <div class="space-y-3">
                             <div>
-                                <p class="text-xs text-slate-500 uppercase tracking-wide">Revenue</p>
-                                <p class="text-slate-800 font-semibold">₹ 5,39,000</p>
+                                <p class="text-xs text-slate-500 uppercase tracking-wide">Production</p>
+                                <p class="text-slate-800 font-semibold">13 KG</p>
                             </div>
                             <div>
                                 <p class="text-xs text-slate-500 uppercase tracking-wide">Net Profit</p>
-                                <p class="text-green-600 font-bold">₹ 2,79,225</p>
+                                <p class="text-green-600 font-bold">₹ 3,18,840</p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-200">
                         <div class="flex justify-between items-center">
                             <span class="text-xs font-medium text-slate-500">DSCR</span>
-                            <span class="text-sm font-bold px-2 py-1 rounded bg-yellow-100 text-yellow-700">2.07</span>
+                            <span class="text-sm font-bold px-2 py-1 rounded bg-yellow-100 text-yellow-700">2.72</span>
                         </div>
                     </div>
                 </div>
@@ -431,19 +429,19 @@
                         <h4 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-200 pb-2">Year 2</h4>
                         <div class="space-y-3">
                             <div>
-                                <p class="text-xs text-slate-500 uppercase tracking-wide">Revenue</p>
-                                <p class="text-slate-800 font-semibold">₹ 6,10,687</p>
+                                <p class="text-xs text-slate-500 uppercase tracking-wide">Production</p>
+                                <p class="text-slate-800 font-semibold">14 KG</p>
                             </div>
                             <div>
                                 <p class="text-xs text-slate-500 uppercase tracking-wide">Net Profit</p>
-                                <p class="text-green-600 font-bold">₹ 3,63,467</p>
+                                <p class="text-green-600 font-bold">₹ 3,97,969</p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-200">
                         <div class="flex justify-between items-center">
                             <span class="text-xs font-medium text-slate-500">DSCR</span>
-                            <span class="text-sm font-bold px-2 py-1 rounded bg-yellow-100 text-yellow-700">2.55</span>
+                            <span class="text-sm font-bold px-2 py-1 rounded bg-yellow-100 text-yellow-700">3.33</span>
                         </div>
                     </div>
                 </div>
@@ -453,19 +451,19 @@
                         <h4 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-200 pb-2">Year 3</h4>
                         <div class="space-y-3">
                             <div>
-                                <p class="text-xs text-slate-500 uppercase tracking-wide">Revenue</p>
-                                <p class="text-slate-800 font-semibold">₹ 6,86,190</p>
+                                <p class="text-xs text-slate-500 uppercase tracking-wide">Production</p>
+                                <p class="text-slate-800 font-semibold">15 KG</p>
                             </div>
                             <div>
                                 <p class="text-xs text-slate-500 uppercase tracking-wide">Net Profit</p>
-                                <p class="text-green-600 font-bold">₹ 4,48,795</p>
+                                <p class="text-green-600 font-bold">₹ 4,69,345</p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-200">
                         <div class="flex justify-between items-center">
                             <span class="text-xs font-medium text-slate-500">DSCR</span>
-                            <span class="text-sm font-bold px-2 py-1 rounded bg-green-100 text-green-700">3.12</span>
+                            <span class="text-sm font-bold px-2 py-1 rounded bg-green-100 text-green-700">3.97</span>
                         </div>
                     </div>
                 </div>
@@ -475,19 +473,19 @@
                         <h4 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-200 pb-2">Year 4</h4>
                         <div class="space-y-3">
                             <div>
-                                <p class="text-xs text-slate-500 uppercase tracking-wide">Revenue</p>
-                                <p class="text-slate-800 font-semibold">₹ 7,65,672</p>
+                                <p class="text-xs text-slate-500 uppercase tracking-wide">Production</p>
+                                <p class="text-slate-800 font-semibold">17 KG</p>
                             </div>
                             <div>
                                 <p class="text-xs text-slate-500 uppercase tracking-wide">Net Profit</p>
-                                <p class="text-green-600 font-bold">₹ 5,35,482</p>
+                                <p class="text-green-600 font-bold">₹ 5,41,769</p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-200">
                         <div class="flex justify-between items-center">
                             <span class="text-xs font-medium text-slate-500">DSCR</span>
-                            <span class="text-sm font-bold px-2 py-1 rounded bg-green-100 text-green-700">3.81</span>
+                            <span class="text-sm font-bold px-2 py-1 rounded bg-green-100 text-green-700">4.74</span>
                         </div>
                     </div>
                 </div>
@@ -497,19 +495,19 @@
                         <h4 class="text-lg font-bold text-slate-900 mb-4 border-b border-slate-200 pb-2">Year 5</h4>
                         <div class="space-y-3">
                             <div>
-                                <p class="text-xs text-slate-500 uppercase tracking-wide">Revenue</p>
-                                <p class="text-slate-800 font-semibold">₹ 8,49,315</p>
+                                <p class="text-xs text-slate-500 uppercase tracking-wide">Production</p>
+                                <p class="text-slate-800 font-semibold">19 KG</p>
                             </div>
                             <div>
                                 <p class="text-xs text-slate-500 uppercase tracking-wide">Net Profit</p>
-                                <p class="text-green-600 font-bold">₹ 6,23,770</p>
+                                <p class="text-green-600 font-bold">₹ 6,68,640</p>
                             </div>
                         </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-slate-200">
                         <div class="flex justify-between items-center">
                             <span class="text-xs font-medium text-slate-500">DSCR</span>
-                            <span class="text-sm font-bold px-2 py-1 rounded bg-green-100 text-green-700">4.65</span>
+                            <span class="text-sm font-bold px-2 py-1 rounded bg-green-600 text-white">6.12</span>
                         </div>
                     </div>
                 </div>
@@ -520,65 +518,70 @@
                 <table class="min-w-full divide-y divide-slate-200 bg-white text-sm">
                     <thead class="bg-slate-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                Particulars</th>
-                            <th
-                                class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                Year 1</th>
-                            <th
-                                class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                Year 2</th>
-                            <th
-                                class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                Year 3</th>
-                            <th
-                                class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                Year 4</th>
-                            <th
-                                class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
-                                Year 5</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Particulars</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Year 1</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Year 2</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Year 3</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Year 4</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">Year 5</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200">
                         <tr>
                             <td class="px-6 py-4 font-medium text-slate-900">Production (KG)</td>
-                            <td class="px-6 py-4 text-right">11</td>
-                            <td class="px-6 py-4 text-right">12</td>
                             <td class="px-6 py-4 text-right">13</td>
                             <td class="px-6 py-4 text-right">14</td>
                             <td class="px-6 py-4 text-right">15</td>
+                            <td class="px-6 py-4 text-right">17</td>
+                            <td class="px-6 py-4 text-right">19</td>
                         </tr>
                         <tr>
-                            <td class="px-6 py-4 font-medium text-slate-900">Total Revenue</td>
-                            <td class="px-6 py-4 text-right">₹ 5,39,000</td>
-                            <td class="px-6 py-4 text-right">₹ 6,10,687</td>
-                            <td class="px-6 py-4 text-right">₹ 6,86,190</td>
-                            <td class="px-6 py-4 text-right">₹ 7,65,672</td>
-                            <td class="px-6 py-4 text-right">₹ 8,49,315</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">Sale Price (per KG)</td>
+                            <td class="px-6 py-4 text-right">₹ 43,000</td>
+                            <td class="px-6 py-4 text-right">₹ 44,290</td>
+                            <td class="px-6 py-4 text-right">₹ 45,619</td>
+                            <td class="px-6 py-4 text-right">₹ 46,988</td>
+                            <td class="px-6 py-4 text-right">₹ 48,398</td>
                         </tr>
                         <tr>
-                            <td class="px-6 py-4 font-medium text-slate-900">Total Expenses</td>
-                            <td class="px-6 py-4 text-right text-red-500">(₹ 1,88,000)</td>
-                            <td class="px-6 py-4 text-right text-red-500">(₹ 1,89,800)</td>
-                            <td class="px-6 py-4 text-right text-red-500">(₹ 1,94,330)</td>
-                            <td class="px-6 py-4 text-right text-red-500">(₹ 2,01,481)</td>
-                            <td class="px-6 py-4 text-right text-red-500">(₹ 2,11,190)</td>
+                            <td class="px-6 py-4 font-bold text-slate-900">Total Revenue</td>
+                            <td class="px-6 py-4 text-right font-bold">₹ 5,59,000</td>
+                            <td class="px-6 py-4 text-right font-bold">₹ 6,33,347</td>
+                            <td class="px-6 py-4 text-right font-bold">₹ 7,02,528</td>
+                            <td class="px-6 py-4 text-right font-bold">₹ 7,75,295</td>
+                            <td class="px-6 py-4 text-right font-bold">₹ 9,05,036</td>
                         </tr>
                         <tr>
-                            <td class="px-6 py-4 font-medium text-slate-900">Interest</td>
-                            <td class="px-6 py-4 text-right text-red-500">(₹ 71,775)</td>
-                            <td class="px-6 py-4 text-right text-red-500">(₹ 57,420)</td>
-                            <td class="px-6 py-4 text-right text-red-500">(₹ 43,065)</td>
+                            <td class="px-6 py-4 font-medium text-slate-900">Operational Exp.</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 1,35,000)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 1,48,500)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 1,63,350)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 1,79,685)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 1,97,654)</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-slate-900">Depreciation</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 55,000)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 46,750)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 39,738)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 33,777)</td>
                             <td class="px-6 py-4 text-right text-red-500">(₹ 28,710)</td>
-                            <td class="px-6 py-4 text-right text-red-500">(₹ 14,355)</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 font-medium text-slate-900">Interest on Loan</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 50,160)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 40,128)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 30,096)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 20,064)</td>
+                            <td class="px-6 py-4 text-right text-red-500">(₹ 10,032)</td>
                         </tr>
                         <tr class="bg-green-50">
-                            <td class="px-6 py-4 font-bold text-slate-900">NET PROFIT</td>
-                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 2,79,225</td>
-                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 3,63,467</td>
-                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 4,48,795</td>
-                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 5,35,482</td>
-                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 6,23,770</td>
+                            <td class="px-6 py-4 font-bold text-slate-900 uppercase">NET PROFIT</td>
+                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 3,18,840</td>
+                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 3,97,969</td>
+                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 4,69,345</td>
+                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 5,41,769</td>
+                            <td class="px-6 py-4 text-right font-bold text-green-700">₹ 6,68,640</td>
                         </tr>
                     </tbody>
                 </table>
@@ -586,9 +589,9 @@
 
             <div class="mt-8 text-center">
                 <p class="text-slate-500 text-sm">
-                    Average Debt Service Coverage Ratio (DSCR): <span class="font-bold text-slate-900">3.24</span>
+                    Average Debt Service Coverage Ratio (DSCR): <span class="font-bold text-slate-900">4.18</span>
                     <span class="mx-2">•</span>
-                    Repayment Period: <span class="font-bold text-slate-900">5 Years</span>
+                    Repayment Period: <span class="font-bold text-slate-900">5 Years (Quarterly Principal: ₹26,400)</span>
                 </p>
             </div>
         </div>
@@ -599,9 +602,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid md:grid-cols-2 gap-8 mb-8">
                 <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <i data-lucide="leaf" class="h-6 w-6 text-orange-500"></i>
-                        <span class="text-xl font-bold text-white tracking-tight">Swabhimaan Bio</span>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <!-- Logo Image -->
+                        <img src="logo.png" 
+                             alt="Swabhimaan Bio Logo" 
+                             class="h-10 w-10 rounded-lg object-cover shadow-sm border border-slate-700"
+                             onerror="this.src='https://via.placeholder.com/40?text=SB'">
                     </div>
                     <p class="mb-2">Submitted By: <span class="text-white">Mrs. Rajni Sheetal (Proprietor)</span></p>
                     <p class="mb-2">Spouse Name: <span class="text-white">Mr. Kamal Kumar Sharma</span></p>
@@ -609,14 +615,14 @@
                 </div>
                 <div class="md:text-right">
                     <h4 class="text-white font-bold mb-4">Submitted To</h4>
-                    <p>The Branch Manager</p>
+                    <p class="text-white font-medium">The Branch Manager</p>
                     <p class="text-white font-medium">Punjab National Bank</p>
                     <p>Jol Sapar, Hamirpur Branch</p>
                 </div>
             </div>
 
             <div class="border-t border-slate-800 pt-8 text-xs text-center">
-                <p>DISCLAIMER: This report is prepared based on market assumptions. Actual results may vary.</p>
+                <p>DISCLAIMER: This report is prepared based on market assumptions. Actual results may vary depending on crop yield and market rates.</p>
                 <p class="mt-2">Document intended for bank appraisal purposes under MSME scheme.</p>
             </div>
         </div>
@@ -630,17 +636,16 @@
         // Mobile Menu Logic
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
-        const menuIcon = menuBtn.querySelector('i');
         let isMenuOpen = false;
 
         menuBtn.addEventListener('click', () => {
             isMenuOpen = !isMenuOpen;
             if (isMenuOpen) {
                 mobileMenu.classList.remove('hidden');
-                menuIcon.setAttribute('data-lucide', 'x');
+                menuBtn.innerHTML = '<i data-lucide="x"></i>';
             } else {
                 mobileMenu.classList.add('hidden');
-                menuIcon.setAttribute('data-lucide', 'menu');
+                menuBtn.innerHTML = '<i data-lucide="menu"></i>';
             }
             lucide.createIcons();
         });
@@ -650,7 +655,7 @@
             link.addEventListener('click', () => {
                 isMenuOpen = false;
                 mobileMenu.classList.add('hidden');
-                menuIcon.setAttribute('data-lucide', 'menu');
+                menuBtn.innerHTML = '<i data-lucide="menu"></i>';
                 lucide.createIcons();
             });
         });
@@ -663,20 +668,18 @@
 
         function switchTab(tab) {
             if (tab === 'overview') {
-                btnOverview.classList.add('tab-active', 'bg-white', 'shadow-sm', 'text-slate-900');
-                btnOverview.classList.remove('tab-inactive', 'text-slate-500');
-
-                btnTable.classList.add('tab-inactive', 'text-slate-500');
-                btnTable.classList.remove('tab-active', 'bg-white', 'shadow-sm', 'text-slate-900');
+                btnOverview.classList.add('tab-active');
+                btnOverview.classList.remove('tab-inactive');
+                btnTable.classList.add('tab-inactive');
+                btnTable.classList.remove('tab-active');
 
                 contentOverview.classList.remove('hide');
                 contentTable.classList.add('hide');
             } else {
-                btnTable.classList.add('tab-active', 'bg-white', 'shadow-sm', 'text-slate-900');
-                btnTable.classList.remove('tab-inactive', 'text-slate-500');
-
-                btnOverview.classList.add('tab-inactive', 'text-slate-500');
-                btnOverview.classList.remove('tab-active', 'bg-white', 'shadow-sm', 'text-slate-900');
+                btnTable.classList.add('tab-active');
+                btnTable.classList.remove('tab-inactive');
+                btnOverview.classList.add('tab-inactive');
+                btnOverview.classList.remove('tab-active');
 
                 contentTable.classList.remove('hide');
                 contentOverview.classList.add('hide');
@@ -688,5 +691,4 @@
 
     </script>
 </body>
-
 </html>
