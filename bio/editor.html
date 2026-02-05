@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Letterhead Editor - Atish Ak Sharma</title>
+<title>Letterhead - Atish Ak Sharma</title>
 <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
 <style>
 body{
@@ -114,9 +114,10 @@ button:hover{background:#1d4ed8}
 <div class="panel">
 
   <h3>Logo</h3>
-  <input type="file" id="logoInput" accept="image/*">
+  <p style="font-size:12px;">Using demo image: <b>logo.png</b> (replace this file in same folder)</p>
 
   <label>Logo Size</label>
+
   <input type="range" id="logoSize" min="40" max="200" value="100">
 
   <label>Logo Box Width</label>
@@ -124,14 +125,17 @@ button:hover{background:#1d4ed8}
 
   <label>Logo Box Height</label>
   <input type="range" id="boxHeight" min="60" max="200" value="120">
+
   <h3>Address Editor</h3>
+
   <div style="display:flex; gap:6px; margin-bottom:6px;">
     <button type="button" onclick="formatAddress('bold')">Bold</button>
     <button type="button" onclick="formatAddress('italic')">Italic</button>
     <button type="button" onclick="formatAddress('underline')">Underline</button>
   </div>
-  <div id="addressInput" contenteditable="true" style="border:1px solid #ccc; padding:8px; min-height:140px;">
-<b>SWABHIMAAN BIO</b><br><b>Proprietor:</b> Mrs. Rajni Sheetal<br><b>Address:</b> Village Bahn, PO - Rangas,<br> Tehsil - Nadaun, District-Hamirpur,<br> Himachal Pradesh - 177048<br><b>Phone:</b> +91-7018604098
+
+ <div id="addressInput" contenteditable="true" style="border:1px solid #ccc; padding:8px; min-height:140px;">
+<b><i>SWABHIMAAN BIO</i></b><br><b>Proprietor:</b> Mrs. Rajni Sheetal<br><b>Address:</b> Village Bahn, PO - Rangas,<br> Tehsil - Nadaun, District - Hamirpur,<br> Himachal Pradesh - 177048<br><b>Phone:</b> +91-7018604098
   </div>
 
   <label>Alignment</label>
@@ -161,7 +165,7 @@ button:hover{background:#1d4ed8}
   <div class="header">
 
     <div class="logo-box" id="logoBox">
-      <img id="logoPreview">
+      <img id="logoPreview" src="logo.png" alt="Logo">
     </div>
 
     <div class="address" id="addressPreview"></div>
@@ -169,8 +173,8 @@ button:hover{background:#1d4ed8}
   </div>
 
   <div class="meta-row" style="display:flex; justify-content:space-between; margin-top:12px; font-size:14px;">
-    <div><b>Ref. No.:</b> <span contenteditable="true" style="min-width:220px; display:inline-block; font-size:18px;">______________________</span></div>
-    <div><b>Date:</b> <span contenteditable="true" style="min-width:150px; display:inline-block; font-size:18px;">_____ /_____ /__________</span></div>
+    <div><b>Ref. No.:</b> <span contenteditable="true" style="min-width:220px; display:inline-block; font-size:18px;">________________________</span></div>
+    <div><b>Date:</b> <span contenteditable="true" style="min-width:180px; display:inline-block; font-size:18px;">______ /______ /_________</span></div>
   </div>
 
   <div id="bodyContent" contenteditable="true" style="margin-top:25px; min-height:235mm; border:1px dashed #ccc; padding:10px; font-size:13px; line-height:1.6;">
@@ -190,14 +194,7 @@ const addressInput = document.getElementById('addressInput');
 // initial sync
 addressPreview.innerHTML = addressInput.innerHTML;
 
-// Upload logo
-document.getElementById('logoInput').addEventListener('change', e=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ()=> logo.src = reader.result;
-  reader.readAsDataURL(file);
-});
+
 
 // Resize logo
 document.getElementById('logoSize').addEventListener('input', e=>{
