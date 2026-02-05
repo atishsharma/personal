@@ -85,8 +85,8 @@
     }
 
     .logo-box {
-      width: 280px;
-      height: 140px;
+      width: 300px;
+      height: 120px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -132,25 +132,20 @@
       <h3>Logo</h3>
 
       <label>Logo Size</label>
-
-      <input type="range" id="logoSize" min="40" max="200" value="100">
-
+      <input type="range" id="logoSize" min="40" max="300" value="100">
       <label>Logo Box Width</label>
-      <input type="range" id="boxWidth" min="80" max="300" value="180">
-
+      <input type="range" id="boxWidth" min="80" max="300" value="300">
       <label>Logo Box Height</label>
       <input type="range" id="boxHeight" min="60" max="200" value="120">
-
+      
       <h3>Address Editor</h3>
-
       <div style="display:flex; gap:6px; margin-bottom:6px;">
         <button type="button" onclick="formatAddress('bold')">B</button>
         <button type="button" onclick="formatAddress('italic')">I</button>
         <button type="button" onclick="formatAddress('underline')">U</button>
       </div>
-
       <div id="addressInput" contenteditable="true" style="border:1px solid #ccc; padding:8px; min-height:140px;">
-        <b><i>SWABHIMAAN BIO</i></b><br><b>Proprietor:</b> Mrs. Rajni Sheetal<br><b>Address:</b>Vill.- Bahn,PO - Rangas,<br>Tehsil - Nadaun, District - Hamirpur,<br> Himachal Pradesh - 177048<br><b>Phone:</b> +91-7018604098
+        <b><i>SWABHIMAAN BIO</i></b><br><b>Proprietor:</b> Mrs. Rajni Sheetal<br><b>Address: </b>Vill.- Bahn,PO - Rangas,<br>Tehsil - Nadaun, District - Hamirpur,<br> Himachal Pradesh - 177048<br><b>Phone:</b> +91-7018604098
       </div>
 
       <label>Alignment</label>
@@ -189,9 +184,9 @@
 
       <div class="meta-row" style="display:flex; justify-content:space-between; margin-top:12px; font-size:14px;">
         <div><b>Ref. No.:</b> <span contenteditable="true"
-            style="min-width:220px; display:inline-block; font-size:18px;">________________________</span></div>
+            style="min-width:220px; display:inline-block; font-size:18px;">              </span></div>
         <div><b>Date:</b> <span contenteditable="true"
-            style="min-width:180px; display:inline-block; font-size:18px;">______ /______ /_________</span></div>
+            style="min-width:180px; display:inline-block; font-size:18px;">    /    /      </span></div>
       </div>
 
       <div id="bodyContent" contenteditable="true"
