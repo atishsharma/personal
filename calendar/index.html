@@ -471,7 +471,7 @@
             </div>
         </div>
 
-        <div id="calendar-week-labels" class="grid grid-cols-7 text-center py-5 bg-zinc-900/50 text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em]" onclick="event.stopPropagation()"></div>
+        <div id="calendar-week-labels" class="grid grid-cols-7 text-center py-2 bg-zinc-900 text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em]" onclick="event.stopPropagation()"></div>
         <div id="calendar-body" class="flex-1 overflow-y-auto calendar-grid scroll-hide" onclick="event.stopPropagation()"></div>
         
         <div class="p-4 bg-zinc-900 border-t border-zinc-200/10 flex flex-wrap gap-2 text-[8px] font-bold justify-center" onclick="event.stopPropagation()">
@@ -676,7 +676,6 @@
             const tithiIdx = isTarget ? 10 : (seed % 16);
             setText('widget-tithi', `${dict.tithis[tithiIdx]} (${getSolarDay(now)})`);
 
-            // Muhurat & Festival Combined Tag Box
             const mBox = document.getElementById('widget-muhurat-box');
             if (mBox) {
                 mBox.innerHTML = '';
@@ -766,6 +765,11 @@
             const widgetView = document.getElementById('widget-view');
             fullCal.classList.toggle('active'); 
             if(fullCal.classList.contains('active')) {
+                // Logic Fix: Always open current day month view every time
+                const today = new Date();
+                selectedMonth = today.getMonth();
+                selectedYear = today.getFullYear();
+
                 renderCalendar(); 
                 widgetView.style.opacity = '0';
                 setTimeout(() => widgetView.style.visibility = 'hidden', 400);
@@ -792,15 +796,25 @@
             setText('current-month-year', `${date.toLocaleString(currentLang, { month: 'long' })} ${selectedYear}`);
             const solarSign = dict.rashis[selectedMonth % 12];
             setText('calendar-lunar-months', `${dict.months[selectedMonth % 12]} / ${solarSign} Solar Month`);
+            
+            const today = new Date();
+            const isThisMonth = (selectedYear === today.getFullYear() && selectedMonth === today.getMonth());
             const weekCont = document.getElementById('calendar-week-labels');
-            if (weekCont) weekCont.innerHTML = dict.shortDays.map(d => `<div>${d}</div>`).join('');
+            if (weekCont) {
+                weekCont.innerHTML = dict.shortDays.map((d, i) => {
+                    // Logic Fix: Highlight current weekday column label
+                    const isTodayColumn = isThisMonth && (i === today.getDay());
+                    return `<div class="py-3 ${isTodayColumn ? 'text-blue-400 bg-white/5' : 'text-zinc-400'}">${d}</div>`;
+                }).join('');
+            }
+
             const firstDay = new Date(selectedYear, selectedMonth, 1).getDay();
             const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
             for(let i = 0; i < firstDay; i++) body.appendChild(Object.assign(document.createElement('div'), {className: 'calendar-day opacity-20 bg-zinc-800/30'}));
             for(let d = 1; d <= daysInMonth; d++) {
                 const dayEl = document.createElement('div');
                 const tempDate = new Date(selectedYear, selectedMonth, d);
-                const isToday = tempDate.toDateString() === new Date().toDateString();
+                const isToday = tempDate.toDateString() === today.toDateString();
                 const mData = getMuhurats(tempDate);
                 const key = tempDate.toISOString().split('T')[0];
                 const solarDayNum = getSolarDay(tempDate);
