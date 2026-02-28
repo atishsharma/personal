@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedic Path - Hindu Calendar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --deep-saffron: #FF6600;
+            --gold: #D4AF37;
+            --dark-maroon: #4A0E0E;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fdf5e6;
+            color: #333;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            transition: background 0.3s ease;
+        }
+
+        .heading-font {
+            font-family: 'Marcellus', serif;
+        }
+
+        /* Widget Mode Styling */
+        .widget-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #fff5e6 100%);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 2px solid var(--saffron);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .widget-header {
+            background: var(--saffron);
+            padding: 15px;
+            color: white;
+            text-align: center;
+        }
+
+        /* Full Screen Flip-out */
+        .full-calendar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 50;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .full-calendar-overlay.active {
+            transform: translateY(0);
+        }
+
+        /* Calendar Grid */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: #eee;
+            border: 1px solid #ddd;
+        }
+
+        .calendar-day {
+            background: white;
+            min-height: 80px;
+            padding: 8px;
+            font-size: 0.8rem;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .calendar-day:hover {
+            background-color: #fff9f0;
+        }
+
+        .calendar-day.today {
+            background-color: #fff5e6;
+            border: 2px solid var(--saffron);
+        }
+
+        .calendar-day.festival {
+            background-color: #fff0f0;
+        }
+
+        .festival-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--deep-saffron);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 2px;
+        }
+
+        /* Om Icon Animation */
+        .om-spinner {
+            animation: slowRotate 20s linear infinite;
+        }
+
+        @keyframes slowRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .btn-shubh {
+            background: linear-gradient(to right, var(--saffron), var(--deep-saffron));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 153, 51, 0.4);
+        }
+
+        .scroll-hide::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-[#FFFBF2]">
+
+    <!-- Widget View (Home) -->
+    <div id="widget-view" class="p-4 flex flex-col items-center justify-center min-h-screen">
+        <div class="widget-container">
+            <div class="widget-header">
+                <h2 class="heading-font text-xl font-bold">Vedic Path</h2>
+                <p id="widget-date" class="text-xs opacity-90">Feb 28, 2026</p>
+            </div>
+            
+            <div class="p-6 text-center">
+                <div class="mb-4 relative inline-block">
+                    <svg class="om-spinner w-20 h-20 text-[#FF9933] opacity-20 absolute top-0 left-0" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12.44 1.15c-.47-.13-.97-.15-1.44-.06-1.55.3-2.65 1.57-2.65 3.06 0 .54.14 1.05.38 1.49-.63-.12-1.28-.13-1.92.01-1.4.3-2.39 1.4-2.58 2.75-.07.47-.05.94.06 1.4-.41-.12-.84-.17-1.28-.15-1.52.06-2.73 1.19-2.93 2.65-.07.49-.04.99.09 1.47-.28-.08-.57-.13-.87-.14-1.51-.04-2.78.99-3.08 2.4-.33 1.57.54 3.16 2.05 3.73 1.51.57 3.23-.05 4.04-1.46.25-.43.41-.91.46-1.41.4.15.82.25 1.25.29 1.52.12 2.87-.84 3.21-2.26.11-.46.14-.93.09-1.4.45.1.92.14 1.4.11 1.52-.09 2.76-1.21 2.97-2.67.07-.48.06-.97-.03-1.44.47.11.96.16 1.46.13 1.52-.08 2.78-1.18 3.01-2.63.26-1.58-.65-3.14-2.18-3.66-1.53-.52-3.23.14-4 1.58-.23.42-.37.89-.42 1.37-.4-.14-.81-.23-1.24-.26-1.52-.11-2.88.85-3.21 2.27-.1.45-.13.92-.08 1.39-.46-.11-.94-.16-1.43-.13-1.52.09-2.76 1.21-2.97 2.67-.07.49-.05.98.05 1.45-.48-.12-.99-.17-1.5-.15-1.53.07-2.78 1.2-2.98 2.67-.22 1.59.73 3.12 2.27 3.59 1.54.47 3.2-.23 3.94-1.65.23-.44.36-.92.39-1.42.42.16.86.27 1.32.31 1.52.14 2.89-.82 3.24-2.23.11-.47.13-.95.07-1.42.48.11.97.16 1.48.13 1.52-.09 2.77-1.19 3-2.65.25-1.58-.66-3.13-2.19-3.65-1.54-.52-3.23.15-4 1.59z"/>
+                    </svg>
+                    <div class="text-4xl py-6 font-bold text-gray-800 z-10 relative">ॐ</div>
+                </div>
+                
+                <h3 id="widget-tithi" class="text-2xl font-bold text-amber-900 mb-1">Magha Shukla Ekadashi</h3>
+                <p id="widget-nakshatra" class="text-sm text-gray-600 mb-4">Nakshatra: Rohini</p>
+                
+                <div class="grid grid-cols-2 gap-2 text-xs mb-6">
+                    <div class="bg-orange-50 p-2 rounded-lg">
+                        <span class="block text-gray-500">Sunrise</span>
+                        <span class="font-semibold" id="w-sunrise">06:44 AM</span>
+                    </div>
+                    <div class="bg-orange-50 p-2 rounded-lg">
+                        <span class="block text-gray-500">Sunset</span>
+                        <span class="font-semibold" id="w-sunset">06:18 PM</span>
+                    </div>
+                </div>
+
+                <button onclick="toggleCalendar()" class="btn-shubh w-full py-3 rounded-xl font-semibold transition hover:scale-105 active:scale-95">
+                    View Full Calendar
+                </button>
+            </div>
+        </div>
+        
+        <p class="mt-8 text-sm text-gray-400">© 2026 Vedic Path Digital</p>
+    </div>
+
+    <!-- Full Screen Calendar Overlay -->
+    <div id="full-calendar" class="full-calendar-overlay">
+        <!-- Sticky Header -->
+        <div class="p-4 border-b flex items-center justify-between bg-white sticky top-0 z-20">
+            <button onclick="toggleCalendar()" class="p-2 text-gray-500 hover:text-orange-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="text-center">
+                <h2 id="current-month-year" class="heading-font text-xl font-bold text-orange-800">February 2026</h2>
+                <p class="text-[10px] uppercase tracking-widest text-gray-400">Phalguna / Chaitra</p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="changeMonth(-1)" class="p-2 bg-gray-100 rounded-full">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button onclick="changeMonth(1)" class="p-2 bg-gray-100 rounded-full">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Days Labels -->
+        <div class="grid grid-cols-7 text-center py-2 bg-orange-50 text-[10px] font-bold text-orange-400 uppercase">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        </div>
+
+        <!-- Calendar Body -->
+        <div id="calendar-body" class="flex-1 overflow-y-auto calendar-grid scroll-hide">
+            <!-- Days will be injected here -->
+        </div>
+
+        <!-- Panchang Detail Panel (Hidden by default) -->
+        <div id="day-detail" class="fixed bottom-0 left-0 w-full bg-white rounded-t-3xl shadow-2xl p-6 transform translate-y-full transition-transform duration-300 z-30">
+            <div class="w-12 h-1 bg-gray-200 rounded-full mx-auto mb-4" onclick="closeDetail()"></div>
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h2 id="detail-date" class="text-2xl font-bold text-gray-800">28 Feb</h2>
+                    <p id="detail-tithi" class="text-orange-600 font-semibold">Shukla Ekadashi</p>
+                </div>
+                <div class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-bold" id="detail-paksha">
+                    Shukla Paksha
+                </div>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="flex justify-between border-b pb-2">
+                    <span class="text-gray-500">Nakshatra</span>
+                    <span class="font-medium" id="detail-nakshatra">Rohini</span>
+                </div>
+                <div class="flex justify-between border-b pb-2">
+                    <span class="text-gray-500">Yoga</span>
+                    <span class="font-medium" id="detail-yoga">Preeti</span>
+                </div>
+                <div class="flex justify-between border-b pb-2">
+                    <span class="text-gray-500">Karana</span>
+                    <span class="font-medium" id="detail-karana">Vanija</span>
+                </div>
+                <div class="flex justify-between pt-2">
+                    <span class="text-gray-500">Rahu Kaal</span>
+                    <span class="font-medium text-red-500" id="detail-rahu">09:12 - 10:45</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- State ---
+        let currentDate = new Date();
+        let selectedMonth = currentDate.getMonth();
+        let selectedYear = currentDate.getFullYear();
+
+        const festivals = {
+            "2026-02-28": "Jaya Ekadashi",
+            "2026-03-03": "Holi / Phalguna Purnima",
+            "2026-03-19": "Chaitra Navratri Begins",
+            "2026-03-27": "Ram Navami",
+            "2026-04-02": "Hanuman Jayanti",
+        };
+
+        const tithis = ["Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi", "Purnima", "Amavasya"];
+        const nakshatras = ["Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra", "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha", "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"];
+
+        // --- Functions ---
+
+        function init() {
+            updateWidget();
+            renderCalendar();
+        }
+
+        function toggleCalendar() {
+            const overlay = document.getElementById('full-calendar');
+            overlay.classList.toggle('active');
+            if(overlay.classList.contains('active')) {
+                renderCalendar();
+            }
+        }
+
+        function updateWidget() {
+            const now = new Date();
+            const options = { day: 'numeric', month: 'long', year: 'numeric' };
+            document.getElementById('widget-date').innerText = now.toLocaleDateString('en-IN', options);
+            
+            // Simulated Vedic Calculation for Feb 28 2026
+            document.getElementById('widget-tithi').innerText = "Magha Shukla Ekadashi";
+            document.getElementById('widget-nakshatra').innerText = "Nakshatra: Rohini";
+        }
+
+        function changeMonth(delta) {
+            selectedMonth += delta;
+            if (selectedMonth > 11) {
+                selectedMonth = 0;
+                selectedYear++;
+            } else if (selectedMonth < 0) {
+                selectedMonth = 11;
+                selectedYear--;
+            }
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const body = document.getElementById('calendar-body');
+            const monthYear = document.getElementById('current-month-year');
+            body.innerHTML = '';
+
+            const date = new Date(selectedYear, selectedMonth, 1);
+            const monthName = date.toLocaleString('default', { month: 'long' });
+            monthYear.innerText = `${monthName} ${selectedYear}`;
+
+            // First day offset
+            const firstDay = new Date(selectedYear, selectedMonth, 1).getDay();
+            const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+
+            // Padding days
+            for (let i = 0; i < firstDay; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day bg-gray-50';
+                body.appendChild(empty);
+            }
+
+            // Month days
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dayEl = document.createElement('div');
+                const dateKey = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+                
+                const isToday = new Date().toDateString() === new Date(selectedYear, selectedMonth, d).toDateString();
+                const festival = festivals[dateKey];
+                
+                dayEl.className = `calendar-day ${isToday ? 'today' : ''} ${festival ? 'festival' : ''}`;
+                
+                // Tithi simulation (loops 1-15 twice monthly roughly)
+                const tithiIdx = (d + (selectedMonth * 2)) % 15;
+                const paksha = d < 15 ? "S" : "K";
+
+                dayEl.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <span class="font-bold ${isToday ? 'text-orange-600' : 'text-gray-700'}">${d}</span>
+                        <span class="text-[9px] text-orange-400 font-bold">${paksha}${tithiIdx + 1}</span>
+                    </div>
+                    ${festival ? `<div class="mt-1 text-[8px] leading-tight text-red-600 font-bold"><span class="festival-dot"></span>${festival}</div>` : ''}
+                `;
+
+                dayEl.onclick = () => openDetail(d, tithiIdx, paksha, festival);
+                body.appendChild(dayEl);
+            }
+        }
+
+        function openDetail(day, tithiIdx, paksha, festival) {
+            const panel = document.getElementById('day-detail');
+            const monthName = new Date(selectedYear, selectedMonth, 1).toLocaleString('default', { month: 'short' });
+            
+            document.getElementById('detail-date').innerText = `${day} ${monthName} ${selectedYear}`;
+            document.getElementById('detail-tithi').innerText = (festival ? `${festival} (${tithis[tithiIdx]})` : tithis[tithiIdx]);
+            document.getElementById('detail-paksha').innerText = paksha === "S" ? "Shukla Paksha" : "Krishna Paksha";
+            
+            // Randomize others for demo purposes (usually calculated from ephemeris)
+            document.getElementById('detail-nakshatra').innerText = nakshatras[day % 27];
+            document.getElementById('detail-yoga').innerText = "Auspicious (Preeti)";
+            document.getElementById('detail-karana').innerText = "Vanija";
+            document.getElementById('detail-rahu').innerText = "11:30 AM - 01:00 PM";
+
+            panel.style.transform = "translateY(0)";
+        }
+
+        function closeDetail() {
+            document.getElementById('day-detail').style.transform = "translateY(100%)";
+        }
+
+        // Initialize on load
+        window.onload = init;
+    </script>
+</body>
+</html>
