@@ -6,11 +6,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Hindu Calendar">
-    <title>Hindu Calendar</title>
+    <title>Ats's Hindu Calendar</title>
     <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     
-    <!-- Optimized Manifest for Fullscreen Edge-to-Edge -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkhpbmR1IENhbGVuZGFyIiwKICAic2hvcnRfbmFtZSI6ICJIaW5kdSBDYWwiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAiZnVsbHNjcmVlbiIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzAwMDAwMCIsCiAgInRoZW1lX2NvbG9yIjogIiMwMDAwMDAiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL3Bicy50d2ltZy5jb20vcHJvZmlsZV9pbWFnZXMvMTUzMDE4NDQzOTQwOTgxNTU1My9zdEF0WnZ5cF80MDB4NDAwLmpwZyIsCiAgICAgICJzaXplcyI6ICI0MDB4NDAwIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvanBlZyIKICAgIH0KICBdCn0=">
+    <!-- Optimized Manifest: Full Name for Splash/Install, Short Name for App Drawer -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkF0cydzIEhpbmR1IENhbGVuZGFyIiwKICAic2hvcnRfbmFtZSI6ICJIaW5kdSBDYWxlbmRhciIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJmdWxsc2NyZWVuIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDAwMDAwIiwKICAidGhlbWVfY29sb3IiOiAiIzAwMDAwMCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vcGJzLnR3aW1nLmNvbS9wcm9maWxlX2ltYWdlcy8xNTMwMTg0NDM5NDA5ODE1NTUzL3N0QXRadnlwXzQwMHg0MDAuanBnIiwKICAgICAgInNpemVzIjogIjQwMHg0MDAiLAogICAgICAidHlwZSI6ICJpbWFnZS9qcGVnIgogICAgfQogIF0KfQ==">
     
     <link rel="apple-touch-icon" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
 
@@ -154,7 +154,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 2px;
-            border: 1px solid rgba(255,255,255,0.5); /* 1px Outline */
+            border: 1px solid rgba(255,255,255,0.5);
         }
 
         .block-month { 
@@ -163,7 +163,7 @@
             text-transform: uppercase; 
             letter-spacing: 2px; 
             line-height: 1.1; 
-            border-bottom: 1px solid rgba(255,255,255,0.3); /* 1px Outline */
+            border-bottom: 1px solid rgba(255,255,255,0.3); 
         }
         .block-year { font-size: 13px; font-weight: 600; opacity: 0.9; letter-spacing: 4px; line-height: 1.1; }
         .block-hindu-year { font-size: 10px; font-weight: 800; opacity: 0.75; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
@@ -316,7 +316,7 @@
         <div class="flex items-start gap-4 mb-4">
             <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" class="w-12 h-12 rounded-xl" alt="App Icon">
             <div class="flex-1">
-                <h4 class="font-bold text-lg leading-tight">Install Hindu Calendar</h4>
+                <h4 class="font-bold text-lg leading-tight">Install Ats's Hindu Calendar</h4>
                 <p class="text-xs text-zinc-400 mt-1" id="install-instr">Install this app on your home screen for quick access and full-screen experience.</p>
             </div>
             <button onclick="closeInstallPrompt()" class="p-1 opacity-50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
@@ -344,7 +344,7 @@
         <div id="main-widget-container" class="widget-container" onclick="event.stopPropagation()">
             <div id="widget-content-animator" class="widget-content-wrapper">
                 <div class="header-top">
-                    <span id="app-title-label" class="heading-font text-[14px] font-bold uppercase tracking-[0.3em] text-white">Hindu Calendar</span>
+                    <span id="app-title-label" class="heading-font text-[14px] font-bold uppercase tracking-[0.3em] text-white">Ats's Hindu Calendar</span>
                 </div>
 
                 <div class="date-section">
@@ -423,10 +423,10 @@
             </div>
         </div>
         
-        <p class="mt-8 text-[10px] text-zinc-500 uppercase tracking-[0.6em] font-black opacity-40 text-center w-full">Hindu Calendar</p>
+        <p class="mt-8 text-[10px] text-zinc-500 uppercase tracking-[0.6em] font-black opacity-40 text-center w-full">2026 • Ats's Hindu Calendar</p>
     </div>
 
-    <!-- Date Picker Modal -->
+    <!-- Combined Date Picker Modal -->
     <div id="date-picker-modal" class="hidden fixed inset-0 bg-black/70 z-[200] flex items-center justify-center backdrop-blur-md">
         <div class="modal bg-white p-8 rounded-[32px] w-[90%] max-w-[340px]" id="date-picker-content" onclick="event.stopPropagation()">
             <h3 class="heading-font text-2xl font-bold mb-6 text-center text-[var(--text)]" id="label-picker-title">Select Date</h3>
@@ -511,7 +511,7 @@
     <script>
         const I18N = {
             en: {
-                title: "Hindu Calendar", live: "Live", dailyPanc: "Daily Panchang", openCal: "Open Calendar",
+                title: "Ats's Hindu Calendar", live: "Live", dailyPanc: "Daily Panchang", openCal: "Open Calendar",
                 nak: "Nakshatra", yog: "Yoga", kar: "Karana", signs: "Signs", rahu: "Rahu Kaal",
                 ritu: "Ritu", vSamvat: "Vikram Samvat",
                 tithis: ["Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami", "Jaya Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi", "Purnima", "Amavasya"],
@@ -525,7 +525,7 @@
                 auspicious: "Muhurats:", marriage: "Marriage", naming: "Naming", travel: "Travel", vrat: "Vrat", sankranti: "Sankranti"
             },
             hi: {
-                title: "हिंदू कैलेंडर", live: "सजीव", dailyPanc: "दैनिक पंचांग", openCal: "कैलेंडर खोलें",
+                title: "अतुल का हिंदू कैलेंडर", live: "सजीव", dailyPanc: "दैनिक पंचांग", openCal: "कैलेंडर खोलें",
                 nak: "नक्षत्र", yog: "योग", kar: "करण", signs: "राशि", rahu: "राहु काल",
                 ritu: "ऋतु", vSamvat: "विक्रम संवत",
                 tithis: ["प्रतिपदा", "द्वितीया", "तृतीया", "चतुर्थी", "पंचमी", "षष्ठी", "सप्तमी", "अष्टमी", "नवमी", "दशमी", "जया एकादशी", "द्वादशी", "त्रयोदशी", "चतुर्दशी", "पूर्णिमा", "अमावस्या"],
@@ -660,7 +660,6 @@
             setText('widget-full-year', y);
             setText('widget-hindu-year', `${dict.vSamvat} ${vsYear}`);
             setText('widget-month-label', dict.months[m]);
-            setText('app-title-label', dict.title);
             
             const centralSymbolEl = document.getElementById('central-symbol');
             if (centralSymbolEl) centralSymbolEl.innerText = rashiSymbols[m];
@@ -669,12 +668,12 @@
             const tithiIdx = isTarget ? 10 : (seed % 16);
             setText('widget-tithi', `${dict.tithis[tithiIdx]} (${getSolarDay(now)})`);
 
-            // Muhurat & Festival Box
+            // Combined Muhurat & Festival Box
             const mBox = document.getElementById('widget-muhurat-box');
             if (mBox) {
                 mBox.innerHTML = '';
                 
-                // Festival as a Priority Tag
+                // Show festival tag ONLY if today is a festival
                 if (festivals[dateKey]) {
                     mBox.innerHTML += `<span class="muhurat-icon bg-red-100 text-red-600 border border-red-200">🎉 ${festivals[dateKey]}</span>`;
                 }
