@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Hindu Calendar">
+    <title>Hindu Calendar</title>
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    
+    <!-- Optimized Manifest for Fullscreen Edge-to-Edge -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkhpbmR1IENhbGVuZGFyIiwKICAic2hvcnRfbmFtZSI6ICJIaW5kdSBDYWwiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAiZnVsbHNjcmVlbiIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzAwMDAwMCIsCiAgInRoZW1lX2NvbG9yIjogIiMwMDAwMDAiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL3Bicy50d2ltZy5jb20vcHJvZmlsZV9pbWFnZXMvMTUzMDE4NDQzOTQwOTgxNTU1My9zdEF0WnZ5cF80MDB4NDAwLmpwZyIsCiAgICAgICJzaXplcyI6ICI0MDB4NDAwIiwKICAgICAgInR5cGUiOiAiaW1hZ2UvanBlZyIKICAgIH0KICBdCn0=">
+    
+    <link rel="apple-touch-icon" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Poppins:wght@300;400;600;800&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --p-start: #2196F3;
+            --p-end: #3F51B5;
+            --primary-grad: linear-gradient(135deg, var(--p-start) 0%, var(--p-end) 100%);
+            --bg: #000000;
+            --card-bg: #FFFFFF;
+            --text: #333333;
+            --text-dim: #666666;
+            --border: rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease;
+            touch-action: manipulation;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .watermark-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.25;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: space-around;
+            overflow: hidden;
+            background-color: black;
+        }
+
+        .wm-item {
+            font-size: 16px;
+            color: var(--p-start);
+            margin: 10px;
+            font-weight: 800;
+        }
+
+        .heading-font { font-family: 'Marcellus', serif; }
+
+        .widget-container {
+            width: 100%;
+            max-width: 380px;
+            margin: 0 auto;
+            border-radius: 48px;
+            background: var(--card-bg);
+            box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+            border: 2px solid #000000;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        .widget-content-wrapper {
+            transition: transform 0.3s ease-out, opacity 0.2s ease;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .animate-next { animation: slideInRight 0.4s ease-out forwards; }
+        .animate-prev { animation: slideInLeft 0.4s ease-out forwards; }
+
+        .header-top {
+            background: var(--primary-grad);
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+        }
+
+        .date-section {
+            background: var(--primary-grad);
+            color: white;
+            padding: 18px 12px 22px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .nav-arrow-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 8px;
+            transition: all 0.2s;
+            color: white;
+            backdrop-filter: blur(4px);
+        }
+        .nav-arrow-btn:hover { background: rgba(255, 255, 255, 0.25); transform: scale(1.1); }
+        .nav-arrow-btn:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.9); }
+
+        .block-number {
+            font-size: 80px;
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -3px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .date-info-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1px;
+            cursor: pointer;
+        }
+
+        .block-day {
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(8px);
+            padding: 2px 14px;
+            border-radius: 100px;
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+            border: 1px solid rgba(255,255,255,0.5); /* 1px Outline */
+        }
+
+        .block-month { 
+            font-size: 15px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            line-height: 1.1; 
+            border-bottom: 1px solid rgba(255,255,255,0.3); /* 1px Outline */
+        }
+        .block-year { font-size: 13px; font-weight: 600; opacity: 0.9; letter-spacing: 4px; line-height: 1.1; }
+        .block-hindu-year { font-size: 10px; font-weight: 800; opacity: 0.75; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+
+        .full-calendar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 251, 242, 0.99);
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex;
+            flex-direction: column;
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .full-calendar-overlay.active { transform: translateY(0); }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background-color: var(--border);
+        }
+
+        .calendar-day {
+            background: var(--card-bg);
+            min-height: 110px;
+            padding: 6px;
+            font-size: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .calendar-day.today { box-shadow: inset 0 0 0 2px var(--p-end); }
+
+        @keyframes rotateSymbol { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .symbol-animate { display: inline-block; animation: rotateSymbol 45s linear infinite; }
+
+        .btn-action {
+            background: var(--primary-grad);
+            color: white;
+            box-shadow: 0 10px 25px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-panchang-toggle {
+            background: transparent;
+            border: 2px solid var(--p-start);
+            color: var(--p-start);
+            transition: all 0.2s ease;
+        }
+        .btn-panchang-toggle.active { background: var(--p-start); color: white; }
+
+        .detail-row { border-bottom: 1px solid var(--border); padding: 12px 0; display: flex; justify-content: space-between; align-items: center; }
+        .detail-label { font-size: 10px; text-transform: uppercase; color: var(--text-dim); font-weight: 800; letter-spacing: 0.1em; }
+        .detail-value { font-weight: 700; font-size: 14px; color: var(--text); }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.15);
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 800;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .lang-btn.active { background: white; color: var(--p-end); }
+
+        #quick-panchang-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+        }
+        #quick-panchang-dropdown.open { max-height: 900px; }
+
+        .astronomy-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 14px 0 6px 0;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+        }
+
+        .btn-header-back {
+            border: 2px solid var(--p-start);
+            color: var(--p-start);
+            padding: 8px;
+            border-radius: 16px;
+            transition: all 0.2s ease;
+        }
+        .btn-header-back:active { background-color: var(--p-start); color: white; }
+
+        .month-name-btn { transition: all 0.2s ease; padding: 4px 16px; border-radius: 12px; cursor: pointer; display: inline-block; }
+        .month-name-btn:hover { background-color: rgba(33, 150, 243, 0.1); color: var(--p-start) !important; transform: translateY(-1px); }
+
+        .grid-tithi-number { font-size: 9px; font-weight: 900; color: var(--p-start); opacity: 0.7; }
+        .grid-vikram-number { font-size: 9px; font-weight: 900; color: #4f46e5; opacity: 0.6; }
+        .grid-event-text { font-size: 7px; font-weight: 700; line-height: 1.1; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; }
+        
+        .color-circle { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+
+        #install-prompt {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(150%);
+            width: calc(100% - 48px);
+            max-width: 400px;
+            background: #1a1a1a;
+            color: white;
+            padding: 24px;
+            border-radius: 24px;
+            z-index: 500;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        #install-prompt.show { transform: translateX(-50%) translateY(0); }
+
+        .exit-btn-detail {
+            background: rgba(0,0,0,0.05);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ef4444;
+            border: 1px solid #fee2e2;
+        }
+        .exit-btn-detail:active { background: #fee2e2; }
+
+        .muhurat-icon { font-size: 10px; padding: 2px 8px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body class="bg-black" onclick="handleGlobalClick(event)">
+
+    <div id="watermark-container" class="watermark-overlay"></div>
+
+    <!-- Add to Home Screen Prompt -->
+    <div id="install-prompt">
+        <div class="flex items-start gap-4 mb-4">
+            <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" class="w-12 h-12 rounded-xl" alt="App Icon">
+            <div class="flex-1">
+                <h4 class="font-bold text-lg leading-tight">Install Hindu Calendar</h4>
+                <p class="text-xs text-zinc-400 mt-1" id="install-instr">Install this app on your home screen for quick access and full-screen experience.</p>
+            </div>
+            <button onclick="closeInstallPrompt()" class="p-1 opacity-50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <button id="install-button" class="w-full py-3 bg-blue-500 rounded-xl font-bold text-sm tracking-wide active:scale-95 transition">Add to Home Screen</button>
+    </div>
+
+    <!-- Widget View -->
+    <div id="widget-view" class="p-4 flex flex-col items-center justify-center min-h-screen">
+        
+        <!-- Top Toolbar -->
+        <div class="mb-6 flex items-center gap-4">
+             <div class="flex bg-zinc-800 p-1 rounded-full border border-zinc-700">
+                 <button onclick="setLang('en')" id="btn-en" class="lang-btn active">EN</button>
+                 <button onclick="setLang('hi')" id="btn-hi" class="lang-btn">हिं</button>
+             </div>
+             <div class="flex gap-1.5 px-2">
+                 <div class="color-circle bg-[#2196F3]" onclick="setTheme('#2196F3', '#3F51B5')"></div>
+                 <div class="color-circle bg-[#FF512F]" onclick="setTheme('#FF512F', '#DD2476')"></div>
+                 <div class="color-circle bg-[#4CAF50]" onclick="setTheme('#4CAF50', '#009688')"></div>
+                 <div class="color-circle bg-[#FF9800]" onclick="setTheme('#FF9800', '#FF512F')"></div>
+             </div>
+        </div>
+
+        <div id="main-widget-container" class="widget-container" onclick="event.stopPropagation()">
+            <div id="widget-content-animator" class="widget-content-wrapper">
+                <div class="header-top">
+                    <span id="app-title-label" class="heading-font text-[14px] font-bold uppercase tracking-[0.3em] text-white">Hindu Calendar</span>
+                </div>
+
+                <div class="date-section">
+                    <button onclick="prevDay(event)" class="nav-arrow-btn">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+
+                    <div class="flex items-center justify-center gap-7 flex-1" onclick="openDatePicker('widget')">
+                        <div id="widget-large-date" class="block-number">...</div>
+                        <div class="date-info-stack">
+                            <div id="widget-day-name" class="block-day">...</div>
+                            <div id="widget-full-month" class="block-month">...</div>
+                            <div id="widget-full-year" class="block-year">...</div>
+                            <div id="widget-hindu-year" class="block-hindu-year">...</div>
+                        </div>
+                    </div>
+
+                    <button onclick="nextDay(event)" class="nav-arrow-btn">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+
+                <div class="p-8 text-center pt-4">
+                    <div class="mb-6 relative inline-block">
+                        <div class="absolute -inset-10 bg-[var(--primary-grad)] opacity-20 rounded-full blur-3xl symbol-animate"></div>
+                        <div class="symbol-animate relative z-10">
+                            <div id="central-symbol" class="text-8xl font-bold text-zinc-800 drop-shadow-2xl">♈</div>
+                        </div>
+                        <p id="widget-month-label" class="text-[14px] font-black uppercase tracking-[0.5em] text-[var(--p-start)] mt-6 relative z-20"></p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h3 id="widget-tithi" class="text-2xl font-bold mb-1 tracking-tight text-[var(--text)]">...</h3>
+                    </div>
+
+                    <!-- Muhurat & Festival Box (Combined tags) -->
+                    <div id="widget-muhurat-box" class="flex flex-wrap justify-center gap-2 mb-4"></div>
+
+                    <div class="flex justify-center gap-2 mb-4">
+                        <span id="widget-paksha-label" class="text-[10px] bg-zinc-100 px-3 py-1 rounded-full font-bold uppercase text-[var(--text-dim)] tracking-wider">...</span>
+                        <span id="widget-ritu-label" class="text-[10px] bg-amber-100 px-3 py-1 rounded-full font-bold uppercase text-amber-600 tracking-wider">...</span>
+                    </div>
+                    
+                    <div class="astronomy-row">
+                        <span class="flex items-center gap-1">🌅 <span id="q-sunrise">06:44 AM</span></span>
+                        <span class="flex items-center gap-1">🌇 <span id="q-sunset">06:18 PM</span></span>
+                    </div>
+
+                    <div class="mb-4" id="daily-panchang-container">
+                        <button id="panchang-btn" onclick="toggleQuickPanchang(event)" class="btn-panchang-toggle w-full py-4 rounded-3xl flex items-center justify-center gap-2 text-[11px] font-black uppercase tracking-widest shadow-sm">
+                            <span id="label-daily-panchang">Daily Panchang</span>
+                            <svg id="dropdown-arrow" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                        
+                        <div id="quick-panchang-dropdown" class="text-left bg-zinc-50 rounded-[40px] p-0 mt-3 border border-[var(--border)] overflow-hidden">
+                            <div class="p-8 space-y-0">
+                                <div class="detail-row"><span class="detail-label" id="lbl-nakshatra">Nakshatra</span><span class="detail-value text-[var(--text)]" id="q-nakshatra">...</span></div>
+                                <div class="detail-row"><span class="detail-label">Brahma Muhurat</span><span class="detail-value text-indigo-600" id="q-brahma">...</span></div>
+                                <div class="detail-row"><span class="detail-label" id="lbl-yoga">Yoga</span><span class="detail-value text-[var(--text)]" id="q-yoga">...</span></div>
+                                <div class="detail-row"><span class="detail-label" id="lbl-karana">Karana</span><span class="detail-value text-[var(--text)]" id="q-karana">...</span></div>
+                                <div class="detail-row"><span class="detail-label text-red-600">Rahu Kaal</span><span class="detail-value font-bold text-red-500" id="q-rahu">...</span></div>
+                                <div class="detail-row border-none"><span class="detail-label" id="lbl-signs">Signs</span><span class="detail-value text-indigo-500" id="q-signs">...</span></div>
+                                
+                                <div class="mt-6 pt-4 border-t border-zinc-200">
+                                    <h4 class="text-[10px] font-black uppercase tracking-[0.2em] text-orange-600 mb-3">Upcoming Events</h4>
+                                    <div id="upcoming-events-list" class="space-y-2 text-[12px] font-bold text-zinc-700"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="toggleCalendar()" class="btn-action w-full py-5 rounded-[32px] font-bold text-md transition active:scale-95 shadow-xl uppercase tracking-[0.2em] text-sm mt-2">
+                        <span id="label-open-calendar">Open Calendar</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <p class="mt-8 text-[10px] text-zinc-500 uppercase tracking-[0.6em] font-black opacity-40 text-center w-full">Hindu Calendar</p>
+    </div>
+
+    <!-- Date Picker Modal -->
+    <div id="date-picker-modal" class="hidden fixed inset-0 bg-black/70 z-[200] flex items-center justify-center backdrop-blur-md">
+        <div class="modal bg-white p-8 rounded-[32px] w-[90%] max-w-[340px]" id="date-picker-content" onclick="event.stopPropagation()">
+            <h3 class="heading-font text-2xl font-bold mb-6 text-center text-[var(--text)]" id="label-picker-title">Select Date</h3>
+            <div id="full-date-select-row" class="hidden flex gap-2 mb-4">
+                 <select id="select-day" class="flex-1 p-3 border rounded-2xl bg-zinc-50 font-bold outline-none border-[var(--border)]"></select>
+            </div>
+            <div class="flex flex-col gap-4 mb-8">
+                <select id="select-month" class="w-full p-4 border rounded-2xl bg-zinc-50 font-bold outline-none border-[var(--border)]"></select>
+                <select id="select-year" class="w-full p-4 border rounded-2xl bg-zinc-50 font-bold outline-none border-[var(--border)]"></select>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="closeDatePicker()" class="flex-1 py-3 text-zinc-400 font-bold uppercase text-[11px] tracking-widest" id="btn-cancel">Cancel</button>
+                <button onclick="applyDatePicker()" class="flex-1 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-2xl font-bold uppercase text-[11px] tracking-widest shadow-lg" id="btn-apply">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full Calendar Overlay -->
+    <div id="full-calendar" class="full-calendar-overlay" onclick="closeDetail()">
+        <div class="p-6 border-b border-[var(--border)] flex items-center justify-between bg-[var(--card-bg)] sticky top-0 z-20" onclick="event.stopPropagation()">
+            <button onclick="toggleCalendar()" class="btn-header-back">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="text-center cursor-pointer">
+                <h2 id="current-month-year" onclick="openDatePicker('calendar')" class="heading-font text-2xl font-bold text-[var(--p-end)] month-name-btn"></h2>
+                <p id="calendar-lunar-months" class="text-[10px] uppercase tracking-widest text-[var(--p-start)] font-black"></p>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="changeMonth(-1)" class="p-2 bg-zinc-100 rounded-full border border-[var(--border)] active:bg-blue-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button onclick="changeMonth(1)" class="p-2 bg-zinc-100 rounded-full border border-[var(--border)] active:bg-blue-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="calendar-week-labels" class="grid grid-cols-7 text-center py-5 bg-zinc-50 text-[10px] font-black text-[var(--text-dim)] uppercase tracking-[0.3em]" onclick="event.stopPropagation()"></div>
+        <div id="calendar-body" class="flex-1 overflow-y-auto calendar-grid scroll-hide" onclick="event.stopPropagation()"></div>
+        
+        <div class="p-4 bg-[var(--card-bg)] border-t border-[var(--border)] flex flex-wrap gap-2 text-[8px] font-bold justify-center" onclick="event.stopPropagation()">
+            <span class="text-pink-500">💍 Marriage</span>
+            <span class="text-blue-500">🍼 Naming</span>
+            <span class="text-orange-500">🚩 Travel</span>
+            <span class="text-purple-600">🌙 Vrat</span>
+            <span class="text-red-600">🎉 Festival</span>
+            <span class="text-yellow-600">☀️ Sankranti</span>
+        </div>
+
+        <!-- Detail Drawer -->
+        <div id="day-detail" class="fixed bottom-0 left-0 w-full bg-[var(--card-bg)] rounded-t-[48px] shadow-2xl p-10 transform translate-y-full transition-transform duration-300 z-[110] border-t border-[var(--border)]" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <div class="w-12 h-1.5 bg-zinc-200 rounded-full" onclick="closeDetail()"></div>
+                <button onclick="closeDetail()" class="exit-btn-detail">Exit</button>
+            </div>
+            <div class="flex justify-between items-start mb-8">
+                <div>
+                    <h2 id="detail-date" class="text-3xl font-bold tracking-tighter text-[var(--text)]"></h2>
+                    <p id="detail-tithi" class="text-[var(--p-end)] font-bold text-xl mt-1"></p>
+                </div>
+                <div class="bg-zinc-100 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest text-indigo-500" id="detail-paksha"></div>
+            </div>
+            
+            <div class="space-y-1 max-h-[45vh] overflow-y-auto scroll-hide">
+                <div id="detail-muhurat-status" class="hidden p-6 rounded-[32px] bg-gradient-to-br from-green-50 to-emerald-50 mb-6 border border-green-100">
+                    <h4 class="font-black text-green-700 text-[10px] uppercase tracking-[0.2em] mb-2">Auspicious Timing</h4>
+                    <p id="detail-muhurat-list" class="text-green-900 text-sm font-bold"></p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-0">
+                    <div class="detail-row"><span class="detail-label" id="det-nakshatra">Nakshatra</span><span class="detail-value text-[var(--text)]" id="detail-nakshatra"></span></div>
+                    <div class="detail-row"><span class="detail-label">Brahma Muhurat</span><span class="detail-value text-indigo-600 font-bold" id="detail-brahma"></span></div>
+                    <div class="detail-row"><span class="detail-label" id="det-yoga">Yoga</span><span class="detail-value text-[var(--text)]" id="detail-yoga"></span></div>
+                    <div class="detail-row"><span class="detail-label" id="det-karana">Karana</span><span class="detail-value text-[var(--text)]" id="detail-karana"></span></div>
+                    <div class="detail-row"><span class="detail-label" id="det-ritu">Ritu</span><span class="detail-value text-amber-500 font-bold" id="detail-ritu"></span></div>
+                    <div class="detail-row border-none"><span class="detail-label text-red-400" id="det-rahu">Rahu Kaal</span><span class="detail-value text-red-500 font-bold" id="detail-rahu"></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const I18N = {
+            en: {
+                title: "Hindu Calendar", live: "Live", dailyPanc: "Daily Panchang", openCal: "Open Calendar",
+                nak: "Nakshatra", yog: "Yoga", kar: "Karana", signs: "Signs", rahu: "Rahu Kaal",
+                ritu: "Ritu", vSamvat: "Vikram Samvat",
+                tithis: ["Pratipada", "Dwitiya", "Tritiya", "Chaturthi", "Panchami", "Shashthi", "Saptami", "Ashtami", "Navami", "Dashami", "Jaya Ekadashi", "Dwadashi", "Trayodashi", "Chaturdashi", "Purnima", "Amavasya"],
+                naks: ["Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra", "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni", "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha", "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha", "Purva Bhadrapada", "Uttara Bhadrapada", "Revati"],
+                months: ["Chaitra", "Vaishakha", "Jyeshtha", "Ashadha", "Shravana", "Bhadrapada", "Ashvina", "Kartika", "Margashirsha", "Pausha", "Magha", "Phalguna"],
+                days: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+                shortDays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                ritulist: ["Vasanta", "Grishma", "Varsha", "Sharad", "Hemant", "Shishir"],
+                pakshas: ["Shukla Paksha", "Krishna Paksha"],
+                rashis: ["Mesha", "Vrishabha", "Mithuna", "Karka", "Simha", "Kanya", "Tula", "Vrishchika", "Dhanu", "Makara", "Kumbha", "Meena"],
+                auspicious: "Muhurats:", marriage: "Marriage", naming: "Naming", travel: "Travel", vrat: "Vrat", sankranti: "Sankranti"
+            },
+            hi: {
+                title: "हिंदू कैलेंडर", live: "सजीव", dailyPanc: "दैनिक पंचांग", openCal: "कैलेंडर खोलें",
+                nak: "नक्षत्र", yog: "योग", kar: "करण", signs: "राशि", rahu: "राहु काल",
+                ritu: "ऋतु", vSamvat: "विक्रम संवत",
+                tithis: ["प्रतिपदा", "द्वितीया", "तृतीया", "चतुर्थी", "पंचमी", "षष्ठी", "सप्तमी", "अष्टमी", "नवमी", "दशमी", "जया एकादशी", "द्वादशी", "त्रयोदशी", "चतुर्दशी", "पूर्णिमा", "अमावस्या"],
+                naks: ["अश्विनी", "भरणी", "कृत्तिका", "रोहिणी", "मृगशिरा", "आर्द्रा", "पुनर्वसु", "पुष्य", "अश्लेषा", "मघा", "पूर्वा फाल्गुनी", "उत्तरा फाल्गुनी", "हस्त", "चित्रा", "स्वाती", "विशाखा", "अनुराधा", "ज्येष्ठा", "मूल", "पूर्वाषाढ़ा", "उत्तराषाढ़ा", "श्रवण", "धनिष्ठा", "शतभिषा", "पूर्वा भाद्रपद", "उत्तरा भाद्रपद", "रेवती"],
+                months: ["चैत्र", "वैशाख", "ज्येष्ठ", "आषाढ़", "श्रावण", "भाद्रपद", "अश्विन", "कार्तिक", "मार्गशीर्ष", "पौष", "माघ", "फाल्गुन"],
+                days: ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"],
+                shortDays: ["रवि", "सोम", "मंगल", "बुध", "गुरु", "शुक्र", "शनि"],
+                ritulist: ["वसंत", "ग्रीष्म", "वर्षा", "शरद", "हेमंत", "शिशिर"],
+                pakshas: ["शुक्ल पक्ष", "कृष्ण पक्ष"],
+                rashis: ["मेष", "वृषभ", "मिथुन", "कर्क", "सिंह", "कन्या", "तुला", "वृश्चिक", "धनु", "मकर", "कुंभ", "मीन"],
+                auspicious: "शुभ मुहूर्त:", marriage: "विवाह", naming: "नामकरण", travel: "यात्रा", vrat: "व्रत", sankranti: "संक्रांति"
+            }
+        };
+
+        const festivals = { "2026-01-14": "Makar Sankranti", "2026-02-15": "Maha Shivaratri", "2026-02-28": "Jaya Ekadashi", "2026-03-03": "Holi", "2026-03-19": "Hindu New Year", "2026-03-27": "Ram Navami", "2026-04-18": "Akshaya Tritiya" };
+        const vrats = { "2026-02-28": "Ekadashi Vrat", "2026-03-01": "Pradosh Vrat", "2026-03-07": "Sankashti Chaturthi" };
+        const sankrantiDates = { "2026-01-14": "Makar", "2026-02-13": "Kumbha", "2026-03-14": "Meena", "2026-04-14": "Mesha" };
+        const rahuKaalTable = { 0: "04:30 PM - 06:00 PM", 1: "07:30 AM - 09:00 AM", 2: "03:00 PM - 04:30 PM", 3: "12:00 PM - 01:30 PM", 4: "01:30 PM - 03:00 PM", 5: "10:30 AM - 12:00 PM", 6: "09:00 AM - 10:30 AM" };
+        const rashiSymbols = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"];
+
+        let currentLang = 'en';
+        let widgetDate = new Date();
+        let selectedMonth = new Date().getMonth();
+        let selectedYear = new Date().getFullYear();
+        let touchStartX = 0;
+        let pickerMode = 'widget';
+        let deferredPrompt;
+
+        function setText(id, text) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = text;
+        }
+
+        function getSolarDay(date) {
+            const dStr = date.toISOString().split('T')[0];
+            const sortedSank = Object.keys(sankrantiDates).sort();
+            let lastSank = sortedSank[0];
+            for(let s of sortedSank) {
+                if(s <= dStr) lastSank = s;
+                else break;
+            }
+            const diff = Math.floor((date - new Date(lastSank)) / (1000 * 60 * 60 * 24)) + 1;
+            return diff > 0 ? diff : 1;
+        }
+
+        function getTithiCycleDay(date) {
+            const d = date.getDate();
+            if (date.getMonth() === 2 && date.getFullYear() === 2026 && d >= 19) {
+                const diff = d - 19;
+                return ((diff + 3) % 15) || 15;
+            }
+            return (d % 15) || 15;
+        }
+
+        function getMuhurats(date) {
+            const seed = date.getDate() + (date.getMonth() * 31);
+            return { marriage: seed % 7 === 0, naming: seed % 5 === 0, travel: seed % 4 === 0 };
+        }
+
+        function handleGlobalClick(e) {
+            const dropdown = document.getElementById('quick-panchang-dropdown');
+            const container = document.getElementById('daily-panchang-container');
+            if (dropdown && dropdown.classList.contains('open') && !container.contains(e.target)) {
+                toggleQuickPanchang();
+            }
+            const datePicker = document.getElementById('date-picker-modal');
+            const datePickerContent = document.getElementById('date-picker-content');
+            if (datePicker && !datePicker.classList.contains('hidden') && !datePickerContent.contains(e.target)) {
+                closeDatePicker();
+            }
+        }
+
+        function prevDay(e) {
+            if (e) e.stopPropagation();
+            widgetDate.setDate(widgetDate.getDate() - 1);
+            updateWidget('prev');
+        }
+
+        function nextDay(e) {
+            if (e) e.stopPropagation();
+            widgetDate.setDate(widgetDate.getDate() + 1);
+            updateWidget('next');
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            updateWidget();
+            if(document.getElementById('full-calendar').classList.contains('active')) renderCalendar();
+        }
+
+        function setTheme(start, end) {
+            document.documentElement.style.setProperty('--p-start', start);
+            document.documentElement.style.setProperty('--p-end', end);
+            updateWidget();
+            generateWatermarks();
+        }
+
+        function toggleQuickPanchang(event) {
+            if(event) event.stopPropagation();
+            const dropdown = document.getElementById('quick-panchang-dropdown');
+            const btn = document.getElementById('panchang-btn');
+            const isOpen = dropdown.classList.contains('open');
+            dropdown.classList.toggle('open');
+            btn.classList.toggle('active');
+            document.getElementById('dropdown-arrow').style.transform = !isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+        }
+
+        function updateWidget(direction) {
+            const now = widgetDate;
+            const dict = I18N[currentLang];
+            const d = now.getDate();
+            const m = now.getMonth();
+            const y = now.getFullYear();
+            const seed = d + (m * 31);
+            const dateKey = now.toISOString().split('T')[0];
+            
+            const animator = document.getElementById('widget-content-animator');
+            if(animator && direction) {
+                animator.classList.remove('animate-next', 'animate-prev');
+                void animator.offsetWidth;
+                animator.classList.add(direction === 'next' ? 'animate-next' : 'animate-prev');
+            }
+
+            const isAfterNewYear = (m > 2) || (m === 2 && d >= 19);
+            const vsYear = isAfterNewYear ? y + 57 : y + 56;
+
+            setText('widget-large-date', d);
+            setText('widget-day-name', dict.days[now.getDay()]);
+            setText('widget-full-month', now.toLocaleString(currentLang, { month: 'long' }));
+            setText('widget-full-year', y);
+            setText('widget-hindu-year', `${dict.vSamvat} ${vsYear}`);
+            setText('widget-month-label', dict.months[m]);
+            setText('app-title-label', dict.title);
+            
+            const centralSymbolEl = document.getElementById('central-symbol');
+            if (centralSymbolEl) centralSymbolEl.innerText = rashiSymbols[m];
+            
+            const isTarget = (d === 28 && m === 1 && y === 2026);
+            const tithiIdx = isTarget ? 10 : (seed % 16);
+            setText('widget-tithi', `${dict.tithis[tithiIdx]} (${getSolarDay(now)})`);
+
+            // Muhurat & Festival Box
+            const mBox = document.getElementById('widget-muhurat-box');
+            if (mBox) {
+                mBox.innerHTML = '';
+                
+                // Festival as a Priority Tag
+                if (festivals[dateKey]) {
+                    mBox.innerHTML += `<span class="muhurat-icon bg-red-100 text-red-600 border border-red-200">🎉 ${festivals[dateKey]}</span>`;
+                }
+
+                const mData = getMuhurats(now);
+                if(mData.marriage) mBox.innerHTML += `<span class="muhurat-icon bg-blue-100 text-blue-600 border border-blue-200">💍 ${dict.marriage}</span>`;
+                if(mData.naming) mBox.innerHTML += `<span class="muhurat-icon bg-cyan-100 text-cyan-600 border border-cyan-200">🍼 ${dict.naming}</span>`;
+                if(mData.travel) mBox.innerHTML += `<span class="muhurat-icon bg-indigo-100 text-indigo-600 border border-indigo-200">🚩 ${dict.travel}</span>`;
+            }
+            
+            setText('widget-paksha-label', d < 15 ? dict.pakshas[0] : dict.pakshas[1]);
+            setText('widget-ritu-label', dict.ritulist[Math.floor(m/2)]);
+            
+            setText('q-sunrise', "06:44 AM");
+            setText('q-sunset', "06:18 PM");
+            setText('q-nakshatra', dict.naks[seed % 27]);
+            setText('q-brahma', "04:52 - 05:40 AM");
+            setText('q-yoga', "Shubha");
+            setText('q-karana', "Vanija");
+            setText('q-rahu', rahuKaalTable[now.getDay()]);
+            setText('q-signs', `${dict.rashis[m]} / ${dict.rashis[seed % 12]}`);
+            
+            setText('label-daily-panchang', dict.dailyPanc);
+            setText('label-open-calendar', dict.openCal);
+
+            const upList = document.getElementById('upcoming-events-list');
+            if (upList) {
+                upList.innerHTML = '';
+                let count = 0;
+                for(let i = 1; i < 60 && count < 3; i++) {
+                    let checkDate = new Date(now); checkDate.setDate(now.getDate() + i);
+                    let key = checkDate.toISOString().split('T')[0];
+                    let label = festivals[key] || vrats[key] || (sankrantiDates[key] ? `${sankrantiDates[key]} Sankranti` : "");
+                    if(label) {
+                        upList.innerHTML += `<div class="flex justify-between border-b border-zinc-100 py-1"><span>${checkDate.getDate()} ${checkDate.toLocaleString(currentLang, {month:'short'})}</span> <span class="text-blue-600">${label}</span></div>`;
+                        count++;
+                    }
+                }
+            }
+        }
+
+        function openDetail(dayNum) {
+            const targetDate = new Date(selectedYear, selectedMonth, dayNum);
+            const dict = I18N[currentLang];
+            const dateKey = targetDate.toISOString().split('T')[0];
+            const isTarget = (dayNum === 28 && selectedMonth === 1 && selectedYear === 2026);
+            const seed = dayNum + (selectedMonth * 31);
+
+            setText('detail-date', `${dayNum} ${targetDate.toLocaleString(currentLang, { month: 'short' })} ${selectedYear}`);
+            setText('detail-tithi', isTarget ? dict.tithis[10] : dict.tithis[seed % 16]);
+            setText('detail-paksha', dayNum < 15 ? dict.pakshas[0] : dict.pakshas[1]);
+            setText('detail-nakshatra', dict.naks[seed % 27]);
+            setText('detail-yoga', "Shubha");
+            setText('detail-karana', "Vanija");
+            setText('detail-ritu', dict.ritulist[Math.floor(selectedMonth/2)]);
+            setText('detail-brahma', "04:52 - 05:40 AM");
+            setText('detail-rahu', rahuKaalTable[targetDate.getDay()]);
+
+            const muhuBox = document.getElementById('detail-muhurat-status');
+            const muhuList = document.getElementById('detail-muhurat-list');
+            if (muhuBox && muhuList) {
+                let acts = [];
+                const mData = getMuhurats(targetDate);
+                if(festivals[dateKey]) acts.push(festivals[dateKey]);
+                if(vrats[dateKey]) acts.push(vrats[dateKey]);
+                if(sankrantiDates[dateKey]) acts.push(`${sankrantiDates[dateKey]} Sankranti`);
+                if(mData.marriage) acts.push(dict.marriage);
+                if(mData.naming) acts.push(dict.naming);
+                if(mData.travel) acts.push(dict.travel);
+
+                if(acts.length > 0) { muhuBox.classList.remove('hidden'); muhuList.innerText = acts.join(", "); }
+                else { muhuBox.classList.add('hidden'); }
+            }
+            document.getElementById('day-detail').style.transform = "translateY(0%)";
+        }
+
+        function closeDetail() { 
+            const el = document.getElementById('day-detail');
+            if (el) el.style.transform = "translateY(100%)"; 
+        }
+
+        function toggleCalendar() { 
+            closeDetail();
+            const fullCal = document.getElementById('full-calendar');
+            fullCal.classList.toggle('active'); 
+            if(fullCal.classList.contains('active')) renderCalendar(); 
+        }
+
+        function changeMonth(delta) {
+            closeDetail();
+            selectedMonth += delta;
+            if(selectedMonth > 11) { selectedMonth = 0; selectedYear++; }
+            else if(selectedMonth < 0) { selectedMonth = 11; selectedYear--; }
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const body = document.getElementById('calendar-body');
+            const dict = I18N[currentLang];
+            if (!body) return;
+            body.innerHTML = '';
+            
+            const date = new Date(selectedYear, selectedMonth, 1);
+            setText('current-month-year', `${date.toLocaleString(currentLang, { month: 'long' })} ${selectedYear}`);
+            const solarSign = dict.rashis[selectedMonth % 12];
+            setText('calendar-lunar-months', `${dict.months[selectedMonth % 12]} / ${solarSign} Solar Month`);
+            
+            const weekCont = document.getElementById('calendar-week-labels');
+            if (weekCont) weekCont.innerHTML = dict.shortDays.map(d => `<div>${d}</div>`).join('');
+            
+            const firstDay = new Date(selectedYear, selectedMonth, 1).getDay();
+            const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+            
+            for(let i = 0; i < firstDay; i++) body.appendChild(Object.assign(document.createElement('div'), {className: 'calendar-day opacity-20 bg-zinc-50'}));
+            
+            for(let d = 1; d <= daysInMonth; d++) {
+                const dayEl = document.createElement('div');
+                const tempDate = new Date(selectedYear, selectedMonth, d);
+                const isToday = tempDate.toDateString() === new Date().toDateString();
+                const mData = getMuhurats(tempDate);
+                const key = tempDate.toISOString().split('T')[0];
+                
+                const solarDayNum = getSolarDay(tempDate);
+                const tithiCycleDay = getTithiCycleDay(tempDate);
+                const pakshaCode = (d % 30 < 15) ? (currentLang === 'en' ? 'S' : 'शु') : (currentLang === 'en' ? 'K' : 'कृ');
+                
+                dayEl.className = `calendar-day ${isToday ? 'today' : ''}`;
+                dayEl.onclick = (e) => { e.stopPropagation(); openDetail(d); };
+                
+                let events = '';
+                if(vrats[key]) events += `<div class="grid-event-text text-indigo-600">🌙 ${vrats[key]}</div>`;
+                if(festivals[key]) events += `<div class="grid-event-text text-blue-600 font-bold">🎉 ${festivals[key]}</div>`;
+                if(sankrantiDates[key]) events += `<div class="grid-event-text text-orange-600 font-black">☀️ ${sankrantiDates[key]}</div>`;
+                
+                let icons = '<div class="flex gap-1 flex-wrap mt-auto">';
+                if(mData.marriage) icons += '<span class="text-[9px]">💍</span>';
+                if(mData.naming) icons += '<span class="text-[9px]">🍼</span>';
+                if(mData.travel) icons += '<span class="text-[9px]">🚩</span>';
+                icons += '</div>';
+
+                dayEl.innerHTML = `
+                    <div class="flex justify-between items-start w-full">
+                        <span class="font-bold ${isToday ? 'text-[var(--p-end)]' : 'text-zinc-500'}">${d}</span>
+                        <span class="grid-tithi-number">${solarDayNum}</span>
+                    </div>
+                    <div class="flex-1 mt-1">${events}</div>
+                    <div class="flex justify-between items-end w-full mt-auto">
+                        ${icons}
+                        <span class="grid-vikram-number">${pakshaCode}${tithiCycleDay}</span>
+                    </div>
+                `;
+                body.appendChild(dayEl);
+            }
+        }
+
+        function setupSwipe() {
+            const calendarBody = document.getElementById('calendar-body');
+            if (calendarBody) {
+                calendarBody.addEventListener('touchstart', e => touchStartX = e.touches[0].clientX);
+                calendarBody.addEventListener('touchend', e => {
+                    let diff = touchStartX - e.changedTouches[0].clientX;
+                    if(Math.abs(diff) > 70) changeMonth(diff > 0 ? 1 : -1);
+                });
+            }
+
+            const widgetContainer = document.getElementById('main-widget-container');
+            if (widgetContainer) {
+                let widgetTouchX = 0;
+                widgetContainer.addEventListener('touchstart', e => widgetTouchX = e.touches[0].clientX);
+                widgetContainer.addEventListener('touchend', e => {
+                    let diff = widgetTouchX - e.changedTouches[0].clientX;
+                    if(Math.abs(diff) > 50) {
+                        if (diff > 0) nextDay();
+                        else prevDay();
+                    }
+                });
+            }
+        }
+
+        function openDatePicker(mode) { 
+            pickerMode = mode || 'widget';
+            closeDetail();
+            populatePickerOptions(); 
+            const dayRow = document.getElementById('full-date-select-row');
+            if (dayRow) dayRow.classList.toggle('hidden', pickerMode === 'calendar');
+            const el = document.getElementById('date-picker-modal');
+            if (el) el.classList.remove('hidden'); 
+        }
+
+        function closeDatePicker() { 
+            const el = document.getElementById('date-picker-modal');
+            if (el) el.classList.add('hidden'); 
+        }
+
+        function applyDatePicker() {
+            const d = document.getElementById('select-day');
+            const m = document.getElementById('select-month');
+            const y = document.getElementById('select-year');
+            if (pickerMode === 'widget') {
+                widgetDate = new Date(parseInt(y.value), parseInt(m.value), parseInt(d.value));
+                updateWidget('next');
+            } else {
+                selectedMonth = parseInt(m.value);
+                selectedYear = parseInt(y.value);
+                renderCalendar();
+            }
+            closeDatePicker();
+        }
+
+        function populatePickerOptions() {
+            const ds = document.getElementById('select-day');
+            const ms = document.getElementById('select-month');
+            const ys = document.getElementById('select-year');
+            if (!ms || !ys || !ds) return;
+            const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+            ds.innerHTML = ""; ms.innerHTML = ""; ys.innerHTML = "";
+            for(let i=1; i<=31; i++) ds.add(new Option(i, i));
+            months.forEach((m, i) => ms.add(new Option(m, i)));
+            for(let y = selectedYear - 100; y <= selectedYear + 100; y++) ys.add(new Option(y, y));
+            if (pickerMode === 'widget') {
+                ds.value = widgetDate.getDate();
+                ms.value = widgetDate.getMonth();
+                ys.value = widgetDate.getFullYear();
+            } else {
+                ms.value = selectedMonth;
+                ys.value = selectedYear;
+            }
+        }
+
+        function generateWatermarks() {
+            const container = document.getElementById('watermark-container');
+            if (!container) return;
+            container.innerHTML = '';
+            for(let i = 0; i < 120; i++) {
+                const span = document.createElement('span');
+                span.className = 'wm-item';
+                span.innerText = i % 2 === 0 ? 'ॐ' : '卐';
+                container.appendChild(span);
+            }
+        }
+
+        function setupInstallation() {
+            const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches;
+            const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                if (!isStandalone) showInstallPopup('android');
+            });
+
+            if (isIos && !isStandalone) {
+                showInstallPopup('ios');
+            }
+        }
+
+        function showInstallPopup(type) {
+            const prompt = document.getElementById('install-prompt');
+            const btn = document.getElementById('install-button');
+            const instr = document.getElementById('install-instr');
+            
+            if (type === 'ios') {
+                btn.style.display = 'none';
+                instr.innerHTML = 'To install: Tap <span class="text-blue-400 font-bold px-1">Share</span> then <span class="text-blue-400 font-bold px-1">"Add to Home Screen"</span>.';
+            } else {
+                btn.onclick = async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') closeInstallPrompt();
+                        deferredPrompt = null;
+                    }
+                };
+            }
+            setTimeout(() => prompt.classList.add('show'), 3000);
+        }
+
+        function closeInstallPrompt() {
+            document.getElementById('install-prompt').classList.remove('show');
+        }
+
+        window.onload = () => { 
+            updateWidget(); 
+            renderCalendar(); 
+            setupSwipe(); 
+            generateWatermarks();
+            setupInstallation();
+            const dpModal = document.getElementById('date-picker-modal');
+            if (dpModal) dpModal.onclick = (e) => { if (e.target.id === 'date-picker-modal') closeDatePicker(); };
+        };
+    </script>
+</body>
+</html>
