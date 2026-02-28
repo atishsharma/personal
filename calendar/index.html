@@ -9,7 +9,7 @@
     <title>Ats's Hindu Calendar</title>
     <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     
-    <!-- Optimized Manifest: Full Name for Splash/Install, Short Name for App Drawer -->
+    <!-- Optimized Manifest: Full Name "Ats's Hindu Calendar", Short Name "Hindu Calendar" -->
     <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkF0cydzIEhpbmR1IENhbGVuZGFyIiwKICAic2hvcnRfbmFtZSI6ICJIaW5kdSBDYWxlbmRhciIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJmdWxsc2NyZWVuIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjMDAwMDAwIiwKICAidGhlbWVfY29sb3IiOiAiIzAwMDAwMCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vcGJzLnR3aW1nLmNvbS9wcm9maWxlX2ltYWdlcy8xNTMwMTg0NDM5NDA5ODE1NTUzL3N0QXRadnlwXzQwMHg0MDAuanBnIiwKICAgICAgInNpemVzIjogIjQwMHg0MDAiLAogICAgICAidHlwZSI6ICJpbWFnZS9qcGVnIgogICAgfQogIF0KfQ==">
     
     <link rel="apple-touch-icon" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
@@ -41,7 +41,6 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* Tiled Watermark Grid - Global Background */
         .watermark-overlay {
             position: fixed;
             top: 0;
@@ -49,7 +48,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0; /* Placed behind content */
+            z-index: 0;
             opacity: 0.25;
             display: flex;
             flex-wrap: wrap;
@@ -175,14 +174,13 @@
         .block-year { font-size: 13px; font-weight: 600; opacity: 0.9; letter-spacing: 4px; line-height: 1.1; }
         .block-hindu-year { font-size: 10px; font-weight: 800; opacity: 0.75; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
 
-        /* Full Calendar View - Following Widget Background */
         .full-calendar-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: transparent; /* Transparent to show global watermarks */
+            background: rgba(255, 251, 242, 0.99);
             z-index: 100;
             transform: translateY(100%);
             transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
@@ -313,6 +311,35 @@
         .exit-btn-detail:active { background: #fee2e2; }
 
         .muhurat-icon { font-size: 10px; padding: 2px 8px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
+
+        .external-links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 340px;
+            margin-top: 24px;
+        }
+        .link-btn-themed {
+            padding: 14px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+            border: 2px solid var(--p-start);
+            color: white;
+            background: rgba(33, 150, 243, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        .link-btn-themed:hover {
+            background: var(--primary-grad);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(33, 150, 243, 0.3);
+        }
+        .link-btn-themed:active { transform: translateY(0); }
     </style>
 </head>
 <body class="bg-black" onclick="handleGlobalClick(event)">
@@ -324,7 +351,7 @@
         <div class="flex items-start gap-4 mb-4">
             <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" class="w-12 h-12 rounded-xl" alt="App Icon">
             <div class="flex-1">
-                <h4 class="font-bold text-lg leading-tight">Install Ats's Hindu Calendar</h4>
+                <h4 class="font-bold text-lg leading-tight" id="prompt-name">Install Ats's Hindu Calendar</h4>
                 <p class="text-xs text-zinc-400 mt-1" id="install-instr">Install this app on your home screen for quick access and full-screen experience.</p>
             </div>
             <button onclick="closeInstallPrompt()" class="p-1 opacity-50"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
@@ -429,8 +456,24 @@
                 </div>
             </div>
         </div>
+
+        <!-- External Link Buttons Above Footer -->
+        <div class="external-links-container">
+            <a href="https://github.com/atishsharma/ats-hindu-calendar-widget" target="_blank" class="link-btn-themed">
+                <span class="flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    View on GitHub
+                </span>
+            </a>
+            <a href="https://github.com/atishsharma/ats-hindu-calendar-widget/releases" target="_blank" class="link-btn-themed">
+                <span class="flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Download for Desktop
+                </span>
+            </a>
+        </div>
         
-        <p class="mt-8 text-[10px] text-zinc-500 uppercase tracking-[0.6em] font-black opacity-40 text-center w-full">Ats's Hindu Calendar</p>
+        <p class="mt-8 text-[10px] text-zinc-500 uppercase tracking-[0.6em] font-black opacity-40 text-center w-full">2026 • Ats's Hindu Calendar</p>
     </div>
 
     <!-- Combined Date Picker Modal -->
@@ -451,7 +494,7 @@
         </div>
     </div>
 
-    <!-- Full Calendar Overlay - Uses Global Watermark Background -->
+    <!-- Full Calendar Overlay -->
     <div id="full-calendar" class="full-calendar-overlay" onclick="closeDetail()">
         <div class="p-6 border-b border-zinc-200/10 flex items-center justify-between bg-zinc-900 sticky top-0 z-20" onclick="event.stopPropagation()">
             <button onclick="toggleCalendar()" class="btn-header-back">
@@ -532,7 +575,7 @@
                 auspicious: "Muhurats:", marriage: "Marriage", naming: "Naming", travel: "Travel", vrat: "Vrat", sankranti: "Sankranti"
             },
             hi: {
-                title: "अतुल का हिंदू कैलेंडर", live: "सजीव", dailyPanc: "दैनिक पंचांग", openCal: "कैलेंडर खोलें",
+                title: "आतिश का हिंदू कैलेंडर", live: "सजीव", dailyPanc: "दैनिक पंचांग", openCal: "कैलेंडर खोलें",
                 nak: "नक्षत्र", yog: "योग", kar: "करण", signs: "राशि", rahu: "राहु काल",
                 ritu: "ऋतु", vSamvat: "विक्रम संवत",
                 tithis: ["प्रतिपदा", "द्वितीया", "तृतीया", "चतुर्थी", "पंचमी", "षष्ठी", "सप्तमी", "अष्टमी", "नवमी", "दशमी", "जया एकादशी", "द्वादशी", "त्रयोदशी", "चतुर्दशी", "पूर्णिमा", "अमावस्या"],
@@ -668,6 +711,7 @@
             setText('widget-hindu-year', `${dict.vSamvat} ${vsYear}`);
             setText('widget-month-label', dict.months[m]);
             setText('app-title-label', dict.title);
+            setText('prompt-name', `Install ${dict.title}`);
             
             const centralSymbolEl = document.getElementById('central-symbol');
             if (centralSymbolEl) centralSymbolEl.innerText = rashiSymbols[m];
@@ -765,11 +809,9 @@
             const widgetView = document.getElementById('widget-view');
             fullCal.classList.toggle('active'); 
             if(fullCal.classList.contains('active')) {
-                // Logic Fix: Always open current day month view every time
                 const today = new Date();
                 selectedMonth = today.getMonth();
                 selectedYear = today.getFullYear();
-
                 renderCalendar(); 
                 widgetView.style.opacity = '0';
                 setTimeout(() => widgetView.style.visibility = 'hidden', 400);
@@ -802,7 +844,6 @@
             const weekCont = document.getElementById('calendar-week-labels');
             if (weekCont) {
                 weekCont.innerHTML = dict.shortDays.map((d, i) => {
-                    // Logic Fix: Highlight current weekday column label
                     const isTodayColumn = isThisMonth && (i === today.getDay());
                     return `<div class="py-3 ${isTodayColumn ? 'text-blue-400 bg-white/5' : 'text-zinc-400'}">${d}</div>`;
                 }).join('');
@@ -939,7 +980,9 @@
                 deferredPrompt = e;
                 if (!isStandalone) showInstallPopup('android');
             });
-            if (isIos && !isStandalone) showInstallPopup('ios');
+            if (isIos && !isStandalone) {
+                showInstallPopup('ios');
+            }
         }
 
         function showInstallPopup(type) {
