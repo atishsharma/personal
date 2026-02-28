@@ -41,6 +41,7 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
+        /* Tiled Watermark Grid - Global Background */
         .watermark-overlay {
             position: fixed;
             top: 0;
@@ -48,7 +49,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: -1;
+            z-index: 0; /* Placed behind content */
             opacity: 0.25;
             display: flex;
             flex-wrap: wrap;
@@ -66,6 +67,12 @@
         }
 
         .heading-font { font-family: 'Marcellus', serif; }
+
+        #widget-view {
+            position: relative;
+            z-index: 10;
+            transition: opacity 0.4s ease;
+        }
 
         .widget-container {
             width: 100%;
@@ -168,13 +175,14 @@
         .block-year { font-size: 13px; font-weight: 600; opacity: 0.9; letter-spacing: 4px; line-height: 1.1; }
         .block-hindu-year { font-size: 10px; font-weight: 800; opacity: 0.75; text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
 
+        /* Full Calendar View - Following Widget Background */
         .full-calendar-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 251, 242, 0.99);
+            background: transparent; /* Transparent to show global watermarks */
             z-index: 100;
             transform: translateY(100%);
             transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
@@ -380,7 +388,6 @@
                         <h3 id="widget-tithi" class="text-2xl font-bold mb-1 tracking-tight text-[var(--text)]">...</h3>
                     </div>
 
-                    <!-- Muhurat & Festival Box (Combined tags) -->
                     <div id="widget-muhurat-box" class="flex flex-wrap justify-center gap-2 mb-4"></div>
 
                     <div class="flex justify-center gap-2 mb-4">
@@ -405,7 +412,7 @@
                                 <div class="detail-row"><span class="detail-label">Brahma Muhurat</span><span class="detail-value text-indigo-600" id="q-brahma">...</span></div>
                                 <div class="detail-row"><span class="detail-label" id="lbl-yoga">Yoga</span><span class="detail-value text-[var(--text)]" id="q-yoga">...</span></div>
                                 <div class="detail-row"><span class="detail-label" id="lbl-karana">Karana</span><span class="detail-value text-[var(--text)]" id="q-karana">...</span></div>
-                                <div class="detail-row"><span class="detail-label text-red-600">Rahu Kaal</span><span class="detail-value font-bold text-red-500" id="q-rahu">...</span></div>
+                                <div class="detail-row text-red-600 font-bold"><span class="detail-label text-red-600">Rahu Kaal</span><span class="detail-value font-bold text-red-500" id="q-rahu">...</span></div>
                                 <div class="detail-row border-none"><span class="detail-label" id="lbl-signs">Signs</span><span class="detail-value text-indigo-500" id="q-signs">...</span></div>
                                 
                                 <div class="mt-6 pt-4 border-t border-zinc-200">
@@ -423,7 +430,7 @@
             </div>
         </div>
         
-        <p class="mt-8 text-[10px] text-zinc-500 uppercase tracking-[0.6em] font-black opacity-40 text-center w-full">2026 • Ats's Hindu Calendar</p>
+        <p class="mt-8 text-[10px] text-zinc-500 uppercase tracking-[0.6em] font-black opacity-40 text-center w-full">Ats's Hindu Calendar</p>
     </div>
 
     <!-- Combined Date Picker Modal -->
@@ -444,30 +451,30 @@
         </div>
     </div>
 
-    <!-- Full Calendar Overlay -->
+    <!-- Full Calendar Overlay - Uses Global Watermark Background -->
     <div id="full-calendar" class="full-calendar-overlay" onclick="closeDetail()">
-        <div class="p-6 border-b border-[var(--border)] flex items-center justify-between bg-[var(--card-bg)] sticky top-0 z-20" onclick="event.stopPropagation()">
+        <div class="p-6 border-b border-zinc-200/10 flex items-center justify-between bg-zinc-900 sticky top-0 z-20" onclick="event.stopPropagation()">
             <button onclick="toggleCalendar()" class="btn-header-back">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </button>
             <div class="text-center cursor-pointer">
-                <h2 id="current-month-year" onclick="openDatePicker('calendar')" class="heading-font text-2xl font-bold text-[var(--p-end)] month-name-btn"></h2>
+                <h2 id="current-month-year" onclick="openDatePicker('calendar')" class="heading-font text-2xl font-bold text-white month-name-btn"></h2>
                 <p id="calendar-lunar-months" class="text-[10px] uppercase tracking-widest text-[var(--p-start)] font-black"></p>
             </div>
             <div class="flex gap-2">
-                <button onclick="changeMonth(-1)" class="p-2 bg-zinc-100 rounded-full border border-[var(--border)] active:bg-blue-100">
+                <button onclick="changeMonth(-1)" class="p-2 bg-zinc-800 rounded-full border border-zinc-700 active:bg-blue-100/10 text-white">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 </button>
-                <button onclick="changeMonth(1)" class="p-2 bg-zinc-100 rounded-full border border-[var(--border)] active:bg-blue-100">
+                <button onclick="changeMonth(1)" class="p-2 bg-zinc-800 rounded-full border border-zinc-700 active:bg-blue-100/10 text-white">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </button>
             </div>
         </div>
 
-        <div id="calendar-week-labels" class="grid grid-cols-7 text-center py-5 bg-zinc-50 text-[10px] font-black text-[var(--text-dim)] uppercase tracking-[0.3em]" onclick="event.stopPropagation()"></div>
+        <div id="calendar-week-labels" class="grid grid-cols-7 text-center py-5 bg-zinc-900/50 text-[10px] font-black text-zinc-400 uppercase tracking-[0.3em]" onclick="event.stopPropagation()"></div>
         <div id="calendar-body" class="flex-1 overflow-y-auto calendar-grid scroll-hide" onclick="event.stopPropagation()"></div>
         
-        <div class="p-4 bg-[var(--card-bg)] border-t border-[var(--border)] flex flex-wrap gap-2 text-[8px] font-bold justify-center" onclick="event.stopPropagation()">
+        <div class="p-4 bg-zinc-900 border-t border-zinc-200/10 flex flex-wrap gap-2 text-[8px] font-bold justify-center" onclick="event.stopPropagation()">
             <span class="text-pink-500">💍 Marriage</span>
             <span class="text-blue-500">🍼 Naming</span>
             <span class="text-orange-500">🚩 Travel</span>
@@ -660,6 +667,7 @@
             setText('widget-full-year', y);
             setText('widget-hindu-year', `${dict.vSamvat} ${vsYear}`);
             setText('widget-month-label', dict.months[m]);
+            setText('app-title-label', dict.title);
             
             const centralSymbolEl = document.getElementById('central-symbol');
             if (centralSymbolEl) centralSymbolEl.innerText = rashiSymbols[m];
@@ -668,16 +676,13 @@
             const tithiIdx = isTarget ? 10 : (seed % 16);
             setText('widget-tithi', `${dict.tithis[tithiIdx]} (${getSolarDay(now)})`);
 
-            // Combined Muhurat & Festival Box
+            // Muhurat & Festival Combined Tag Box
             const mBox = document.getElementById('widget-muhurat-box');
             if (mBox) {
                 mBox.innerHTML = '';
-                
-                // Show festival tag ONLY if today is a festival
                 if (festivals[dateKey]) {
                     mBox.innerHTML += `<span class="muhurat-icon bg-red-100 text-red-600 border border-red-200">🎉 ${festivals[dateKey]}</span>`;
                 }
-
                 const mData = getMuhurats(now);
                 if(mData.marriage) mBox.innerHTML += `<span class="muhurat-icon bg-blue-100 text-blue-600 border border-blue-200">💍 ${dict.marriage}</span>`;
                 if(mData.naming) mBox.innerHTML += `<span class="muhurat-icon bg-cyan-100 text-cyan-600 border border-cyan-200">🍼 ${dict.naming}</span>`;
@@ -758,8 +763,16 @@
         function toggleCalendar() { 
             closeDetail();
             const fullCal = document.getElementById('full-calendar');
+            const widgetView = document.getElementById('widget-view');
             fullCal.classList.toggle('active'); 
-            if(fullCal.classList.contains('active')) renderCalendar(); 
+            if(fullCal.classList.contains('active')) {
+                renderCalendar(); 
+                widgetView.style.opacity = '0';
+                setTimeout(() => widgetView.style.visibility = 'hidden', 400);
+            } else {
+                widgetView.style.visibility = 'visible';
+                widgetView.style.opacity = '1';
+            }
         }
 
         function changeMonth(delta) {
@@ -775,45 +788,35 @@
             const dict = I18N[currentLang];
             if (!body) return;
             body.innerHTML = '';
-            
             const date = new Date(selectedYear, selectedMonth, 1);
             setText('current-month-year', `${date.toLocaleString(currentLang, { month: 'long' })} ${selectedYear}`);
             const solarSign = dict.rashis[selectedMonth % 12];
             setText('calendar-lunar-months', `${dict.months[selectedMonth % 12]} / ${solarSign} Solar Month`);
-            
             const weekCont = document.getElementById('calendar-week-labels');
             if (weekCont) weekCont.innerHTML = dict.shortDays.map(d => `<div>${d}</div>`).join('');
-            
             const firstDay = new Date(selectedYear, selectedMonth, 1).getDay();
             const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
-            
-            for(let i = 0; i < firstDay; i++) body.appendChild(Object.assign(document.createElement('div'), {className: 'calendar-day opacity-20 bg-zinc-50'}));
-            
+            for(let i = 0; i < firstDay; i++) body.appendChild(Object.assign(document.createElement('div'), {className: 'calendar-day opacity-20 bg-zinc-800/30'}));
             for(let d = 1; d <= daysInMonth; d++) {
                 const dayEl = document.createElement('div');
                 const tempDate = new Date(selectedYear, selectedMonth, d);
                 const isToday = tempDate.toDateString() === new Date().toDateString();
                 const mData = getMuhurats(tempDate);
                 const key = tempDate.toISOString().split('T')[0];
-                
                 const solarDayNum = getSolarDay(tempDate);
                 const tithiCycleDay = getTithiCycleDay(tempDate);
                 const pakshaCode = (d % 30 < 15) ? (currentLang === 'en' ? 'S' : 'शु') : (currentLang === 'en' ? 'K' : 'कृ');
-                
                 dayEl.className = `calendar-day ${isToday ? 'today' : ''}`;
                 dayEl.onclick = (e) => { e.stopPropagation(); openDetail(d); };
-                
                 let events = '';
                 if(vrats[key]) events += `<div class="grid-event-text text-indigo-600">🌙 ${vrats[key]}</div>`;
                 if(festivals[key]) events += `<div class="grid-event-text text-blue-600 font-bold">🎉 ${festivals[key]}</div>`;
                 if(sankrantiDates[key]) events += `<div class="grid-event-text text-orange-600 font-black">☀️ ${sankrantiDates[key]}</div>`;
-                
                 let icons = '<div class="flex gap-1 flex-wrap mt-auto">';
                 if(mData.marriage) icons += '<span class="text-[9px]">💍</span>';
                 if(mData.naming) icons += '<span class="text-[9px]">🍼</span>';
                 if(mData.travel) icons += '<span class="text-[9px]">🚩</span>';
                 icons += '</div>';
-
                 dayEl.innerHTML = `
                     <div class="flex justify-between items-start w-full">
                         <span class="font-bold ${isToday ? 'text-[var(--p-end)]' : 'text-zinc-500'}">${d}</span>
@@ -838,7 +841,6 @@
                     if(Math.abs(diff) > 70) changeMonth(diff > 0 ? 1 : -1);
                 });
             }
-
             const widgetContainer = document.getElementById('main-widget-container');
             if (widgetContainer) {
                 let widgetTouchX = 0;
@@ -918,23 +920,18 @@
         function setupInstallation() {
             const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches || window.matchMedia('(display-mode: fullscreen)').matches;
             const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
                 if (!isStandalone) showInstallPopup('android');
             });
-
-            if (isIos && !isStandalone) {
-                showInstallPopup('ios');
-            }
+            if (isIos && !isStandalone) showInstallPopup('ios');
         }
 
         function showInstallPopup(type) {
             const prompt = document.getElementById('install-prompt');
             const btn = document.getElementById('install-button');
             const instr = document.getElementById('install-instr');
-            
             if (type === 'ios') {
                 btn.style.display = 'none';
                 instr.innerHTML = 'To install: Tap <span class="text-blue-400 font-bold px-1">Share</span> then <span class="text-blue-400 font-bold px-1">"Add to Home Screen"</span>.';
@@ -951,9 +948,7 @@
             setTimeout(() => prompt.classList.add('show'), 3000);
         }
 
-        function closeInstallPrompt() {
-            document.getElementById('install-prompt').classList.remove('show');
-        }
+        function closeInstallPrompt() { document.getElementById('install-prompt').classList.remove('show'); }
 
         window.onload = () => { 
             updateWidget(); 
