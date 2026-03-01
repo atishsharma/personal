@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ember Crochet Studio Pro - Boutique Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9f7f4;
+            color: #2d3436;
+        }
+
+        .category-tab {
+            @apply px-5 py-2 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 bg-white border border-gray-200 shadow-sm hover:bg-orange-50;
+        }
+
+        .category-tab.active {
+            @apply bg-orange-500 text-white shadow-lg border-orange-600 ring-4 ring-orange-200 ring-offset-2;
+        }
+
+        .crochet-grid {
+            display: grid;
+            gap: 1px;
+            background: #e2e8f0;
+            border: 2px solid #1f2937;
+            aspect-ratio: 1/1;
+            width: 100%;
+            position: relative;
+        }
+
+        .stitch {
+            background: #ffffff;
+            aspect-ratio: 1/1;
+            cursor: crosshair;
+            position: relative;
+        }
+
+        .stitch.stamp-preview {
+            opacity: 0.6;
+            outline: 1px dashed rgba(0, 0, 0, 0.3);
+        }
+
+        .visual-container {
+            position: relative;
+            width: 100%;
+            height: 520px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2.5rem;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            border: 1px solid #333;
+            background: #000;
+            perspective: 1000px;
+        }
+
+        .visual-mask-wrapper {
+            width: 80%;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease-out;
+        }
+
+        .visual-mask {
+            width: 100%;
+            height: 100%;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            background-repeat: repeat;
+            position: relative;
+            image-rendering: auto;
+        }
+
+        .float-control {
+            @apply bg-black/50 backdrop-blur-md shadow-lg rounded-xl p-2.5 pointer-events-auto hover:bg-black/70 transition-all flex items-center gap-2 border border-white/10 text-white;
+        }
+
+        .history-btn {
+            @apply p-1.5 rounded-lg bg-gray-100 border border-gray-200 hover:bg-gray-200 transition-all active:scale-90 active:bg-orange-100 active:border-orange-300 disabled:opacity-20 disabled:cursor-not-allowed;
+        }
+
+        .layer-item {
+            @apply flex items-center justify-between p-3 bg-white border border-gray-100 rounded-2xl mb-2 transition-all cursor-pointer hover:border-orange-200;
+        }
+
+        .layer-item.active {
+            @apply border-orange-400 bg-orange-50 shadow-sm ring-1 ring-orange-200;
+        }
+
+        #reportModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #motifHoverWindow {
+            position: fixed;
+            pointer-events: none;
+            z-index: 3000;
+            display: none;
+            width: 160px;
+            @apply bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 flex flex-col items-center;
+            transform: translate(15px, 15px);
+        }
+
+        .hover-canvas-container {
+            width: 140px;
+            height: 140px;
+            @apply bg-gray-100 rounded-xl overflow-hidden border border-gray-100;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 22px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: #f97316;
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(18px);
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-[#f9f7f4] min-h-screen flex flex-col">
+
+    <div id="motifHoverWindow">
+        <div class="hover-canvas-container">
+            <canvas id="hoverPreviewCanvas" width="140" height="140" style="image-rendering: pixelated;"></canvas>
+        </div>
+    </div>
+
+    <!-- Final Report Dialog -->
+    <div id="reportModal" onclick="closeReportModal(event)">
+        <div class="bg-white rounded-[3.5rem] w-full max-w-6xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl"
+            onclick="event.stopPropagation()">
+            <div class="p-8 border-b border-gray-100 flex justify-between items-end bg-gray-50/50">
+                <div>
+                    <h2 class="text-3xl font-bold font-serif italic text-gray-900 leading-tight">Ember Crochet Report
+                    </h2>
+                    <p
+                        class="text-[10px] font-black text-orange-500 uppercase tracking-[0.3em] mt-2 text-center uppercase leading-none">
+                        Landscape Production Blueprint</p>
+                </div>
+                <button onclick="closeReportModal()"
+                    class="w-12 h-12 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all shadow-sm">✕</button>
+            </div>
+
+            <div id="modalPrintArea" class="p-10 overflow-y-auto bg-white flex-grow no-scrollbar"
+                style="width: 1120px; margin: 0 auto;">
+                <!-- Content Injected via JS -->
+            </div>
+
+            <div class="p-8 border-t border-gray-100 flex gap-6 bg-gray-50/50">
+                <button onclick="closeReportModal()"
+                    class="flex-1 py-4 rounded-3xl font-bold text-xs bg-white border border-gray-200 hover:bg-gray-100 transition tracking-widest uppercase">Back
+                    to Studio</button>
+                <button onclick="generateFinalPDF()"
+                    class="flex-1 py-4 rounded-3xl font-black text-xs bg-gray-900 text-white hover:bg-black transition shadow-xl tracking-widest uppercase">Export
+                    Landscape PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-[1400px] mx-auto p-4 lg:p-8 flex-grow w-full">
+        <header class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <h1 class="text-3xl font-extrabold font-serif italic text-gray-900 leading-none">
+                Ember Crochet Studio <span class="text-orange-500 font-sans not-italic text-lg align-top">Pro</span>
+            </h1>
+            <button onclick="openReportModal()"
+                class="bg-gray-900 text-white px-8 py-4 rounded-2xl font-black text-xs hover:bg-black transition flex items-center justify-center gap-3 shadow-xl hover:scale-105 active:scale-95 tracking-wider uppercase">
+                📥 DOWNLOAD PATTERN REPORT
+            </button>
+        </header>
+
+        <div class="mb-8 space-y-6">
+            <div class="flex flex-wrap gap-3" id="categoryContainer"></div>
+            <div class="bg-white p-4 rounded-3xl shadow-sm border border-gray-100">
+                <label
+                    class="text-[10px] font-black uppercase text-gray-400 block mb-3 ml-2 tracking-widest italic uppercase">Silhouette
+                    Boutique</label>
+                <div id="silhouetteGrid" class="flex gap-4 overflow-x-auto pb-2 no-scrollbar"></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- LEFT COLUMN: EDITOR & LAYERS -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="bg-white p-6 rounded-[2.5rem] shadow-xl border border-white">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold">Pattern Canvas</h2>
+                        <div class="flex gap-2">
+                            <button onclick="fillActiveLayer()"
+                                class="text-[9px] uppercase font-black bg-gray-100 px-3 py-1.5 rounded-lg hover:bg-gray-200 transition">Fill</button>
+                            <button onclick="resetCanvas()"
+                                class="text-[9px] uppercase font-black bg-orange-50 text-orange-600 px-3 py-1.5 rounded-lg hover:bg-orange-100 transition">Clear
+                                All</button>
+                        </div>
+                    </div>
+
+                    <div id="gridContainer"
+                        class="mb-6 rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 shadow-inner">
+                        <div id="editorGrid" class="crochet-grid"></div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-3 rounded-2xl flex items-center justify-between gap-4">
+                            <label class="text-[10px] font-black uppercase text-gray-400 shrink-0 uppercase">Stitch
+                                Scale</label>
+                            <input type="range" id="globalScale" min="5" max="300" value="60"
+                                class="w-full accent-orange-500" oninput="updateVisualScale(this.value)">
+                            <span id="scaleLabel" class="text-xs font-bold w-12 text-right">60px</span>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-2xl flex items-center justify-between gap-4">
+                            <label
+                                class="text-[10px] font-black uppercase text-gray-400 shrink-0 uppercase">Resolution</label>
+                            <select id="gridSizeSelect" onchange="changeGridSize(this.value)"
+                                class="w-full bg-transparent text-xs font-bold focus:outline-none text-right cursor-pointer uppercase">
+                                <option value="20" selected>20x20 Standard</option>
+                                <option value="32">32x32 Fine</option>
+                                <option value="48">48x48 Boutique</option>
+                            </select>
+                        </div>
+                        <div class="bg-gray-50 p-3 rounded-2xl flex items-center justify-between gap-4">
+                            <label class="text-[10px] font-black uppercase text-gray-400 shrink-0 uppercase">Yarn
+                                Palette</label>
+                            <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-1" id="colorPalette"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-[2.5rem] shadow-xl border border-white">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-bold">Design Layers</h2>
+                        <button onclick="addNewPaintLayer()"
+                            class="text-[9px] font-black uppercase bg-gray-900 text-white px-4 py-2 rounded-xl hover:bg-black transition shadow-sm">+
+                            New Paint Layer</button>
+                    </div>
+                    <div id="layersList" class="max-h-64 overflow-y-auto no-scrollbar pr-2"></div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: STUDIO PREVIEW -->
+            <div class="lg:col-span-7 space-y-6">
+                <div class="bg-white p-5 rounded-[2.5rem] shadow-xl border border-white h-full flex flex-col">
+                    <div class="flex justify-between items-center px-2 mb-4">
+                        <div class="flex items-center gap-3">
+                            <h2 class="text-lg font-bold">Studio Preview</h2>
+                            <div class="flex gap-1 bg-gray-50 p-1 rounded-xl border border-gray-100">
+                                <button onclick="undo()" id="undoBtn" class="history-btn" title="Undo Action"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M3 7v6h6" />
+                                        <path d="M21 17a9 9 0 0 0-9-9 6.7 6.7 0 0 0-5 2.2L3 13" />
+                                    </svg></button>
+                                <button onclick="redo()" id="redoBtn" class="history-btn" title="Redo Action"><svg
+                                        xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 7v6h-6" />
+                                        <path d="M3 17a9 9 0 0 1 9-9 6.7 6.7 0 0 1 5 2.2L21 13" />
+                                    </svg></button>
+                            </div>
+                        </div>
+                        <span id="currentSelection"
+                            class="text-[10px] font-black text-orange-500 uppercase px-3 py-1 bg-orange-50 rounded-full tracking-wider uppercase leading-none">Model</span>
+                    </div>
+
+                    <div class="visual-container flex-grow" id="dropTarget" ondragover="allowDrop(event)"
+                        ondrop="onDropPattern(event)">
+                        <div class="visual-mask-wrapper" id="zoomWrapper">
+                            <div id="visualMask" class="visual-mask"></div>
+                        </div>
+                        <div
+                            class="absolute bottom-5 left-5 right-5 flex flex-wrap gap-2 justify-between pointer-events-none">
+                            <div class="flex gap-2">
+                                <div class="float-control pointer-events-auto"><label
+                                        class="text-[9px] font-black uppercase text-white/50">Tilt</label><input
+                                        type="range" min="-45" max="45" value="0" class="w-20 h-1 accent-orange-500"
+                                        oninput="tiltPreview(this.value)"></div>
+                                <div class="float-control pointer-events-auto"><label
+                                        class="text-[9px] font-black uppercase text-white/50">Zoom</label><input
+                                        type="range" min="0.5" max="2.5" step="0.1" value="1"
+                                        class="w-20 h-1 accent-orange-500" oninput="zoomPreview(this.value)"></div>
+                            </div>
+                            <div class="float-control pointer-events-auto"><label
+                                    class="text-[9px] font-black uppercase text-white/50">Studio BG</label><input
+                                    type="color" value="#000000" id="bgColorPicker"
+                                    oninput="updatePreviewBG(this.value)"
+                                    class="w-6 h-6 rounded cursor-pointer border-none p-0 bg-transparent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-12 bg-white p-8 rounded-[3rem] shadow-2xl border border-white">
+            <div
+                class="flex flex-col md:flex-row md:items-center justify-between mb-6 border-b border-gray-100 pb-4 gap-4">
+                <div>
+                    <h2 class="text-xl font-bold tracking-tight">Designer Motif Library</h2>
+                    <p class="text-xs text-gray-400 font-bold uppercase mt-1 italic uppercase">Select a motif. Click
+                        grid to place. Active motif layers can be moved by clicking the grid.</p>
+                </div>
+                <div class="flex items-center gap-6 bg-gray-50 px-5 py-3 rounded-2xl border border-gray-100">
+                    <button id="finalizeBtn" onclick="bakeStamp()"
+                        class="hidden bg-orange-500 text-white text-[10px] font-black px-4 py-2 rounded-full uppercase hover:bg-orange-600 transition shadow-lg">Finalize
+                        Stamp</button>
+                    <div class="text-[10px] font-black text-orange-600 uppercase" id="selectedLabel">Painting Mode</div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-10 gap-3" id="motifLibrary"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- BOUTIQUE CONSTANTS ---
+        const palette = ['#FBBF24', '#3B82F6', '#EF4444', '#10B981', '#F472B6', '#8B5CF6', '#1F2937', '#ffffff', '#78350F', '#6366f1', '#fb923c', '#4ade80'];
+
+        const boutiqueMotifs = [
+            { id: 'ref-chevron', icon: '📐', name: 'Chevron' }, { id: 'ref-mandala', icon: '☸️', name: 'Mandala' },
+            { id: 'ref-bobble', icon: '🧶', name: 'Bobble' }, { id: 'ref-zigzag', icon: '⚡', name: 'Zigzag' },
+            { id: 'granny', icon: '🌸', name: 'Granny' }, { id: 'waffle', icon: '🧇', name: 'Waffle' },
+            { id: 'check', icon: '🏁', name: 'Check' }, { id: 'ombre', icon: '🌈', name: 'Ombre' },
+            { id: 'nordic', icon: '❄️', name: 'Nordic' }, { id: 'v-stitch', icon: '∨', name: 'V-Stitch' },
+            { id: 'bubbles', icon: '🫧', name: 'Bubbles' }, { id: 'moss', icon: '🌿', name: 'Moss' },
+            { id: 'star', icon: '⭐', name: 'Star' }, { id: 'diamond', icon: '💎', name: 'Diamond' },
+            { id: 'spiral', icon: '🌀', name: 'Spiral' }, { id: 'heart', icon: '❤️', name: 'Heart' },
+            { id: 'snowflake', icon: '❄️', name: 'Snowflake' }, { id: 'crescent', icon: '🌙', name: 'Crescent' },
+            { id: 'paw', icon: '🐾', name: 'Paw' }, { id: 'leaf', icon: '🍃', name: 'Leaf' },
+            { id: 'lattice', icon: '🕸️', name: 'Lattice' }, { id: 'cross', icon: '❌', name: 'Cross' },
+            { id: 'border', icon: '➰', name: 'Border' }, { id: 'dots-lg', icon: '🔴', name: 'Dots LG' },
+            { id: 'tri', icon: '🔺', name: 'Triangles' }, { id: 'clover', icon: '🍀', name: 'Clover' },
+            { id: 'stripes', icon: '📏', name: 'Stripes' }, { id: 'harlequin', icon: '🃏', name: 'Harlequin' },
+            { id: 'mosaic', icon: '🧱', name: 'Mosaic' }, { id: 'waves', icon: '🌊', name: 'Waves' }
+        ];
+
+        const library = {
+            fashion: { title: 'Fashion', icon: '👗', items: [{ id: 'dress-mini', name: 'Mini Dress', path: 'M30,10 L70,10 L85,90 L15,90 Z' }, { id: 'dress-aline', name: 'A-Line', path: 'M40,10 L60,10 L90,95 L10,95 Z' }, { id: 'dress-ruffle', name: 'Ruffle', path: 'M35,15 L65,15 L80,50 L85,90 L15,90 L20,50 Z' }, { id: 'dress-maxi', name: 'Maxi Gown', path: 'M35,5 L65,5 L95,95 L5,95 Z' }, { id: 'dress-pinafore', name: 'Pinafore', path: 'M30,20 L40,20 L40,40 L60,40 L60,20 L70,20 L80,90 L20,90 Z' }, { id: 'dress-tutu', name: 'Tutu Skirt', path: 'M30,40 L70,40 L95,90 L5,90 Z' }, { id: 'dress-party', name: 'Party Dress', path: 'M30,10 Q50,0 70,10 L80,40 Q50,50 20,40 Z' }] },
+            bags: { title: 'Handbags', icon: '👜', items: [{ id: 'bag-tote', name: 'Boutique Tote', path: 'M15,35 L85,35 L82,90 L18,90 Z M35,35 Q35,5 50,5 Q65,5 65,35' }, { id: 'bag-baguette', name: 'Baguette', path: 'M5,50 Q5,40 15,40 L85,40 Q95,40 95,50 L95,70 Q95,80 85,80 L15,80 Q5,80 5,70 Z' }, { id: 'bag-clutch', name: 'Envelope Clutch', path: 'M10,40 L90,40 L90,85 L10,85 Z M10,40 L50,65 L90,40' }, { id: 'bag-backpack', name: 'Mini Pack', path: 'M25,40 Q25,20 50,20 Q75,20 75,40 L85,90 L15,90 Z' }, { id: 'bag-saddle', name: 'Saddle Bag', path: 'M20,30 L80,30 L80,60 Q80,95 50,95 Q20,95 20,60 Z' }, { id: 'bag-bucket', name: 'Bucket Bag', path: 'M25,25 L75,25 Q85,95 50,95 Q15,95 25,25 Z' }, { id: 'bag-hobo', name: 'Hobo Bag', path: 'M10,50 Q10,20 50,20 Q90,20 90,50 Q90,95 50,95 Q10,95 10,50' }, { id: 'bag-wristlet', name: 'Wristlet', path: 'M30,40 L70,40 L70,70 L30,70 Z M70,45 Q90,45 90,20 Q90,5 70,5' }] },
+            home: { title: 'Home Decor', icon: '🏠', items: [{ id: 'cushion', name: 'Cushion Cover', path: 'M15,15 Q15,10 20,10 L80,10 Q85,10 85,15 L85,85 Q85,90 80,90 L20,90 Q15,90 15,85 Z' }, { id: 'runner', name: 'Table Runner', path: 'M5,40 L95,40 L95,60 L5,60 Z' }, { id: 'plant', name: 'Plant Hanger', path: 'M50,5 L50,40 M35,40 L65,40 L60,70 L40,70 Z' }, { id: 'candle-s', name: 'Candle Cover (S)', path: 'M35,30 L65,30 L65,90 L35,90 Z' }, { id: 'candle-m', name: 'Candle Cover (M)', path: 'M35,20 L65,20 L65,90 L35,90 Z' }, { id: 'candle-l', name: 'Candle Cover (Tall)', path: 'M35,10 L65,10 L65,90 L35,90 Z' }] },
+            baby: { title: 'Baby', icon: '👶', items: [{ id: 'bootie', name: 'Baby Booties', path: 'M30,70 L30,40 Q30,25 50,25 L75,25 L75,85 Q40,95 30,85 Z' }, { id: 'blanket', name: 'Baby Blanket', path: 'M10,10 L90,10 L90,90 L10,90 Z' }, { id: 'b-dress', name: 'Baby Dress', path: 'M35,20 L65,20 L80,85 L20,85 Z' }] },
+            amigurumi: { title: 'Amigurumi', icon: '🧸', items: [{ id: 'bear', name: 'Mini Bear', path: 'M40,40 Q40,20 50,20 Q60,20 60,40 Q60,60 50,60 Z M35,30 Q35,15 45,15' }, { id: 'keychain', name: 'Keychain', path: 'M45,45 Q45,35 55,35 Q65,35 65,45 Q65,55 55,55 Z' }, { id: 'doll', name: 'Doll', path: 'M40,25 Q40,10 50,10 Q60,10 60,25 Q60,40 50,40 Z M35,40 L65,40 L70,90 L30,90 Z' }, { id: 'animal', name: 'Animal', path: 'M35,40 Q35,20 50,20 Q65,20 65,40 L65,80 L35,80 Z' }] },
+            more: { title: 'More Designs', icon: '✨', items: [{ id: 'bouquet-closed', name: 'Bouquet (C)', path: 'M50,10 Q35,40 40,90 L60,90 Q65,40 50,10' }, { id: 'bouquet-open', name: 'Bouquet (O)', path: 'M50,90 L30,30 Q50,10 70,30 Z M40,30 L60,30' }, { id: 'hat-sun', name: 'Sun Hat', path: 'M10,70 Q10,55 30,55 L30,40 Q30,20 50,20 Q70,20 70,40 L70,55 Q90,55 90,70 L90,80 L10,80 Z' }, { id: 'hat-beanie', name: 'Beanie Hat', path: 'M30,80 L70,80 Q70,30 50,30 Q30,30 30,80 Z' }, { id: 'hat-beret', name: 'Beret', path: 'M20,60 Q50,30 80,60 L80,70 Q50,85 20,70 Z' }, { id: 'hat-cowboy', name: 'Cowboy Hat', path: 'M10,75 Q30,65 30,50 L30,35 Q30,25 50,25 Q70,25 70,35 L70,50 Q70,65 90,75 Z' }, { id: 'hat-cloche', name: 'Cloche Hat', path: 'M25,80 Q25,30 50,30 Q75,30 75,80 Q50,95 25,80 Z' }] }
+        };
+
+        // --- CORE APPLICATION STATE ---
+        let layers = [];
+        let activeLayerIndex = 0;
+        let gridSize = 20;
+        let currentColor = '#FBBF24';
+        let isDrawing = false;
+        let isDraggingStamp = false;
+        let currentItem = null;
+        let currentCatId = 'fashion';
+        let selectedMotifId = null;
+        let ghostStamp = null;
+        let historyStack = [];
+        let historyIndex = -1;
+
+        // --- HOISTED CORE LOGIC ---
+
+        function isMotifActive(motifId, x, y, cx, cy, sz) {
+            let dx = x - cx, dy = y - cy;
+            let d = Math.sqrt(dx * dx + dy * dy);
+            switch (motifId) {
+                case 'ref-chevron': return y % 8 > Math.abs((x % 8) - 4);
+                case 'ref-mandala': return (d < sz / 4) && (Math.floor(Math.atan2(dy, dx) * 4) % 2 == 0 || d < sz / 10);
+                case 'heart': { let hx = dx / (sz / 5); let hy = -dy / (sz / 5); return (hx * hx + hy * hy - 0.5) ** 3 - hx * hx * hy ** 3 < 0; }
+                case 'star': return (Math.abs(dx) < 1 || Math.abs(dy) < 1 || Math.abs(dx) === Math.abs(dy)) && (d < sz / 3.5);
+                case 'snowflake': return (Math.abs(dx) < 0.6 || Math.abs(dy) < 0.6 || Math.abs(dx) === Math.abs(dy)) && (d < sz / 3);
+                case 'clover': return Math.sqrt((dx - 2) ** 2 + (dy + 2) ** 2) < 2.5 || Math.sqrt((dx + 2) ** 2 + (dy + 2) ** 2) < 2.5 || Math.sqrt((dx - 2) ** 2 + (dy - 2) ** 2) < 2.5 || Math.sqrt((dx + 2) ** 2 + (dy - 2) ** 2) < 2.5;
+                case 'paw': return d < 3 || Math.sqrt((dx - 2) ** 2 + (dy + 2.5) ** 2) < 1.5 || Math.sqrt((dx + 2) ** 2 + (dy + 2.5) ** 2) < 1.5 || Math.sqrt(dx ** 2 + (dy + 3) ** 2) < 1.5;
+                case 'crescent': return (d < sz / 5) && (Math.sqrt((dx - 2) ** 2 + dy ** 2) > sz / 6);
+                case 'leaf': return Math.abs(dx) < (sz / 8 - Math.abs(dy / 1.5)) && Math.abs(dy) < sz / 4;
+                case 'waves': return y > cy + Math.sin(x / 2) * 2;
+                case 'check': return (Math.floor(x / 4) + Math.floor(y / 4)) % 2 === 0;
+                case 'nordic': return Math.abs(dx) === Math.abs(dy) || dx === 0 || dy === 0;
+                case 'v-stitch': return (x + y) % 4 === 0 || (x - y) % 4 === 0;
+                case 'stripes': return Math.floor(x / 2) % 2 === 0;
+                case 'lattice': return (x + y) % 5 == 0 || (x - y) % 5 == 0;
+                case 'cross': return Math.abs(dx) === Math.abs(dy);
+                case 'border': return x === 0 || x === sz - 1 || y === 0 || y === sz - 1;
+                case 'dots-lg': return (x % 5 == 2 && y % 5 == 2);
+                case 'tri': return Math.abs(dx) < dy - cy && dy > cy;
+                case 'granny': { let dm = Math.max(Math.abs(dx), Math.abs(dy)); return dm < sz / 4; }
+                case 'waffle': return (x % 3 === 0 || y % 3 === 0);
+                case 'bubbles': return (x % 5 === 0 && y % 5 === 0);
+                case 'moss': return (x + y) % 2 === 0;
+                case 'spiral': return Math.floor(d + Math.atan2(dy, dx) * 3) % 2 === 0 && d < sz / 3;
+                case 'harlequin': return (Math.floor(x / 3) % 2 !== Math.floor(y / 3) % 2);
+                case 'mosaic': return (x + y) % 3 == 0 || (x - y) % 4 == 0;
+                case 'ombre': return y < cy + sz / 6;
+                case 'ref-bobble': return (x % 2 == 0 && y % 2 == 0);
+                case 'ref-zigzag': return (x + y) % 6 < 3;
+                default: return d < 1;
+            }
+        }
+
+        function handleHoverMove(e) {
+            const win = document.getElementById('motifHoverWindow');
+            if (win && win.style.display === 'flex') {
+                win.style.left = (e.clientX + 10) + 'px';
+                win.style.top = (e.clientY + 10) + 'px';
+            }
+        }
+
+        function showHoverPreview(motifId) {
+            const win = document.getElementById('motifHoverWindow');
+            const canvas = document.getElementById('hoverPreviewCanvas');
+            if (!win || !canvas) return;
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, 140, 140);
+            const previewSize = 30; const step = 140 / previewSize; const mid = previewSize / 2;
+            for (let y = 0; y < previewSize; y++) {
+                for (let x = 0; x < previewSize; x++) {
+                    if (isMotifActive(motifId, x, y, mid, mid, previewSize)) {
+                        ctx.fillStyle = currentColor;
+                        ctx.fillRect(x * step, y * step, step, step);
+                    }
+                }
+            }
+            win.style.display = 'flex';
+        }
+
+        function hideHoverPreview() {
+            const win = document.getElementById('motifHoverWindow');
+            if (win) win.style.display = 'none';
+        }
+
+        function renderCategories() {
+            const container = document.getElementById('categoryContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            Object.keys(library).forEach(id => {
+                const btn = document.createElement('div');
+                btn.className = `category-tab ${id === currentCatId ? 'active' : ''}`;
+                btn.onclick = () => setCategory(id);
+                btn.innerHTML = `<span>${library[id].icon}</span> <span>${library[id].title}</span>`;
+                container.appendChild(btn);
+            });
+        }
+
+        function setCategory(id) {
+            currentCatId = id;
+            renderCategories();
+            const grid = document.getElementById('silhouetteGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            library[id].items.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-gray-50 border-2 border-transparent rounded-2xl p-4 min-w-[110px] hover:bg-white hover:border-orange-200 transition-all flex flex-col items-center shrink-0 group';
+                btn.onclick = () => selectItem(item);
+                btn.innerHTML = `<svg viewBox="0 0 100 100" class="w-8 h-8 fill-gray-300 group-hover:fill-orange-500 transition-colors"><path d="${item.path}"></path></svg><span class="text-[8px] font-black uppercase mt-2 text-gray-400 group-hover:text-gray-900 leading-tight">${item.name}</span>`;
+                grid.appendChild(btn);
+            });
+            selectItem(library[id].items[0]);
+        }
+
+        function selectItem(item) {
+            currentItem = item;
+            const mask = document.getElementById('visualMask');
+            if (!mask) return;
+            const url = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='${item.path}' fill='black'/%3E%3C/svg%3E")`;
+            mask.style.maskImage = url;
+            mask.style.webkitMaskImage = url;
+            document.getElementById('currentSelection').innerText = item.name;
+        }
+
+        function renderMotifs() {
+            const lib = document.getElementById('motifLibrary');
+            if (!lib) return;
+            lib.innerHTML = '';
+            boutiqueMotifs.forEach(m => {
+                const div = document.createElement('div');
+                div.className = 'bg-white border shadow-sm rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer hover:border-orange-400 transition w-full motif-item';
+                div.id = `motif-${m.id}`;
+                div.onclick = () => {
+                    if (selectedMotifId) bakeStamp();
+                    selectedMotifId = (selectedMotifId === m.id) ? null : m.id;
+                    document.querySelectorAll('.motif-item').forEach(el => el.classList.remove('selected'));
+                    if (selectedMotifId) {
+                        div.classList.add('selected');
+                        document.getElementById('selectedLabel').innerText = `Stamp Tool: ${m.name}`;
+                        document.getElementById('finalizeBtn').classList.remove('hidden');
+                    } else {
+                        document.getElementById('selectedLabel').innerText = 'Painting Mode';
+                        document.getElementById('finalizeBtn').classList.add('hidden');
+                    }
+                };
+                div.onmouseenter = () => showHoverPreview(m.id);
+                div.onmouseleave = hideHoverPreview;
+                div.innerHTML = `<span class="text-xl mb-1">${m.icon}</span><span class="text-[9px] font-black uppercase text-center leading-none">${m.name}</span>`;
+                lib.appendChild(div);
+            });
+        }
+
+        // --- LAYER & GRID LOGIC ---
+
+        function resetCanvas() {
+            layers = [{ id: Date.now(), name: 'Base Layer', type: 'paint', visible: true, data: Array(gridSize * gridSize).fill('#ffffff') }];
+            activeLayerIndex = 0;
+            historyStack = []; historyIndex = -1;
+            renderLayersUI(); renderGrid(); saveHistory();
+        }
+
+        function addNewPaintLayer() {
+            bakeStamp();
+            const newLayer = { id: Date.now(), name: `Layer ${layers.length + 1}`, type: 'paint', visible: true, data: Array(gridSize * gridSize).fill(null) };
+            layers.push(newLayer);
+            activeLayerIndex = layers.length - 1;
+            renderLayersUI(); renderGrid(); saveHistory();
+        }
+
+        function addMotifLayer(motifId, cx, cy, color) {
+            const motif = boutiqueMotifs.find(m => m.id === motifId);
+            const newLayer = { id: Date.now(), name: motif.name, type: 'motif', motifId, cx, cy, color, visible: true };
+            layers.push(newLayer);
+            activeLayerIndex = layers.length - 1;
+            renderLayersUI(); renderGrid(); saveHistory();
+        }
+
+        function removeLayer(idx) {
+            if (layers.length <= 1) return;
+            layers.splice(idx, 1);
+            activeLayerIndex = Math.min(activeLayerIndex, layers.length - 1);
+            renderLayersUI(); renderGrid(); saveHistory();
+        }
+
+        function moveLayer(idx, dir) {
+            const newIdx = idx + dir;
+            if (newIdx < 0 || newIdx >= layers.length) return;
+            const temp = layers[idx];
+            layers[idx] = layers[newIdx];
+            layers[newIdx] = temp;
+            activeLayerIndex = newIdx;
+            renderLayersUI(); renderGrid(); saveHistory();
+        }
+
+        function toggleLayerVisibility(idx) {
+            layers[idx].visible = !layers[idx].visible;
+            renderLayersUI(); renderGrid();
+        }
+
+        function renderLayersUI() {
+            const list = document.getElementById('layersList');
+            if (!list) return;
+            list.innerHTML = '';
+            [...layers].reverse().forEach((layer, revIdx) => {
+                const idx = layers.length - 1 - revIdx;
+                const item = document.createElement('div');
+                item.className = `layer-item ${idx === activeLayerIndex ? 'active' : ''}`;
+                item.onclick = () => {
+                    activeLayerIndex = idx;
+                    renderLayersUI();
+                    if (layers[idx].type === 'motif') {
+                        document.getElementById('selectedLabel').innerText = `Edit: ${layers[idx].name}`;
+                    }
+                };
+                item.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <button onclick="event.stopPropagation(); toggleLayerVisibility(${idx})" class="text-gray-400 hover:text-orange-500">${layer.visible ? '👁️' : '🕶️'}</button>
+                        <span class="text-[10px] font-black uppercase tracking-tight">${layer.name}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="event.stopPropagation(); moveLayer(${idx}, 1)" class="w-6 h-6 border border-gray-200 rounded hover:bg-gray-100 flex items-center justify-center font-bold">↑</button>
+                        <button onclick="event.stopPropagation(); moveLayer(${idx}, -1)" class="w-6 h-6 border border-gray-200 rounded hover:bg-gray-100 flex items-center justify-center font-bold">↓</button>
+                        <button onclick="event.stopPropagation(); removeLayer(${idx})" class="w-6 h-6 hover:text-red-500 flex items-center justify-center">🗑️</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function compositeGrid() {
+            const final = Array(gridSize * gridSize).fill('#ffffff');
+            layers.forEach(layer => {
+                if (!layer.visible) return;
+                for (let i = 0; i < final.length; i++) {
+                    const x = i % gridSize, y = Math.floor(i / gridSize);
+                    if (layer.type === 'paint') {
+                        if (layer.data[i] && layer.data[i] !== '#ffffff') final[i] = layer.data[i];
+                    } else {
+                        if (isMotifActive(layer.motifId, x, y, layer.cx, layer.cy, gridSize)) final[i] = layer.color;
+                    }
+                }
+            });
+            return final;
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('editorGrid');
+            if (!grid) return;
+            grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+            const data = compositeGrid();
+            grid.innerHTML = '';
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const stitch = document.createElement('div');
+                stitch.className = 'stitch';
+                let x = i % gridSize, y = Math.floor(i / gridSize);
+                stitch.style.backgroundColor = data[i];
+
+                if (ghostStamp && isMotifActive(ghostStamp.id, x, y, ghostStamp.x, ghostStamp.y, gridSize)) {
+                    stitch.style.backgroundColor = currentColor;
+                    stitch.classList.add('stamp-preview');
+                }
+
+                stitch.onmouseover = () => { if (isDrawing) { if (selectedMotifId) { ghostStamp = { id: selectedMotifId, x, y }; renderGrid(); } else paintCell(i); } };
+                stitch.onmousedown = () => {
+                    if (selectedMotifId) { ghostStamp = { id: selectedMotifId, x, y }; renderGrid(); }
+                    else if (layers[activeLayerIndex].type === 'motif') { layers[activeLayerIndex].cx = x; layers[activeLayerIndex].cy = y; renderGrid(); }
+                    else paintCell(i);
+                };
+                grid.appendChild(stitch);
+            }
+            updateLiveTexture();
+        }
+
+        function paintCell(idx) {
+            const layer = layers[activeLayerIndex];
+            if (layer.type === 'paint') { layer.data[idx] = currentColor; renderGrid(); }
+        }
+
+        function fillActiveLayer() {
+            const layer = layers[activeLayerIndex];
+            if (layer.type === 'paint') { layer.data = Array(gridSize * gridSize).fill(currentColor); renderGrid(); saveHistory(); }
+        }
+
+        function bakeStamp() {
+            if (ghostStamp) { addMotifLayer(ghostStamp.id, ghostStamp.x, ghostStamp.y, currentColor); ghostStamp = null; renderGrid(); }
+        }
+
+        // --- PALETTE & TECHNICAL UI ---
+
+        function createPalette() {
+            const container = document.getElementById('colorPalette');
+            if (!container) return;
+            container.innerHTML = '';
+            palette.forEach(color => {
+                const btn = document.createElement('button');
+                btn.className = 'w-6 h-6 rounded-full border-2 border-white shadow-sm shrink-0';
+                btn.style.backgroundColor = color;
+                btn.onclick = () => {
+                    bakeStamp(); currentColor = color; selectedMotifId = null;
+                    document.querySelectorAll('.motif-item').forEach(el => el.classList.remove('selected'));
+                    document.querySelectorAll('#colorPalette button').forEach(b => b.style.outline = 'none');
+                    btn.style.outline = '2px solid #f97316';
+                    document.getElementById('selectedLabel').innerText = 'Painting Mode';
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function changeGridSize(size) { gridSize = parseInt(size); resetCanvas(); }
+        function updateVisualScale(val) { document.getElementById('visualMask').style.backgroundSize = `${val}px ${val}px`; document.getElementById('scaleLabel').innerText = `${val}px`; }
+        function updatePreviewBG(c) { document.getElementById('dropTarget').style.background = c; }
+        function tiltPreview(v) { document.getElementById('visualMask').style.transform = `rotateY(${v}deg)`; }
+        function zoomPreview(v) { document.getElementById('zoomWrapper').style.transform = `scale(${v})`; }
+
+        function updateLiveTexture() {
+            const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 512;
+            const ctx = canvas.getContext('2d'); const step = 512 / gridSize;
+            const data = compositeGrid();
+            data.forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect((i % gridSize) * step, Math.floor(i / gridSize) * step, step, step); });
+            if (ghostStamp) {
+                for (let i = 0; i < data.length; i++) {
+                    if (isMotifActive(ghostStamp.id, i % gridSize, Math.floor(i / gridSize), ghostStamp.x, ghostStamp.y, gridSize)) {
+                        ctx.fillStyle = currentColor; ctx.fillRect((i % gridSize) * step, Math.floor(i / gridSize) * step, step, step);
+                    }
+                }
+            }
+            document.getElementById('visualMask').style.backgroundImage = `url(${canvas.toDataURL()})`;
+        }
+
+        // --- STATE & HISTORY ---
+
+        function saveHistory() {
+            const data = JSON.stringify(layers);
+            if (historyIndex < historyStack.length - 1) historyStack = historyStack.slice(0, historyIndex + 1);
+            if (historyStack[historyIndex] === data) return;
+            historyStack.push(data);
+            if (historyStack.length > 50) historyStack.shift();
+            historyIndex = historyStack.length - 1;
+            updateHistoryButtons();
+        }
+        function undo() { if (historyIndex > 0) { historyIndex--; layers = JSON.parse(historyStack[historyIndex]); activeLayerIndex = Math.min(activeLayerIndex, layers.length - 1); renderLayersUI(); renderGrid(); updateHistoryButtons(); } }
+        function redo() { if (historyIndex < historyStack.length - 1) { historyIndex++; layers = JSON.parse(historyStack[historyIndex]); activeLayerIndex = Math.min(activeLayerIndex, layers.length - 1); renderLayersUI(); renderGrid(); updateHistoryButtons(); } }
+        function updateHistoryButtons() {
+            const u = document.getElementById('undoBtn'); const r = document.getElementById('redoBtn');
+            if (u) u.disabled = historyIndex <= 0; if (r) r.disabled = historyIndex >= historyStack.length - 1;
+        }
+
+        // --- REPORTING ---
+
+        function openReportModal() {
+            bakeStamp();
+            const modal = document.getElementById('reportModal');
+            const area = document.getElementById('modalPrintArea');
+            if (!modal || !area) return;
+            const data = compositeGrid();
+            const usedColors = [...new Set(data)].filter(c => c !== '#ffffff');
+            const currentScale = document.getElementById('globalScale').value;
+            const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 512;
+            const pCtx = canvas.getContext('2d'); const step = 512 / gridSize;
+            data.forEach((c, i) => { pCtx.fillStyle = c; pCtx.fillRect((i % gridSize) * step, Math.floor(i / gridSize) * step, step, step); });
+            const patternData = canvas.toDataURL();
+            const reportPatternSize = (currentScale / 4.16) || 15;
+
+            area.innerHTML = `
+                <div style="display: flex; width: 1040px; gap: 60px; align-items: stretch;">
+                    <div style="flex: 1; border-right: 2px dashed #eee; padding-right: 40px;">
+                        <div style="border-bottom: 5px solid #f97316; padding-bottom: 25px; margin-bottom: 40px;">
+                            <h3 style="font-size: 32px; font-family: serif; color: #111; margin: 0;">Ember Crochet Report</h3>
+                            <p style="color: #f97316; font-weight: 800; text-transform: uppercase; margin-top: 6px; letter-spacing: 2px; font-size: 11px;">Boutique Production Sheet</p>
+                        </div>
+                        <div style="background: #000; padding: 40px; border-radius: 40px; text-align: center; margin-bottom: 40px;">
+                            <svg width="280" height="280" viewBox="0 0 100 100">
+                                <defs><pattern id="repPat" patternUnits="userSpaceOnUse" width="${reportPatternSize}" height="${reportPatternSize}"><image href="${patternData}" width="${reportPatternSize}" height="${reportPatternSize}" /></pattern></defs>
+                                <path d="${currentItem.path}" fill="url(#repPat)" stroke="#fff" stroke-width="0.3" />
+                            </svg>
+                            <p style="color: #fff; font-weight: 800; text-transform: uppercase; margin-top: 25px; letter-spacing: 3px; font-size: 14px;">${currentItem.name}</p>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div style="background: #f9f7f4; padding: 25px; border-radius: 25px;">
+                                <h4 style="font-size: 10px; color: #bbb; text-transform: uppercase; margin-bottom: 12px; font-weight: 800;">Specs</h4>
+                                <p style="font-size: 12px; color: #444; line-height: 1.8; margin: 0;">Resolution: ${gridSize}x${gridSize}<br>Scale: ${currentScale}px<br>Layers: ${layers.length}</p>
+                            </div>
+                            <div style="background: #f9f7f4; padding: 25px; border-radius: 25px;">
+                                <h4 style="font-size: 10px; color: #bbb; text-transform: uppercase; margin-bottom: 12px; font-weight: 800;">Palette</h4>
+                                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                                    ${usedColors.map(c => `<div style="width: 18px; height: 18px; border-radius: 50%; background: ${c}; border: 1px solid #ddd;"></div>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="flex: 1;">
+                        <h4 style="font-size: 11px; color: #bbb; text-transform: uppercase; margin-bottom: 30px; font-weight: 800; text-align: center; letter-spacing: 3px;">Master Stitch Map</h4>
+                        <div style="display: grid; grid-template-columns: repeat(${gridSize}, 1fr); gap: 1px; background: #222; border: 4px solid #222; aspect-ratio: 1/1; border-radius: 12px; overflow: hidden;">
+                            ${data.map(c => `<div style="background:${c}; aspect-ratio:1/1;"></div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.style.display = 'flex';
+        }
+
+        function closeReportModal() { document.getElementById('reportModal').style.display = 'none'; }
+        async function generateFinalPDF() {
+            const area = document.getElementById('modalPrintArea');
+            const opt = { margin: 0.2, filename: `EMBER_SPEC_${currentItem.name.toUpperCase()}.pdf`, image: { type: 'jpeg', quality: 1.0 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'px', format: [800, 1150], orientation: 'landscape' } };
+            await html2pdf().set(opt).from(area).save();
+            closeReportModal();
+        }
+
+        function allowDrop(e) { e.preventDefault(); }
+        function onDropPattern(e) { e.preventDefault(); addMotifLayer(e.dataTransfer.getData('pattern'), gridSize / 2, gridSize / 2, currentColor); }
+
+        // --- APP INIT ---
+
+        function init() {
+            renderCategories();
+            renderMotifs();
+            createPalette();
+            resetCanvas();
+            setCategory('fashion');
+
+            document.body.addEventListener('mousedown', (e) => {
+                if (e.target.closest('#editorGrid')) {
+                    isDrawing = true;
+                }
+            });
+            document.body.addEventListener('mouseup', () => {
+                if (isDrawing || isDraggingStamp) saveHistory();
+                isDrawing = false;
+                isDraggingStamp = false;
+            });
+            document.addEventListener('mousemove', handleHoverMove);
+            updateHistoryButtons();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+        });
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>
