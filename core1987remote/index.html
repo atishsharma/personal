@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CL-9 CORE Universal Remote 1987 | Authentic Online Simulator</title>
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;0,800;1,700;1,800&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #2a2a2c; 
+            --remote-ivory: #e6e4dc; 
+            --remote-shadow: #c4c2b9;
+            --lcd-bg: #8ea998; 
+            --lcd-text: #1a1a1a;
+            --btn-blue: #0066cc; 
+            --btn-bg: #efeee8;
+            --btn-border: #b8b7b0;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            background-image: radial-gradient(circle at 50% 0%, #3a3a3c 0%, transparent 80%);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* MODERN PAGE WRAPPER                                                        */
+        /* -------------------------------------------------------------------------- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            width: 100%;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 60px;
+            width: 100%;
+            max-width: 1200px;
+            margin-bottom: 20px; 
+        }
+
+        @media (max-width: 1024px) {
+            .app-container { flex-direction: column; align-items: center; gap: 40px; }
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* THE DEVICE: CHASSIS & SHAPE                                                */
+        /* -------------------------------------------------------------------------- */
+        .device-block {
+            width: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            flex-shrink: 0;
+        }
+
+        .remote-chassis {
+            position: relative;
+            width: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            filter: drop-shadow(15px 25px 30px rgba(0,0,0,0.5));
+        }
+
+        /* The Shovel-Head (Wide Top) */
+        .remote-head {
+            position: relative;
+            width: 340px;
+            background: var(--remote-ivory);
+            border-radius: 4px 4px 0 0;
+            border: 1px solid #fff;
+            border-bottom: none;
+            padding: 25px 20px 15px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 50;
+            box-shadow: inset -2px -2px 5px rgba(0,0,0,0.05), inset 2px 2px 5px rgba(255,255,255,1);
+        }
+
+        /* ATS Design Emboss */
+        .ats-logo {
+            position: absolute;
+            top: 8px;
+            right: 15px;
+            font-weight: 900;
+            color: #d1cfc8;
+            letter-spacing: 2px;
+            font-size: 8px;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.9), -1px -1px 0px rgba(0,0,0,0.15);
+        }
+
+        /* The Handle (Narrow Bottom - Main Keys Only) */
+        .remote-body {
+            width: 260px;
+            background: var(--remote-ivory);
+            border-left: 1px solid #fff;
+            border-right: 1px solid #fff;
+            border-top: none;
+            padding: 0 15px 12px 15px; 
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 40;
+            box-shadow: inset -2px 0px 5px rgba(0,0,0,0.05), inset 2px 0px 5px rgba(255,255,255,1);
+        }
+
+        /* Slider Track (Houses Micro Keys) */
+        .remote-track {
+            width: 260px;
+            position: relative;
+            background: #d1cfc8; 
+            border-left: 1px solid #fff;
+            border-right: 1px solid #fff;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset -2px 0px 5px rgba(0,0,0,0.05), inset 2px 0px 5px rgba(255,255,255,1);
+        }
+
+        /* LCD Screen */
+        .oled-display {
+            height: 90px;
+            background: var(--lcd-bg);
+            border: 3px solid #d4d2ca;
+            border-radius: 2px;
+            padding: 4px 12px 8px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: var(--lcd-text);
+            box-shadow: inset 2px 4px 8px rgba(0,0,0,0.3), 0 1px 0 white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .lcd-row-top { display: flex; justify-content: space-between; align-items: flex-start; font-size: 11px; margin-top: -2px; }
+        .lcd-time { font-size: 22px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: baseline; gap: 4px;}
+        .lcd-ampm { font-size: 10px; line-height: 1; }
+        .lcd-row-bot { display: flex; justify-content: space-between; align-items: flex-end; font-size: 16px; font-weight: 800;}
+        .lcd-symbol { opacity: 0; transition: opacity 0.1s; }
+        .lcd-symbol.active { opacity: 1; }
+
+        /* -------------------------------------------------------------------------- */
+        /* PHYSICAL BUTTONS (HARDWARE ACCURATE)                                       */
+        /* -------------------------------------------------------------------------- */
+        .btn-phys {
+            background: var(--btn-bg);
+            border: 1px solid var(--btn-border);
+            box-shadow: 1px 2px 0px var(--remote-shadow), inset 1px 1px 2px white;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 6px 8px;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+        }
+        .btn-phys:active {
+            transform: translate(1px, 2px);
+            box-shadow: 0px 0px 0px transparent, inset 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .btn-label {
+            color: var(--btn-blue);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 800;
+            font-style: italic;
+            font-size: 16px;
+            line-height: 1;
+        }
+        .btn-sub {
+            font-size: 8px;
+            color: #222;
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            margin-top: 2px;
+            letter-spacing: -0.5px;
+        }
+
+        /* Rocker Switches (Paired Keys) */
+        .paired-btn { flex-direction: row; justify-content: space-between; align-items: center; padding: 0; }
+        .paired-btn .btn-sub { margin-top: 0; font-size: 9px; pointer-events: none; z-index: 0; }
+        .rocker-half { width: 50%; height: 100%; display: flex; flex-col; justify-content: center; z-index: 10; transition: background 0.1s; }
+        .rocker-half.left { align-items: flex-start; padding-left: 10px; }
+        .rocker-half.right { align-items: flex-end; padding-right: 10px; }
+        .rocker-half:hover { background: rgba(0,0,0,0.02); }
+        .rocker-half:active { background: rgba(0,0,0,0.05); }
+
+        /* -------------------------------------------------------------------------- */
+        /* SLIDE COVER & MICRO PANEL                                                  */
+        /* -------------------------------------------------------------------------- */
+        .micro-panel-bg {
+            height: 220px;
+            width: 100%;
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .micro-keys-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px 8px; width: 100%; padding: 5px; position: relative;
+        }
+
+        .slide-cover {
+            position: absolute;
+            top: 0; left: -1px; width: calc(100% + 2px); height: 270px; 
+            background: var(--remote-ivory);
+            border: 1px solid #fff;
+            border-top: 1px solid var(--btn-border);
+            border-radius: 0 0 10px 10px;
+            z-index: 30;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            box-shadow: inset -2px -2px 5px rgba(0,0,0,0.05), inset 2px 2px 5px rgba(255,255,255,1), 0 15px 25px rgba(0,0,0,0.3);
+        }
+        
+        .slide-cover.open { 
+            transform: translateY(220px); 
+        }
+
+        .slide-grip-area {
+            width: 100%; height: 50px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 12px; cursor: pointer; gap: 6px;
+        }
+        .horizontal-rib { 
+            width: 50px; 
+            height: 3px; 
+            background: #d4d2ca; 
+            border-bottom: 1px solid #ffffff; 
+            border-top: 1px solid #b8b7b0;
+            border-radius: 2px; 
+        }
+        
+        .core-logo-bottom {
+            font-weight: 900; color: #d1cfc8; letter-spacing: 6px; font-size: 24px; text-transform: uppercase;
+            font-family: 'Inter', sans-serif; transform: scaleY(0.7); margin-bottom: 20px;
+            text-shadow: 1px 1px 1px white, -1px -1px 1px rgba(0,0,0,0.1);
+        }
+
+        .spacer { height: 50px; transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .spacer.open { height: 270px; }
+
+        .reset-hole {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: #222;
+            border-radius: 50%;
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8), 1px 1px 0 rgba(255,255,255,0.6);
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        .btn-micro { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; user-select: none;}
+        .btn-micro-sq {
+            width: 26px; height: 26px; background: var(--btn-bg); border: 1px solid var(--btn-border);
+            box-shadow: 1px 1px 0px var(--remote-shadow), inset 1px 1px 1px white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: var(--btn-blue); font-weight: 900;
+        }
+        .btn-micro:active .btn-micro-sq { transform: translate(1px, 1px); box-shadow: none; }
+        .btn-micro-label { font-size: 8px; font-weight: 800; color: #333; font-family: 'Inter', sans-serif; letter-spacing: -0.5px;}
+
+        /* Authentic Manual Icons */
+        .icon-set::after { content: '≡'; font-size: 16px; margin-bottom: 2px;}
+        .icon-at::after { content: 'A'; }
+        .icon-edit::after { content: '⎍'; font-size: 14px; margin-bottom: 4px;}
+        .icon-cancel::after { content: ''; width: 10px; height: 10px; background: var(--btn-blue); }
+        .icon-left::after { content: '◀'; font-size: 10px;}
+        .icon-wait::after { content: '+'; font-size: 16px;}
+        .icon-delete::after { content: ''; width: 10px; height: 10px; border: 2px solid #555; }
+        .icon-right::after { content: '▶'; font-size: 10px;}
+        .icon-enable::after { content: 'En'; font-family: 'Inter', sans-serif; font-size: 10px; font-style: italic;}
+        .icon-key::after { content: ''; width: 6px; height: 6px; border: 2px solid var(--btn-blue); border-radius: 1px;}
+        .icon-do::after { content: 'L'; }
+        .icon-ok::after { content: '↵'; font-size: 14px;}
+
+        /* -------------------------------------------------------------------------- */
+        /* MANUAL CARDS & INFO HUB                                                    */
+        /* -------------------------------------------------------------------------- */
+        .info-block { width: 480px; display: flex; flex-direction: column; gap: 20px; }
+        
+        .manual-card {
+            background: #fff; border-radius: 8px; padding: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); border-left: 5px solid var(--btn-blue);
+            font-family: 'Inter', sans-serif; color: #333; width: 100%;
+        }
+
+        .manual-title { font-weight: 900; font-size: 18px; letter-spacing: -0.5px; border-bottom: 2px solid #eee; padding-bottom: 8px; margin-bottom: 12px; }
+        .manual-text { font-size: 13px; line-height: 1.6; color: #555; }
+
+        .reg-item { 
+            border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; align-items: center;
+            font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #444; cursor: pointer; transition: all 0.2s;
+        }
+        .reg-item:hover { background: #f8fafc; padding-left: 5px; border-left: 3px solid var(--btn-blue); }
+
+        .input-sim {
+            width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: bold;
+            outline: none; transition: border-color 0.2s;
+        }
+        .input-sim:focus { border-color: var(--btn-blue); }
+        .btn-sim {
+            background: var(--btn-blue); color: white; border: none; border-radius: 6px;
+            padding: 10px 15px; font-weight: bold; cursor: pointer; transition: all 0.2s;
+            font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-sim:hover { filter: brightness(1.1); }
+        .btn-sim:active { transform: scale(0.98); }
+
+        /* Custom Interactive Tooltip */
+        #custom-tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            color: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-family: 'Inter', sans-serif;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.15s;
+            white-space: pre-wrap;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CUSTOM TOOLTIP CONTAINER -->
+    <div id="custom-tooltip"></div>
+
+    <!-- MODERN HEADER -->
+    <header class="w-full bg-[#151515] text-white py-5 px-8 flex justify-between items-center shadow-lg border-b border-[#333]">
+        <div class="flex items-center gap-4">
+            <div class="font-black text-2xl tracking-tighter">CL-9 <span class="text-blue-500">CORE Universal Remote</span></div>
+            <div class="text-[10px] uppercase tracking-widest text-gray-400 bg-[#222] px-3 py-1.5 rounded border border-[#444]">1987 Authentic Simulator</div>
+        </div>
+        <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">ATS Design Studio</div>
+    </header>
+
+    <main class="main-wrapper">
+        <div class="app-container">
+            
+            <!-- BLOCK 1: THE HARDWARE & INSTRUCTIONS -->
+            <div class="device-block">
+                
+                <div class="remote-chassis">
+                    <!-- THE HEAD -->
+                    <div class="remote-head">
+                        <div class="ats-logo">ats design</div>
+                        <div class="oled-display">
+                            <!-- Battery Row -->
+                            <div class="flex justify-center text-[7px] font-black tracking-[0.2em] text-black opacity-80" data-tip="Low Battery Warning Indicator">
+                                <span id="lcd-battery">BATTERY</span>
+                            </div>
+                            <!-- Top Row: Time & Info -->
+                            <div class="lcd-row-top">
+                                <div class="lcd-time">
+                                    <span class="lcd-ampm" id="lcd-ampm">AM</span>
+                                    <span id="lcd-clock">10:50</span>
+                                </div>
+                                <div id="lcd-day" data-tip="Current Day of the Week (Updates Live)">TH</div>
+                            </div>
+                            <!-- Bottom Row: Status & Symbols -->
+                            <div class="lcd-row-bot">
+                                <span id="lcd-status">0-0</span>
+                                <div class="flex gap-2">
+                                    <span class="lcd-symbol" id="sym-en">En</span>
+                                    <span class="lcd-symbol" id="sym-l">L-</span>
+                                    <span class="lcd-symbol" id="sym-c">C</span>
+                                    <span class="lcd-symbol" id="sym-j">J</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Authentic Top Keys (Row 1 & 2) -->
+                        <div class="grid grid-cols-4 gap-2 mt-2">
+                            <div class="btn-phys h-12" onclick="handlePress('a-')" data-tip="Location 'a-' / Direct Access PAGE a- / Set AM">
+                                <span class="btn-label">a-</span><span class="btn-sub">AM</span>
+                            </div>
+                            <div class="btn-phys h-12" onclick="handlePress('b-')" data-tip="Location 'b-' / Direct Access PAGE b- / Set PM">
+                                <span class="btn-label">b-</span><span class="btn-sub">PM</span>
+                            </div>
+                            <div class="btn-phys h-12" onclick="handlePress('c-')" data-tip="Location 'c-' / Direct Access PAGE c- / 2nd Week Event">
+                                <span class="btn-label">c-</span><span class="btn-sub">2nd</span>
+                            </div>
+                            <div class="btn-phys h-12" onclick="handlePress('P')" data-tip="PAGE Selector / Repeating Event (RPT)">
+                                <span class="btn-label flex items-baseline">P<span class="text-[8px] ml-0.5 text-black not-italic font-sans">(PAGE)</span></span>
+                                <span class="btn-sub">RPT</span>
+                            </div>
+                        </div>
+                        
+                        <!-- PAIRED ROCKER SWITCHES (Row 2) -->
+                        <div class="grid grid-cols-2 gap-2 mt-1">
+                            <!-- a HR b Rocker -->
+                            <div class="btn-phys paired-btn h-10 relative overflow-hidden">
+                                <div class="rocker-half left" onclick="handlePress('a')" data-tip="Location 'a' / Hour Down">
+                                    <span class="btn-label text-sm">a</span>
+                                </div>
+                                <span class="absolute inset-0 flex items-center justify-center btn-sub">HR</span>
+                                <div class="rocker-half right" onclick="handlePress('b')" data-tip="Location 'b' / Hour Up">
+                                    <span class="btn-label text-sm">b</span>
+                                </div>
+                            </div>
+                            <!-- c MIN d Rocker -->
+                            <div class="btn-phys paired-btn h-10 relative overflow-hidden">
+                                <div class="rocker-half left" onclick="handlePress('c')" data-tip="Location 'c' / Minute Down">
+                                    <span class="btn-label text-sm">c</span>
+                                </div>
+                                <span class="absolute inset-0 flex items-center justify-center btn-sub">MIN</span>
+                                <div class="rocker-half right" onclick="handlePress('d')" data-tip="Location 'd' / Minute Up">
+                                    <span class="btn-label text-sm">d</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- THE BODY (Main Keys Only) -->
+                    <div class="remote-body">
+                        <!-- Keypad -->
+                        <div class="mt-4 grid grid-cols-3 gap-2">
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('1')" data-tip="Location Key '1'"><span class="btn-label">1</span></div>
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('2')" data-tip="Location Key '2'"><span class="btn-label">2</span></div>
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('3')" data-tip="Location Key '3'"><span class="btn-label">3</span></div>
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('4')" data-tip="Location Key '4'"><span class="btn-label">4</span></div>
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('5')" data-tip="Location Key '5'"><span class="btn-label">5</span></div>
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('6')" data-tip="Location Key '6'"><span class="btn-label">6</span></div>
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('7')" data-tip="Location Key '7'"><span class="btn-label">7</span></div>
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('8')" data-tip="Location Key '8'"><span class="btn-label">8</span></div>
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('9')" data-tip="Location Key '9'"><span class="btn-label">9</span></div>
+                            
+                            <div class="btn-phys h-12 justify-center items-center" onclick="handlePress('0')" data-tip="Location Key '0'"><span class="btn-label">0</span></div>
+                            
+                            <!-- E DAY F Rocker (Col-span-2) -->
+                            <div class="btn-phys paired-btn h-12 col-span-2 relative overflow-hidden">
+                                <div class="rocker-half left !pl-6" onclick="handlePress('E')" data-tip="Location 'E' / Day Down">
+                                    <span class="btn-label text-[18px]">E</span>
+                                </div>
+                                <span class="absolute inset-0 flex items-center justify-center btn-sub">DAY</span>
+                                <div class="rocker-half right !pr-6" onclick="handlePress('F')" data-tip="Location 'F' / Day Up">
+                                    <span class="btn-label text-[18px]">F</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SLIDER TRACK (Housing the Micro Keys and Cover) -->
+                    <div class="remote-track">
+                        
+                        <!-- Hidden Micro Panel (Inside Track) -->
+                        <div class="micro-panel-bg">
+                            <div class="micro-keys-grid">
+                                <!-- Row 1 -->
+                                <div class="btn-micro" onclick="handleMicro('SET')" data-tip="Set Time (Start/Finish)"><div class="btn-micro-sq icon-set"></div><div class="btn-micro-label">SET</div></div>
+                                <div class="btn-micro" onclick="handleMicro('AT')" data-tip="Set Absolute Event Timer"><div class="btn-micro-sq icon-at"></div><div class="btn-micro-label">AT</div></div>
+                                <div class="btn-micro" onclick="handleMicro('EDIT')" data-tip="Edit Program / Modify Captured Codes"><div class="btn-micro-sq icon-edit"></div><div class="btn-micro-label">EDIT</div></div>
+                                <div class="btn-micro" onclick="handleMicro('CANCEL')" data-tip="Cancel / Stop Program Execution"><div class="btn-micro-sq icon-cancel"></div><div class="btn-micro-label">CANCEL</div></div>
+                                <!-- Row 2 -->
+                                <div class="btn-micro" onclick="handleMicro('LEFT')" data-tip="Move Cursor Left (Edit Mode)"><div class="btn-micro-sq icon-left"></div><div class="btn-micro-label">&larr;</div></div>
+                                <div class="btn-micro" onclick="handleMicro('WAIT')" data-tip="Relative Event Timer / Pause Sequence"><div class="btn-micro-sq icon-wait"></div><div class="btn-micro-label">WAIT</div></div>
+                                <div class="btn-micro" onclick="handleMicro('DELETE')" data-tip="Delete Character or Program"><div class="btn-micro-sq icon-delete"></div><div class="btn-micro-label">DELETE</div></div>
+                                <div class="btn-micro" onclick="handleMicro('RIGHT')" data-tip="Move Cursor Right (Edit Mode)"><div class="btn-micro-sq icon-right"></div><div class="btn-micro-label">&rarr;</div></div>
+                                <!-- Row 3 -->
+                                <div class="btn-micro" onclick="handleMicro('ENABLE')" data-tip="Enable Programming Mode (En)"><div class="btn-micro-sq icon-enable"></div><div class="btn-micro-label">ENABLE</div></div>
+                                <div class="btn-micro" onclick="handleMicro('KEY')" data-tip="Explicitly Specify KEY Location"><div class="btn-micro-sq icon-key"></div><div class="btn-micro-label">(KEY)</div></div>
+                                <div class="btn-micro" onclick="handleMicro('DO')" data-tip="DO / Learn Command (L)"><div class="btn-micro-sq icon-do"></div><div class="btn-micro-label">DO</div></div>
+                                <div class="btn-micro" onclick="handleMicro('OK')" data-tip="OK / Save Program"><div class="btn-micro-sq icon-ok"></div><div class="btn-micro-label">OK</div></div>
+                                
+                                <!-- Authentic Reset Hole between (KEY) and DO -->
+                                <div class="reset-hole" title="Hardware Reset" onclick="handleMicro('RESET')" data-tip="System Hardware Reset (Clears Display)"></div>
+                            </div>
+                        </div>
+
+                        <!-- SLIDING COVER (The CORE Flap) -->
+                        <div class="slide-cover" id="cover">
+                            <div class="slide-grip-area" onclick="toggleCover()" data-tip="Click to slide the CORE programming cover">
+                                <div class="horizontal-rib"></div>
+                                <div class="horizontal-rib"></div>
+                            </div>
+                            <div class="core-logo-bottom">CORE</div>
+                        </div>
+
+                    </div>
+
+                    <!-- Dynamic Spacer for Canvas Auto-Expansion -->
+                <div class="spacer" id="spacer"></div>
+            </div>
+
+            <!-- Instructions Card under the Remote -->
+            <div class="manual-card w-[340px] mt-4" style="border-color: #cbd5e1; padding: 20px;">
+                <div class="manual-title">CORE Teaching Protocol</div>
+                <div class="manual-text">
+                    <ol class="list-decimal pl-4 space-y-1 font-medium text-[11px] text-slate-600">
+                        <li>Slide open the programming cover.</li>
+                        <li>Press <strong class="text-black">ENABLE (En)</strong>. LCD displays <span class="font-mono text-blue-600 font-bold">En</span>.</li>
+                        <li>Select Location: Press a Page digit then Key digit.</li>
+                        <li>Press <strong class="text-black">DO (L)</strong>. LCD shows <span class="font-mono text-blue-600 font-bold">L-</span> (Learning mode).</li>
+                        <li><em>Send Signal: Use the <strong>IR Simulator</strong>.</em> LCD shows <span class="font-mono text-blue-600 font-bold">C</span>.</li>
+                        <li>Press <strong class="text-black">OK (↵)</strong> to bond. LCD flashes <span class="font-mono text-blue-600 font-bold">J</span>.</li>
+                    </ol>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- BLOCK 2: INFO HUB -->
+        <div class="info-block">
+            
+            <!-- Advanced Features Tabs -->
+            <div class="manual-card" style="border-left-color: #a855f7;">
+                <div class="flex items-center gap-2 mb-3">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <div class="manual-title border-0 pb-0 mb-0">Advanced Programming</div>
+                </div>
+                
+                <div class="flex border-b border-gray-200 mb-3">
+                    <button id="tab-btn-seq" onclick="switchTab('seq')" class="flex-1 pb-2 text-[11px] font-black text-blue-600 border-b-2 border-blue-600 uppercase transition-colors">Sequences</button>
+                    <button id="tab-btn-time" onclick="switchTab('time')" class="flex-1 pb-2 text-[11px] font-black text-gray-400 border-b-2 border-transparent uppercase transition-colors hover:text-blue-400">Timers</button>
+                    <button id="tab-btn-edit" onclick="switchTab('edit')" class="flex-1 pb-2 text-[11px] font-black text-gray-400 border-b-2 border-transparent uppercase transition-colors hover:text-blue-400">Editing</button>
+                </div>
+                
+                <!-- Sequences Tab -->
+                <div id="tab-content-seq" class="text-[12px] text-slate-500 leading-relaxed">
+                    Combine multiple commands into a single keypress.<br><br>
+                    <ol class="list-decimal pl-4 space-y-1 font-medium text-slate-600">
+                        <li>Press <strong class="text-black">ENABLE</strong>.</li>
+                        <li>Select a location (e.g., <strong class="text-black">0</strong> then <strong class="text-black">1</strong>).</li>
+                        <li>Press <strong class="text-black">DO (L)</strong>.</li>
+                        <li>Enter sequence locations (e.g. <strong class="text-black">P 8 a</strong>).</li>
+                        <li>Press <strong class="text-black">OK (↵)</strong> to save.</li>
+                    </ol>
+                </div>
+
+                <!-- Timers Tab -->
+                <div id="tab-content-time" class="text-[12px] text-slate-500 leading-relaxed hidden">
+                    Run commands automatically at a specific time.<br><br>
+                    <ol class="list-decimal pl-4 space-y-1 font-medium text-slate-600">
+                        <li>Press <strong class="text-black">ENABLE</strong>.</li>
+                        <li>Press <strong class="text-black">AT</strong> (Absolute) or <strong class="text-black">WAIT</strong>.</li>
+                        <li>Set time using digit/rocker keys.</li>
+                        <li>Press <strong class="text-black">DO (L)</strong>.</li>
+                        <li>Enter location to execute.</li>
+                        <li>Press <strong class="text-black">OK (↵)</strong> to set timer.</li>
+                    </ol>
+                </div>
+
+                <!-- Editing Tab -->
+                <div id="tab-content-edit" class="text-[12px] text-slate-500 leading-relaxed hidden">
+                    Review and modify existing programs.<br><br>
+                    <ol class="list-decimal pl-4 space-y-1 font-medium text-slate-600">
+                        <li>Press <strong class="text-black">EDIT</strong>.</li>
+                        <li>Enter the location to review.</li>
+                        <li>Use <strong class="text-black">◀ / ▶</strong> to move cursor.</li>
+                        <li>Press <strong class="text-black">DELETE</strong> to erase character.</li>
+                        <li>Press <strong class="text-black">OK (↵)</strong> to save changes.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- IR Signal Simulator (The Capture Box) -->
+            <div class="manual-card" style="border-left-color: #f43f5e;">
+                <div class="flex items-center gap-2 mb-3">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f43f5e" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <div class="manual-title border-0 pb-0 mb-0">IR Signal Simulator</div>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-4 font-medium leading-relaxed">
+                        Point your "virtual" remote at CORE. While CORE is in Learning Mode (<strong class="text-blue-600">L-</strong>), enter the signal string and transmit.
+                    </p>
+                    <div class="flex gap-2">
+                        <input type="text" id="ir-input" class="input-sim" placeholder="e.g., SONY_TV_POWER">
+                        <button id="transmit-btn" onclick="transmitIR()" class="btn-sim whitespace-nowrap">Transmit IR</button>
+                    </div>
+                </div>
+
+                <!-- Memory Registry -->
+                <div class="manual-card flex-1 flex flex-col max-h-[300px]">
+                    <div class="flex justify-between items-end border-b-2 border-gray-100 pb-2 mb-3">
+                        <div class="manual-title border-0 pb-0 mb-0" style="font-size: 16px;">6502 Memory Registry</div>
+                        <button class="text-xs text-blue-600 font-bold hover:underline uppercase" onclick="wipeMemory()">Format</button>
+                    </div>
+                    <div id="macro-registry" class="flex-1 overflow-y-auto pr-2 mt-1">
+                        <!-- User memory injected here -->
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded border border-gray-200 text-xs text-gray-700 leading-relaxed mt-4">
+                        <strong>Executing / Testing:</strong> <span id="testing-enabled-val" class="font-mono text-blue-600 font-bold">Nothing yet</span>
+                    </div>
+                </div>
+
+                <!-- Factory Presets Selector -->
+                <div class="manual-card mt-2 flex flex-col max-h-[300px]" style="border-left-color: #10b981; padding-top: 15px; padding-bottom: 15px;">
+                    <div class="flex items-center gap-2 mb-2">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <div class="manual-title border-0 pb-0 mb-0" style="font-size: 16px;">Factory Presets Loaded</div>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-2 leading-relaxed">
+                        Click a preset below to instantly test it on the remote screen and save it to your Memory Registry.
+                    </p>
+                    <div id="preset-registry" class="flex-1 overflow-y-auto pr-2 mt-2 border-t border-gray-100 pt-2">
+                        <!-- Presets injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODERN FOOTER -->
+    <footer class="w-full bg-[#151515] text-gray-500 py-6 text-center text-xs border-t border-[#333] mt-auto">
+        <p>&copy; 2026 CORE Universal Remote Simulator. Built With Authentic Wozniak Specifications.</p>
+    </footer>
+
+    <script>
+        // Official Factory Presets from the PDF Manual
+        const FACTORY_PRESETS = {
+            '1-1': 'Sony A/V Pwr', '1-2': 'Sony TV Pwr', '1-3': 'Sony VCR Pwr', '1-4': 'Sony CD', '1-5': 'Sony AM/FM', '1-6': 'Sony Tape', '1-7': 'Sony Vid 1', '1-8': 'Sony Vid 2', '1-9': 'Sony TV', '1-0': 'Sony Phono', '1-c': 'Sony Vol -', '1-d': 'Sony Vol +', '1-b': 'Sony Mute',
+            '2-E': 'Sony Stat -', '2-F': 'Sony Stat +', '2-a': 'Sony Enter', '2-b': 'Sony Mem Scan', '2-1': 'Sony 1', '2-2': 'Sony 2', '2-3': 'Sony 3', '2-4': 'Sony 4', '2-5': 'Sony 5', '2-6': 'Sony 6', '2-7': 'Sony 7', '2-8': 'Sony 8', '2-9': 'Sony 9', '2-0': 'Sony 0',
+            '3-E': 'Sony CH -', '3-F': 'Sony CH +', '3-a': 'Sony Enter', '3-b': 'Sony Mem Scan', '3-c': 'Sony MTS', '3-d': 'Sony Ant', '3-1': 'Sony 1', '3-2': 'Sony 2', '3-3': 'Sony 3', '3-4': 'Sony 4', '3-5': 'Sony 5', '3-6': 'Sony 6', '3-7': 'Sony 7', '3-8': 'Sony 8', '3-9': 'Sony 9', '3-0': 'Sony 0',
+            '4-E': 'Sony VCR CH -', '4-F': 'Sony VCR CH +', '4-a': 'Sony Enter', '4-b': 'Sony Mem Scan', '4-c': 'Sony TV/Vid', '4-d': 'Sony Disp', '4-1': 'Sony 1', '4-2': 'Sony 2', '4-3': 'Sony 3', '4-4': 'Sony 4', '4-5': 'Sony 5', '4-6': 'Sony 6', '4-7': 'Sony 7', '4-8': 'Sony 8', '4-9': 'Sony 9', '4-0': 'Sony 0',
+            '5-b': 'Sony Fwd Play', '5-c': 'Sony Rewind', '5-d': 'Sony Fast Fwd', '5-1': 'Sony Record', '5-2': 'Sony Stop', '5-3': 'Sony Pause',
+            '6-a': 'Sony Tape Rev', '6-b': 'Sony Tape Fwd', '6-c': 'Sony Tape Rew', '6-d': 'Sony Tape FF', '6-1': 'Sony Tape Rec', '6-2': 'Sony Tape Stop', '6-3': 'Sony Tape Pause', '6-4': 'Sony Phono Cue', '6-5': 'Sony Rec Mute', '6-7': 'Sony Phono Stop', '6-8': 'Sony CD Stop', '6-9': 'Sony CD Play', '6-0': 'Sony Phono Start', '6-E': 'Sony CD Rev', '6-F': 'Sony CD Fwd',
+            '7-2': 'Mitsu Stereo', '7-3': 'Mitsu SAP', '7-4': 'Mitsu Mono', '7-5': 'Mitsu EXP', '7-6': 'Mitsu Lock', '7-7': 'Mitsu Q/V', '7-8': 'Mitsu Disp', '7-9': 'Mitsu Ant', '7-0': 'Mitsu Timer', '7-E': 'Mitsu TV', '7-F': 'Mitsu Ext 1',
+            '8-a': 'Mitsu Power', '8-b': 'Mitsu Mute', '8-c': 'Mitsu Vol -', '8-d': 'Mitsu Vol +', '8-E': 'Mitsu CH -', '8-F': 'Mitsu CH +', '8-1': 'Mitsu 1', '8-2': 'Mitsu 2', '8-3': 'Mitsu 3', '8-4': 'Mitsu 4', '8-5': 'Mitsu 5', '8-6': 'Mitsu 6', '8-7': 'Mitsu 7', '8-8': 'Mitsu 8', '8-9': 'Mitsu 9', '8-0': 'Mitsu 0',
+            '9-b': 'Mitsu VCR Play', '9-c': 'Mitsu VCR Rew', '9-d': 'Mitsu VCR FF', '9-1': 'Mitsu VCR Rec', '9-2': 'Mitsu VCR Stop', '9-3': 'Mitsu VCR Pause', '9-4': 'Mitsu Vid/TV',
+            'E-a': 'Mitsu VCR Pwr', 'E-E': 'Mitsu VCR CH -', 'E-F': 'Mitsu VCR CH +', 'E-1': 'Mitsu 1', 'E-2': 'Mitsu 2', 'E-3': 'Mitsu 3', 'E-4': 'Mitsu 4', 'E-5': 'Mitsu 5', 'E-6': 'Mitsu 6', 'E-7': 'Mitsu 7', 'E-8': 'Mitsu 8', 'E-9': 'Mitsu 9', 'E-0': 'Mitsu 0',
+            'F-a': 'Zenith Enter', 'F-b': 'Zenith Mute', 'F-c': 'Zenith Vol -', 'F-d': 'Zenith Vol +', 'F-E': 'Zenith CH -', 'F-F': 'Zenith CH +', 'F-1': 'Zenith 1', 'F-2': 'Zenith 2', 'F-3': 'Zenith 3', 'F-4': 'Zenith 4', 'F-5': 'Zenith 5', 'F-6': 'Zenith 6', 'F-7': 'Zenith 7', 'F-8': 'Zenith 8', 'F-9': 'Zenith 9', 'F-0': 'Zenith 0',
+            'b-4': 'Zenith A/B', 'b-5': 'Zenith Power'
+        };
+
+        // System State
+        let state = {
+            enabled: false,
+            learning: false,
+            captured: false,
+            page: '0',
+            key: '0',
+            buffer: '',
+            awaitingPage: false,
+        };
+
+        // Initialize Memory
+        let memory = JSON.parse(localStorage.getItem('cl9_memory_1987')) || {};
+
+        // DOM Elements
+        const elStatus = document.getElementById('lcd-status');
+        const symEn = document.getElementById('sym-en');
+        const symL = document.getElementById('sym-l');
+        const symC = document.getElementById('sym-c');
+        const symJ = document.getElementById('sym-j');
+        const cover = document.getElementById('cover');
+        const spacer = document.getElementById('spacer');
+
+        // Setup Custom Tooltips
+        const tooltip = document.getElementById('custom-tooltip');
+        document.querySelectorAll('[data-tip]').forEach(el => {
+            el.addEventListener('mouseenter', e => {
+                tooltip.innerText = el.getAttribute('data-tip');
+                tooltip.style.opacity = '1';
+            });
+            el.addEventListener('mousemove', e => {
+                tooltip.style.left = (e.pageX + 15) + 'px';
+                tooltip.style.top = (e.pageY + 15) + 'px';
+            });
+            el.addEventListener('mouseleave', () => {
+                tooltip.style.opacity = '0';
+            });
+        });
+
+        // Clock Logic
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            const mins = now.getMinutes().toString().padStart(2, '0');
+            const days = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+            const day = days[now.getDay()];
+
+            document.getElementById('lcd-clock').innerText = `${hours}:${mins}`;
+            document.getElementById('lcd-ampm').innerText = ampm;
+            document.getElementById('lcd-day').innerText = day;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Advanced 3-Tab Logic
+        function switchTab(tabId) {
+            ['seq', 'time', 'edit'].forEach(id => {
+                const btn = document.getElementById('tab-btn-' + id);
+                const content = document.getElementById('tab-content-' + id);
+                if (id === tabId) {
+                    btn.classList.add('text-blue-600', 'border-blue-600');
+                    btn.classList.remove('text-gray-400', 'border-transparent');
+                    content.classList.remove('hidden');
+                } else {
+                    btn.classList.remove('text-blue-600', 'border-blue-600');
+                    btn.classList.add('text-gray-400', 'border-transparent');
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        // Display update
+        function updateLCD() {
+            if (state.awaitingPage) {
+                elStatus.innerText = `P-`;
+            } else {
+                // Format the display: direct pages drop the dash visually
+                const displayPage = ['a-','b-','c-'].includes(state.page) ? state.page.replace('-','') : state.page;
+                elStatus.innerText = `${displayPage}-${state.key}`;
+            }
+
+            symEn.classList.toggle('active', state.enabled);
+            symL.classList.toggle('active', state.learning && !state.captured);
+            symC.classList.toggle('active', state.captured);
+        }
+
+        // Cover Toggle
+        function toggleCover() {
+            cover.classList.toggle('open');
+            spacer.classList.toggle('open');
+        }
+
+        // Main Keyboard Input
+        function handlePress(val) {
+            // Prevent interference if user is trying to learn an IR code
+            if (state.learning && !state.captured) {
+                flashReject();
+                return;
+            }
+
+            // Normal operation / Location selection
+            if (['a-', 'b-', 'c-'].includes(val)) {
+                state.page = val;
+                state.key = '-'; 
+                state.awaitingPage = false;
+            } else if (val === 'P') {
+                state.awaitingPage = true;
+            } else if (['0','1','2','3','4','5','6','7','8','9','a','b','c','d','E','F'].includes(val)) {
+                if (state.awaitingPage) {
+                    state.page = val;
+                    state.key = '-'; 
+                    state.awaitingPage = false;
+                } else {
+                    state.key = val;
+                    
+                    // Execute if not programming
+                    if (!state.enabled && !state.learning) {
+                        const pageName = state.page.replace('-', '');
+                        const memKey = `${pageName}-${state.key}`;
+                        if (memory[memKey]) {
+                            executeMacro(memKey);
+                        } else {
+                            flashReject(); // Empty key
+                        }
+                    }
+                }
+            }
+            updateLCD();
+        }
+
+        // The New IR Signal Simulator
+        function transmitIR() {
+            const btn = document.getElementById('transmit-btn');
+            
+            if (state.learning && !state.captured) {
+                const inputEl = document.getElementById('ir-input');
+                let code = inputEl.value.trim();
+                if (!code) code = "GENERIC_IR_SIGNAL";
+                
+                state.captured = true;
+                state.buffer = code;
+                updateLCD();
+                inputEl.value = ''; 
+                
+                // Success Feedback
+                const oldText = btn.innerText;
+                btn.innerText = "CAPTURED!";
+                btn.style.background = "#10b981"; // Green
+                setTimeout(() => {
+                    btn.innerText = oldText;
+                    btn.style.background = "";
+                }, 1500);
+
+            } else {
+                flashReject();
+                // Error Feedback
+                const oldText = btn.innerText;
+                btn.innerText = "ERR: NOT IN LEARN (L-)";
+                btn.style.background = "#f43f5e"; // Red
+                setTimeout(() => {
+                    btn.innerText = oldText;
+                    btn.style.background = "";
+                }, 2000);
+            }
+        }
+
+        // Micro Panel (Programming) Logic
+        function handleMicro(action) {
+            switch(action) {
+                case 'ENABLE':
+                    state.enabled = !state.enabled;
+                    if(!state.enabled) { state.learning = false; state.captured = false; }
+                    break;
+                case 'DO':
+                    if (state.enabled && state.key !== '-') {
+                        state.learning = true;
+                        state.captured = false;
+                        state.buffer = "";
+                    } else {
+                        flashReject(); // Cannot learn if not enabled or key not selected
+                    }
+                    break;
+                case 'CANCEL':
+                    state.learning = false;
+                    state.captured = false;
+                    state.buffer = "";
+                    break;
+                case 'OK':
+                    if (state.learning && state.captured) {
+                        // Save to Memory Registry
+                        const pageName = state.page.replace('-', '');
+                        const loc = `${pageName}-${state.key}`;
+                        memory[loc] = state.buffer;
+                        localStorage.setItem('cl9_memory_1987', JSON.stringify(memory));
+                        
+                        // Flash J for success
+                        symC.classList.remove('active');
+                        symJ.classList.add('active');
+                        setTimeout(() => symJ.classList.remove('active'), 500);
+
+                        state.learning = false;
+                        state.captured = false;
+                        renderRegistry();
+                    } else {
+                        flashReject();
+                    }
+                    break;
+                case 'DELETE':
+                    if (state.enabled && state.key !== '-') {
+                        const pageName = state.page.replace('-', '');
+                        const loc = `${pageName}-${state.key}`;
+                        if (memory[loc]) {
+                            delete memory[loc];
+                            localStorage.setItem('cl9_memory_1987', JSON.stringify(memory));
+                            renderRegistry();
+                        }
+                    } else {
+                        flashReject();
+                    }
+                    break;
+                case 'KEY':
+                    elStatus.style.opacity = '0.5';
+                    setTimeout(() => elStatus.style.opacity = '1', 100);
+                    break;
+                case 'RESET':
+                    memory = {};
+                    localStorage.removeItem('cl9_memory_1987');
+                    state.enabled = false;
+                    state.learning = false;
+                    state.captured = false;
+                    state.page = '0';
+                    state.key = '0';
+                    renderRegistry();
+                    flashReject();
+                    break;
+            }
+            updateLCD();
+        }
+
+        function executeMacro(loc) {
+            // Update the CORE display to reflect the key being tested
+            const parts = loc.split('-');
+            if(parts.length === 2) {
+                // Determine if it was a direct access page
+                if(['a','b','c'].includes(parts[0])) {
+                    state.page = parts[0] + '-';
+                } else {
+                    state.page = parts[0];
+                }
+                state.key = parts[1];
+                updateLCD();
+            }
+
+            // Visual transmission feedback
+            symC.classList.add('active'); 
+            setTimeout(() => symC.classList.remove('active'), 300);
+            
+            // Log & Update Dynamic UI
+            const testLabel = document.getElementById('testing-enabled-val');
+            if(testLabel) {
+                testLabel.innerText = `[PAGE ${state.page} KEY ${state.key}] ${memory[loc]}`;
+                testLabel.style.color = '#f43f5e';
+                setTimeout(() => testLabel.style.color = '#0066cc', 300);
+            }
+        }
+
+        function flashReject() {
+            // Visual simulation of the "low-frequency buzz" reject tone
+            elStatus.style.opacity = '0';
+            setTimeout(() => elStatus.style.opacity = '1', 100);
+            setTimeout(() => elStatus.style.opacity = '0', 200);
+            setTimeout(() => elStatus.style.opacity = '1', 300);
+        }
+
+        function wipeMemory() {
+            if(confirm("Are you sure you want to format the CORE 6502 Memory?")) {
+                memory = {};
+                localStorage.removeItem('cl9_memory_1987');
+                renderRegistry();
+                const testLabel = document.getElementById('testing-enabled-val');
+                if (testLabel) testLabel.innerText = 'Memory Formatted.';
+            }
+        }
+
+        function loadPreset(loc) {
+            const val = FACTORY_PRESETS[loc];
+            memory[loc] = val;
+            localStorage.setItem('cl9_memory_1987', JSON.stringify(memory));
+            renderRegistry();
+            executeMacro(loc);
+        }
+
+        function renderPresets() {
+            const reg = document.getElementById('preset-registry');
+            const keys = Object.keys(FACTORY_PRESETS);
+            
+            reg.innerHTML = keys.map(k => `
+                <div class="reg-item" onclick="loadPreset('${k}')" title="Click to load and test on remote screen">
+                    <span><strong class="text-green-600 font-black mr-2">${k}</strong></span>
+                    <span class="bg-gray-100 px-2 py-1 rounded text-[10px] truncate max-w-[150px] text-right" title="${FACTORY_PRESETS[k]}">${FACTORY_PRESETS[k]}</span>
+                </div>`).join('');
+        }
+
+        function renderRegistry() {
+            const reg = document.getElementById('macro-registry');
+            const keys = Object.keys(memory);
+            if(keys.length === 0) { 
+                reg.innerHTML = '<div class="text-xs italic text-gray-400 p-4 bg-gray-50 rounded border border-gray-200">No programs stored in CORE memory. Use the protocol below or load a Preset.</div>'; 
+                return; 
+            }
+            
+            keys.sort((a, b) => {
+                const [pA, kA] = a.split('-');
+                const [pB, kB] = b.split('-');
+                if(pA === pB) return kA.localeCompare(kB);
+                return pA.localeCompare(pB);
+            });
+            
+            reg.innerHTML = keys.map(k => `
+                <div class="reg-item" onclick="executeMacro('${k}')" title="Click to test command on remote screen">
+                    <span><strong class="text-blue-600 font-black mr-2">${k}</strong></span>
+                    <span class="bg-gray-100 px-2 py-1 rounded text-[10px] truncate max-w-[200px] text-right" title="${memory[k]}">${memory[k]}</span>
+                </div>`).join('');
+        }
+
+        // Init
+        updateLCD();
+        renderRegistry();
+        renderPresets();
+
+    </script>
+</body>
+</html>
