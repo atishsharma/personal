@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CL-9 CORE 2026 | Unified Heritage Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #e2e8f0;
+            --remote-body: #fcfcfc;
+            --screen-bg: #0a0a0c;
+            --accent-blue: #2563eb;
+            --accent-pink: #e11d48;
+            --accent-green: #059669;
+            --accent-purple: #7c3aed;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(225, 29, 72, 0.05) 0px, transparent 50%);
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 5%;
+            overflow: hidden;
+        }
+
+        /* The Physical Chassis */
+        .remote-chassis {
+            position: relative;
+            width: 380px;
+            height: 840px;
+            background: var(--remote-body);
+            border-radius: 60px;
+            box-shadow: 
+                0 50px 100px -20px rgba(0, 0, 0, 0.25), 
+                inset 0 -10px 20px rgba(0,0,0,0.03),
+                inset 0 4px 6px rgba(255,255,255,1);
+            border: 4px solid var(--accent-blue);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            user-select: none;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            flex-shrink: 0;
+        }
+
+        /* Pill Switch */
+        .mode-pill {
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 30px;
+            display: flex;
+            padding: 4px;
+            position: relative;
+            cursor: pointer;
+        }
+        .mode-pill .toggle {
+            position: absolute;
+            width: calc(50% - 4px);
+            height: calc(100% - 8px);
+            background: var(--accent-blue);
+            border-radius: 25px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+        }
+        .mode-pill.soft .toggle { transform: translateX(100%); }
+        .mode-pill div {
+            width: 50%;
+            text-align: center;
+            font-size: 8px;
+            font-weight: 900;
+            z-index: 10;
+            padding: 6px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+        .mode-pill.phys .label-phys { color: white; }
+        .mode-pill.soft .label-soft { color: white; }
+
+        /* Screen Area */
+        .oled-display {
+            position: relative;
+            height: 200px;
+            background: var(--screen-bg);
+            border-radius: 24px;
+            padding: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #00f2ff;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.9), 0 8px 16px rgba(0,0,0,0.1);
+            overflow: hidden;
+            border: 4px solid #222;
+        }
+
+        /* Buttons with Shadows */
+        .btn-pop {
+            position: relative;
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+            box-shadow: 0 4px 0px #cbd5e1;
+            transition: all 0.1s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .btn-pop:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0px #cbd5e1;
+        }
+
+        .outline-blue { border-color: var(--accent-blue); color: var(--accent-blue); }
+        .outline-pink { border-color: var(--accent-pink); color: var(--accent-pink); }
+        .outline-green { border-color: var(--accent-green); color: var(--accent-green); }
+        .outline-purple { border-color: var(--accent-purple); color: var(--accent-purple); }
+
+        .prog-active {
+            animation: pulse-border 1.5s infinite;
+            background: #fff1f2 !important;
+            border-color: var(--accent-pink) !important;
+        }
+
+        /* Hidden Input Box (Modern Drawer) */
+        .hidden-drawer {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 80%;
+            background: rgba(10, 10, 12, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 2px solid var(--accent-blue);
+            transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 20;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .hidden-drawer.open { bottom: 0; }
+
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 3px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Registry & Panel Styles */
+        .info-panel {
+            margin-left: 60px;
+            height: 840px;
+            width: 480px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .glass-box {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            border: 1px solid rgba(255,255,255,0.8);
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        #log-window::-webkit-scrollbar { width: 4px; }
+        #log-window::-webkit-scrollbar-thumb { background: #333; }
+    </style>
+</head>
+<body>
+
+    <!-- SINGLE UNIFIED REMOTE -->
+    <div class="remote-chassis" id="remote">
+        
+        <!-- Mode Switch (Pill) -->
+        <div class="mode-pill phys" id="mode-switch" onclick="toggleView()">
+            <div class="toggle"></div>
+            <div class="label-phys">Hardware</div>
+            <div class="label-soft">Software</div>
+        </div>
+
+        <!-- System Header -->
+        <div class="flex justify-between items-center px-1">
+            <div>
+                <div class="font-black text-lg tracking-tighter">CL-9 <span class="text-blue-600">CORE</span></div>
+                <div class="text-[7px] font-bold text-slate-400 uppercase tracking-widest">Heritage Unified</div>
+            </div>
+            <div class="flex gap-2">
+                <button onclick="clearLogs()" title="Clear Screen" id="clr-btn" class="w-10 h-10 rounded-full border-2 border-slate-200 flex items-center justify-center text-[8px] font-black text-slate-400 hover:border-blue-400">CLR</button>
+                <button onclick="toggleProg()" id="prog-btn" class="w-10 h-10 rounded-full border-2 border-slate-200 flex items-center justify-center text-[10px] font-black text-slate-400">PROG</button>
+                <button onclick="togglePower()" id="pwr-btn" class="w-10 h-10 rounded-full border-2 border-slate-200 flex items-center justify-center text-slate-400 hover:text-blue-600">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18.36 6.64a9 9 0 1 1-12.73 0M12 2v10"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Unified OLED Screen -->
+        <div class="oled-display">
+            <div class="scanlines"></div>
+            <div id="screen-ui" class="opacity-0 transition-opacity duration-500 h-full flex flex-col">
+                <div class="flex justify-between text-[9px] font-bold text-blue-400 border-b border-white/5 pb-1 mb-2">
+                    <span id="page-indicator">UNIT: HARDWARE</span>
+                    <span id="sys-status">OFFLINE</span>
+                </div>
+                <div id="log-window" class="flex-1 overflow-y-auto text-[9px] leading-tight space-y-1 pr-1">
+                    <div class="text-white/40">SYSTEM STANDBY...</div>
+                </div>
+                <div id="input-buffer" class="mt-1 text-rose-400 font-bold bg-white/5 p-1 rounded hidden text-[10px]">
+                    > BUFFER: <span id="typing-area"></span>_
+                </div>
+
+                <!-- Hidden Input Drawer (Modern Version of the Original Switchbox) -->
+                <div class="hidden-drawer" id="hidden-terminal">
+                    <div class="flex justify-between items-center border-b border-blue-500/30 pb-2">
+                        <span class="text-[8px] text-blue-500 font-black uppercase">Core Terminal</span>
+                        <button onclick="toggleTerminal()" class="text-[8px] text-white/50">CLOSE</button>
+                    </div>
+                    <div class="text-[8px] text-white/40 italic">Input advanced macro strings or debug parameters directly into the 6502 core logic.</div>
+                    <input type="text" id="terminal-input" class="bg-blue-500/10 border border-blue-500/30 rounded p-2 text-white text-[10px] outline-none" placeholder="Enter Hex String...">
+                    <button onclick="submitTerminal()" class="bg-blue-600 text-white font-bold text-[8px] p-2 rounded">BOND TO MEMORY</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DYNAMIC GRIDS -->
+        <!-- Hardware View (Numeric & Fixed) -->
+        <div id="phys-view" class="flex flex-col gap-4 flex-1">
+            <div class="grid grid-cols-2 gap-3 h-24">
+                <div class="btn-pop outline-blue" onclick="handleKey('VOL_UP')">
+                    <span class="text-[8px] font-black uppercase">Vol +</span>
+                </div>
+                <div class="btn-pop outline-blue" onclick="handleKey('CH_UP')">
+                    <span class="text-[8px] font-black uppercase">Ch +</span>
+                </div>
+                <div class="btn-pop outline-blue" onclick="handleKey('VOL_DOWN')">
+                    <span class="text-[8px] font-black uppercase">Vol -</span>
+                </div>
+                <div class="btn-pop outline-blue" onclick="handleKey('CH_DOWN')">
+                    <span class="text-[8px] font-black uppercase">Ch -</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-3 flex-1">
+                <div class="btn-pop text-xs outline-pink" onclick="handleKey('MUTE')">MUTE</div>
+                <div class="btn-pop text-xs" onclick="handleKey('PREV')">PREV</div>
+                <div class="btn-pop text-xs" onclick="handleKey('INFO')">INFO</div>
+                <!-- Numeric Keys -->
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('1')">1</div>
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('2')">2</div>
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('3')">3</div>
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('4')">4</div>
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('5')">5</div>
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('6')">6</div>
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('7')">7</div>
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('8')">8</div>
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('9')">9</div>
+                <div class="btn-pop text-xs outline-pink font-black" onclick="handleKey('CLR')">CLR</div>
+                <div class="btn-pop text-sm font-bold" onclick="handleKey('0')">0</div>
+                <div class="btn-pop text-xs outline-blue font-black" onclick="handleKey('ENT')">ENT</div>
+            </div>
+        </div>
+
+        <!-- Software View (Paging & App Control) -->
+        <div id="soft-view" class="hidden flex flex-col gap-4 flex-1">
+            <div class="grid grid-cols-4 gap-2 h-12">
+                <button onclick="changePage('TV')" class="btn-pop outline-blue text-[7px] font-black">TV</button>
+                <button onclick="changePage('AUDIO')" class="btn-pop outline-purple text-[7px] font-black">AUDIO</button>
+                <button onclick="changePage('LIGHTS')" class="btn-pop outline-green text-[7px] font-black">LGHT</button>
+                <button onclick="changePage('MACROS')" class="btn-pop outline-pink text-[7px] font-black">MACRO</button>
+            </div>
+            <div class="grid grid-cols-2 gap-3 flex-1" id="soft-grid">
+                <!-- Buttons injected by script -->
+            </div>
+            <button onclick="toggleTerminal()" class="h-10 border-2 border-dashed border-slate-200 rounded-xl text-[7px] font-black text-slate-300 hover:border-blue-400 hover:text-blue-400 transition-colors">
+                [ OPEN ADVANCED CORE TERMINAL ]
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="flex justify-between items-center text-[7px] font-black text-slate-300 tracking-[0.2em] pt-4 border-t border-slate-100">
+            <span>6502-NG // V.4.26-ALPHA</span>
+            <div class="flex gap-1">
+                <div class="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTRY & INFO PANEL -->
+    <div class="info-panel">
+        <div class="glass-box flex-1 flex flex-col overflow-hidden border-t-4 border-blue-500">
+            <h3 class="font-black text-blue-600 text-[10px] uppercase tracking-widest mb-4 flex items-center gap-2">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"></path></svg>
+                6502 Memory Registry
+            </h3>
+            <div id="macro-registry" class="flex-1 overflow-y-auto space-y-2 pr-2">
+                <div class="text-slate-400 text-xs italic">Registry empty...</div>
+            </div>
+        </div>
+
+        <div class="glass-box">
+            <h2 class="font-black text-lg mb-3 tracking-tighter">Unified Protocol</h2>
+            <div class="space-y-3 text-[12px] text-slate-500 leading-relaxed">
+                <p><strong class="text-slate-900">One Remote, Two Brains:</strong> Switch between Hardware (Traditional) and Software (Contextual) interfaces using the top toggle.</p>
+                <p><strong class="text-rose-500">Advanced Programming:</strong> Use [PROG] to bond keypad strings to buttons, or use the <span class="text-blue-500">Core Terminal</span> in Software mode for direct string entry.</p>
+                <div class="pt-3 border-t border-slate-200 flex justify-between items-center">
+                    <span class="text-[8px] font-black text-slate-400 uppercase">Flash Storage Active</span>
+                    <button onclick="localStorage.clear(); location.reload();" class="text-[8px] font-bold text-rose-500 hover:underline">WIPE CORE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isPowerOn = false;
+        let isProgMode = false;
+        let currentView = 'PHYS';
+        let currentPage = 'TV';
+        let inputBuffer = "";
+        
+        let customActions = JSON.parse(localStorage.getItem('cl9_heritage_cmds')) || {};
+
+        const softPages = {
+            TV: [
+                { id: 's_netflix', label: 'NETFLIX', color: 'pink', cmd: 'APP_NETFLIX' },
+                { id: 's_plex', label: 'PLEX', color: 'blue', cmd: 'APP_PLEX' },
+                { id: 's_yt', label: 'YOUTUBE', color: 'pink', cmd: 'APP_YT' },
+                { id: 's_input', label: 'HDMI SYNC', color: 'purple', cmd: 'SW_HDMI' }
+            ],
+            AUDIO: [
+                { id: 'a_pair', label: 'BT PAIR', color: 'purple', cmd: 'BT_DISCOVER' },
+                { id: 'a_eq', label: 'FLAT EQ', color: 'purple', cmd: 'EQ_SET_0' }
+            ],
+            LIGHTS: [
+                { id: 'l_night', label: 'NIGHT SCENE', color: 'blue', cmd: 'HUE_SLEEP' },
+                { id: 'l_day', label: 'WORK SCENE', color: 'green', cmd: 'HUE_WORK' }
+            ],
+            MACROS: [
+                { id: 'm_cine', label: 'THEATER', color: 'pink', cmd: 'MACRO_CINEMA' }
+            ]
+        };
+
+        function addLog(text, color = "white") {
+            const logWindow = document.getElementById('log-window');
+            const div = document.createElement('div');
+            div.style.color = color;
+            div.innerHTML = `<span class="opacity-40">[${new Date().toLocaleTimeString([], {hour12: false, second:'2-digit'})}]</span> ${text}`;
+            logWindow.prepend(div);
+        }
+
+        function clearLogs() {
+            if(!isPowerOn) return;
+            document.getElementById('log-window').innerHTML = '';
+            addLog('DISPLAY BUFFER RESET', '#00f2ff');
+        }
+
+        function togglePower() {
+            isPowerOn = !isPowerOn;
+            const ui = document.getElementById('screen-ui');
+            const pwrBtn = document.getElementById('pwr-btn');
+            
+            if(isPowerOn) {
+                ui.classList.remove('opacity-0');
+                pwrBtn.classList.add('border-blue-500', 'text-blue-500');
+                document.getElementById('sys-status').innerText = 'CORE_READY';
+                addLog('6502-NG VIRTUAL CORE ONLINE', '#00f2ff');
+                renderSoftPage();
+                renderRegistry();
+            } else {
+                ui.classList.add('opacity-0');
+                pwrBtn.classList.remove('border-blue-500', 'text-blue-500');
+                document.getElementById('sys-status').innerText = 'OFFLINE';
+            }
+        }
+
+        function toggleView() {
+            if(!isPowerOn) return;
+            const pill = document.getElementById('mode-switch');
+            const phys = document.getElementById('phys-view');
+            const soft = document.getElementById('soft-view');
+            const indicator = document.getElementById('page-indicator');
+
+            if(currentView === 'PHYS') {
+                currentView = 'SOFT';
+                pill.classList.replace('phys', 'soft');
+                phys.classList.add('hidden');
+                soft.classList.remove('hidden');
+                indicator.innerText = 'UNIT: SOFTWARE';
+                addLog('CONTEXT SW: SOFT_BUS', '#8b5cf6');
+            } else {
+                currentView = 'PHYS';
+                pill.classList.replace('soft', 'phys');
+                soft.classList.add('hidden');
+                phys.classList.remove('hidden');
+                indicator.innerText = 'UNIT: HARDWARE';
+                addLog('CONTEXT SW: HARD_BUS', '#3b82f6');
+            }
+        }
+
+        function toggleProg() {
+            if(!isPowerOn) return;
+            isProgMode = !isProgMode;
+            const btn = document.getElementById('prog-btn');
+            const area = document.getElementById('input-buffer');
+            
+            if(isProgMode) {
+                btn.classList.add('prog-active');
+                area.classList.remove('hidden');
+                addLog('PROG MODE: ENTER CMD STRING', '#f43f5e');
+            } else {
+                btn.classList.remove('prog-active');
+                area.classList.add('hidden');
+                inputBuffer = "";
+                document.getElementById('typing-area').innerText = "";
+            }
+        }
+
+        function handleKey(key) {
+            if(!isPowerOn) return;
+
+            // Programming Logic
+            if(isProgMode) {
+                if(key === 'CLR') inputBuffer = "";
+                else if(key === 'ENT') addLog('TAP TARGET BUTTON', '#f43f5e');
+                else if(/^\d$/.test(key)) inputBuffer += key;
+                document.getElementById('typing-area').innerText = inputBuffer;
+
+                if(!(/^\d$/.test(key)) && key !== 'CLR' && key !== 'ENT' && inputBuffer) {
+                    saveMacro('key_' + key, inputBuffer);
+                }
+                return;
+            }
+
+            // Normal Logic
+            const action = customActions['key_' + key] || 'SYS_INT_' + key;
+            addLog(`EXEC: ${action}`, '#3b82f6');
+        }
+
+        function changePage(p) {
+            if(!isPowerOn) return;
+            currentPage = p;
+            renderSoftPage();
+            addLog(`SOFT_NAV: ${p}`, '#8b5cf6');
+        }
+
+        function renderSoftPage() {
+            const grid = document.getElementById('soft-grid');
+            grid.innerHTML = '';
+            softPages[currentPage].forEach(btn => {
+                const uid = `soft_${currentPage}_${btn.id}`;
+                const saved = customActions[uid];
+                const el = document.createElement('div');
+                el.className = `btn-pop h-24 outline-${btn.color}`;
+                el.innerHTML = `
+                    <span class="text-[8px] font-black uppercase mb-1">${btn.label}</span>
+                    <span class="text-[6px] font-mono opacity-40">${saved ? 'MACRO:'+saved : btn.cmd}</span>
+                `;
+                el.onclick = () => {
+                    if(isProgMode && inputBuffer) saveMacro(uid, inputBuffer);
+                    else addLog(`EXEC: ${saved || btn.cmd}`, '#10b981');
+                };
+                grid.appendChild(el);
+            });
+        }
+
+        function saveMacro(key, val) {
+            customActions[key] = val;
+            localStorage.setItem('cl9_heritage_cmds', JSON.stringify(customActions));
+            addLog(`BONDED "${val}" TO ${key}`, '#10b981');
+            toggleProg();
+            renderSoftPage();
+            renderRegistry();
+        }
+
+        function renderRegistry() {
+            const reg = document.getElementById('macro-registry');
+            const keys = Object.keys(customActions);
+            if(keys.length === 0) {
+                reg.innerHTML = '<div class="text-slate-400 text-[10px] italic">No macros in flash memory.</div>';
+                return;
+            }
+            reg.innerHTML = keys.map(k => `
+                <div class="bg-white p-2 rounded-lg border border-slate-100 flex justify-between items-center text-[9px] font-mono">
+                    <span class="text-slate-400 font-bold">${k.toUpperCase().replace('KEY_','')}</span>
+                    <span class="text-blue-600 font-black">${customActions[k]}</span>
+                </div>
+            `).join('');
+        }
+
+        function toggleTerminal() {
+            if(!isPowerOn) return;
+            document.getElementById('hidden-terminal').classList.toggle('open');
+        }
+
+        function submitTerminal() {
+            const val = document.getElementById('terminal-input').value;
+            if(val) {
+                addLog(`CMD BUFFERED: ${val}`, '#f43f5e');
+                inputBuffer = val;
+                document.getElementById('typing-area').innerText = inputBuffer;
+                toggleProg(); // Enter selection mode
+                toggleTerminal();
+            }
+        }
+
+        // 3D Mouse Tilt
+        document.addEventListener('mousemove', (e) => {
+            if(window.innerWidth < 1200) return;
+            const remote = document.getElementById('remote');
+            const xAxis = (window.innerWidth / 3 - e.pageX) / 40;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 40;
+            remote.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        renderRegistry();
+    </script>
+</body>
+</html>
