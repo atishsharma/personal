@@ -72,54 +72,58 @@
             📱 Smartphone Camera Architectures: 3D Teardown Viewer
         </header>
 
-        <!-- Top Left Controls (Camera Selection) -->
-        <div class="pointer-events-auto absolute top-16 md:top-20 left-4 md:left-6 z-30">
-            <!-- Desktop Box -->
-            <div class="hidden md:block bg-black/60 backdrop-blur-xl text-white p-6 rounded-2xl w-[420px] border border-white/10 shadow-2xl transition-all duration-300">
-                <div id="dialog-header" class="flex justify-between items-center cursor-pointer mb-2 select-none group">
-                    <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">Choose Smartphone</h1>
-                    <svg id="collapse-icon" style="transform: rotate(0deg);" class="w-6 h-6 text-gray-400 group-hover:text-white transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </div>
-                
-                <div id="dialog-content" class="transition-all duration-300 origin-top overflow-hidden opacity-100" style="max-height: 500px;">
-                    <div class="pt-4">
-                        <select id="phone-select" class="w-full bg-gray-800/80 text-white rounded-xl p-3 border border-gray-600 focus:outline-none focus:border-cyan-500 transition-colors cursor-pointer appearance-none font-medium">
-                            <option value="apple">Apple iPhone 17 Pro Max</option>
-                            <option value="samsung">Samsung Galaxy S26 Ultra</option>
-                            <option value="pixel">Google Pixel 10 Pro</option>
-                            <option value="huawei">Huawei Pura 80 Ultra</option>
-                            <option value="vivo">Vivo X300 Pro</option>
-                            <option value="oppo">Oppo Find X9 Pro</option>
-                            <option value="xiaomi">Xiaomi 17 Ultra</option>
-                            <option value="oneplus">OnePlus 15</option>
-                            <option value="sony">Sony Xperia 1 VII</option>
-                        </select>
+        <!-- Top Controls Container (Responsive Flex Layout) -->
+        <div class="pointer-events-none absolute top-16 md:top-20 left-0 w-full px-4 md:px-6 flex justify-between items-start z-30">
+            
+            <!-- Left Side: Camera Selection -->
+            <div class="pointer-events-auto">
+                <!-- Desktop Box -->
+                <div class="hidden md:block bg-black/60 backdrop-blur-xl text-white p-6 rounded-2xl w-[360px] lg:w-[420px] border border-white/10 shadow-2xl transition-all duration-300">
+                    <div id="dialog-header" class="flex justify-between items-center cursor-pointer select-none group">
+                        <h1 class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">Choose Smartphone</h1>
+                        <svg id="collapse-icon" style="transform: rotate(0deg);" class="w-6 h-6 text-gray-400 group-hover:text-white transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </div>
+                    
+                    <div id="dialog-content" class="transition-all duration-300 origin-top overflow-hidden opacity-100" style="max-height: 500px;">
+                        <div class="pt-4">
+                            <select id="phone-select" class="w-full bg-gray-800/80 text-white rounded-xl p-3 border border-gray-600 focus:outline-none focus:border-cyan-500 transition-colors cursor-pointer appearance-none font-medium">
+                                <option value="apple">Apple iPhone 17 Pro Max</option>
+                                <option value="samsung">Samsung Galaxy S26 Ultra</option>
+                                <option value="pixel">Google Pixel 10 Pro</option>
+                                <option value="huawei">Huawei Pura 80 Ultra</option>
+                                <option value="vivo">Vivo X300 Pro</option>
+                                <option value="oppo">Oppo Find X9 Pro</option>
+                                <option value="xiaomi">Xiaomi 17 Ultra</option>
+                                <option value="oneplus">OnePlus 15</option>
+                                <option value="sony">Sony Xperia 1 VII</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
+                <!-- Mobile Compact Icon -->
+                <div class="md:hidden relative w-12 h-12 bg-black/60 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center shadow-2xl">
+                    <span class="text-xl">📱</span>
+                    <select id="phone-select-mobile" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                        <option value="apple">Apple iPhone 17 Pro Max</option>
+                        <option value="samsung">Samsung Galaxy S26 Ultra</option>
+                        <option value="pixel">Google Pixel 10 Pro</option>
+                        <option value="huawei">Huawei Pura 80 Ultra</option>
+                        <option value="vivo">Vivo X300 Pro</option>
+                        <option value="oppo">Oppo Find X9 Pro</option>
+                        <option value="xiaomi">Xiaomi 17 Ultra</option>
+                        <option value="oneplus">OnePlus 15</option>
+                        <option value="sony">Sony Xperia 1 VII</option>
+                    </select>
+                </div>
             </div>
-            <!-- Mobile Compact Icon -->
-            <div class="md:hidden relative w-14 h-14 bg-black/60 backdrop-blur-xl border border-white/20 rounded-full flex items-center justify-center shadow-2xl mt-1">
-                <span class="text-2xl">📱</span><span class="text-[10px] ml-0.5 mt-2">▼</span>
-                <select id="phone-select-mobile" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
-                    <option value="apple">Apple iPhone 17 Pro Max</option>
-                    <option value="samsung">Samsung Galaxy S26 Ultra</option>
-                    <option value="pixel">Google Pixel 10 Pro</option>
-                    <option value="huawei">Huawei Pura 80 Ultra</option>
-                    <option value="vivo">Vivo X300 Pro</option>
-                    <option value="oppo">Oppo Find X9 Pro</option>
-                    <option value="xiaomi">Xiaomi 17 Ultra</option>
-                    <option value="oneplus">OnePlus 15</option>
-                    <option value="sony">Sony Xperia 1 VII</option>
-                </select>
-            </div>
-        </div>
 
-        <!-- Top Right Actions Group -->
-        <div class="pointer-events-auto absolute top-16 md:top-20 right-4 md:right-6 flex gap-2 md:gap-3 z-30 mt-1 md:mt-0">
-            <input type="file" id="file-input" accept="image/*" class="hidden">
-            <button id="btn-upload" class="w-14 h-14 md:w-12 md:h-12 flex items-center justify-center bg-white backdrop-blur-xl text-gray-900 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] hover:bg-gray-100 transition-colors text-xl" title="Upload Custom Photo">🖼️</button>
-            <button id="btn-capture" class="w-14 h-14 md:w-12 md:h-12 flex items-center justify-center bg-white backdrop-blur-xl text-gray-900 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] hover:bg-gray-100 transition-colors text-xl" title="Capture Shot">📸</button>
-            <button id="settings-toggle" class="w-14 h-14 md:w-12 md:h-12 flex items-center justify-center bg-white backdrop-blur-xl text-gray-900 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] hover:bg-gray-100 transition-colors text-xl" title="Settings & Actions">⚙️</button>
+            <!-- Right Side: Actions Group -->
+            <div class="pointer-events-auto flex gap-2 md:gap-3">
+                <input type="file" id="file-input" accept="image/*" class="hidden">
+                <button id="btn-upload" class="w-12 h-12 flex items-center justify-center bg-white backdrop-blur-xl text-gray-900 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] hover:bg-gray-100 transition-colors text-xl" title="Upload Custom Photo">🖼️</button>
+                <button id="btn-capture" class="w-12 h-12 flex items-center justify-center bg-white backdrop-blur-xl text-gray-900 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] hover:bg-gray-100 transition-colors text-xl" title="Capture Shot">📸</button>
+                <button id="settings-toggle" class="w-12 h-12 flex items-center justify-center bg-white backdrop-blur-xl text-gray-900 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] hover:bg-gray-100 transition-colors text-xl" title="Settings & Actions">⚙️</button>
+            </div>
         </div>
 
         <!-- Top Right Instructions (Toggled via Settings) -->
@@ -176,7 +180,7 @@
         if (window.innerWidth < 768) {
             camera.position.set(30, 24, 38); // Zoom out for Mobile
         } else {
-            camera.position.set(18, 14, 22); // Zoom in 50% for Laptop
+            camera.position.set(18, 14, 22); // Comfortable Zoom for Laptop
         }
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -239,6 +243,7 @@
         window.currentSliderMode = null;
         window.lastPhotoPosX = null;
         window.lastPhotoPosY = null;
+        window.lastPhotoPosZ = null;
 
         function createSensorGridTexture() {
             const canvas = document.createElement('canvas');
@@ -268,17 +273,32 @@
         const housingEdgeMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.2 });
 
         function getOpticalZoomMultiplier(camType, sliderVal = 0) {
-            let z = 1.0;
-            if (camType === 'ultrawide') z = 1.0; 
-            else if (camType === 'front') z = 1.2; 
-            else if (camType === 'primary') z = 2.0; 
-            else if (camType.includes('telephoto2')) z = 10.0; 
-            else if (camType.includes('telephoto')) z = 5.0; 
-
-            if (window.currentSliderMode === 'sony') z = 5.0 + sliderVal * 5.0;
-            else if (window.currentSliderMode === 'vivo') z = 8.0 + sliderVal * 2.0; 
+            const meta = modelsData[currentPhone][currentCam]?.meta;
+            if (!meta) return 1.0;
             
-            return z;
+            let focal = parseFloat(meta.focal.split('-')[0].replace('mm', ''));
+            if (window.currentSliderMode === 'sony') {
+                focal = 85 + sliderVal * (170 - 85);
+            }
+            
+            // Base 13mm is perfectly uncropped Ultrawide view
+            let z = focal / 13.0; 
+            
+            // Apply Physical distance offset (dragging photo on Z axis scales the zoom naturally)
+            let distMultiplier = 1.0;
+            if (window.activePhotoMesh && window.activePhotoMesh.userData.orig && currentLightNodes.length > 1) {
+                const entryZ = currentLightNodes[1].position.z;
+                const origZ = window.activePhotoMesh.userData.orig.z;
+                const currentZ = window.activePhotoMesh.position.z;
+                
+                const origDist = Math.abs(origZ - entryZ);
+                const currentDist = Math.abs(currentZ - entryZ);
+                
+                if (currentDist > 0.5) distMultiplier = origDist / currentDist;
+                else distMultiplier = origDist / 0.5; // Cap scaling to prevent infinite size
+            }
+            
+            return z * distMultiplier;
         }
 
         function drawSensorCrop(canvas, invert=true, useVignette=false, forceZoom=null) {
@@ -291,13 +311,13 @@
             const sliderVal = parseFloat(document.getElementById('zoom-slider')?.value || 0);
             const z = forceZoom !== null ? forceZoom : getOpticalZoomMultiplier(currentCam, sliderVal);
 
-            // Calculate Framing/Panning Offsets from physical drag
+            // Calculate Framing/Panning Offsets from physical Drag
             let panX = 0; let panY = 0;
             if (window.activePhotoMesh && window.activePhotoMesh.userData.orig) {
                 const dx = window.activePhotoMesh.position.x - window.activePhotoMesh.userData.orig.x;
                 const dy = window.activePhotoMesh.position.y - window.activePhotoMesh.userData.orig.y;
-                panX = dx * 300; 
-                panY = -dy * 300; 
+                panX = -dx * 100 / z; // Normalize pan speed regardless of zoom
+                panY = dy * 100 / z; 
             }
 
             if (invert) {
@@ -450,7 +470,7 @@
             
             currentMeshes = []; currentLightBeams = []; currentLightNodes = []; currentSensorMats = []; 
             draggableObjects.length = 0; variableLensGroups = []; window.activePhotoMesh = null;
-            window.lastPhotoPosX = null; window.lastPhotoPosY = null;
+            window.lastPhotoPosX = null; window.lastPhotoPosY = null; window.lastPhotoPosZ = null;
             
             document.getElementById('zoom-container').classList.add('hidden');
             document.getElementById('zoom-container').classList.remove('flex');
@@ -515,10 +535,10 @@
             const geo = isCircular ? new THREE.CylinderGeometry(w/2, w/2, 0.05, 32) : new THREE.BoxGeometry(w, h, 0.05);
             if (isCircular) geo.rotateX(Math.PI/2);
             
-            const mesh = addPart(name, geo, outerGlassMat, orig, exp, rot, 2.5, 0.8, true);
+            const mesh = addPart(name, geo, outerGlassMat, orig, exp, rot, 2.5, 0.8, false); // Glass Outline Non-Draggable
             const edges = new THREE.EdgesGeometry(geo);
             const line = new THREE.LineSegments(edges, outerGlassEdgeMat);
-            line.raycast = function() {}; // Prevent outline detachment
+            line.raycast = function() {}; 
             mesh.add(line);
             
             return mesh;
@@ -572,22 +592,11 @@
                 controls.enabled = false;
                 draggingObject = event.object;
                 
-                if (event.object === window.activePhotoMesh) {
-                    event.object.userData.dragStartZ = event.object.position.z;
-                }
-                
                 if(event.object.material.emissive && event.object !== window.activePhotoMesh) {
                     event.object.material.emissive.setHex(0x222222);
                 }
             });
 
-            dragControls.addEventListener('drag', function (event) {
-                if (event.object === window.activePhotoMesh) {
-                    // Lock Z movement for linear panning
-                    event.object.position.z = event.object.userData.dragStartZ;
-                }
-            });
-            
             dragControls.addEventListener('dragend', function (event) {
                 controls.enabled = true;
                 draggingObject = null;
@@ -643,7 +652,7 @@
             const sourceZ = frontZ + 2.0;
             const expSourceZ = expFrontZ + 2.5;
 
-            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.5, 2.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,sourceZ), new THREE.Vector3(0,0,expSourceZ), null, 1.8, 0.4, true);
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.0, 2.0), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,sourceZ), new THREE.Vector3(0,0,expSourceZ), null, 1.4, 0.25, true);
             nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,sourceZ)));
 
             const frontGlass = addFrontGlassPart("Display Hole", sSize, sSize, new THREE.Vector3(0, 0, frontZ), new THREE.Vector3(0, 0, expFrontZ), null, true);
@@ -704,7 +713,7 @@
             const sourceZ = frontZ + 2.6;
             const expSourceZ = expFrontZ + 3;
 
-            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.5, 2.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,sourceZ), new THREE.Vector3(0,0,expSourceZ), null, 1.8, 0.4, true);
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.0, 2.0), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,sourceZ), new THREE.Vector3(0,0,expSourceZ), null, 1.4, 0.25, true);
             nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,sourceZ)));
 
             const frontGlass = addFrontGlassPart("Front Glass", sSize, sSize, new THREE.Vector3(0, 0, frontZ), new THREE.Vector3(0, 0, expFrontZ), null, true);
@@ -761,7 +770,7 @@
             const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(0, -3.5, -1), new THREE.Vector3(0, -6, -1), new THREE.Vector3(-Math.PI/2, 0, 0), 2.5, 1, false);
 
             const nodes = [];
-            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.5, 2.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,8), new THREE.Vector3(0,0,13), null, 1.8, 0.4, true);
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.0, 2.0), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,8), new THREE.Vector3(0,0,13), null, 1.4, 0.25, true);
             nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,8)));
             
             const frontGlass = addFrontGlassPart("Front Glass", 2.6, 2.6, new THREE.Vector3(0, 0, 4.6), new THREE.Vector3(0, 0, 10.5), null, true);
@@ -821,7 +830,7 @@
             const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(0, -3, 0), new THREE.Vector3(0, -6, 0), new THREE.Vector3(-Math.PI/2, 0, 0), 2.5, 1, false);
 
             const nodes = [];
-            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.5, 2.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,11.5), null, 1.8, 0.4, true);
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.0, 2.0), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,11.5), null, 1.4, 0.25, true);
             nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,7)));
 
             const frontGlass = addFrontGlassPart("Front Glass", 2.8, 2.8, new THREE.Vector3(0, 0, 3.9), new THREE.Vector3(0, 0, 10.2), null, true);
@@ -884,7 +893,7 @@
             const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(sensorX, 0, 0), new THREE.Vector3(sensorX + 3.5, 0, 0), new THREE.Vector3(0, -Math.PI/2, 0), 2.5, 1, false);
 
             const nodes = [];
-            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.5, 2.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,9.5), null, 1.8, 0.4, true);
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.0, 2.0), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,9.5), null, 1.4, 0.25, true);
             nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,7)));
 
             nodes.push(addLightNode(win, new THREE.Vector3(0,0,2.5)));
@@ -964,7 +973,7 @@
             const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(sensorX, 0, 0), new THREE.Vector3(sensorX + 3.5, 0, 0), new THREE.Vector3(0, -Math.PI/2, 0), 2.5, 1, false);
 
             const nodes = [];
-            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.5, 2.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,9.5), null, 1.8, 0.4, true);
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.0, 2.0), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,9.5), null, 1.4, 0.25, true);
             nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,7)));
 
             nodes.push(addLightNode(win, new THREE.Vector3(0,0,2.5)));
@@ -1045,7 +1054,7 @@
             const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(sensorX, 0, 0), new THREE.Vector3(sensorX + 3.5, 0, 0), new THREE.Vector3(0, -Math.PI/2, 0), 2.5, 1, false);
 
             const nodes = [];
-            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.5, 2.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,9.5), null, 1.8, 0.4, true);
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(2.0, 2.0), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,9.5), null, 1.4, 0.25, true);
             nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,7)));
 
             nodes.push(addLightNode(win, new THREE.Vector3(0,0,2.5)));
@@ -1275,7 +1284,7 @@
             renderTabs();
             updateModel();
             
-            let isCollapsed = true;
+            isCollapsed = true;
             document.getElementById('dialog-content').style.maxHeight = '0px';
             document.getElementById('dialog-content').style.opacity = '0';
             document.getElementById('collapse-icon').style.transform = 'rotate(180deg)';
@@ -1391,13 +1400,15 @@
                 }
             }
 
-            // Real-time sensor update based on photo panning
+            // Real-time sensor update based on photo panning & distance dragging
             if (window.activePhotoMesh) {
                 if (Math.abs(window.activePhotoMesh.position.x - (window.lastPhotoPosX || 0)) > 0.005 ||
-                    Math.abs(window.activePhotoMesh.position.y - (window.lastPhotoPosY || 0)) > 0.005) {
+                    Math.abs(window.activePhotoMesh.position.y - (window.lastPhotoPosY || 0)) > 0.005 ||
+                    Math.abs(window.activePhotoMesh.position.z - (window.lastPhotoPosZ || 0)) > 0.005) {
                     updateTextures();
                     window.lastPhotoPosX = window.activePhotoMesh.position.x;
                     window.lastPhotoPosY = window.activePhotoMesh.position.y;
+                    window.lastPhotoPosZ = window.activePhotoMesh.position.z;
                 }
             }
 
