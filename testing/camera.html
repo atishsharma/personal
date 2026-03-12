@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Explore how flagship smartphone cameras work internally. Learn how primary, telephoto, and ultra-wide cameras function on top models like iPhone 17 Pro, Pixel phones, and Samsung Galaxy S26 Ultra.">
+    <title>How Smartphone Cameras Work: Telephoto, Primary & Ultra-Wide in iPhone 17 Pro, Pixel & Samsung S26 Ultra</title>
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/DragControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: radial-gradient(circle at center, #1e1e2f 0%, #0a0a12 100%); 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        #canvas-container { 
+            width: 100vw; 
+            height: 100vh; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            z-index: 1; 
+        }
+        #ui-container { 
+            position: absolute; 
+            z-index: 10; 
+            pointer-events: none; 
+            width: 100%; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-sizing: border-box;
+        }
+        .pointer-events-auto { pointer-events: auto; }
+        
+        #desc-text::-webkit-scrollbar { width: 6px; }
+        #desc-text::-webkit-scrollbar-track { background: transparent; }
+        #desc-text::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+    <!-- Camera Flash Overlay -->
+    <div id="flash-overlay" class="fixed inset-0 z-[100] bg-white hidden opacity-0 transition-opacity duration-75 pointer-events-none"></div>
+
+    <!-- Capture Popup Modal -->
+    <div id="capture-popup" class="pointer-events-auto fixed inset-0 z-50 bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-xl">
+        <div class="relative flex flex-col items-center justify-center w-full max-w-4xl p-6 h-full">
+            <div class="bg-gray-900 p-2 rounded-2xl border border-white/10 shadow-2xl flex items-center justify-center w-full md:w-auto" style="max-height: 65vh;">
+                <img id="capture-image" class="rounded-xl max-w-full object-contain block bg-black" style="max-height: calc(65vh - 1rem);" />
+            </div>
+            <div class="mt-8 text-center flex flex-col items-center">
+                <h3 id="capture-title" class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent tracking-wide">Shot</h3>
+                <p id="capture-subtitle" class="text-gray-200 text-sm md:text-base mt-3 max-w-lg font-medium leading-relaxed"></p>
+            </div>
+            <button id="btn-close-capture" class="mt-8 bg-white/10 hover:bg-white/20 border border-white/20 px-10 py-3 rounded-full text-white font-bold transition-all backdrop-blur-md shadow-lg">Close Gallery</button>
+        </div>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <div id="ui-container">
+        <!-- App Header -->
+        <header class="pointer-events-auto fixed top-0 left-0 w-full bg-black/80 backdrop-blur-md text-white/90 py-3 text-center z-30 border-b border-white/10 font-semibold tracking-wide shadow-md text-sm md:text-base">
+            📱 Smartphone Camera Architectures: 3D Teardown Viewer
+        </header>
+
+        <!-- Top Left Controls (Camera Selection) -->
+        <div class="pointer-events-auto absolute top-20 left-4 right-4 md:left-6 md:right-auto bg-black/60 backdrop-blur-xl text-white p-6 rounded-2xl w-auto md:w-[420px] border border-white/10 shadow-2xl transition-all duration-300 z-20">
+            <div id="dialog-header" class="flex justify-between items-center cursor-pointer mb-2 select-none group">
+                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">Choose Smartphone Camera</h1>
+                <svg id="collapse-icon" style="transform: rotate(180deg);" class="w-6 h-6 text-gray-400 group-hover:text-white transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+            
+            <div id="dialog-content" class="transition-all duration-300 origin-top overflow-hidden opacity-0" style="max-height: 0px;">
+                <div class="pt-4">
+                    <select id="phone-select" class="w-full bg-gray-800/80 text-white rounded-xl p-3 mb-4 border border-gray-600 focus:outline-none focus:border-cyan-500 transition-colors cursor-pointer appearance-none font-medium">
+                        <option value="apple">Apple iPhone 17 Pro Max</option>
+                        <option value="samsung">Samsung Galaxy S26 Ultra</option>
+                        <option value="pixel">Google Pixel 10 Pro</option>
+                        <option value="huawei">Huawei Pura 80 Ultra</option>
+                        <option value="vivo">Vivo X300 Pro</option>
+                        <option value="oppo">Oppo Find X9 Pro</option>
+                        <option value="xiaomi">Xiaomi 17 Ultra</option>
+                        <option value="oneplus">OnePlus 15</option>
+                        <option value="sony">Sony Xperia 1 VII</option>
+                    </select>
+                    
+                    <p id="desc-text" class="text-sm text-gray-300 mb-2 leading-relaxed h-32 overflow-y-auto pr-3"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Right Actions Group -->
+        <div class="pointer-events-auto absolute top-20 right-4 md:right-6 flex gap-2 md:gap-3 z-30">
+            <input type="file" id="file-input" accept="image/*" class="hidden">
+            <button id="btn-upload" class="w-12 h-12 flex items-center justify-center bg-white backdrop-blur-xl text-gray-900 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] hover:bg-gray-100 transition-colors text-xl" title="Upload Custom Photo">🖼️</button>
+            <button id="btn-capture" class="w-12 h-12 flex items-center justify-center bg-white backdrop-blur-xl text-gray-900 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] hover:bg-gray-100 transition-colors text-xl" title="Capture Shot">📸</button>
+            <button id="settings-toggle" class="w-12 h-12 flex items-center justify-center bg-white backdrop-blur-xl text-gray-900 rounded-full border-2 border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)] hover:bg-gray-100 transition-colors text-xl" title="Settings & Actions">⚙️</button>
+        </div>
+
+        <!-- Top Right Instructions (Toggled via Settings) -->
+        <div id="settings-panel" class="pointer-events-auto absolute top-[140px] right-4 md:right-6 bg-black/60 backdrop-blur-xl text-white p-5 rounded-2xl border border-white/10 w-72 shadow-2xl z-20 flex flex-col gap-4 transition-all duration-300 origin-top-right opacity-0 scale-95 pointer-events-none">
+            <ul class="space-y-3 text-sm">
+                <li class="flex items-start gap-3"><span class="text-xl">👆</span> <span><strong class="text-cyan-400">Drag & Drop</strong> the photo to pan/frame your shot! Move lenses to break alignment.</span></li>
+                <li class="flex items-start gap-3"><span class="text-xl">🔄</span> <span><strong class="text-cyan-400">Orbit</strong> background to rotate view. Lenses dynamically vibrate using <strong class="text-cyan-400">OIS</strong>.</span></li>
+                <li class="flex items-start gap-3"><span class="text-xl">📸</span> <span><strong class="text-cyan-400">Inspect the Sensor</strong> to see the inverted projection and metallic backside.</span></li>
+            </ul>
+            
+            <hr class="border-white/10" />
+            
+            <div class="flex flex-col gap-2.5">
+                <div class="flex gap-2">
+                    <button id="btn-explode" class="flex-1 bg-cyan-600/80 hover:bg-cyan-500 text-white py-2 rounded-xl font-semibold transition-colors shadow-lg shadow-cyan-900/50 text-sm">Explode</button>
+                    <button id="btn-reset" class="flex-1 bg-gray-600/80 hover:bg-gray-500 text-white py-2 rounded-xl font-semibold transition-colors shadow-lg text-sm">Reset</button>
+                </div>
+                <button id="btn-theme" class="w-full bg-gray-800/80 hover:bg-gray-700 text-gray-200 py-2 rounded-xl text-sm font-semibold transition-colors border border-gray-600 shadow-lg">☀️ Bright Mode</button>
+            </div>
+        </div>
+
+        <!-- Variable Zoom Slider (Responsive Layout) -->
+        <div id="zoom-container" class="pointer-events-auto absolute bottom-36 left-1/2 -translate-x-1/2 w-[90%] md:bottom-auto md:top-20 md:left-auto md:right-[180px] md:translate-x-0 md:w-[300px] bg-black/80 backdrop-blur-xl p-4 rounded-2xl border border-cyan-500/50 shadow-[0_0_15px_rgba(0,240,255,0.2)] z-20 hidden flex-col items-center gap-2 transition-all">
+            <label class="text-white text-sm font-bold tracking-wide"><span id="zoom-label">Optical Zoom:</span> <span id="zoom-val" class="text-cyan-400">85mm</span></label>
+            <input type="range" id="zoom-slider" min="0" max="1" step="0.01" value="0" class="w-full accent-cyan-400 cursor-pointer">
+            <div class="flex justify-between w-full text-[10px] text-gray-400 font-semibold px-1">
+                <span id="zoom-min-label">Wide (85mm)</span>
+                <span id="zoom-max-label">Tele (170mm)</span>
+            </div>
+        </div>
+
+        <!-- Bottom Center Camera Tabs (Dynamically Generated) -->
+        <div id="tabs-container" class="pointer-events-auto absolute bottom-20 left-1/2 transform -translate-x-1/2 flex gap-1 md:gap-2 bg-black/60 backdrop-blur-xl p-2 rounded-full border border-white/20 shadow-2xl z-20 w-max max-w-[95vw] overflow-x-auto overflow-y-hidden">
+            <!-- Tabs injected via JS -->
+        </div>
+
+        <!-- App Footer -->
+        <footer class="pointer-events-auto fixed bottom-0 left-0 w-full bg-black/80 backdrop-blur-md text-white/60 py-2.5 text-center text-xs md:text-sm z-30 border-t border-white/10 shadow-[0_-4px_6px_rgba(0,0,0,0.3)]">
+            <div class="mb-1">Interactive 3D Simulation &bull; Scroll to Zoom &bull; Drag components to inspect</div>
+            <div class="text-[10px] md:text-xs text-white/40">&copy; 2026 ATS Design &bull; <a href="https://github.com/atishsharma" target="_blank" class="hover:text-cyan-400 transition-colors underline">Official Github</a></div>
+        </footer>
+    </div>
+
+    <script>
+        // === 1. THREE.JS INITIALIZATION ===
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(14, 11, 17);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // === 2. LIGHTING ===
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(10, 20, 10);
+        scene.add(dirLight);
+
+        const cyanLight = new THREE.PointLight(0x00f0ff, 2, 50);
+        cyanLight.position.set(5, -5, 5);
+        scene.add(cyanLight);
+
+        const purpleLight = new THREE.PointLight(0xb000ff, 2, 50);
+        purpleLight.position.set(-5, 5, -5);
+        scene.add(purpleLight);
+
+        const grid = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
+        grid.position.y = -5;
+        scene.add(grid);
+
+        // === 3. SHARED MATERIALS & TEXTURES ===
+        const glassMat = new THREE.MeshPhysicalMaterial({
+            color: 0xffffff, metalness: 0.1, roughness: 0.05, transmission: 0.95, ior: 1.5,
+            transparent: true, opacity: 1, side: THREE.DoubleSide, emissive: 0x111122, emissiveIntensity: 0.2
+        });
+
+        const lensMat = new THREE.MeshPhysicalMaterial({
+            color: 0xe0f7fa, metalness: 0.2, roughness: 0.02, transmission: 0.98, ior: 1.45,
+            transparent: true, side: THREE.DoubleSide, emissive: 0x0a1a2a, emissiveIntensity: 0.5
+        });
+
+        const outerGlassMat = new THREE.MeshPhysicalMaterial({
+            color: 0x88ddff, metalness: 0.2, roughness: 0.05, transmission: 0.9, ior: 1.5,
+            transparent: true, opacity: 0.55, side: THREE.DoubleSide, emissive: 0x002244, emissiveIntensity: 0.6
+        });
+        const outerGlassEdgeMat = new THREE.LineBasicMaterial({ color: 0x00ffff, transparent: true, opacity: 0.9, linewidth: 2 });
+
+        // Globals for dynamic texturing
+        window.activeFrontCanvas = document.createElement('canvas');
+        window.activeFrontCanvas.width = 1024; window.activeFrontCanvas.height = 768;
+        window.activeFrontTex = new THREE.CanvasTexture(window.activeFrontCanvas);
+
+        window.activeSensorCanvas = document.createElement('canvas');
+        window.activeSensorCanvas.width = 1024; window.activeSensorCanvas.height = 768;
+        window.activeSensorTex = new THREE.CanvasTexture(window.activeSensorCanvas);
+
+        window.customImage = null; 
+        window.activePhotoMesh = null;
+        window.currentSliderMode = null;
+        window.lastPhotoPosX = null;
+        window.lastPhotoPosY = null;
+
+        function createSensorGridTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256; canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#111'; ctx.fillRect(0, 0, 256, 256);
+            ctx.strokeStyle = '#333'; ctx.lineWidth = 1;
+            for(let i=0; i<256; i+=8) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 256); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(256, i); ctx.stroke();
+            }
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        const sensorMat = new THREE.MeshStandardMaterial({
+            map: createSensorGridTexture(), metalness: 0.8, roughness: 0.2, color: 0x555555
+        });
+
+        const lightBeamMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc, transparent: true, opacity: 0.35, blending: THREE.AdditiveBlending, depthWrite: false
+        });
+        const baseBeamGeo = new THREE.CylinderGeometry(0.04, 0.04, 1, 8); 
+
+        const housingMat = new THREE.MeshPhysicalMaterial({
+            color: 0x050505, transparent: true, opacity: 0.7, roughness: 0.9, metalness: 0.1, side: THREE.BackSide, depthWrite: false
+        });
+        const housingEdgeMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.2 });
+
+        function getOpticalZoomMultiplier(camType, sliderVal = 0) {
+            let z = 1.0;
+            if (camType === 'ultrawide') z = 1.0; 
+            else if (camType === 'front') z = 1.2; 
+            else if (camType === 'primary') z = 2.0; 
+            else if (camType.includes('telephoto2')) z = 10.0; 
+            else if (camType.includes('telephoto')) z = 5.0; 
+
+            if (window.currentSliderMode === 'sony') z = 5.0 + sliderVal * 5.0;
+            else if (window.currentSliderMode === 'vivo') z = 8.0 + sliderVal * 2.0; 
+            
+            return z;
+        }
+
+        function drawSensorCrop(canvas, invert=true, useVignette=false, forceZoom=null) {
+            const ctx = canvas.getContext('2d');
+            const cw = canvas.width;  // 1024
+            const ch = canvas.height; // 768
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.save();
+
+            const sliderVal = parseFloat(document.getElementById('zoom-slider')?.value || 0);
+            const z = forceZoom !== null ? forceZoom : getOpticalZoomMultiplier(currentCam, sliderVal);
+
+            // Calculate Framing/Panning Offsets from physical drag
+            let panX = 0; let panY = 0;
+            if (window.activePhotoMesh && window.activePhotoMesh.userData.orig) {
+                const dx = window.activePhotoMesh.position.x - window.activePhotoMesh.userData.orig.x;
+                const dy = window.activePhotoMesh.position.y - window.activePhotoMesh.userData.orig.y;
+                panX = dx * 300; 
+                panY = -dy * 300; 
+            }
+
+            if (invert) {
+                ctx.translate(cw, ch);
+                ctx.scale(-1, -1);
+            }
+
+            if (window.customImage) {
+                const img = window.customImage;
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(0, 0, cw, ch);
+
+                const targetAspect = cw / ch;
+                const imgAspect = img.width / img.height;
+
+                let drawW, drawH;
+                if (imgAspect > targetAspect) {
+                    drawW = cw;
+                    drawH = cw / imgAspect;
+                } else {
+                    drawH = ch;
+                    drawW = ch * imgAspect;
+                }
+
+                ctx.translate(cw/2, ch/2);
+                ctx.scale(z, z);
+                ctx.translate(panX, panY);
+
+                // Draw centered inside the canvas (letterboxed/pillarboxed naturally)
+                ctx.drawImage(img, -drawW/2, -drawH/2, drawW, drawH);
+
+            } else {
+                // Procedural Landscape
+                ctx.translate(cw/2, ch/2);
+                ctx.scale(z, z);
+                ctx.translate(panX, panY);
+
+                const grad = ctx.createLinearGradient(0, -ch*2, 0, ch*2);
+                grad.addColorStop(0, '#1e3a8a'); 
+                grad.addColorStop(1, '#fbcfe8'); 
+                ctx.fillStyle = grad; 
+                ctx.fillRect(-cw*2, -ch*2, cw*4, ch*4);
+
+                ctx.fillStyle = '#fef08a';
+                ctx.beginPath(); ctx.arc(cw*0.2, -ch*0.2, ch*0.1, 0, Math.PI*2); ctx.fill();
+
+                ctx.fillStyle = '#064e3b';
+                ctx.beginPath(); ctx.moveTo(-cw, ch); ctx.lineTo(-cw*0.2, 0); ctx.lineTo(cw*0.7, ch); ctx.fill();
+                ctx.fillStyle = '#065f46';
+                ctx.beginPath(); ctx.moveTo(-cw*0.5, ch); ctx.lineTo(cw*0.2, ch*0.1); ctx.lineTo(cw*1.2, ch); ctx.fill();
+                
+                ctx.fillStyle = '#022c22';
+                ctx.fillRect(-cw*0.2, ch*0.1, cw*0.05, ch*0.4);
+                ctx.beginPath(); ctx.arc(-cw*0.175, ch*0.1, ch*0.15, 0, Math.PI*2); ctx.fill();
+            }
+
+            if (useVignette && window.currentSliderMode === 'vivo') {
+                ctx.resetTransform(); 
+                if (sliderVal > 0) {
+                    ctx.fillStyle = `rgba(0,0,0, ${sliderVal * 0.35})`;
+                    ctx.fillRect(0,0,cw,ch);
+                }
+            }
+
+            ctx.restore();
+        }
+
+        function updateTextures() {
+            if (!window.activePhotoMesh) return;
+
+            // 1. Update 4:3 Sensor Canvas
+            drawSensorCrop(window.activeSensorCanvas, true, true);
+            window.activeSensorTex.needsUpdate = true;
+
+            // 2. Update Front Ambient Mesh (Uncropped view)
+            if (window.customImage) {
+                if (!window.activePhotoMesh.material.map || !window.activePhotoMesh.material.map.isNativeTexture) {
+                    const tex = new THREE.Texture(window.customImage);
+                    tex.isNativeTexture = true;
+                    tex.needsUpdate = true;
+                    window.activePhotoMesh.material.map = tex;
+                }
+                const aspect = window.customImage.width / window.customImage.height;
+                window.activePhotoMesh.scale.set(aspect, 1, 1);
+            } else {
+                drawSensorCrop(window.activeFrontCanvas, false, false, 1.0); 
+                window.activeFrontTex.needsUpdate = true;
+                if (window.activePhotoMesh.material.map !== window.activeFrontTex) {
+                    window.activePhotoMesh.material.map = window.activeFrontTex;
+                }
+                window.activePhotoMesh.scale.set(1.333, 1, 1); 
+            }
+        }
+
+        // === 4. STATE & HELPERS ===
+        let currentMeshes = [];
+        let currentLightBeams = [];
+        let draggableObjects = [];
+        let dragControls = null;
+        let draggingObject = null;
+        let currentLightNodes = [];
+        let currentSensorMats = [];
+        let variableLensGroups = []; 
+
+        function createDimSprite(text) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.font = 'bold 36px monospace';
+            ctx.fillStyle = '#00f0ff';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(text, 256, 64);
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ map: texture, depthTest: false, transparent: true });
+            const sprite = new THREE.Sprite(material);
+            sprite.scale.set(6, 1.5, 1);
+            sprite.raycast = function() {}; 
+            return sprite;
+        }
+
+        function addHousing(w, h, d, pos, dimText = null) {
+            const geo = new THREE.BoxGeometry(w, h, d);
+            const mesh = new THREE.Mesh(geo, housingMat);
+            mesh.position.copy(pos);
+            mesh.raycast = function() {}; 
+            
+            const edges = new THREE.EdgesGeometry(geo);
+            const line = new THREE.LineSegments(edges, housingEdgeMat);
+            line.raycast = function() {};
+            mesh.add(line);
+            
+            scene.add(mesh);
+            currentMeshes.push(mesh);
+
+            if (dimText) {
+                const dimLabel = createDimSprite(dimText);
+                dimLabel.position.copy(pos);
+                dimLabel.position.y -= (h / 2 + 0.8);
+                scene.add(dimLabel);
+                currentMeshes.push(dimLabel);
+            }
+        }
+
+        function clearScene() {
+            currentMeshes.forEach(m => { scene.remove(m); if(m.geometry) m.geometry.dispose(); });
+            currentLightBeams.forEach(b => { scene.remove(b); if(b.geometry) b.geometry.dispose(); });
+            currentLightNodes.forEach(n => scene.remove(n));
+            
+            currentMeshes = []; currentLightBeams = []; currentLightNodes = []; currentSensorMats = []; 
+            draggableObjects.length = 0; variableLensGroups = []; window.activePhotoMesh = null;
+            window.lastPhotoPosX = null; window.lastPhotoPosY = null;
+            
+            document.getElementById('zoom-container').classList.add('hidden');
+            document.getElementById('zoom-container').classList.remove('flex');
+        }
+
+        function createTextSprite(text, scaleModifier = 1) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 128;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = 'rgba(20, 20, 30, 0.85)';
+            ctx.beginPath(); ctx.roundRect(0, 0, 512, 128, 64); ctx.fill();
+            
+            ctx.textAlign = 'center'; 
+            ctx.textBaseline = 'middle';
+            
+            const lines = text.split('\n');
+            if (lines.length > 1) {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 36px sans-serif';
+                ctx.fillText(lines[0], 256, 46);
+                ctx.fillStyle = '#00f0ff';
+                ctx.font = 'bold 22px sans-serif';
+                ctx.fillText(lines[1], 256, 86);
+            } else {
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 44px sans-serif';
+                ctx.fillText(text, 256, 64);
+            }
+            
+            const texture = new THREE.CanvasTexture(canvas);
+            const material = new THREE.SpriteMaterial({ map: texture, depthTest: false, transparent: true });
+            const sprite = new THREE.Sprite(material);
+            sprite.scale.set(4 * scaleModifier, 1 * scaleModifier, 1);
+            sprite.raycast = function() {}; 
+            return sprite;
+        }
+
+        function addPart(name, geometry, material, orig, exp, rot = null, labelOffset = 2.5, textScale = 1) {
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.copy(orig);
+            if (rot) mesh.rotation.set(rot.x, rot.y, rot.z);
+            
+            if (name && name.trim() !== "") {
+                const label = createTextSprite(name, textScale);
+                label.position.set(0, labelOffset, 0);
+                mesh.add(label);
+            }
+            
+            mesh.userData = { orig: orig.clone(), exp: exp.clone(), isLens: name === "" };
+            scene.add(mesh);
+            currentMeshes.push(mesh);
+            draggableObjects.push(mesh);
+            return mesh;
+        }
+
+        function addFrontGlassPart(name, w, h, orig, exp, rot = null, isCircular = true) {
+            const geo = isCircular ? new THREE.CylinderGeometry(w/2, w/2, 0.05, 32) : new THREE.BoxGeometry(w, h, 0.05);
+            if (isCircular) geo.rotateX(Math.PI/2);
+            
+            const mesh = addPart(name, geo, outerGlassMat, orig, exp, rot, 2.5, 0.8);
+            const edges = new THREE.EdgesGeometry(geo);
+            const line = new THREE.LineSegments(edges, outerGlassEdgeMat);
+            mesh.add(line);
+            
+            return mesh;
+        }
+
+        function addSensorBackplate(sensorMesh, w, h) {
+            const backMat = new THREE.MeshStandardMaterial({ 
+                color: 0x1e3f5a, metalness: 0.9, roughness: 0.2, emissive: 0x0a1520 
+            });
+            const backMesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), backMat);
+            
+            backMesh.rotation.x = Math.PI; 
+            backMesh.position.set(0, 0, -0.052); 
+            sensorMesh.add(backMesh);
+            
+            const chipMat = new THREE.MeshStandardMaterial({ color: 0xcc9933, metalness: 1.0, roughness: 0.3 });
+            const chip = new THREE.Mesh(new THREE.PlaneGeometry(w*0.4, h*0.4), chipMat);
+            chip.position.z = 0.002; 
+            backMesh.add(chip);
+
+            const borderGeo = new THREE.EdgesGeometry(new THREE.PlaneGeometry(w*0.8, h*0.8));
+            const borderMat = new THREE.LineBasicMaterial({ color: 0x55aaee, transparent: true, opacity: 0.5 });
+            const border = new THREE.LineSegments(borderGeo, borderMat);
+            border.position.z = 0.001;
+            backMesh.add(border);
+        }
+
+        function addLightNode(parentMesh, worldPos) {
+            const node = new THREE.Object3D();
+            node.position.copy(worldPos);
+            scene.add(node);
+            if (parentMesh) parentMesh.attach(node);
+            currentLightNodes.push(node);
+            return node;
+        }
+
+        function setupLightPath(nodes) {
+            currentLightNodes = nodes;
+            for (let i = 0; i < nodes.length - 1; i++) {
+                const mesh = new THREE.Mesh(baseBeamGeo, lightBeamMat);
+                scene.add(mesh);
+                currentLightBeams.push(mesh);
+            }
+        }
+
+        function initDrag() {
+            if (dragControls) dragControls.dispose();
+            dragControls = new THREE.DragControls(draggableObjects, camera, renderer.domElement);
+            
+            dragControls.addEventListener('dragstart', function (event) {
+                controls.enabled = false;
+                draggingObject = event.object;
+                if(event.object.material.emissive && event.object !== window.activePhotoMesh) {
+                    event.object.material.emissive.setHex(0x222222);
+                }
+            });
+            
+            dragControls.addEventListener('dragend', function (event) {
+                controls.enabled = true;
+                draggingObject = null;
+                if(event.object.material.emissive && event.object !== window.activePhotoMesh) {
+                    event.object.material.emissive.setHex(0x000000);
+                }
+            });
+        }
+
+        function createLensGeo(radius, thickness, isConvex) {
+            if (isConvex) {
+                const geo = new THREE.SphereGeometry(radius, 32, 16);
+                geo.scale(1, 1, thickness / radius);
+                return geo;
+            } else {
+                const geo = new THREE.CylinderGeometry(radius, radius * 0.9, thickness, 32);
+                geo.rotateX(Math.PI/2);
+                return geo;
+            }
+        }
+
+        // === 5. ARCHITECTURE BUILDERS ===
+
+        function buildFrontCamera() {
+            clearScene();
+            camera.position.set(10, 8, 14); 
+            const meta = modelsData[currentPhone][currentCam].meta;
+            const { lensCount, sSize, dim: dimText } = meta;
+            const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
+            
+            let w = sSize, h = sSize * 0.75; // 4:3 Ratio
+
+            const lenses = [];
+            for (let i = 0; i < lensCount; i++) {
+                const isConvex = i % 2 === 0;
+                let radius = 0.8 - (i * 0.05);
+                let thick = isConvex ? 0.15 : 0.08;
+                
+                const geo = createLensGeo(radius, thick, isConvex);
+                const zPos = (lensCount - i) * 0.3 + 0.5; 
+                const expZ = (lensCount - i) * 1.2 + 1; 
+                
+                const lens = addPart("", geo, lensMat, new THREE.Vector3(0,0,zPos), new THREE.Vector3(0,0,expZ));
+                lenses.push(lens);
+            }
+
+            const sGeo = new THREE.BoxGeometry(w, h, 0.1);
+            const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -2));
+
+            const nodes = [];
+            const frontZ = lensCount * 0.3 + 0.8;
+            const expFrontZ = lensCount * 1.2 + 2.0;
+            const sourceZ = frontZ + 2.0;
+            const expSourceZ = expFrontZ + 2.5;
+
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(3, 3), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,sourceZ), new THREE.Vector3(0,0,expSourceZ));
+            nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,sourceZ)));
+
+            const frontGlass = addFrontGlassPart("Display Hole", sSize, sSize, new THREE.Vector3(0, 0, frontZ), new THREE.Vector3(0, 0, expFrontZ), null, true);
+            nodes.push(addLightNode(frontGlass, new THREE.Vector3(0,0,frontZ)));
+
+            lenses.forEach(lens => {
+                nodes.push(addLightNode(lens, new THREE.Vector3(0,0,lens.userData.orig.z)));
+            });
+            nodes.push(addLightNode(sensor, new THREE.Vector3(0,0,0)));
+            setupLightPath(nodes);
+
+            const sensorImageMat = new THREE.MeshBasicMaterial({ map: window.activeSensorTex, transparent: true, opacity: 1, depthWrite: false });
+            currentSensorMats.push(sensorImageMat);
+            const sensorImagePlane = new THREE.Mesh(new THREE.PlaneGeometry(w*0.96, h*0.96), sensorImageMat);
+            sensorImagePlane.position.set(0, 0, 0.06); 
+            sensor.add(sensorImagePlane);
+            
+            addSensorBackplate(sensor, w, h);
+            addHousing(w + 1.0, h + 1.0, lensCount * 0.5 + 1.5, new THREE.Vector3(0, 0, (lensCount*0.3)/2 + 0.2), dimText);
+            
+            updateTextures();
+            initDrag();
+        }
+
+        function buildStandardCamera() {
+            clearScene();
+            camera.position.set(12, 9, 17);
+            const meta = modelsData[currentPhone][currentCam].meta;
+            const { lensCount, sSize, dim: dimText } = meta;
+            const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
+            
+            let isUltrawide = (currentCam === 'ultrawide');
+            let w = sSize, h = sSize * 0.75; // 4:3 Aspect Ratio
+
+            const lenses = [];
+            for (let i = 0; i < lensCount; i++) {
+                const isConvex = i % 2 === 0;
+                let radius = (sSize*0.4) - (i * 0.05);
+                let thick = isConvex ? 0.2 : 0.1;
+                
+                if (isUltrawide && i === 0) { radius = sSize*0.6; thick = 0.4; } 
+                else if (!isUltrawide && i === 0) { radius = sSize*0.5; thick = 0.25; }
+                
+                const geo = createLensGeo(radius, thick, isConvex);
+                const zPos = (lensCount - i) * 0.4 + 1; 
+                const expZ = (lensCount - i) * 1.5 + 2; 
+                
+                const lens = addPart("", geo, lensMat, new THREE.Vector3(0,0,zPos), new THREE.Vector3(0,0,expZ));
+                lenses.push(lens);
+            }
+
+            const sGeo = new THREE.BoxGeometry(w, h, 0.1);
+            const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -3), null, 3.0);
+
+            const nodes = [];
+            const frontZ = lensCount * 0.4 + 1.4;
+            const expFrontZ = lensCount * 1.5 + 3.0;
+            const sourceZ = frontZ + 2.6;
+            const expSourceZ = expFrontZ + 3;
+
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(3, 3), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,sourceZ), new THREE.Vector3(0,0,expSourceZ));
+            nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,sourceZ)));
+
+            const frontGlass = addFrontGlassPart("Front Glass", sSize, sSize, new THREE.Vector3(0, 0, frontZ), new THREE.Vector3(0, 0, expFrontZ), null, true);
+            nodes.push(addLightNode(frontGlass, new THREE.Vector3(0,0,frontZ)));
+
+            lenses.forEach(lens => { nodes.push(addLightNode(lens, new THREE.Vector3(0,0,lens.userData.orig.z))); });
+            nodes.push(addLightNode(sensor, new THREE.Vector3(0,0,0)));
+            setupLightPath(nodes);
+
+            const sensorImageMat = new THREE.MeshBasicMaterial({ map: window.activeSensorTex, transparent: true, opacity: 1, depthWrite: false });
+            currentSensorMats.push(sensorImageMat);
+            const sensorImagePlane = new THREE.Mesh(new THREE.PlaneGeometry(w*0.96, h*0.96), sensorImageMat);
+            sensorImagePlane.position.set(0, 0, 0.06); 
+            sensor.add(sensorImagePlane);
+
+            addSensorBackplate(sensor, w, h);
+            addHousing(w + 1.5, h + 1.5, lensCount * 0.6 + 2, new THREE.Vector3(0, 0, (lensCount*0.4)/2 + 0.5), dimText);
+            
+            updateTextures();
+            initDrag();
+        }
+
+        function buildAppleTelephoto() {
+            clearScene();
+            camera.position.set(12, 9, 17);
+            const meta = modelsData[currentPhone][currentCam].meta;
+            const { lensCount, sSize, dim: dimText } = meta;
+            const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
+            
+            let w = sSize, h = sSize * 0.75;
+            const appleLenses = [];
+            for (let i = 0; i < lensCount; i++) {
+                const isConvex = i % 2 === 0;
+                const radius = 1.2 - (i * 0.05);
+                const thick = isConvex ? 0.2 : 0.1;
+                const geo = createLensGeo(radius, thick, isConvex);
+                
+                const zPos = 4.2 - (i * 0.4); 
+                const expZ = 9.5 - (i * 1.2); 
+                
+                const lens = addPart("", geo, lensMat, new THREE.Vector3(0,0,zPos), new THREE.Vector3(0,0,expZ));
+                appleLenses.push(lens);
+            }
+
+            const shape = new THREE.Shape();
+            shape.moveTo(-1.5, 2); shape.lineTo(1.5, 2); shape.lineTo(2.5, -2); shape.lineTo(-0.5, -2); shape.lineTo(-1.5, 2);
+            const tetraGeo = new THREE.ExtrudeGeometry(shape, { depth: 1.5, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.05, bevelThickness: 0.05 });
+            tetraGeo.center();
+            const tetra = addPart('Tetraprism', tetraGeo, glassMat, new THREE.Vector3(0, 0, 0), new THREE.Vector3(3.5, 0, 0));
+            tetra.rotation.y = Math.PI / 2;
+
+            const sGeo = new THREE.BoxGeometry(w, h, 0.1);
+            // Rotated to face UP (+Y)
+            const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(0, -3.5, -1), new THREE.Vector3(0, -6, -1), new THREE.Vector3(-Math.PI/2, 0, 0), 2.5);
+
+            const nodes = [];
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(3, 3), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,8), new THREE.Vector3(0,0,13));
+            nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,8)));
+            
+            const frontGlass = addFrontGlassPart("Front Glass", 2.6, 2.6, new THREE.Vector3(0, 0, 4.6), new THREE.Vector3(0, 0, 10.5), null, true);
+            nodes.push(addLightNode(frontGlass, new THREE.Vector3(0,0,4.6)));
+
+            appleLenses.forEach(lens => { nodes.push(addLightNode(lens, new THREE.Vector3(0,0,lens.userData.orig.z))); });
+            nodes.push(addLightNode(tetra, new THREE.Vector3(0,0,1))); 
+            nodes.push(addLightNode(tetra, new THREE.Vector3(0,-1.5,0.5))); 
+            nodes.push(addLightNode(tetra, new THREE.Vector3(0,1.5,-0.5))); 
+            nodes.push(addLightNode(sensor, new THREE.Vector3(0,-3.5,-1))); 
+            setupLightPath(nodes);
+
+            const sensorImageMat = new THREE.MeshBasicMaterial({ map: window.activeSensorTex, transparent: true, opacity: 1, depthWrite: false });
+            currentSensorMats.push(sensorImageMat);
+            const sensorImagePlane = new THREE.Mesh(new THREE.PlaneGeometry(w*0.96, h*0.96), sensorImageMat);
+            sensorImagePlane.position.set(0, 0, 0.06); 
+            sensor.add(sensorImagePlane);
+
+            addSensorBackplate(sensor, w, h);
+            addHousing(6, 8, 9, new THREE.Vector3(0, -1, 1.5), dimText);
+
+            updateTextures();
+            initDrag();
+        }
+
+        function buildSamsungTelephoto2() {
+            clearScene();
+            camera.position.set(14, 8, 14); 
+            const meta = modelsData[currentPhone][currentCam].meta;
+            const { lensCount, sSize, dim: dimText } = meta;
+            const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
+            
+            let w = sSize, h = sSize * 0.75;
+            const samsungLenses = [];
+            for (let i = 0; i < lensCount; i++) {
+                const isConvex = i !== 1 && i !== 3; 
+                const radius = 1.3 - (i * 0.05);
+                const thick = isConvex ? 0.25 : 0.1;
+                const geo = createLensGeo(radius, thick, isConvex);
+                
+                const zPos = 3.5 - (i * 0.4); 
+                const expZ = 9.0 - (i * 1.5); 
+                
+                const lens = addPart("", geo, lensMat, new THREE.Vector3(0,0,zPos), new THREE.Vector3(0,0,expZ));
+                samsungLenses.push(lens);
+            }
+
+            const tShape = new THREE.Shape();
+            tShape.moveTo(0, 0); tShape.lineTo(2.5, 0); tShape.lineTo(0, 2.5); tShape.lineTo(0, 0);
+            const pGeo = new THREE.ExtrudeGeometry(tShape, { depth: 2, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05 });
+            pGeo.center();
+            const prism = addPart('90° Prism', pGeo, glassMat, new THREE.Vector3(0, 0, 0), new THREE.Vector3(4, 0, 0));
+            prism.rotation.set(Math.PI, 0, Math.PI/4); 
+
+            const sGeo = new THREE.BoxGeometry(w, h, 0.1);
+            // Rotate to face UP (+Y)
+            const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(0, -3, 0), new THREE.Vector3(0, -6, 0), new THREE.Vector3(-Math.PI/2, 0, 0), 2.5);
+
+            const nodes = [];
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(3.5, 3.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,11.5));
+            nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,7)));
+
+            const frontGlass = addFrontGlassPart("Front Glass", 2.8, 2.8, new THREE.Vector3(0, 0, 3.9), new THREE.Vector3(0, 0, 10.2), null, true);
+            nodes.push(addLightNode(frontGlass, new THREE.Vector3(0,0,3.9)));
+
+            samsungLenses.forEach(lens => { nodes.push(addLightNode(lens, new THREE.Vector3(0,0,lens.userData.orig.z))); });
+            nodes.push(addLightNode(prism, new THREE.Vector3(0,0,0)));
+            nodes.push(addLightNode(sensor, new THREE.Vector3(0,-3,0)));
+            setupLightPath(nodes);
+
+            const sensorImageMat = new THREE.MeshBasicMaterial({ map: window.activeSensorTex, transparent: true, opacity: 1, depthWrite: false });
+            currentSensorMats.push(sensorImageMat);
+            const sensorImagePlane = new THREE.Mesh(new THREE.PlaneGeometry(w*0.96, h*0.96), sensorImageMat);
+            sensorImagePlane.position.set(0, 0, 0.06); 
+            sensor.add(sensorImagePlane);
+
+            addSensorBackplate(sensor, w, h);
+            addHousing(6, 7, 9, new THREE.Vector3(0, -0.5, 2.5), dimText);
+
+            updateTextures();
+            initDrag();
+        }
+
+        function buildPeriscopeCamera() {
+            clearScene();
+            camera.position.set(16, 9, 12); 
+            const meta = modelsData[currentPhone][currentCam].meta;
+            const { lensCount, sSize, dim: dimText } = meta;
+            const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
+
+            let w = sSize, h = sSize * 0.75;
+
+            const win = addFrontGlassPart('Aperture Window', 2.2, 2.2, new THREE.Vector3(0, 0, 2.5), new THREE.Vector3(0, 0, 5.5), null, false);
+
+            const tShape = new THREE.Shape();
+            tShape.moveTo(0, 0); tShape.lineTo(2, 0); tShape.lineTo(0, 2); tShape.lineTo(0, 0);
+            const pGeo = new THREE.ExtrudeGeometry(tShape, { depth: 2, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05 });
+            pGeo.center();
+            const prism = addPart('90° Prism', pGeo, glassMat, new THREE.Vector3(0, 0, 0), new THREE.Vector3(-3, 3, 0));
+            prism.rotation.set(0, Math.PI/2, -Math.PI/4); 
+
+            const periscopeLenses = [];
+            for (let i = 0; i < lensCount; i++) {
+                const isConvex = i % 2 === 0;
+                const radius = 1.0 - (i * 0.03);
+                const thick = isConvex ? 0.25 : 0.1;
+                const geo = createLensGeo(radius, thick, isConvex);
+                
+                const xPos = 2.0 + (i * 0.7); 
+                const expX = 1.0 + (i * 1.5); 
+                const expY = -1.5 - (i * 0.8); 
+                
+                const lens = addPart("", geo, lensMat, new THREE.Vector3(xPos,0,0), new THREE.Vector3(expX,expY,0), new THREE.Vector3(0, Math.PI/2, 0));
+                periscopeLenses.push(lens);
+            }
+
+            const sensorX = 2.0 + (lensCount - 1) * 0.7 + 1.7;
+            const sGeo = new THREE.BoxGeometry(w, h, 0.1);
+            // Face -X
+            const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(sensorX, 0, 0), new THREE.Vector3(sensorX + 3.5, 0, 0), new THREE.Vector3(0, -Math.PI/2, 0), 2.5);
+
+            const nodes = [];
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(3.5, 3.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,9.5));
+            nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,7)));
+
+            nodes.push(addLightNode(win, new THREE.Vector3(0,0,2.5)));
+            nodes.push(addLightNode(prism, new THREE.Vector3(0,0,0)));
+            periscopeLenses.forEach(lens => { nodes.push(addLightNode(lens, new THREE.Vector3(lens.userData.orig.x, 0, 0))); });
+            nodes.push(addLightNode(sensor, new THREE.Vector3(sensorX,0,0)));
+            setupLightPath(nodes);
+
+            const sensorImageMat = new THREE.MeshBasicMaterial({ map: window.activeSensorTex, transparent: true, opacity: 1, depthWrite: false });
+            currentSensorMats.push(sensorImageMat);
+            const sensorImagePlane = new THREE.Mesh(new THREE.PlaneGeometry(w*0.96, h*0.96), sensorImageMat);
+            sensorImagePlane.position.set(0, 0, 0.06); 
+            sensor.add(sensorImagePlane);
+
+            addSensorBackplate(sensor, w, h);
+
+            const housingW = sensorX + 4.5;
+            addHousing(housingW, 6, 6, new THREE.Vector3(housingW/2 - 2, 0, 1), dimText);
+
+            updateTextures();
+            initDrag();
+        }
+
+        function buildVivoVariablePeriscope() {
+            clearScene();
+            camera.position.set(16, 9, 12); 
+            const meta = modelsData[currentPhone][currentCam].meta;
+            const { lensCount, sSize, dim: dimText } = meta;
+            const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
+            
+            window.currentSliderMode = 'vivo';
+            document.getElementById('zoom-label').innerText = 'Focus Distance:';
+            document.getElementById('zoom-val').innerText = 'Infinity';
+            document.getElementById('zoom-min-label').innerText = 'Infinity';
+            document.getElementById('zoom-max-label').innerText = 'Macro';
+            document.getElementById('zoom-slider').value = 0;
+            document.getElementById('zoom-container').classList.remove('hidden');
+            document.getElementById('zoom-container').classList.add('flex');
+
+            const win = addFrontGlassPart('Aperture Window', 2.2, 2.2, new THREE.Vector3(0, 0, 2.5), new THREE.Vector3(0, 0, 5.5), null, false);
+
+            const tShape = new THREE.Shape();
+            tShape.moveTo(0, 0); tShape.lineTo(2, 0); tShape.lineTo(0, 2); tShape.lineTo(0, 0);
+            const pGeo = new THREE.ExtrudeGeometry(tShape, { depth: 2, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05 });
+            pGeo.center();
+            const prism = addPart('90° Prism', pGeo, glassMat, new THREE.Vector3(0, 0, 0), new THREE.Vector3(-3, 3, 0));
+            prism.rotation.set(0, Math.PI/2, -Math.PI/4); 
+
+            const basePositions = [1.5, 2.3, 3.1, 4.5, 5.3, 6.1];
+            const moveRanges = [0, 0, 0, -0.9, -0.9, 0]; 
+
+            const periscopeLenses = [];
+            for (let i = 0; i < lensCount; i++) {
+                const isConvex = i % 2 === 0;
+                const radius = 1.0 - (i * 0.03);
+                const thick = isConvex ? 0.25 : 0.1;
+                const geo = createLensGeo(radius, thick, isConvex);
+                
+                const xPos = basePositions[i]; 
+                const expX = 1.0 + (i * 1.5); 
+                const expY = -1.5 - (i * 0.8); 
+                
+                const lens = addPart("", geo, lensMat, new THREE.Vector3(xPos,0,0), new THREE.Vector3(expX,expY,0), new THREE.Vector3(0, Math.PI/2, 0));
+                
+                lens.userData.baseX = xPos;
+                lens.userData.expBaseXOffset = expX - xPos;
+                periscopeLenses.push(lens);
+            }
+            
+            variableLensGroups = [
+                { lenses: [periscopeLenses[3], periscopeLenses[4]], moveRange: moveRanges[3] }
+            ];
+
+            let w = sSize, h = sSize * 0.75;
+            const sensorX = 7.0;
+            const sGeo = new THREE.BoxGeometry(w, h, 0.1);
+            const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(sensorX, 0, 0), new THREE.Vector3(sensorX + 3.5, 0, 0), new THREE.Vector3(0, -Math.PI/2, 0), 2.5);
+
+            const nodes = [];
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(3.5, 3.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,9.5));
+            nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,7)));
+
+            nodes.push(addLightNode(win, new THREE.Vector3(0,0,2.5)));
+            nodes.push(addLightNode(prism, new THREE.Vector3(0,0,0)));
+            periscopeLenses.forEach(lens => { nodes.push(addLightNode(lens, new THREE.Vector3(lens.userData.baseX, 0, 0))); });
+            nodes.push(addLightNode(sensor, new THREE.Vector3(sensorX,0,0)));
+            setupLightPath(nodes);
+
+            const sensorImageMat = new THREE.MeshBasicMaterial({ map: window.activeSensorTex, transparent: true, opacity: 1, depthWrite: false });
+            currentSensorMats.push(sensorImageMat);
+            const sensorImagePlane = new THREE.Mesh(new THREE.PlaneGeometry(w*0.96, h*0.96), sensorImageMat);
+            sensorImagePlane.position.set(0, 0, 0.06); 
+            sensor.add(sensorImagePlane);
+
+            addSensorBackplate(sensor, w, h);
+
+            const housingW = sensorX + 4.5;
+            addHousing(housingW, 6, 6, new THREE.Vector3(housingW/2 - 2, 0, 1), dimText);
+
+            updateTextures();
+            initDrag();
+        }
+
+        function buildVariablePeriscopeCamera() {
+            clearScene();
+            camera.position.set(16, 9, 12); 
+            const meta = modelsData[currentPhone][currentCam].meta;
+            const { lensCount, sSize, dim: dimText } = meta;
+            const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
+            
+            window.currentSliderMode = 'sony';
+            document.getElementById('zoom-label').innerText = 'Optical Zoom:';
+            document.getElementById('zoom-val').innerText = '85mm';
+            document.getElementById('zoom-min-label').innerText = 'Wide (85mm)';
+            document.getElementById('zoom-max-label').innerText = 'Tele (170mm)';
+            document.getElementById('zoom-slider').value = 0;
+            document.getElementById('zoom-container').classList.remove('hidden');
+            document.getElementById('zoom-container').classList.add('flex');
+
+            const win = addFrontGlassPart('Aperture Window', 2.2, 2.2, new THREE.Vector3(0, 0, 2.5), new THREE.Vector3(0, 0, 5.5), null, false);
+
+            const tShape = new THREE.Shape();
+            tShape.moveTo(0, 0); tShape.lineTo(2, 0); tShape.lineTo(0, 2); tShape.lineTo(0, 0);
+            const pGeo = new THREE.ExtrudeGeometry(tShape, { depth: 2, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05 });
+            pGeo.center();
+            const prism = addPart('90° Prism', pGeo, glassMat, new THREE.Vector3(0, 0, 0), new THREE.Vector3(-3, 3, 0));
+            prism.rotation.set(0, Math.PI/2, -Math.PI/4); 
+
+            const basePositions = [1.5, 2.2, 2.9, 4.2, 4.9, 5.8];
+            const moveRanges = [0, 0.5, 0.5, -0.3, -0.3, 0];
+
+            const periscopeLenses = [];
+            for (let i = 0; i < lensCount; i++) {
+                const isConvex = i % 2 === 0;
+                const radius = 1.0 - (i * 0.03);
+                const thick = isConvex ? 0.25 : 0.1;
+                const geo = createLensGeo(radius, thick, isConvex);
+                
+                const xPos = basePositions[i]; 
+                const expX = 1.0 + (i * 1.5); 
+                const expY = -1.5 - (i * 0.8); 
+                
+                const lens = addPart("", geo, lensMat, new THREE.Vector3(xPos,0,0), new THREE.Vector3(expX,expY,0), new THREE.Vector3(0, Math.PI/2, 0));
+                
+                lens.userData.baseX = xPos;
+                lens.userData.expBaseXOffset = expX - xPos;
+                periscopeLenses.push(lens);
+            }
+            
+            variableLensGroups = [
+                { lenses: [periscopeLenses[1], periscopeLenses[2]], moveRange: moveRanges[1] },
+                { lenses: [periscopeLenses[3], periscopeLenses[4]], moveRange: moveRanges[3] }
+            ];
+
+            let w = sSize, h = sSize * 0.75;
+            const sensorX = 6.8;
+            const sGeo = new THREE.BoxGeometry(w, h, 0.1);
+            const sensor = addPart(sensorText, sGeo, sensorMat, new THREE.Vector3(sensorX, 0, 0), new THREE.Vector3(sensorX + 3.5, 0, 0), new THREE.Vector3(0, -Math.PI/2, 0), 2.5);
+
+            const nodes = [];
+            window.activePhotoMesh = addPart("Drag to Pan", new THREE.PlaneGeometry(3.5, 3.5), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}), new THREE.Vector3(0,0,7), new THREE.Vector3(0,0,9.5));
+            nodes.push(addLightNode(window.activePhotoMesh, new THREE.Vector3(0,0,7)));
+
+            nodes.push(addLightNode(win, new THREE.Vector3(0,0,2.5)));
+            nodes.push(addLightNode(prism, new THREE.Vector3(0,0,0)));
+            periscopeLenses.forEach(lens => { nodes.push(addLightNode(lens, new THREE.Vector3(lens.userData.baseX, 0, 0))); });
+            nodes.push(addLightNode(sensor, new THREE.Vector3(sensorX,0,0)));
+            setupLightPath(nodes);
+
+            const sensorImageMat = new THREE.MeshBasicMaterial({ map: window.activeSensorTex, transparent: true, opacity: 1, depthWrite: false });
+            currentSensorMats.push(sensorImageMat);
+            const sensorImagePlane = new THREE.Mesh(new THREE.PlaneGeometry(w*0.96, h*0.96), sensorImageMat);
+            sensorImagePlane.position.set(0, 0, 0.06); 
+            sensor.add(sensorImagePlane);
+
+            addSensorBackplate(sensor, w, h);
+
+            const housingW = sensorX + 4.5;
+            addHousing(housingW, 6, 6, new THREE.Vector3(housingW/2 - 2, 0, 1), dimText);
+
+            updateTextures();
+            initDrag();
+        }
+
+        // Action Buttons Logic (Upload & Capture)
+        document.getElementById('btn-upload').addEventListener('click', () => {
+            document.getElementById('file-input').click();
+        });
+
+        document.getElementById('file-input').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        window.customImage = img;
+                        updateTextures();
+                    }
+                    img.src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('btn-capture').addEventListener('click', () => {
+            // Flash effect
+            const flash = document.getElementById('flash-overlay');
+            flash.classList.remove('hidden');
+            flash.style.opacity = '1';
+            setTimeout(() => { flash.style.opacity = '0'; }, 50);
+            setTimeout(() => { flash.classList.add('hidden'); }, 150);
+
+            // Draw correct non-inverted crop for final output
+            const capCanvas = document.createElement('canvas');
+            capCanvas.width = 1024; capCanvas.height = 768;
+            drawSensorCrop(capCanvas, false, false);
+
+            document.getElementById('capture-image').src = capCanvas.toDataURL('image/png');
+
+            const selectEl = document.getElementById('phone-select');
+            const phoneName = selectEl.options[selectEl.selectedIndex].text;
+            const camData = modelsData[currentPhone][currentCam];
+            const meta = camData.meta;
+
+            document.getElementById('capture-title').innerText = phoneName;
+            
+            let zoomText = "";
+            if (window.currentSliderMode === 'sony') zoomText = ` @ ${document.getElementById('zoom-val').innerText}`;
+            else if (window.currentSliderMode === 'vivo') zoomText = ` (Focus: ${document.getElementById('zoom-val').innerText})`;
+            
+            document.getElementById('capture-subtitle').innerHTML = `
+                <span class="text-cyan-400 font-bold">${camData.name}${zoomText}</span> • <span class="font-bold">${meta.mp}</span> • ${meta.size} Sensor<br/>
+                <span class="text-gray-400 text-xs tracking-wide">FOCAL: ${meta.focal} • APERTURE: ${meta.aperture} • 4:3 ASPECT RATIO</span>
+            `;
+
+            // Show Popup
+            const popup = document.getElementById('capture-popup');
+            popup.classList.remove('hidden');
+            setTimeout(() => { popup.style.opacity = '1'; }, 10);
+        });
+
+        document.getElementById('btn-close-capture').addEventListener('click', () => {
+            const popup = document.getElementById('capture-popup');
+            popup.style.opacity = '0';
+            setTimeout(() => { popup.classList.add('hidden'); }, 300);
+        });
+
+
+        // Variable Zoom Slider
+        document.getElementById('zoom-slider').addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            
+            if (window.currentSliderMode === 'sony') {
+                const mm = Math.round(85 + (val * 85));
+                document.getElementById('zoom-val').innerText = `${mm}mm`;
+            } else if (window.currentSliderMode === 'vivo') {
+                if (val < 0.05) document.getElementById('zoom-val').innerText = `Infinity`;
+                else if (val > 0.95) document.getElementById('zoom-val').innerText = `Macro`;
+                else document.getElementById('zoom-val').innerText = `${Math.round((1-val)*100 + 15)}cm`;
+            }
+
+            variableLensGroups.forEach(group => {
+                group.lenses.forEach(lens => {
+                    const newX = lens.userData.baseX + (val * group.moveRange);
+                    lens.position.x = newX;
+                    lens.userData.orig.x = newX; 
+                    lens.userData.exp.x = newX + (lens.userData.expBaseXOffset);
+                });
+            });
+
+            updateTextures();
+        });
+
+        // === 6. UI & DATA ARCHITECTURE ===
+        const modelsData = {
+            apple: {
+                front: { name: 'Front', desc: "12MP TrueDepth Front camera. A highly compact module hidden inside the Dynamic Island with 5 tiny precision lenses.", meta: { mp:"12MP", sensorType:"TrueDepth Front", size:"1/3.6\"", focal:"23mm", aperture:"f/1.9", dim:"6.0 x 6.0 x 4.0 mm", lensCount:5, sSize:1.8 }, build: buildFrontCamera },
+                primary: { name: 'Primary', desc: "48MP Main Camera features a massive sensor and a 7-element (7P) lens stack. The straight optical path maximizes light intake.", meta: { mp:"48MP", sensorType:"Main Sensor", size:"1/1.14\"", focal:"24mm", aperture:"f/1.78", dim:"15.0 x 15.0 x 9.0 mm", lensCount:7, sSize:3.0 }, build: buildStandardCamera },
+                telephoto: { name: 'Telephoto', desc: "iPhone 17 Pro Max Tetraprism bounces light 4 times. Look at the front image, then orbit to the sensor to see it projected upside down.", meta: { mp:"12MP", sensorType:"Tetraprism Sensor", size:"1/2.5\"", focal:"120mm", aperture:"f/2.8", dim:"15.0 x 15.0 x 11.0 mm", lensCount:7, sSize:2.5 }, build: buildAppleTelephoto },
+                ultrawide: { name: 'Ultra-wide', desc: "The 48MP Ultra-wide camera employs a highly convex front lens to capture a 120-degree field of view.", meta: { mp:"48MP", sensorType:"Ultra-wide Sensor", size:"1/2.55\"", focal:"13mm", aperture:"f/2.2", dim:"12.0 x 12.0 x 7.0 mm", lensCount:6, sSize:2.5 }, build: buildStandardCamera }
+            },
+            samsung: {
+                front: { name: 'Front', desc: "12MP Dual Pixel Selfie camera. Ultra-fast autofocus housed in a minimal footprint punch-hole design.", meta: { mp:"12MP", sensorType:"Dual Pixel Front", size:"1/3.2\"", focal:"26mm", aperture:"f/2.2", dim:"6.0 x 6.0 x 4.0 mm", lensCount:5, sSize:1.8 }, build: buildFrontCamera },
+                primary: { name: 'Primary', desc: "Samsung's staggering 200MP ISOCELL Main Sensor is backed by an advanced 8-element (8P) lens stack.", meta: { mp:"200MP", sensorType:"ISOCELL Main", size:"1/1.3\"", focal:"23mm", aperture:"f/1.7", dim:"18.0 x 18.0 x 10.0 mm", lensCount:8, sSize:3.8 }, build: buildStandardCamera },
+                ultrawide: { name: 'Ultra-wide', desc: "The 50MP Ultra-wide module leverages a dramatically curved outer lens element.", meta: { mp:"50MP", sensorType:"Ultra-wide Sensor", size:"1/2.52\"", focal:"13mm", aperture:"f/2.0", dim:"12.0 x 12.0 x 6.0 mm", lensCount:6, sSize:2.5 }, build: buildStandardCamera },
+                telephoto1: { name: 'Telephoto 1 (3x)', desc: "A traditional straight optical path 3x telephoto for stunning, uncompressed portraits.", meta: { mp:"10MP", sensorType:"3x Telephoto", size:"1/3.52\"", focal:"69mm", aperture:"f/2.4", dim:"9.0 x 9.0 x 6.0 mm", lensCount:6, sSize:2.0 }, build: buildStandardCamera },
+                telephoto2: { name: 'Telephoto 2 (5x)', desc: "Samsung's ALoP design. By placing the 5-element lens stack tightly on top of the 90° prism, they drastically reduce the camera bump.", meta: { mp:"50MP", sensorType:"5x ALoP Periscope", size:"1/2.52\"", focal:"115mm", aperture:"f/3.4", dim:"12.0 x 15.0 x 8.0 mm", lensCount:5, sSize:3.5 }, build: buildSamsungTelephoto2 }
+            },
+            pixel: {
+                front: { name: 'Front', desc: "Google uses a high-res 42MP ultrawide front sensor to capture more of the environment in selfies.", meta: { mp:"42MP", sensorType:"Front Sensor", size:"1/2.8\"", focal:"21mm", aperture:"f/2.2", dim:"6.0 x 6.0 x 4.0 mm", lensCount:5, sSize:1.8 }, build: buildFrontCamera },
+                primary: { name: 'Primary', desc: "Google's 50MP Main Camera utilizes a perfectly calibrated 7P lens stack.", meta: { mp:"50MP", sensorType:"Main Sensor", size:"1/1.31\"", focal:"25mm", aperture:"f/1.68", dim:"16.0 x 16.0 x 9.0 mm", lensCount:7, sSize:3.0 }, build: buildStandardCamera },
+                telephoto: { name: 'Telephoto', desc: "Google's 90° Periscope system shoots light sideways perfectly into the 48MP sensor.", meta: { mp:"48MP", sensorType:"Periscope Sensor", size:"1/2.55\"", focal:"113mm", aperture:"f/2.8", dim:"20.0 x 12.0 x 8.0 mm", lensCount:5, sSize:3.0 }, build: buildPeriscopeCamera },
+                ultrawide: { name: 'Ultra-wide', desc: "The 48MP Ultra-wide system integrates a specialized 6P lens array.", meta: { mp:"48MP", sensorType:"Ultra-wide Sensor", size:"1/2.55\"", focal:"11mm", aperture:"f/2.2", dim:"12.0 x 12.0 x 6.0 mm", lensCount:6, sSize:2.5 }, build: buildStandardCamera }
+            },
+            huawei: {
+                front: { name: 'Front', desc: "13MP Ultrawide front sensor capable of incredible group selfies with minimal distortion.", meta: { mp:"13MP", sensorType:"Ultrawide Front", size:"1/2.8\"", focal:"18mm", aperture:"f/2.4", dim:"6.0 x 6.0 x 4.0 mm", lensCount:5, sSize:1.8 }, build: buildFrontCamera },
+                primary: { name: 'Primary', desc: "Huawei's 1-inch retractable primary lens mechanically extends to gather maximum light.", meta: { mp:"50MP", sensorType:"1-inch Retractable", size:"1\"", focal:"22.5mm", aperture:"f/1.6-4.0", dim:"18.5 x 18.5 x 12.0 mm", lensCount:8, sSize:4.0 }, build: buildStandardCamera },
+                telephoto: { name: 'Telephoto', desc: "The 50MP Telemacro Periscope features an advanced 6P array for stunning zoom and macro photography.", meta: { mp:"50MP", sensorType:"Telemacro Periscope", size:"1/2.51\"", focal:"90mm", aperture:"f/2.1", dim:"22.0 x 13.0 x 8.5 mm", lensCount:6, sSize:3.2 }, build: buildPeriscopeCamera },
+                ultrawide: { name: 'Ultra-wide', desc: "A high-resolution 50MP Ultra-wide with free-form optics to virtually eliminate edge distortion.", meta: { mp:"50MP", sensorType:"Ultra-wide Sensor", size:"1/2.5\"", focal:"13mm", aperture:"f/2.2", dim:"12.0 x 12.0 x 6.5 mm", lensCount:6, sSize:2.5 }, build: buildStandardCamera }
+            },
+            vivo: {
+                front: { name: 'Front', desc: "32MP front sensor delivering crisp details and excellent low-light selfie performance.", meta: { mp:"32MP", sensorType:"Front Sensor", size:"1/2.8\"", focal:"20mm", aperture:"f/2.0", dim:"6.0 x 6.0 x 4.0 mm", lensCount:5, sSize:1.8 }, build: buildFrontCamera },
+                primary: { name: 'Primary', desc: "1-inch 50MP primary sensor co-engineered with Zeiss, featuring T* coating.", meta: { mp:"50MP", sensorType:"1-inch Zeiss Sensor", size:"1\"", focal:"23mm", aperture:"f/1.75", dim:"18.5 x 18.5 x 11.0 mm", lensCount:8, sSize:4.0 }, build: buildStandardCamera },
+                telephoto: { name: 'Telephoto (Floating)', desc: "The groundbreaking 200MP Zeiss APO Floating Periscope. Use the slider below to smoothly transition the optical elements from Infinity to Macro Focus.", meta: { mp:"200MP", sensorType:"Zeiss APO Floating", size:"1/1.4\"", focal:"85mm", aperture:"f/2.67", dim:"24.0 x 15.0 x 9.0 mm", lensCount:6, sSize:3.8 }, build: buildVivoVariablePeriscope },
+                ultrawide: { name: 'Ultra-wide', desc: "A 50MP Ultra-wide sensor tuned by Zeiss for color-accurate, expansive landscape shots.", meta: { mp:"50MP", sensorType:"Ultra-wide Sensor", size:"1/2.76\"", focal:"14mm", aperture:"f/2.0", dim:"12.0 x 12.0 x 6.5 mm", lensCount:6, sSize:2.5 }, build: buildStandardCamera }
+            },
+            oppo: {
+                front: { name: 'Front', desc: "32MP front shooter with specialized portrait AI processing algorithms.", meta: { mp:"32MP", sensorType:"Front Sensor", size:"1/2.74\"", focal:"21mm", aperture:"f/2.4", dim:"6.0 x 6.0 x 4.0 mm", lensCount:5, sSize:1.8 }, build: buildFrontCamera },
+                primary: { name: 'Primary', desc: "Massive 1-inch sensor, calibrated with Hasselblad Color Calibration for cinematic colors.", meta: { mp:"50MP", sensorType:"1-inch Hasselblad", size:"1\"", focal:"23mm", aperture:"f/1.8", dim:"18.5 x 18.5 x 11.0 mm", lensCount:8, sSize:4.0 }, build: buildStandardCamera },
+                telephoto: { name: 'Telephoto', desc: "Equipped with a 50MP Hasselblad Periscope, leveraging advanced prism stabilization.", meta: { mp:"50MP", sensorType:"Hasselblad Periscope", size:"1/1.56\"", focal:"65mm", aperture:"f/2.6", dim:"22.0 x 13.0 x 8.5 mm", lensCount:6, sSize:3.2 }, build: buildPeriscopeCamera },
+                ultrawide: { name: 'Ultra-wide', desc: "A 50MP ultra-wide unit ensuring consistent Hasselblad tuning.", meta: { mp:"50MP", sensorType:"Ultra-wide Sensor", size:"1/2.0\"", focal:"14mm", aperture:"f/2.0", dim:"12.0 x 12.0 x 6.5 mm", lensCount:6, sSize:2.5 }, build: buildStandardCamera }
+            },
+            xiaomi: {
+                front: { name: 'Front', desc: "32MP front camera embedded flawlessly in the display.", meta: { mp:"32MP", sensorType:"Front Sensor", size:"1/3.14\"", focal:"22mm", aperture:"f/2.0", dim:"6.0 x 6.0 x 4.0 mm", lensCount:5, sSize:1.8 }, build: buildFrontCamera },
+                primary: { name: 'Primary', desc: "1-inch primary camera features Leica optics and a stepless variable aperture.", meta: { mp:"50MP", sensorType:"1-inch Leica Sensor", size:"1\"", focal:"23mm", aperture:"f/1.63-4.0", dim:"18.5 x 18.5 x 11.0 mm", lensCount:8, sSize:4.0 }, build: buildStandardCamera },
+                telephoto: { name: 'Telephoto', desc: "The Leica Periscope telephoto utilizes a specialized 5P lens group to deliver the iconic Leica 'look'.", meta: { mp:"50MP", sensorType:"Leica Periscope", size:"1/2.51\"", focal:"120mm", aperture:"f/2.5", dim:"22.0 x 13.0 x 8.5 mm", lensCount:5, sSize:3.2 }, build: buildPeriscopeCamera },
+                ultrawide: { name: 'Ultra-wide', desc: "A high-performance 50MP Leica ultra-wide for dramatic, distortion-free photography.", meta: { mp:"50MP", sensorType:"Ultra-wide Sensor", size:"1/2.51\"", focal:"12mm", aperture:"f/1.8", dim:"12.0 x 12.0 x 6.5 mm", lensCount:6, sSize:2.5 }, build: buildStandardCamera }
+            },
+            oneplus: {
+                front: { name: 'Front', desc: "32MP Sony front sensor offering rapid autofocus and great dynamic range.", meta: { mp:"32MP", sensorType:"Front Sensor", size:"1/2.74\"", focal:"21mm", aperture:"f/2.4", dim:"6.0 x 6.0 x 4.0 mm", lensCount:5, sSize:1.8 }, build: buildFrontCamera },
+                primary: { name: 'Primary', desc: "50MP primary camera features a custom Sony sensor tuned by Hasselblad.", meta: { mp:"50MP", sensorType:"Hasselblad Main", size:"1/1.4\"", focal:"23mm", aperture:"f/1.6", dim:"16.0 x 16.0 x 9.5 mm", lensCount:7, sSize:3.2 }, build: buildStandardCamera },
+                telephoto: { name: 'Telephoto', desc: "A 50MP Periscope telephoto extends the focal length significantly using an intricate folded optical path.", meta: { mp:"50MP", sensorType:"Periscope Sensor", size:"1/2.0\"", focal:"70mm", aperture:"f/2.6", dim:"20.0 x 12.0 x 8.0 mm", lensCount:5, sSize:3.0 }, build: buildPeriscopeCamera },
+                ultrawide: { name: 'Ultra-wide', desc: "A 50MP ultra-wide camera that perfectly complements the Hasselblad ecosystem.", meta: { mp:"50MP", sensorType:"Ultra-wide Sensor", size:"1/2.0\"", focal:"14mm", aperture:"f/2.2", dim:"12.0 x 12.0 x 6.5 mm", lensCount:6, sSize:2.5 }, build: buildStandardCamera }
+            },
+            sony: {
+                front: { name: 'Front', desc: "12MP Front Camera perfectly integrated in the slim top bezel to avoid punch holes.", meta: { mp:"12MP", sensorType:"Front Sensor", size:"1/2.9\"", focal:"24mm", aperture:"f/2.0", dim:"6.0 x 6.0 x 4.0 mm", lensCount:5, sSize:1.8 }, build: buildFrontCamera },
+                primary: { name: 'Primary', desc: "48MP Exmor T main sensor with 2-layer transistor pixel technology for unparalleled low-light performance.", meta: { mp:"48MP", sensorType:"Exmor T Main", size:"1/1.35\"", focal:"24mm", aperture:"f/1.9", dim:"16.0 x 16.0 x 9.0 mm", lensCount:7, sSize:3.5 }, build: buildStandardCamera },
+                telephoto: { name: 'Telephoto (Variable)', desc: "A true engineering marvel. Use the slider below to physically move internal lens groups, offering continuous optical zoom from 85mm to 170mm without digital crop.", meta: { mp:"12MP", sensorType:"Variable Optical Sensor", size:"1/3.5\"", focal:"85-170mm", aperture:"f/2.3-2.8", dim:"22.0 x 12.0 x 8.0 mm", lensCount:6, sSize:3.0 }, build: buildVariablePeriscopeCamera },
+                ultrawide: { name: 'Ultra-wide', desc: "48MP Ultra-wide providing seamless high-speed autofocus matching the primary sensor.", meta: { mp:"48MP", sensorType:"Ultra-wide Sensor", size:"1/2.5\"", focal:"16mm", aperture:"f/2.2", dim:"12.0 x 12.0 x 6.0 mm", lensCount:6, sSize:2.5 }, build: buildStandardCamera }
+            }
+        };
+
+        let currentPhone = 'apple';
+        let currentCam = 'telephoto';
+        const descEl = document.getElementById('desc-text');
+        const tabsContainer = document.getElementById('tabs-container');
+
+        function renderTabs() {
+            tabsContainer.innerHTML = '';
+            const cameras = Object.keys(modelsData[currentPhone]);
+            
+            if(!cameras.includes(currentCam)) currentCam = 'primary';
+
+            cameras.forEach(camKey => {
+                const camData = modelsData[currentPhone][camKey];
+                const btn = document.createElement('button');
+                btn.innerText = camData.name;
+                btn.className = `tab-btn px-4 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold rounded-full transition-all whitespace-nowrap ${currentCam === camKey ? 'bg-cyan-600 text-white shadow-md shadow-cyan-900/40' : 'text-gray-400 hover:text-white'}`;
+                btn.onclick = () => {
+                    currentCam = camKey;
+                    renderTabs(); 
+                    updateModel();
+                };
+                tabsContainer.appendChild(btn);
+            });
+        }
+
+        function updateModel() {
+            const model = modelsData[currentPhone][currentCam];
+            descEl.innerText = model.desc;
+            model.build();
+        }
+
+        document.getElementById('phone-select').addEventListener('change', (e) => {
+            currentPhone = e.target.value;
+            renderTabs();
+            updateModel();
+            
+            if (!isCollapsed) {
+                isCollapsed = true;
+                dialogContent.style.maxHeight = '0px';
+                dialogContent.style.opacity = '0';
+                collapseIcon.style.transform = 'rotate(180deg)';
+            }
+        });
+
+        document.getElementById('btn-explode').addEventListener('click', () => {
+            draggableObjects.forEach(obj => {
+                gsap.to(obj.position, { x: obj.userData.exp.x, y: obj.userData.exp.y, z: obj.userData.exp.z, duration: 1, ease: "power2.out" });
+            });
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', () => {
+            draggableObjects.forEach(obj => {
+                gsap.to(obj.position, { x: obj.userData.orig.x, y: obj.userData.orig.y, z: obj.userData.orig.z, duration: 1, ease: "power2.out" });
+            });
+        });
+
+        const settingsToggle = document.getElementById('settings-toggle');
+        const settingsPanel = document.getElementById('settings-panel');
+        let isSettingsOpen = false;
+
+        settingsToggle.addEventListener('click', () => {
+            isSettingsOpen = !isSettingsOpen;
+            if (isSettingsOpen) {
+                settingsPanel.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+                settingsPanel.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
+            } else {
+                settingsPanel.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                settingsPanel.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            }
+        });
+
+        const dialogHeader = document.getElementById('dialog-header');
+        const dialogContent = document.getElementById('dialog-content');
+        const collapseIcon = document.getElementById('collapse-icon');
+        let isCollapsed = true; 
+
+        dialogHeader.addEventListener('click', () => {
+            isCollapsed = !isCollapsed;
+            if (isCollapsed) {
+                dialogContent.style.maxHeight = '0px';
+                dialogContent.style.opacity = '0';
+                collapseIcon.style.transform = 'rotate(180deg)';
+            } else {
+                dialogContent.style.maxHeight = '600px';
+                dialogContent.style.opacity = '1';
+                collapseIcon.style.transform = 'rotate(0deg)';
+            }
+        });
+
+        const btnTheme = document.getElementById('btn-theme');
+        let isDarkMode = true; 
+
+        function applyTheme() {
+            if (isDarkMode) {
+                document.body.style.background = '#020205';
+                ambientLight.intensity = 0.05; dirLight.intensity = 0.1;
+                grid.material.opacity = 0.1; grid.material.transparent = true;
+                btnTheme.innerText = '☀️ Switch to Bright Mode';
+                housingMat.opacity = 0.7; housingEdgeMat.opacity = 0.2;
+            } else {
+                document.body.style.background = 'radial-gradient(circle at center, #1e1e2f 0%, #0a0a12 100%)';
+                ambientLight.intensity = 0.6; dirLight.intensity = 1.0;
+                grid.material.opacity = 1.0; grid.material.transparent = false;
+                btnTheme.innerText = '🌙 Cinematic Dark Mode';
+                housingMat.opacity = 0.15; housingEdgeMat.opacity = 0.05;
+            }
+        }
+
+        btnTheme.addEventListener('click', () => { isDarkMode = !isDarkMode; applyTheme(); });
+
+        applyTheme();
+        renderTabs();
+        updateModel(); 
+
+        // === 7. ANIMATION LOOP & RESIZE ===
+        const clock = new THREE.Clock();
+        const _v1 = new THREE.Vector3();
+        const _v2 = new THREE.Vector3();
+        const _up = new THREE.Vector3(0, 1, 0);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+
+            const time = clock.getElapsedTime();
+
+            if (currentLightNodes.length > 1) {
+                for (let i = 0; i < currentLightNodes.length - 1; i++) {
+                    currentLightNodes[i].getWorldPosition(_v1);
+                    currentLightNodes[i+1].getWorldPosition(_v2);
+                    
+                    const beam = currentLightBeams[i];
+                    const dist = _v1.distanceTo(_v2);
+                    
+                    if (dist > 0.001) {
+                        beam.position.copy(_v1).lerp(_v2, 0.5);
+                        beam.quaternion.setFromUnitVectors(_up, _v2.clone().sub(_v1).normalize());
+                        beam.scale.set(1, dist, 1);
+                        beam.visible = true;
+                    } else {
+                        beam.visible = false;
+                    }
+                }
+            }
+
+            // Real-time sensor update based on photo panning
+            if (window.activePhotoMesh) {
+                if (Math.abs(window.activePhotoMesh.position.x - (window.lastPhotoPosX || 0)) > 0.005 ||
+                    Math.abs(window.activePhotoMesh.position.y - (window.lastPhotoPosY || 0)) > 0.005) {
+                    updateTextures();
+                    window.lastPhotoPosX = window.activePhotoMesh.position.x;
+                    window.lastPhotoPosY = window.activePhotoMesh.position.y;
+                }
+            }
+
+            let error = 0;
+            draggableObjects.forEach(obj => {
+                const distToOrig = obj.position.distanceTo(obj.userData.orig);
+                
+                // Allow panning the photo without breaking alignment
+                if (obj !== window.activePhotoMesh) {
+                    error += distToOrig;
+                }
+
+                // Active OIS (Optical Image Stabilization) Animation
+                if (obj.userData.isLens && obj !== draggingObject && distToOrig < 0.2) {
+                    obj.position.x = obj.userData.orig.x + Math.sin(time * 12 + obj.id) * 0.015;
+                    obj.position.y = obj.userData.orig.y + Math.cos(time * 15 + obj.id) * 0.015;
+                }
+            });
+            
+            const maxError = draggableObjects.length * 0.4; 
+            const quality = Math.max(0, 1 - (error / maxError));
+            
+            currentSensorMats.forEach(mat => { mat.opacity = quality; });
+
+            lightBeamMat.opacity = (0.2 + Math.sin(time * 5) * 0.1) * (0.2 + quality * 0.8);
+
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
