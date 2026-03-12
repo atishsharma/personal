@@ -74,7 +74,10 @@
         <!-- Top Left Controls (Camera Selection) -->
         <div class="pointer-events-auto absolute top-20 left-4 right-4 md:left-6 md:right-auto bg-black/60 backdrop-blur-xl text-white p-6 rounded-2xl w-auto md:w-[420px] border border-white/10 shadow-2xl transition-all duration-300 z-20">
             <div id="dialog-header" class="flex justify-between items-center cursor-pointer mb-2 select-none group">
-                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">Choose Smartphone Camera</h1>
+                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                    <span class="hidden md:inline">Choose Smartphone Camera</span>
+                    <span class="inline md:hidden">📱</span>
+                </h1>
                 <svg id="collapse-icon" style="transform: rotate(180deg);" class="w-6 h-6 text-gray-400 group-hover:text-white transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
             </div>
             
@@ -106,7 +109,7 @@
         </div>
 
         <!-- Top Right Instructions (Toggled via Settings) -->
-        <div id="settings-panel" class="pointer-events-auto absolute top-[140px] right-4 md:right-6 bg-black/60 backdrop-blur-xl text-white p-5 rounded-2xl border border-white/10 w-72 shadow-2xl z-20 flex flex-col gap-4 transition-all duration-300 origin-top-right opacity-0 scale-95 pointer-events-none">
+        <div id="settings-panel" class="pointer-events-auto absolute top-[140px] right-4 md:right-6 bg-black/60 backdrop-blur-xl text-white p-5 rounded-2xl border border-white/10 w-72 shadow-2xl z-40 flex flex-col gap-4 transition-all duration-300 origin-top-right opacity-0 scale-95 pointer-events-none">
             <ul class="space-y-3 text-sm">
                 <li class="flex items-start gap-3"><span class="text-xl">👆</span> <span><strong class="text-cyan-400">Drag & Drop</strong> the photo to pan/frame your shot! Move lenses to break alignment.</span></li>
                 <li class="flex items-start gap-3"><span class="text-xl">🔄</span> <span><strong class="text-cyan-400">Orbit</strong> background to rotate view. Lenses dynamically vibrate using <strong class="text-cyan-400">OIS</strong>.</span></li>
@@ -125,7 +128,7 @@
         </div>
 
         <!-- Variable Zoom Slider (Responsive Layout) -->
-        <div id="zoom-container" class="pointer-events-auto absolute bottom-36 left-1/2 -translate-x-1/2 w-[90%] md:bottom-auto md:top-20 md:left-auto md:right-[180px] md:translate-x-0 md:w-[300px] bg-black/80 backdrop-blur-xl p-4 rounded-2xl border border-cyan-500/50 shadow-[0_0_15px_rgba(0,240,255,0.2)] z-20 hidden flex-col items-center gap-2 transition-all">
+        <div id="zoom-container" class="pointer-events-auto absolute bottom-36 left-1/2 -translate-x-1/2 w-[90%] md:bottom-auto md:top-20 md:left-auto md:right-[195px] md:translate-x-0 md:w-[300px] bg-black/80 backdrop-blur-xl p-4 rounded-2xl border border-cyan-500/50 shadow-[0_0_15px_rgba(0,240,255,0.2)] z-20 hidden flex-col items-center gap-2 transition-all">
             <label class="text-white text-sm font-bold tracking-wide"><span id="zoom-label">Optical Zoom:</span> <span id="zoom-val" class="text-cyan-400">85mm</span></label>
             <input type="range" id="zoom-slider" min="0" max="1" step="0.01" value="0" class="w-full accent-cyan-400 cursor-pointer">
             <div class="flex justify-between w-full text-[10px] text-gray-400 font-semibold px-1">
@@ -151,8 +154,8 @@
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
 
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.set(14, 11, 17);
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200);
+        camera.position.set(28, 22, 34);
 
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -179,7 +182,7 @@
         purpleLight.position.set(-5, 5, -5);
         scene.add(purpleLight);
 
-        const grid = new THREE.GridHelper(20, 20, 0x444444, 0x222222);
+        const grid = new THREE.GridHelper(40, 40, 0x444444, 0x222222);
         grid.position.y = -5;
         scene.add(grid);
 
@@ -356,14 +359,14 @@
                     window.activePhotoMesh.material.map = tex;
                 }
                 const aspect = window.customImage.width / window.customImage.height;
-                window.activePhotoMesh.scale.set(aspect, 1, 1);
+                window.activePhotoMesh.scale.set(aspect * 2, 2, 1);
             } else {
                 drawSensorCrop(window.activeFrontCanvas, false, false, 1.0); 
                 window.activeFrontTex.needsUpdate = true;
                 if (window.activePhotoMesh.material.map !== window.activeFrontTex) {
                     window.activePhotoMesh.material.map = window.activeFrontTex;
                 }
-                window.activePhotoMesh.scale.set(1.333, 1, 1); 
+                window.activePhotoMesh.scale.set(1.333 * 2, 2, 1); 
             }
         }
 
@@ -571,7 +574,7 @@
 
         function buildFrontCamera() {
             clearScene();
-            camera.position.set(10, 8, 14); 
+            camera.position.set(20, 16, 28); 
             const meta = modelsData[currentPhone][currentCam].meta;
             const { lensCount, sSize, dim: dimText } = meta;
             const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
@@ -628,7 +631,7 @@
 
         function buildStandardCamera() {
             clearScene();
-            camera.position.set(12, 9, 17);
+            camera.position.set(24, 18, 34);
             const meta = modelsData[currentPhone][currentCam].meta;
             const { lensCount, sSize, dim: dimText } = meta;
             const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
@@ -687,7 +690,7 @@
 
         function buildAppleTelephoto() {
             clearScene();
-            camera.position.set(12, 9, 17);
+            camera.position.set(24, 18, 34);
             const meta = modelsData[currentPhone][currentCam].meta;
             const { lensCount, sSize, dim: dimText } = meta;
             const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
@@ -747,7 +750,7 @@
 
         function buildSamsungTelephoto2() {
             clearScene();
-            camera.position.set(14, 8, 14); 
+            camera.position.set(28, 16, 28); 
             const meta = modelsData[currentPhone][currentCam].meta;
             const { lensCount, sSize, dim: dimText } = meta;
             const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
@@ -805,7 +808,7 @@
 
         function buildPeriscopeCamera() {
             clearScene();
-            camera.position.set(16, 9, 12); 
+            camera.position.set(32, 18, 24); 
             const meta = modelsData[currentPhone][currentCam].meta;
             const { lensCount, sSize, dim: dimText } = meta;
             const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
@@ -868,7 +871,7 @@
 
         function buildVivoVariablePeriscope() {
             clearScene();
-            camera.position.set(16, 9, 12); 
+            camera.position.set(32, 18, 24); 
             const meta = modelsData[currentPhone][currentCam].meta;
             const { lensCount, sSize, dim: dimText } = meta;
             const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
@@ -948,7 +951,7 @@
 
         function buildVariablePeriscopeCamera() {
             clearScene();
-            camera.position.set(16, 9, 12); 
+            camera.position.set(32, 18, 24); 
             const meta = modelsData[currentPhone][currentCam].meta;
             const { lensCount, sSize, dim: dimText } = meta;
             const sensorText = `${meta.mp} ${meta.sensorType}\n${meta.size} • ${meta.focal} • ${meta.aperture}`;
@@ -1025,6 +1028,14 @@
 
             updateTextures();
             initDrag();
+        }
+
+        function closeSettings() {
+            if (isSettingsOpen) {
+                isSettingsOpen = false;
+                settingsPanel.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                settingsPanel.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+            }
         }
 
         // Action Buttons Logic (Upload & Capture)
@@ -1221,12 +1232,14 @@
         });
 
         document.getElementById('btn-explode').addEventListener('click', () => {
+            closeSettings();
             draggableObjects.forEach(obj => {
                 gsap.to(obj.position, { x: obj.userData.exp.x, y: obj.userData.exp.y, z: obj.userData.exp.z, duration: 1, ease: "power2.out" });
             });
         });
 
         document.getElementById('btn-reset').addEventListener('click', () => {
+            closeSettings();
             draggableObjects.forEach(obj => {
                 gsap.to(obj.position, { x: obj.userData.orig.x, y: obj.userData.orig.y, z: obj.userData.orig.z, duration: 1, ease: "power2.out" });
             });
@@ -1284,7 +1297,11 @@
             }
         }
 
-        btnTheme.addEventListener('click', () => { isDarkMode = !isDarkMode; applyTheme(); });
+        btnTheme.addEventListener('click', () => {
+            closeSettings();
+            isDarkMode = !isDarkMode;
+            applyTheme();
+        });
 
         applyTheme();
         renderTabs();
