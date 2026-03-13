@@ -10,6 +10,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ATS Testing">
     
+    <!-- Web App Manifest (Data URI for Single File Support) -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"ATS Testing","short_name":"ATS","start_url":".","display":"standalone","background_color":"#030712","theme_color":"#030712","icons":[{"src":"https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg","sizes":"400x400","type":"image/png"}]}'>
+
     <!-- Icons -->
     <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <link rel="apple-touch-icon" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
@@ -31,8 +34,10 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: #f8fafc;
-            overflow-x: hidden;
+            overflow: hidden; /* Prevent scrolling when modules are open */
             -webkit-tap-highlight-color: transparent;
+            height: 100vh;
+            width: 100vw;
         }
 
         .heading-font {
@@ -55,7 +60,6 @@
             text-shadow: 0 0 10px var(--accent-glow);
         }
 
-        /* Animated background */
         .bg-grid {
             background-size: 40px 40px;
             background-image: 
@@ -77,7 +81,26 @@
             background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.05), transparent);
             animation: scanline 8s linear infinite;
             pointer-events: none;
-            z-index: 50;
+            z-index: 100;
+        }
+
+        /* Module View */
+        #moduleOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 200;
+            background: var(--bg);
+            display: none;
+            flex-direction: column;
+        }
+
+        #moduleFrame {
+            width: 100%;
+            flex: 1;
+            border: none;
         }
 
         /* Hide scrollbars */
@@ -105,7 +128,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-1 px-6 py-12 max-w-4xl mx-auto w-full">
+    <main id="mainContainer" class="flex-1 px-6 py-12 max-w-4xl mx-auto w-full overflow-y-auto">
         
         <div class="mb-12 text-center md:text-left">
             <span class="inline-block px-3 py-1 mb-4 text-[10px] font-bold tracking-widest text-blue-400 border border-blue-400/30 rounded-full uppercase">Operational Hub</span>
@@ -116,10 +139,9 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
             <!-- Smartphone Card -->
-            <a href="https://atishaksharma.com/testing/smartphone.html" class="group relative block rounded-2xl overflow-hidden glass transition-all duration-500 card-hover">
+            <div onclick="openModule('https://atishaksharma.com/testing/smartphone.html')" class="group cursor-pointer relative block rounded-2xl overflow-hidden glass transition-all duration-500 card-hover">
                 <div class="aspect-[4/5] bg-slate-900 overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                    <!-- Mock Preview Visual -->
                     <div class="flex items-center justify-center h-full opacity-40 group-hover:opacity-100 transition-opacity">
                         <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
                     </div>
@@ -129,10 +151,10 @@
                     <h3 class="heading-font text-xl font-bold">Smartphone Vault</h3>
                     <p class="text-xs text-slate-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">360° Wireframe Viewer • iPhone 17 Pro</p>
                 </div>
-            </a>
+            </div>
 
             <!-- Camera Card -->
-            <a href="https://atishaksharma.com/testing/camera.html" class="group relative block rounded-2xl overflow-hidden glass transition-all duration-500 card-hover">
+            <div onclick="openModule('https://atishaksharma.com/testing/camera.html')" class="group cursor-pointer relative block rounded-2xl overflow-hidden glass transition-all duration-500 card-hover">
                 <div class="aspect-[4/5] bg-slate-900 overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
                     <div class="flex items-center justify-center h-full opacity-40 group-hover:opacity-100 transition-opacity">
@@ -144,10 +166,10 @@
                     <h3 class="heading-font text-xl font-bold">Camera Lab</h3>
                     <p class="text-xs text-slate-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Interactive 3D Teardown • Lens Array</p>
                 </div>
-            </a>
+            </div>
 
             <!-- Laptop Card -->
-            <a href="https://atishaksharma.com/testing/laptop.html" class="group relative block rounded-2xl overflow-hidden glass transition-all duration-500 card-hover">
+            <div onclick="openModule('https://atishaksharma.com/testing/laptop.html')" class="group cursor-pointer relative block rounded-2xl overflow-hidden glass transition-all duration-500 card-hover">
                 <div class="aspect-[4/5] bg-slate-900 overflow-hidden">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
                     <div class="flex items-center justify-center h-full opacity-40 group-hover:opacity-100 transition-opacity">
@@ -159,7 +181,7 @@
                     <h3 class="heading-font text-xl font-bold">Laptop Vault</h3>
                     <p class="text-xs text-slate-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Interactive 360° Viewer • MacBook Pro 16</p>
                 </div>
-            </a>
+            </div>
 
         </div>
     </main>
@@ -169,8 +191,20 @@
         <p class="text-xs font-mono text-slate-500 tracking-widest uppercase">© 2026 ATS Design Studio • All Assets Secure</p>
     </footer>
 
+    <!-- Module Overlay (Iframe Shell) -->
+    <div id="moduleOverlay">
+        <header class="p-4 flex items-center justify-between glass border-b border-white/10">
+            <button onclick="closeModule()" class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+                Return to Hub
+            </button>
+            <span id="moduleTitle" class="heading-font text-[10px] font-bold tracking-[0.2em] uppercase opacity-50">Secure View</span>
+        </header>
+        <iframe id="moduleFrame" src="about:blank"></iframe>
+    </div>
+
     <!-- Add to Home Screen Modal -->
-    <div id="installModal" class="fixed inset-0 z-50 flex items-end justify-center bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none p-4 pb-12">
+    <div id="installModal" class="fixed inset-0 z-[300] flex items-end justify-center bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none p-4 pb-12">
         <div class="w-full max-w-sm glass rounded-3xl p-6 text-center transform translate-y-10 transition-transform duration-300 shadow-2xl">
             <div class="flex justify-center mb-6">
                 <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" class="w-16 h-16 rounded-2xl shadow-xl border-2 border-blue-500/50">
@@ -200,50 +234,75 @@
                 </div>
             </div>
 
-            <button onclick="toggleInstallPrompt()" class="mt-8 w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-colors">
+            <button onclick="toggleInstallPrompt()" id="installConfirmBtn" class="mt-8 w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-colors">
                 Got it
             </button>
         </div>
     </div>
 
     <script>
+        let deferredPrompt;
+
         function toggleInstallPrompt() {
             const modal = document.getElementById('installModal');
             const content = modal.querySelector('div');
             
             if (modal.classList.contains('opacity-0')) {
                 modal.classList.remove('opacity-0', 'pointer-events-none');
-                setTimeout(() => {
-                    content.classList.remove('translate-y-10');
-                }, 10);
+                setTimeout(() => content.classList.remove('translate-y-10'), 10);
             } else {
                 content.classList.add('translate-y-10');
-                setTimeout(() => {
-                    modal.classList.add('opacity-0', 'pointer-events-none');
-                }, 300);
+                setTimeout(() => modal.classList.add('opacity-0', 'pointer-events-none'), 300);
             }
         }
 
-        // Auto-show prompt on mobile if not in standalone mode after 3 seconds
+        function openModule(url) {
+            const overlay = document.getElementById('moduleOverlay');
+            const frame = document.getElementById('moduleFrame');
+            const title = document.getElementById('moduleTitle');
+            
+            // Set title based on URL
+            if(url.includes('smartphone')) title.innerText = "Module: Smartphone Vault";
+            if(url.includes('camera')) title.innerText = "Module: Camera Lab";
+            if(url.includes('laptop')) title.innerText = "Module: Laptop Vault";
+
+            frame.src = url;
+            overlay.style.display = 'flex';
+        }
+
+        function closeModule() {
+            const overlay = document.getElementById('moduleOverlay');
+            const frame = document.getElementById('moduleFrame');
+            frame.src = 'about:blank';
+            overlay.style.display = 'none';
+        }
+
+        // Handle native Chrome A2HS prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const btn = document.getElementById('installConfirmBtn');
+            btn.innerText = "Install Now";
+            btn.onclick = async () => {
+                toggleInstallPrompt();
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+            };
+        });
+
         window.addEventListener('load', () => {
             const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             
-            if (isMobile && !isStandalone) {
+            // If the app is refreshed while standalone, the iframe is naturally cleared
+            // because the src starts as about:blank. This fulfills the "open first page again" requirement.
+
+            // Show prompt immediately if not standalone
+            if (!isStandalone) {
+                // Short timeout to ensure visual transition is smooth
                 setTimeout(() => {
                     toggleInstallPrompt();
-                }, 3000);
-            }
-
-            // Ensure internal links open inside the app when in standalone mode
-            if (isStandalone) {
-                document.addEventListener('click', (e) => {
-                    const target = e.target.closest('a');
-                    if (target && target.href && target.href.includes(window.location.hostname)) {
-                        e.preventDefault();
-                        window.location.href = target.href;
-                    }
-                }, false);
+                }, 500);
             }
         });
     </script>
