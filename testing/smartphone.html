@@ -200,7 +200,7 @@
             </div>
         </div>
 
-        <div class="p-6 flex justify-between items-end w-full pb-8 pointer-events-none">
+        <div class="p-6 flex justify-between items-end w-full pb-24 md:pb-8 pointer-events-none">
             <div class="flex gap-4 opacity-70 text-xs tracking-widest">
                 <div class="border border-cyan-500/30 p-2 backdrop-blur-sm hidden sm:block">DRAG TO ROTATE</div>
                 <div class="border border-cyan-500/30 p-2 backdrop-blur-sm hidden sm:block">SCROLL TO ZOOM</div>
@@ -211,12 +211,32 @@
             </div>
         </div>
 
-        <div class="absolute right-6 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 pointer-events-auto z-50">
-            <button id="btn-open-selector" class="layer-btn animate-blink border p-3 text-xs tracking-widest text-cyan-300 hover:bg-cyan-900/60 transition-all duration-300 w-40 text-center bg-cyan-950/80 mb-6 font-bold shadow-[0_0_15px_rgba(0,255,255,0.4)]">SELECT SMARTPHONE</button>
-            <button id="btn-explode" class="layer-btn border border-cyan-500/50 p-3 text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 w-40 text-center bg-black/40 shadow-[0_0_10px_rgba(0,255,255,0.2)]">EXPLODE MODEL</button>
-            <button id="btn-reset" class="layer-btn active border border-cyan-500/50 p-3 text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 w-40 text-center bg-cyan-900/60 shadow-[0_0_10px_rgba(0,255,255,0.2)]">RESET MODEL</button>
-            <button id="btn-rotate" class="layer-btn border border-cyan-500/50 p-3 text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 w-40 text-center bg-black/40 mt-8 shadow-[0_0_10px_rgba(0,255,255,0.2)]">AUTO-ROTATE: OFF</button>
-            <button id="btn-close-vault" class="layer-btn border border-red-500/50 p-3 text-xs tracking-widest text-red-400 hover:bg-red-900/60 transition-all duration-300 w-40 text-center bg-black/80 mt-2 shadow-[0_0_10px_rgba(255,0,0,0.2)]">CLOSE VAULT</button>
+        <!-- Layer Controls / Bottom Mobile Bar -->
+        <div class="absolute bottom-6 left-0 w-full px-4 flex flex-row justify-center gap-2 md:bottom-auto md:left-auto md:right-6 md:top-1/2 md:transform md:-translate-y-1/2 md:w-auto md:px-0 md:flex-col md:gap-3 pointer-events-auto z-50">
+            <button id="btn-open-selector" title="Select Smartphone" class="layer-btn animate-blink border border-cyan-500 p-3 flex items-center justify-center text-xs tracking-widest text-cyan-300 hover:bg-cyan-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none md:bg-cyan-950/80 md:mb-4 bg-black/60 shadow-[0_0_15px_rgba(0,255,255,0.4)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                <span class="hidden md:inline font-bold">SELECT SMARTPHONE</span>
+            </button>
+
+            <button id="btn-explode" title="Explode Model" class="layer-btn border border-cyan-500/50 p-3 flex items-center justify-center text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-black/40 shadow-[0_0_10px_rgba(0,255,255,0.2)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                <span class="hidden md:inline">EXPLODE MODEL</span>
+            </button>
+
+            <button id="btn-reset" title="Reset Model" class="layer-btn active border border-cyan-500/50 p-3 flex items-center justify-center text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-cyan-900/60 shadow-[0_0_10px_rgba(0,255,255,0.2)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></svg>
+                <span class="hidden md:inline">RESET MODEL</span>
+            </button>
+
+            <button id="btn-rotate" title="Toggle Auto-Rotate" class="layer-btn border border-cyan-500/50 p-3 flex items-center justify-center text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-black/40 md:mt-4 shadow-[0_0_10px_rgba(0,255,255,0.2)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                <span id="rotate-text" class="hidden md:inline">AUTO-ROTATE: OFF</span>
+            </button>
+
+            <button id="btn-close-vault" title="Close Vault" class="layer-btn border border-red-500/50 p-3 flex items-center justify-center text-xs tracking-widest text-red-400 hover:bg-red-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-black/80 md:mt-1 shadow-[0_0_10px_rgba(255,0,0,0.2)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span class="hidden md:inline">CLOSE VAULT</span>
+            </button>
         </div>
 
         <div id="tooltip" class="tooltip">BUTTON_NAME</div>
@@ -887,21 +907,21 @@
 
         document.getElementById('btn-explode').addEventListener('click', (e) => {
             isExploded = true;
-            e.target.classList.add('active', 'bg-cyan-900/60');
+            e.currentTarget.classList.add('active', 'bg-cyan-900/60');
             document.getElementById('btn-reset').classList.remove('active', 'bg-cyan-900/60');
         });
 
         document.getElementById('btn-reset').addEventListener('click', (e) => {
             isExploded = false;
-            e.target.classList.add('active', 'bg-cyan-900/60');
+            e.currentTarget.classList.add('active', 'bg-cyan-900/60');
             document.getElementById('btn-explode').classList.remove('active', 'bg-cyan-900/60');
         });
 
         document.getElementById('btn-rotate').addEventListener('click', (e) => {
             isAutoRotate = !isAutoRotate;
-            e.target.innerText = isAutoRotate ? 'AUTO-ROTATE: ON' : 'AUTO-ROTATE: OFF';
-            if(isAutoRotate) { e.target.classList.add('active', 'bg-cyan-900/60'); } 
-            else { e.target.classList.remove('active', 'bg-cyan-900/60'); }
+            document.getElementById('rotate-text').innerText = isAutoRotate ? 'AUTO-ROTATE: ON' : 'AUTO-ROTATE: OFF';
+            if(isAutoRotate) { e.currentTarget.classList.add('active', 'bg-cyan-900/60'); } 
+            else { e.currentTarget.classList.remove('active', 'bg-cyan-900/60'); }
         });
 
         function onPointerMove(event) {
