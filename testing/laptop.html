@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive 360° Laptop Wireframe Viewer – Explore Top Laptops</title>
+    <meta name="description" content="Interactive 360° laptop wireframe viewer showing internal cooling, motherboard, and battery systems. Explore how components work inside MacBook, XPS, and ThinkPad flagship laptops.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="360° Laptop Wireframe Viewer">
+    <meta property="og:description" content="Explore laptop internal systems in an interactive 3D wireframe viewer.">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-glow: #00f0ff;
+            --bg-color: #03060a;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: var(--primary-glow);
+            font-family: 'Courier New', Courier, monospace;
+            user-select: none;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 240, 255, 0.03) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 5;
+            animation: scanlineScroll 10s linear infinite;
+        }
+
+        @keyframes scanlineScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 40%, #000000 120%);
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        .hud-text {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+            letter-spacing: 0.2em;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 15, 25, 0.85);
+            border: 1px solid var(--primary-glow);
+            padding: 8px 12px;
+            color: var(--primary-glow);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4), inset 0 0 10px rgba(0, 240, 255, 0.2);
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+            transform: translate(15px, 15px);
+            z-index: 20;
+        }
+
+        .tooltip::before, .tooltip::after {
+            content: ''; position: absolute; width: 5px; height: 5px;
+        }
+        .tooltip::before { top: -1px; left: -1px; border-top: 1px solid #fff; border-left: 1px solid #fff; }
+        .tooltip::after { bottom: -1px; right: -1px; border-bottom: 1px solid #fff; border-right: 1px solid #fff; }
+
+        #loading {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            background: #000; z-index: 200; transition: opacity 0.5s;
+        }
+
+        .loader {
+            border: 2px solid rgba(0, 240, 255, 0.2);
+            border-top: 2px solid var(--primary-glow);
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .layer-btn {
+            pointer-events: auto; backdrop-filter: blur(4px);
+        }
+        .layer-btn.active {
+            background-color: rgba(0, 150, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            border-color: var(--primary-glow);
+        }
+
+        @keyframes sciFiBlink {
+            0%, 100% { opacity: 1; border-color: var(--primary-glow); box-shadow: 0 0 15px rgba(0, 240, 255, 0.6); }
+            50% { opacity: 0.5; border-color: rgba(0, 240, 255, 0.2); box-shadow: 0 0 5px rgba(0, 240, 255, 0.1); }
+        }
+        .animate-blink { animation: sciFiBlink 1.5s infinite; }
+
+        .glass-panel {
+            background: rgba(3, 6, 10, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+
+        /* Custom Scrollbar for Grid */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0, 240, 255, 0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 240, 255, 0.6); }
+    </style>
+
+    <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="loading">
+        <div class="flex flex-col items-center">
+            <div class="loader mb-4"></div>
+            <div class="hud-text text-xs">ESTABLISHING SECURE CONNECTION...</div>
+        </div>
+    </div>
+
+    <!-- Vault Login Overlay -->
+    <div id="vault-overlay" class="absolute inset-0 z-[100] bg-[#03060a] flex flex-col items-center justify-center font-mono transition-opacity duration-500">
+        <div class="scanlines"></div>
+        <div class="glass-panel p-12 flex flex-col items-center z-10 max-w-lg w-full text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400"></div>
+            <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyan-400"></div>
+            <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-400"></div>
+            <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400"></div>
+
+            <svg class="w-20 h-20 text-cyan-500 mb-6 drop-shadow-[0_0_10px_rgba(0,255,255,0.8)]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                <line x1="2" y1="21" x2="22" y2="21"></line>
+                <line x1="6" y1="21" x2="6" y2="17"></line>
+                <line x1="18" y1="21" x2="18" y2="17"></line>
+            </svg>
+            
+            <h1 class="text-cyan-400 text-2xl md:text-3xl mb-2 tracking-[0.3em] hud-text">ATS HARDWARE LAB</h1>
+            <h2 class="text-cyan-600/80 text-xs md:text-sm mb-8 tracking-[0.5em]">SECURE VAULT ACCESS</h2>
+            
+            <div class="flex flex-col items-center gap-4 w-full">
+                <input type="password" id="vault-password" placeholder="ENTER PASSCODE" class="w-full max-w-[250px] bg-black/60 border border-cyan-500/50 text-cyan-400 px-4 py-3 text-center tracking-[0.5em] focus:outline-none focus:border-cyan-300 focus:shadow-[0_0_15px_rgba(0,255,255,0.3)] transition-all placeholder-cyan-800/50">
+                <p class="text-cyan-800/70 text-[10px] tracking-widest uppercase">Hint: 0000</p>
+                <button id="btn-unlock" class="border border-cyan-500/50 px-10 py-3 text-cyan-400 hover:bg-cyan-900/80 transition-all tracking-[0.2em] mt-2 w-full max-w-[250px] text-sm hover:shadow-[0_0_15px_rgba(0,255,255,0.4)]">AUTHENTICATE</button>
+            </div>
+            <p id="vault-error" class="text-red-500 mt-4 text-xs tracking-widest opacity-0 transition-opacity">ACCESS DENIED - INVALID CODE</p>
+        </div>
+    </div>
+
+    <!-- Laptop Selection Overlay -->
+    <div id="selector-overlay" class="absolute inset-0 z-[90] bg-[#03060a]/95 backdrop-blur-md hidden flex-col items-center justify-start pt-16 font-mono p-4 transition-opacity duration-500 opacity-0 overflow-hidden">
+        <button id="btn-close-selector" class="absolute top-6 right-6 text-cyan-500 hover:text-cyan-300 transition-colors pointer-events-auto border border-cyan-500/50 p-2 hover:bg-cyan-900/50 rounded-md">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        <h2 class="text-cyan-400 text-2xl md:text-3xl mb-8 tracking-[0.3em] hud-text text-center shrink-0">SELECT LAPTOP</h2>
+        <div id="laptop-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 max-w-7xl w-full overflow-y-auto pb-20 px-4 content-start"></div>
+    </div>
+
+    <div id="canvas-container"></div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+
+    <!-- Main HUD Layer -->
+    <div id="ui-layer">
+        <div class="p-6 flex justify-between items-start w-full">
+            <div>
+                <h1 id="hud-title" class="text-2xl md:text-4xl lg:text-5xl font-bold hud-text uppercase tracking-wider">APPLE MACBOOK PRO 16</h1>
+                <p id="project-name" class="text-xs md:text-sm mt-2 opacity-80 tracking-[0.3em] text-cyan-300">PROJECT: SILICON // CLASSIFIED</p>
+            </div>
+            <div class="text-right hidden md:block">
+                <p class="text-xs opacity-70 tracking-widest mb-1">SYSTEM STATUS</p>
+                <p class="text-sm hud-text">ONLINE // SECURE</p>
+                <div class="w-32 h-1 bg-cyan-900/50 mt-2 ml-auto">
+                    <div class="w-full h-full bg-cyan-400 shadow-[0_0_10px_#00ffff]"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 flex justify-between items-end w-full pb-24 md:pb-8 pointer-events-none">
+            <div class="flex gap-4 opacity-70 text-xs tracking-widest flex-wrap max-w-lg items-center">
+                <div class="border border-cyan-500/30 p-2 backdrop-blur-sm hidden sm:block">&copy; ATS Design Studio 2026</div>
+            </div>
+            <div id="dim-text" class="text-right opacity-60 text-[10px] md:text-xs tracking-[0.2em] font-sans text-cyan-200 bg-black/40 p-2 rounded backdrop-blur-sm">
+                DIM: 355.7 x 248.1 x 16.8 mm<br>
+                GEO-MATRIX: HIGH-POLY
+            </div>
+        </div>
+
+        <!-- Interactive Controls -->
+        <div class="absolute bottom-6 left-0 w-full px-4 flex flex-row justify-center gap-2 md:bottom-auto md:left-auto md:right-6 md:top-1/2 md:transform md:-translate-y-1/2 md:w-auto md:px-0 md:flex-col md:gap-3 pointer-events-auto z-50">
+            <button id="btn-open-selector" title="Select Laptop" class="layer-btn animate-blink border border-cyan-500 p-3 flex items-center justify-center text-xs tracking-widest text-cyan-300 hover:bg-cyan-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none md:bg-cyan-950/80 md:mb-4 bg-black/60 shadow-[0_0_15px_rgba(0,255,255,0.4)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="21" x2="22" y2="21"></line></svg>
+                <span class="hidden md:inline font-bold">SELECT LAPTOP</span>
+            </button>
+
+            <button id="btn-toggle-lid" title="Toggle Lid" class="layer-btn border border-cyan-500/50 p-3 flex items-center justify-center text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-black/40 shadow-[0_0_10px_rgba(0,255,255,0.2)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                <span class="hidden md:inline">OPEN LID</span>
+            </button>
+
+            <button id="btn-tablet-mode" title="Tablet Mode" class="layer-btn hidden border border-cyan-500/50 p-3 items-center justify-center text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-black/40 shadow-[0_0_10px_rgba(0,255,255,0.2)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                <span class="hidden md:inline">TABLET MODE</span>
+            </button>
+
+            <button id="btn-toggle-explode" title="Toggle Explode" class="layer-btn border border-cyan-500/50 p-3 flex items-center justify-center text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-black/40 shadow-[0_0_10px_rgba(0,255,255,0.2)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                <span class="hidden md:inline">EXPLODE MODEL</span>
+            </button>
+
+            <button id="btn-rotate" title="Toggle Auto-Rotate" class="layer-btn border border-cyan-500/50 p-3 flex items-center justify-center text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-black/40 md:mt-4 shadow-[0_0_10px_rgba(0,255,255,0.2)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                <span id="rotate-text" class="hidden md:inline">AUTO-ROTATE: OFF</span>
+            </button>
+
+            <button id="btn-close-vault" title="Close Vault" class="layer-btn border border-red-500/50 p-3 flex items-center justify-center text-xs tracking-widest text-red-400 hover:bg-red-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-black/80 md:mt-1 shadow-[0_0_10px_rgba(255,0,0,0.2)]">
+                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span class="hidden md:inline">CLOSE VAULT</span>
+            </button>
+        </div>
+
+        <div id="tooltip" class="tooltip">BUTTON_NAME</div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        let isExploded = false; let isAutoRotate = false; let isInteracting = false; 
+        let idleTimer = null; let autoRotateSpeed = 0.003;
+        
+        let currentLaptopIs2in1 = false;
+        let isLidOpen = false; 
+        let isTabletMode = false;
+        
+        const LID_CLOSED = Math.PI / 2; 
+        const LID_OPEN = -Math.PI / 180 * 20; 
+        let targetLidAngle = LID_CLOSED;
+        let targetBaseRotZ = 0; 
+
+        const interactables = []; const explodableMeshes = []; const raycastTargets = [];
+
+        // --- Materials (Optimized) ---
+        const wireframeMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x006688, wireframe: true, transparent: true, opacity: 0.3, side: THREE.DoubleSide });
+        const matteMaterial = new THREE.MeshStandardMaterial({ color: 0x010203, roughness: 0.9, metalness: 0.1, transparent: true, opacity: 0.5, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+        const screenMat = new THREE.MeshStandardMaterial({ color: 0x02050a, roughness: 0.05, metalness: 0.9, transparent: true, opacity: 0.85, side: THREE.DoubleSide });
+        const highlightMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x00ffff, emissiveIntensity: 0.6, wireframe: true, transparent: true, opacity: 0.8 });
+        
+        const batteryMat = new THREE.MeshStandardMaterial({color: 0x0088ff, emissive: 0x002266, wireframe: true, transparent: true, opacity: 0.8});
+        const boardMat = new THREE.MeshStandardMaterial({color: 0x00ffaa, emissive: 0x005522, wireframe: true, transparent: true, opacity: 0.8});
+        const copperMat = new THREE.MeshStandardMaterial({color: 0xff8800, emissive: 0x662200, wireframe: true, transparent: true, opacity: 0.9});
+        const chipMat = new THREE.MeshStandardMaterial({color: 0xcccccc, emissive: 0x222222, wireframe: true, transparent: true, opacity: 0.9});
+        const modularMat = new THREE.MeshStandardMaterial({color: 0xaa00ff, emissive: 0x440066, wireframe: true, transparent: true, opacity: 0.8});
+
+        const codeNames = ["SILICON", "APEX", "INFINITY", "TITANIUM", "QUANTUM", "VELOCITY", "ECLIPSE", "HORIZON", "NEBULA", "PULSAR"];
+
+        // Expanded list of 16 highly diverse laptops
+        const laptops = [
+            "Apple MacBook Pro 16", "Apple MacBook Pro 13", "Dell XPS 14", 
+            "Lenovo ThinkPad X1", "HP Spectre x360", "Lenovo Yoga 9i",
+            "Asus ROG Zephyrus G14", "Razer Blade 15", "Alienware m18", 
+            "Framework Laptop 13", "MSI Titan GT77", "Acer Predator Helios", 
+            "Samsung Galaxy Book4 360", "LG Gram 17", "Microsoft Surface Laptop Studio",
+            "System76 Lemur Pro"
+        ];
+
+        const vaultOverlay = document.getElementById('vault-overlay');
+        const selectorOverlay = document.getElementById('selector-overlay');
+        const passInput = document.getElementById('vault-password');
+        const errorMsg = document.getElementById('vault-error');
+        const hudTitle = document.getElementById('hud-title');
+        const projNameUI = document.getElementById('project-name');
+        const dimTextUI = document.getElementById('dim-text');
+        const laptopGrid = document.getElementById('laptop-grid');
+        const tooltip = document.getElementById('tooltip');
+
+        // Populate Grid
+        laptops.forEach(laptop => {
+            const card = document.createElement('div');
+            card.className = "border border-cyan-500/30 bg-black/40 hover:bg-cyan-900/50 p-4 cursor-pointer transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.4)] group flex flex-col items-center gap-4 relative overflow-hidden rounded-md";
+            card.innerHTML = `
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-20 h-14 border border-cyan-500/50 opacity-60 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-end relative shadow-[inset_0_0_10px_rgba(0,255,255,0.1)]">
+                    <div class="w-[90%] h-[70%] border border-cyan-400/30 absolute top-1"></div>
+                    <div class="w-full h-1 bg-cyan-400/40 mt-auto"></div>
+                </div>
+                <span class="text-[10px] text-cyan-300 text-center tracking-widest z-10 uppercase font-bold">${laptop}</span>
+            `;
+            
+            card.addEventListener('click', () => {
+                hudTitle.innerText = laptop.toUpperCase();
+                projNameUI.innerText = `PROJECT: ${codeNames[Math.floor(Math.random()*codeNames.length)]} // CLASSIFIED`;
+                
+                selectorOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    selectorOverlay.classList.add('hidden');
+                    selectorOverlay.classList.remove('flex');
+                    generateLaptopModel(laptop);
+                }, 500);
+            });
+            laptopGrid.appendChild(card);
+        });
+
+        // UI Event Listeners
+        function unlockVault() {
+            if (passInput.value === '0000') {
+                errorMsg.style.opacity = '0';
+                vaultOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    vaultOverlay.classList.add('hidden');
+                    selectorOverlay.classList.remove('hidden');
+                    selectorOverlay.classList.add('flex');
+                    setTimeout(() => selectorOverlay.style.opacity = '1', 50);
+                }, 500);
+            } else {
+                errorMsg.style.opacity = '1';
+                passInput.value = ''; passInput.focus();
+            }
+        }
+
+        document.getElementById('btn-unlock').addEventListener('click', unlockVault);
+        passInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') unlockVault(); });
+
+        document.getElementById('btn-open-selector').addEventListener('click', () => {
+            selectorOverlay.classList.remove('hidden'); selectorOverlay.classList.add('flex');
+            setTimeout(() => selectorOverlay.style.opacity = '1', 50);
+        });
+
+        document.getElementById('btn-close-selector').addEventListener('click', () => {
+            selectorOverlay.style.opacity = '0';
+            setTimeout(() => {
+                selectorOverlay.classList.add('hidden');
+                selectorOverlay.classList.remove('flex');
+            }, 500);
+        });
+
+        document.getElementById('btn-close-vault').addEventListener('click', () => {
+            vaultOverlay.classList.remove('hidden');
+            setTimeout(() => {
+                vaultOverlay.style.opacity = '1';
+                passInput.value = '';
+                errorMsg.style.opacity = '0';
+            }, 50);
+        });
+
+        // --- Three.js Setup ---
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x03060a, 0.012);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 250);
+        camera.position.set(0, 25, 45);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        container.appendChild(renderer.domElement);
+
+        const renderScene = new RenderPass(scene, camera);
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        bloomPass.threshold = 0.1; bloomPass.strength = 1.0; bloomPass.radius = 0.6;
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(renderScene); composer.addPass(bloomPass);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.05;
+        controls.minDistance = 15; controls.maxDistance = 90; 
+        controls.maxPolarAngle = Math.PI; // Allow viewing underneath
+        controls.enablePan = true; // explicitly enable panning (Right-click or two-finger drag)
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+        const pointLight = new THREE.PointLight(0x00ffff, 2.5, 120);
+        pointLight.position.set(10, 30, 20); scene.add(pointLight);
+
+        const gridHelper = new THREE.GridHelper(200, 200, 0x00ffff, 0x004455);
+        gridHelper.position.y = -15; gridHelper.material.opacity = 0.15; gridHelper.material.transparent = true;
+        scene.add(gridHelper);
+
+        const laptopGroup = new THREE.Group();
+        scene.add(laptopGroup);
+
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        // --- Core Functions ---
+        function addExplode(mesh, offsetX, offsetY, offsetZ) {
+            mesh.userData.origPos = mesh.position.clone();
+            mesh.userData.expPos = mesh.position.clone().add(new THREE.Vector3(offsetX, offsetY, offsetZ));
+            explodableMeshes.push(mesh);
+        }
+
+        function createRoundedRectShape(width, height, radius) {
+            const shape = new THREE.Shape();
+            const x = -width / 2; const y = -height / 2;
+            shape.moveTo(x + radius, y); shape.lineTo(x + width - radius, y); shape.quadraticCurveTo(x + width, y, x + width, y + radius);
+            shape.lineTo(x + width, y + height - radius); shape.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            shape.lineTo(x + radius, y + height); shape.quadraticCurveTo(x, y + height, x, y + height - radius);
+            shape.lineTo(x, y + radius); shape.quadraticCurveTo(x, y, x + radius, y);
+            return shape;
+        }
+
+        function registerInteractable(mesh, name) {
+            mesh.userData.name = name;
+            interactables.push(mesh);
+            const box = new THREE.Box3().setFromObject(mesh);
+            const size = box.getSize(new THREE.Vector3());
+            const hitGeo = new THREE.BoxGeometry(Math.max(size.x * 1.1, 0.5), Math.max(size.y * 1.1, 0.5), Math.max(size.z * 1.1, 0.5));
+            const hitMesh = new THREE.Mesh(hitGeo, new THREE.MeshBasicMaterial({ visible: false }));
+            
+            const center = box.getCenter(new THREE.Vector3());
+            hitMesh.position.copy(mesh.worldToLocal(center));
+            
+            hitMesh.userData = mesh.userData;
+            mesh.add(hitMesh); 
+            raycastTargets.push(hitMesh);
+            return mesh;
+        }
+
+        // --- I/O & Detailing Builders ---
+        function addPort(x, y, z, pw, ph, pd, name, group) {
+            const portGeo = new THREE.BoxGeometry(pw, ph, pd);
+            const port = new THREE.Mesh(portGeo, highlightMaterial);
+            port.position.set(x, y, z);
+            port.matrixAutoUpdate = false; port.updateMatrix(); 
+            registerInteractable(port, name);
+            group.add(port);
+            addExplode(port, x > 0 ? 3 : -3, 0, 0);
+        }
+
+        function addSpeakerGrill(x, y, z, gw, gd, group, vertical = false) {
+            const rows = vertical ? 12 : 3; const cols = vertical ? 3 : 12;
+            const grillGeo = new THREE.PlaneGeometry(gw, gd, cols, rows);
+            const grill = new THREE.Mesh(grillGeo, wireframeMaterial);
+            grill.rotation.x = -Math.PI / 2;
+            grill.position.set(x, y, z);
+            grill.matrixAutoUpdate = false; grill.updateMatrix(); 
+            registerInteractable(grill, "Speaker Acoustic Grill");
+            group.add(grill);
+        }
+
+        function addVents(x, y, z, span, height, depth, orientation, group) {
+            const ventGroup = new THREE.Group();
+            const count = Math.floor(span / 0.5); 
+            const spacing = span / count;
+
+            let finGeo;
+            if(orientation === 'bottom') finGeo = new THREE.BoxGeometry(0.05, 0.1, depth);
+            else if(orientation === 'side-r' || orientation === 'side-l') finGeo = new THREE.BoxGeometry(depth, 0.05, 0.2);
+            else if(orientation === 'back') finGeo = new THREE.BoxGeometry(0.05, height, depth);
+
+            for(let i=0; i<count; i++) {
+                let fx=0, fy=0, fz=0;
+                if(orientation === 'bottom') fx = -span/2 + i*spacing;
+                else if(orientation === 'side-r' || orientation === 'side-l') fz = -span/2 + i*spacing;
+                else if(orientation === 'back') fx = -span/2 + i*spacing;
+
+                const fin = new THREE.Mesh(finGeo, highlightMaterial);
+                fin.position.set(fx, fy, fz);
+                fin.matrixAutoUpdate = false; fin.updateMatrix(); 
+                ventGroup.add(fin);
+            }
+            
+            ventGroup.position.set(x, y, z);
+            group.add(ventGroup);
+            registerInteractable(ventGroup, "Thermal Exhaust Louvers"); 
+        }
+
+        function clearScene() {
+            while(laptopGroup.children.length > 0){ laptopGroup.remove(laptopGroup.children[0]); }
+            interactables.length = 0; explodableMeshes.length = 0; raycastTargets.length = 0;
+            isExploded = false;
+            
+            const btnExplode = document.getElementById('btn-toggle-explode');
+            btnExplode.classList.remove('active', 'bg-cyan-900/60');
+            btnExplode.querySelector('span').innerText = "EXPLODE MODEL";
+        }
+
+        function updateDimensionsDisplay(w, d, h_base, h_lid) {
+            const totalH = h_base + h_lid;
+            dimTextUI.innerHTML = `DIM: ${(w*10).toFixed(1)} x ${(d*10).toFixed(1)} x ${(totalH*10).toFixed(1)} mm<br>GEO-MATRIX: HIGH-POLY`;
+        }
+
+        // --- Core Chassis Builder ---
+        let currentBaseGroup, currentLidGroup;
+
+        // Allows offset hinges (e.g., Alienware rear shelf)
+        function buildChassis(w, d, h_base, h_lid, radius, hingeOffsetZ = 0) {
+            currentBaseGroup = new THREE.Group();
+            currentLidGroup = new THREE.Group();
+            laptopGroup.add(currentBaseGroup);
+            laptopGroup.add(currentLidGroup);
+
+            // 1. Base Chassis
+            const baseShape = createRoundedRectShape(w, d, radius);
+            const baseGeo = new THREE.ExtrudeGeometry(baseShape, { depth: h_base, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05, curveSegments: 12 });
+            baseGeo.center(); 
+            const baseSolid = new THREE.Mesh(baseGeo, matteMaterial); 
+            const baseWire = new THREE.Mesh(baseGeo, wireframeMaterial);
+            
+            baseSolid.rotation.x = -Math.PI / 2; baseWire.rotation.x = -Math.PI / 2;
+            currentBaseGroup.add(baseSolid); currentBaseGroup.add(baseWire);
+            addExplode(baseSolid, 0, -4, 0); addExplode(baseWire, 0, -4, 0);
+
+            // 2. Lid Chassis
+            const lidD = d - Math.abs(hingeOffsetZ);
+            const lidShape = createRoundedRectShape(w, lidD, radius);
+            const lidGeo = new THREE.ExtrudeGeometry(lidShape, { depth: h_lid, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05, curveSegments: 12 });
+            lidGeo.center();
+            const lidSolid = new THREE.Mesh(lidGeo, matteMaterial);
+            const lidWire = new THREE.Mesh(lidGeo, wireframeMaterial);
+
+            lidSolid.position.set(0, lidD/2, -h_lid/2);
+            lidWire.position.set(0, lidD/2, -h_lid/2);
+            
+            currentLidGroup.position.set(0, h_base/2, -d/2 - hingeOffsetZ);
+            currentLidGroup.rotation.x = LID_CLOSED;
+            
+            currentLidGroup.add(lidSolid); currentLidGroup.add(lidWire);
+            addExplode(lidSolid, 0, 0, -2); addExplode(lidWire, 0, 0, -2);
+
+            // Hinge Cylinder
+            const hingeGeo = new THREE.CylinderGeometry(h_base/2, h_base/2, w - 2, 16);
+            hingeGeo.rotateZ(Math.PI/2);
+            const hinge = new THREE.Mesh(hingeGeo, wireframeMaterial);
+            hinge.position.set(0, h_base/2, -d/2 - hingeOffsetZ);
+            registerInteractable(hinge, "Friction Hinge Assembly");
+            laptopGroup.add(hinge); addExplode(hinge, 0, 0, 0);
+
+            // Screen Panel
+            const screenW = w - 1.2; const screenH = lidD - 1.2;
+            const screenGeo = new THREE.PlaneGeometry(screenW, screenH);
+            const screen = new THREE.Mesh(screenGeo, screenMat); 
+            screen.position.set(0, lidD/2, 0.05); 
+            registerInteractable(screen, "IPS LCD / OLED Panel Matrix");
+            currentLidGroup.add(screen); addExplode(screen, 0, 0, 4); 
+
+            // Optimized Keyboard Deck
+            const kbGroup = new THREE.Group();
+            const kbW = w - 6; const kbD = 9.5; 
+            const kbCenterZ = -1.5; 
+            
+            const rows = 6; const cols = 15;
+            const keyW = kbW / cols; const keyD = kbD / rows;
+            const keyGeo = new THREE.BoxGeometry(keyW - 0.2, 0.1, keyD - 0.2);
+            const spaceGeo = new THREE.BoxGeometry(keyW * 6 - 0.2, 0.1, keyD - 0.2);
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    if (r === 5 && c >= 4 && c <= 9) {
+                        if (c === 4) { 
+                            const space = new THREE.Mesh(spaceGeo, highlightMaterial);
+                            space.position.set(-kbW/2 + (c + 2.5)*keyW + keyW/2, 0, -kbD/2 + r*keyD + keyD/2);
+                            space.matrixAutoUpdate = false; space.updateMatrix();
+                            kbGroup.add(space); registerInteractable(space, "Spacebar"); addExplode(space, 0, 5, 0);
+                        }
+                    } else {
+                        const key = new THREE.Mesh(keyGeo, wireframeMaterial);
+                        key.position.set(-kbW/2 + c*keyW + keyW/2, 0, -kbD/2 + r*keyD + keyD/2);
+                        key.matrixAutoUpdate = false; key.updateMatrix();
+                        kbGroup.add(key); registerInteractable(key, r===0 ? "Function Key" : "Mechanical Switch"); addExplode(key, 0, 5 + Math.random(), 0);
+                    }
+                }
+            }
+            kbGroup.position.set(0, h_base/2 + 0.06, kbCenterZ);
+            currentBaseGroup.add(kbGroup);
+
+            // Trackpad
+            const tpGroup = new THREE.Group();
+            const tpW = 12; const tpD = 6;
+            const tpCenterZ = kbCenterZ + kbD/2 + tpD/2 + 0.5;
+
+            const tpGeo = new THREE.BoxGeometry(tpW, 0.05, tpD);
+            const tpSolid = new THREE.Mesh(tpGeo, matteMaterial);
+            const tpWire = new THREE.Mesh(tpGeo, highlightMaterial);
+            tpGroup.add(tpSolid); tpGroup.add(tpWire);
+            tpGroup.position.set(0, h_base/2 + 0.06, tpCenterZ);
+            registerInteractable(tpSolid, "Haptic Glass Trackpad");
+            currentBaseGroup.add(tpGroup); addExplode(tpGroup, 0, 6, 0);
+
+            // Webcam
+            const camGroup = new THREE.Group();
+            const lensGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.05, 12); lensGeo.rotateX(Math.PI/2);
+            const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+            const sensorGeo = new THREE.BoxGeometry(0.5, 0.2, 0.05);
+            const sensor = new THREE.Mesh(sensorGeo, wireframeMaterial);
+            camGroup.add(lens); camGroup.add(sensor);
+            camGroup.position.set(0, lidD - 0.4, 0.1);
+            registerInteractable(camGroup, "1080p Web Camera");
+            currentLidGroup.add(camGroup); addExplode(camGroup, 0, 0, 4.5);
+        }
+
+        // --- Model Directory & Complete Builders ---
+
+        function generateLaptopModel(modelName) {
+            clearScene();
+            
+            // Standardizing variables
+            let w = 30.4, d = 21.2, h_base = 1.0, h_lid = 0.5, radius = 1.0, hingeZ = 0; 
+            currentLaptopIs2in1 = false;
+
+            switch(modelName) {
+                case "Apple MacBook Pro 16": w=35.5; d=24.8; h_base=1.2; h_lid=0.5; buildMacBookPro16(w, d, h_base, h_lid, radius); break;
+                case "Apple MacBook Pro 13": w=30.4; d=21.2; h_base=1.0; h_lid=0.5; buildMacBookPro13(w, d, h_base, h_lid, radius); break;
+                case "Dell XPS 14": w=32.0; d=21.5; h_base=1.1; h_lid=0.4; buildDellXPS14(w, d, h_base, h_lid, radius); break;
+                case "Lenovo ThinkPad X1": w=31.5; d=22.2; h_base=1.0; radius=0.3; buildThinkPadX1(w, d, h_base, h_lid, radius); break;
+                case "Asus ROG Zephyrus G14": w=31.2; d=22.7; h_base=1.4; radius=0.5; buildZephyrusG14(w, d, h_base, h_lid, radius); break;
+                case "Razer Blade 15": w=35.5; d=23.5; h_base=1.2; radius=0.4; buildRazerBlade(w, d, h_base, h_lid, radius); break;
+                
+                // 2-in-1s
+                case "HP Spectre x360": currentLaptopIs2in1 = true; w=29.8; d=22.0; h_base=1.0; h_lid=0.4; buildHPSpectreX360(w, d, h_base, h_lid, radius); break;
+                case "Lenovo Yoga 9i": currentLaptopIs2in1 = true; w=31.5; d=22.5; h_base=1.1; h_lid=0.4; buildLenovoYoga9i(w, d, h_base, h_lid, radius); break;
+                case "Samsung Galaxy Book4 360": currentLaptopIs2in1 = true; w=35.5; d=25.2; h_base=0.8; h_lid=0.3; buildGalaxyBook(w, d, h_base, h_lid, radius); break;
+                case "Microsoft Surface Laptop Studio": currentLaptopIs2in1 = true; w=32.3; d=23.0; h_base=1.3; h_lid=0.5; radius=0.6; buildSurfaceStudio(w, d, h_base, h_lid, radius); break;
+
+                // Heavies & Unique
+                case "Alienware m18": w=41.0; d=31.9; h_base=1.8; h_lid=0.6; radius=0.8; hingeZ=-3.0; buildAlienwareM18(w, d, h_base, h_lid, radius, hingeZ); break;
+                case "MSI Titan GT77": w=39.7; d=33.0; h_base=2.0; h_lid=0.5; radius=0.5; hingeZ=-2.5; buildMSITitan(w, d, h_base, h_lid, radius, hingeZ); break;
+                case "Acer Predator Helios": w=36.0; d=27.0; h_base=1.6; radius=0.5; hingeZ=-1.5; buildPredator(w, d, h_base, h_lid, radius, hingeZ); break;
+                case "Framework Laptop 13": w=29.6; d=22.8; h_base=1.1; h_lid=0.4; radius=0.4; buildFramework13(w, d, h_base, h_lid, radius); break;
+                case "LG Gram 17": w=37.8; d=25.8; h_base=1.0; h_lid=0.3; buildLGGram(w, d, h_base, h_lid, radius); break;
+                case "System76 Lemur Pro": w=32.2; d=21.6; h_base=1.1; radius=0.8; buildSystem76(w, d, h_base, h_lid, radius); break;
+
+            }
+
+            updateDimensionsDisplay(w, d, h_base, h_lid);
+            
+            // SIT FLAT AT START
+            laptopGroup.rotation.set(0, 0, 0);
+            controls.target.set(0, 0, 0); // Reset pan target
+
+            // Reset Animation States
+            isLidOpen = false;
+            isTabletMode = false;
+            targetLidAngle = LID_CLOSED;
+            targetBaseRotZ = 0;
+            
+            const lidBtnSpan = document.querySelector('#btn-toggle-lid span');
+            if(lidBtnSpan) lidBtnSpan.innerText = "OPEN LID";
+            const btnToggleLid = document.getElementById('btn-toggle-lid');
+            if(btnToggleLid) btnToggleLid.classList.remove('active', 'bg-cyan-900/60');
+
+            const tabletBtn = document.getElementById('btn-tablet-mode');
+            if(tabletBtn) {
+                tabletBtn.classList.add('hidden');
+                tabletBtn.classList.remove('flex', 'active', 'bg-cyan-900/60');
+                tabletBtn.querySelector('span').innerText = "TABLET MODE";
+            }
+        }
+
+        // --- Exhaustive Specific Laptop Builders ---
+
+        function buildMacBookPro16(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -6, 0.15, 0.4, 1.2, "MagSafe 3 Power Port", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -4, 0.2, 0.2, 1.0, "Thunderbolt 4 / USB-C", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.0, "Thunderbolt 4 / USB-C", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, 0, 0.2, 0.2, 0.6, "3.5mm High-Impedance Audio Jack", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -5, 0.2, 0.2, 1.5, "HDMI 2.1 Port", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -3, 0.2, 0.2, 1.0, "Thunderbolt 4 / USB-C", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -1, 0.2, 0.1, 1.8, "SDXC Card Reader", currentBaseGroup);
+
+            addSpeakerGrill(-w/2 + 2, h_base/2 + 0.05, -1.5, 2, 10, currentBaseGroup, true);
+            addSpeakerGrill(w/2 - 2, h_base/2 + 0.05, -1.5, 2, 10, currentBaseGroup, true);
+            addVents(0, -h_base/2 + 0.1, -d/2 + 0.5, w - 8, 1, 1, 'bottom', currentBaseGroup);
+            addVents(-w/2 + 0.1, -h_base/2 + 0.1, 2, 8, 0.5, 0.5, 'side-l', currentBaseGroup); 
+            addVents(w/2 - 0.1, -h_base/2 + 0.1, 2, 8, 0.5, 0.5, 'side-r', currentBaseGroup);
+            
+            const batW = w - 2; const batD = 9;
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(batW, h_base - 0.2, batD), batteryMat);
+            battery.position.set(0, 0, d/2 - batD/2 - 0.5);
+            registerInteractable(battery, "99.6Wh Lithium-Polymer Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(16, 0.2, 9), boardMat);
+            mb.position.set(0, 0, -2); registerInteractable(mb, "M-Series Max Logic Board");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const chip = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.3, 3.5), chipMat);
+            chip.position.set(0, 0.1, -2); registerInteractable(chip, "M-Series Max SoC");
+            currentBaseGroup.add(chip); addExplode(chip, 0, 3, 0);
+
+            [-9, 9].forEach(x => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 2.8, 0.6, 24), wireframeMaterial);
+                fan.position.set(x, 0, -2); registerInteractable(fan, "Centrifugal Cooling Fan");
+                currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+            });
+
+            const logo = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.0, 0.1, 24), highlightMaterial);
+            logo.rotateX(Math.PI/2); logo.position.set(0, d/2, -h_lid - 0.05);
+            currentLidGroup.add(logo); addExplode(logo, 0, 0, -3);
+        }
+
+        function buildMacBookPro13(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -4, 0.2, 0.2, 1.0, "Thunderbolt / USB 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.0, "Thunderbolt / USB 4", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -3, 0.2, 0.2, 0.6, "3.5mm Headphone Jack", currentBaseGroup);
+
+            addSpeakerGrill(-w/2 + 1.5, h_base/2 + 0.05, -1.5, 1.5, 8, currentBaseGroup, true);
+            addSpeakerGrill(w/2 - 1.5, h_base/2 + 0.05, -1.5, 1.5, 8, currentBaseGroup, true);
+            addVents(0, -h_base/2 + 0.1, -d/2 + 0.5, w - 8, 1, 1, 'bottom', currentBaseGroup);
+            addVents(-w/2 + 0.1, -h_base/2 + 0.1, 2, 6, 0.5, 0.5, 'side-l', currentBaseGroup); 
+            addVents(w/2 - 0.1, -h_base/2 + 0.1, 2, 6, 0.5, 0.5, 'side-r', currentBaseGroup);
+
+            const batW = w - 2; const batD = 8;
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(batW, h_base - 0.2, batD), batteryMat);
+            battery.position.set(0, 0, d/2 - batD/2 - 0.5);
+            registerInteractable(battery, "58.2Wh Lithium-Polymer Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(14, 0.2, 8), boardMat);
+            mb.position.set(-3, 0, -2); registerInteractable(mb, "Main Logic Board");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const chip = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.3, 2.5), chipMat);
+            chip.position.set(-3, 0.1, -2); registerInteractable(chip, "M-Series SoC with Unified Memory");
+            currentBaseGroup.add(chip); addExplode(chip, 0, 3, 0);
+
+            const fan = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 0.6, 32), wireframeMaterial);
+            fan.position.set(7, 0, -2); registerInteractable(fan, "Active Cooling Centrifugal Fan");
+            currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+
+            const pipe = new THREE.Mesh(new THREE.BoxGeometry(8, 0.2, 1.0), copperMat);
+            pipe.position.set(2, 0.2, -2); registerInteractable(pipe, "Copper Heat Sink / Thermal Pipe");
+            currentBaseGroup.add(pipe); addExplode(pipe, 0, 4.5, 0);
+            
+            const logo = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.1, 32), highlightMaterial);
+            logo.rotateX(Math.PI/2); logo.position.set(0, d/2, -h_lid - 0.05);
+            currentLidGroup.add(logo); addExplode(logo, 0, 0, -3);
+        }
+
+        function buildDellXPS14(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -5, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -3, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -1, 0.2, 0.1, 1.2, "MicroSD Reader", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -4, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.2, 0.6, "3.5mm Headphone Jack", currentBaseGroup);
+
+            addSpeakerGrill(-w/2 + 3, -h_base/2 - 0.01, d/2 - 2, 4, 1.5, currentBaseGroup, false);
+            addSpeakerGrill(w/2 - 3, -h_base/2 - 0.01, d/2 - 2, 4, 1.5, currentBaseGroup, false);
+            addVents(0, -h_base/2 - 0.01, -2, w - 6, 1, 4, 'bottom', currentBaseGroup);
+
+            const cellW = (w - 4) / 4; const batD = 7;
+            for(let i=0; i<4; i++) {
+                const battery = new THREE.Mesh(new THREE.BoxGeometry(cellW - 0.4, h_base - 0.2, batD), batteryMat);
+                battery.position.set(-w/2 + 2 + cellW/2 + (i*cellW), 0, d/2 - batD/2 - 0.5);
+                registerInteractable(battery, `Battery Cell 0${i+1}`);
+                currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+            }
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(20, 0.2, 9), boardMat);
+            mb.position.set(0, 0, -2.5); registerInteractable(mb, "System Board (CPU/GPU/RAM)");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const chip = new THREE.Mesh(new THREE.BoxGeometry(3.5, 0.3, 2.0), chipMat);
+            chip.position.set(0, 0.1, -2.5); registerInteractable(chip, "Intel Core / Dedicated GPU Die");
+            currentBaseGroup.add(chip); addExplode(chip, 0, 3, 0);
+
+            const fanGeo = new THREE.CylinderGeometry(2.2, 2.2, 0.6, 32);
+            const fanL = new THREE.Mesh(fanGeo, wireframeMaterial); fanL.position.set(-11, 0, -2.5);
+            registerInteractable(fanL, "Left Cooling Fan"); currentBaseGroup.add(fanL); addExplode(fanL, 0, 4, 0);
+            const fanR = new THREE.Mesh(fanGeo, wireframeMaterial); fanR.position.set(11, 0, -2.5);
+            registerInteractable(fanR, "Right Cooling Fan"); currentBaseGroup.add(fanR); addExplode(fanR, 0, 4, 0);
+
+            const pipeGeo = new THREE.BoxGeometry(22, 0.15, 0.8);
+            const pipe1 = new THREE.Mesh(pipeGeo, copperMat); pipe1.position.set(0, 0.25, -3.0);
+            registerInteractable(pipe1, "Primary Thermal Heatpipe"); currentBaseGroup.add(pipe1); addExplode(pipe1, 0, 4.5, 0);
+            const pipe2 = new THREE.Mesh(pipeGeo, copperMat); pipe2.position.set(0, 0.25, -1.8);
+            registerInteractable(pipe2, "Secondary Thermal Heatpipe"); currentBaseGroup.add(pipe2); addExplode(pipe2, 0, 4.5, 0);
+
+            const logo = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.2, 0.1, 32), wireframeMaterial);
+            logo.rotateX(Math.PI/2); logo.position.set(0, d/2, -h_lid - 0.05);
+            currentLidGroup.add(logo); addExplode(logo, 0, 0, -3);
+        }
+
+        function buildThinkPadX1(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -6, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -4, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.5, "HDMI 2.1", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, 0, 0.2, 0.2, 0.6, "3.5mm Combo Audio", currentBaseGroup);
+
+            addVents(w/2 - 0.05, 0, -5, 4, 0.2, 0.2, 'side-r', currentBaseGroup);
+            addVents(0, -h_base/2 - 0.01, -3, w - 8, 1, 4, 'bottom', currentBaseGroup);
+            addSpeakerGrill(-w/2 + 2.5, -h_base/2 - 0.01, d/2 - 1.5, 3, 1, currentBaseGroup, false);
+            addSpeakerGrill(w/2 - 2.5, -h_base/2 - 0.01, d/2 - 1.5, 3, 1, currentBaseGroup, false);
+
+            const tp = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.2, 16), new THREE.MeshStandardMaterial({color: 0xff0000, emissive: 0x550000}));
+            tp.position.set(0, h_base/2 + 0.15, -1.0); registerInteractable(tp, "TrackPoint Navigation Nipple");
+            currentBaseGroup.add(tp); addExplode(tp, 0, 6.5, 0);
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-4, h_base - 0.3, 7), batteryMat);
+            battery.position.set(0, 0, d/2 - 4); registerInteractable(battery, "RapidCharge Lithium Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(22, 0.2, 8), boardMat);
+            mb.position.set(0, 0, -2.5); registerInteractable(mb, "Mainboard (Mil-Spec Tested)");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const fan = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.0, 0.5, 32), wireframeMaterial);
+            fan.position.set(8, 0, -4); registerInteractable(fan, "Owl-Wing Cooling Fan");
+            currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+        }
+
+        function buildZephyrusG14(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -6, 0.2, 0.2, 1.2, "DC Power In", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -4, 0.2, 0.2, 1.5, "HDMI 2.1", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.0, "USB-C DP", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -4, 0.2, 0.2, 1.0, "USB-C", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, 0, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+
+            addVents(-w/2 + 0.05, 0, -8, 3, 0.2, 0.2, 'side-l', currentBaseGroup);
+            addVents(w/2 - 0.05, 0, -8, 3, 0.2, 0.2, 'side-r', currentBaseGroup);
+            addVents(0, 0, -d/2 + 0.05, w - 8, 0.8, 0.2, 'back', currentBaseGroup); 
+            addVents(0, -h_base/2 - 0.01, -4, w - 10, 1, 5, 'bottom', currentBaseGroup);
+            addSpeakerGrill(-w/2 + 2, h_base/2 + 0.05, 3, 2, 4, currentBaseGroup, true);
+            addSpeakerGrill(w/2 - 2, h_base/2 + 0.05, 3, 2, 4, currentBaseGroup, true);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(24, 0.2, 10), boardMat);
+            mb.position.set(0, 0, -2); registerInteractable(mb, "ROG Gaming Motherboard");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const vapor = new THREE.Mesh(new THREE.BoxGeometry(16, 0.4, 6), copperMat);
+            vapor.position.set(0, 0.2, -2.5); registerInteractable(vapor, "Custom Vapor Chamber");
+            currentBaseGroup.add(vapor); addExplode(vapor, 0, 3, 0);
+
+            [-9, 9].forEach(x => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 2.8, 0.6, 32), wireframeMaterial);
+                fan.position.set(x, 0, -2.5); registerInteractable(fan, "Arc Flow Fan");
+                currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+            });
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(24, 0.5, 6), batteryMat);
+            battery.position.set(0, 0, 5); registerInteractable(battery, "76Wh High-Cap Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const matrixGroup = new THREE.Group();
+            const dotGeo = new THREE.BoxGeometry(0.2, 0.2, 0.05);
+            for(let i=-6; i<6; i+=0.6) {
+                for(let j=-3; j<3; j+=0.6) {
+                    if (Math.random() > 0.4) {
+                        const dot = new THREE.Mesh(dotGeo, highlightMaterial);
+                        dot.position.set(i, d/2 + j, -h_lid - 0.02);
+                        dot.matrixAutoUpdate = false; dot.updateMatrix();
+                        matrixGroup.add(dot);
+                    }
+                }
+            }
+            registerInteractable(matrixGroup, "AniMe Matrix LED Display");
+            currentLidGroup.add(matrixGroup); addExplode(matrixGroup, 0, 0, -2.5);
+        }
+
+        function buildRazerBlade(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -5, 0.2, 0.2, 1.2, "Power Port", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -3, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -1, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -5, 0.2, 0.2, 1.5, "HDMI 2.1", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -3, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -1, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            
+            addSpeakerGrill(-w/2 + 1.5, h_base/2 + 0.05, -1.5, 1.5, 9, currentBaseGroup, true);
+            addSpeakerGrill(w/2 - 1.5, h_base/2 + 0.05, -1.5, 1.5, 9, currentBaseGroup, true);
+            addVents(0, -h_base/2 - 0.01, -3, w - 8, 1, 5, 'bottom', currentBaseGroup);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(22, 0.2, 10), boardMat);
+            mb.position.set(0, 0, -2); registerInteractable(mb, "Black PCB Motherboard");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const vapor = new THREE.Mesh(new THREE.BoxGeometry(18, 0.4, 8), copperMat);
+            vapor.position.set(0, 0.2, -2.5); registerInteractable(vapor, "Full-cover Vapor Chamber");
+            currentBaseGroup.add(vapor); addExplode(vapor, 0, 3, 0);
+
+            [-8, 8].forEach(x => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 0.6, 32), wireframeMaterial);
+                fan.position.set(x, 0, -2.5); registerInteractable(fan, "High-Flow Fan");
+                currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+            });
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(26, 0.5, 6), batteryMat);
+            battery.position.set(0, 0, 5); registerInteractable(battery, "80Wh Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const razerMat = new THREE.MeshStandardMaterial({color: 0x00ff00, emissive: 0x00aa00});
+            const logo = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.1, 32), razerMat);
+            logo.rotateX(Math.PI/2); logo.position.set(0, d/2, -h_lid - 0.05);
+            registerInteractable(logo, "Razer Chroma Logo");
+            currentLidGroup.add(logo); addExplode(logo, 0, 0, -3);
+        }
+
+        // --- 2-in-1 Laptops ---
+        function buildHPSpectreX360(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -d/2 + 0.5, 0.2, 0.2, 0.6, "Angled Audio Jack", currentBaseGroup); 
+            addPort(w/2 - 0.05, 0, -d/2 + 0.5, 0.2, 0.2, 1.0, "Angled Thunderbolt 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.2, "USB-A Drop-Jaw", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.1, 1.0, "MicroSD", currentBaseGroup);
+
+            addVents(-w/2 + 0.05, 0, -5, 2, 0.2, 0.2, 'side-l', currentBaseGroup);
+            addVents(w/2 - 0.05, 0, -5, 2, 0.2, 0.2, 'side-r', currentBaseGroup);
+            addVents(0, -h_base/2 - 0.01, -3, w - 8, 1, 3, 'bottom', currentBaseGroup);
+            addSpeakerGrill(-w/2 + 2, -h_base/2 - 0.01, d/2 - 2, 3, 1.5, currentBaseGroup, false);
+            addSpeakerGrill(w/2 - 2, -h_base/2 - 0.01, d/2 - 2, 3, 1.5, currentBaseGroup, false);
+            
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-4, h_base - 0.3, 7), batteryMat);
+            battery.position.set(0, 0, d/2 - 4); registerInteractable(battery, "66Wh 4-Cell Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(20, 0.2, 8), boardMat);
+            mb.position.set(0, 0, -2.5); registerInteractable(mb, "Compact System Board");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            [-4, 4].forEach(x => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 1.8, 0.4, 24), wireframeMaterial);
+                fan.position.set(x, 0, -3); registerInteractable(fan, "Ultra-thin Cooling Fan");
+                currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+            });
+        }
+
+        function buildLenovoYoga9i(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -4, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -4, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.2, 1.0, "USB-C 3.2", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, 0, 0.2, 0.2, 0.6, "Audio Jack", currentBaseGroup);
+
+            addVents(0, -h_base/2 - 0.01, -3, w - 8, 1, 4, 'bottom', currentBaseGroup);
+            addSpeakerGrill(-w/2 + 3, -h_base/2 - 0.01, d/2 - 2, 4, 1.5, currentBaseGroup, false);
+            addSpeakerGrill(w/2 - 3, -h_base/2 - 0.01, d/2 - 2, 4, 1.5, currentBaseGroup, false);
+
+            const sbGeo = new THREE.CylinderGeometry(h_base/2 + 0.1, h_base/2 + 0.1, w - 2, 24);
+            sbGeo.rotateZ(Math.PI/2);
+            const soundbar = new THREE.Mesh(sbGeo, highlightMaterial);
+            // The lid group is already at the hinge position, so local position is 0,0,0
+            soundbar.position.set(0, 0, 0); 
+            registerInteractable(soundbar, "Bowers & Wilkins Rotating Soundbar");
+            currentLidGroup.add(soundbar); addExplode(soundbar, 0, 0, 0);
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-4, h_base - 0.3, 8), batteryMat);
+            battery.position.set(0, 0, d/2 - 4.5); registerInteractable(battery, "75Wh Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(20, 0.2, 7), boardMat);
+            mb.position.set(0, 0, -3); registerInteractable(mb, "System Board");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+            
+            [-6, 6].forEach(x => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.0, 0.4, 24), wireframeMaterial);
+                fan.position.set(x, 0, -3.5); registerInteractable(fan, "Cooling Fan");
+                currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+            });
+        }
+
+        function buildGalaxyBook(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -4, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -4, 0.2, 0.1, 1.0, "MicroSD", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.3, 1.2, "USB-A", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, 0, 0.2, 0.2, 1.5, "HDMI", currentBaseGroup);
+
+            addSpeakerGrill(-w/2 + 3, -h_base/2 - 0.01, d/2 - 2, 3, 1, currentBaseGroup, false);
+            addSpeakerGrill(w/2 - 3, -h_base/2 - 0.01, d/2 - 2, 3, 1, currentBaseGroup, false);
+            addVents(0, -h_base/2 - 0.01, -3, w - 10, 1, 3, 'bottom', currentBaseGroup);
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-2, h_base - 0.2, 8), batteryMat);
+            battery.position.set(0, 0, d/2 - 4.5); registerInteractable(battery, "Thin 68Wh Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(22, 0.15, 6), boardMat);
+            mb.position.set(0, 0, -3); registerInteractable(mb, "Ultra-thin Logic Board");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+            
+            [-5, 5].forEach(x => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.3, 24), wireframeMaterial);
+                fan.position.set(x, 0, -3.5); registerInteractable(fan, "Micro Fan");
+                currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+            });
+        }
+
+        function buildSurfaceStudio(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            // Thick stepped base
+            const step = new THREE.Mesh(new THREE.BoxGeometry(w-2, 0.4, d-2), matteMaterial);
+            step.position.set(0, -h_base/2 - 0.2, 0);
+            currentBaseGroup.add(step);
+            
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, 0, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.1, 2.0, "Surface Connect", currentBaseGroup);
+
+            // Perimeter vents
+            addVents(-w/2 + 1.05, -h_base/2 - 0.2, 0, d-4, 0.4, 0.2, 'side-l', currentBaseGroup);
+            addVents(w/2 - 1.05, -h_base/2 - 0.2, 0, d-4, 0.4, 0.2, 'side-r', currentBaseGroup);
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-4, h_base - 0.2, 6), batteryMat);
+            battery.position.set(0, 0, d/2 - 3.5); registerInteractable(battery, "58Wh Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(18, 0.2, 8), boardMat);
+            mb.position.set(0, 0, -2.5); registerInteractable(mb, "Surface Motherboard");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            [-5, 5].forEach(x => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 0.5, 24), wireframeMaterial);
+                fan.position.set(x, 0, -3); registerInteractable(fan, "Cooling Fan");
+                currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+            });
+        }
+
+        // --- Heavies / Special ---
+        function buildFramework13(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            // Modular cards instead of fixed ports
+            for(let i=0; i<2; i++) {
+                const cardL = new THREE.Mesh(new THREE.BoxGeometry(1.5, h_base - 0.2, 3), modularMat);
+                cardL.position.set(-w/2 + 0.75, 0, -2 + i*4); registerInteractable(cardL, "Expansion Card (USB-C / HDMI)");
+                currentBaseGroup.add(cardL); addExplode(cardL, -4, 0, 0);
+
+                const cardR = new THREE.Mesh(new THREE.BoxGeometry(1.5, h_base - 0.2, 3), modularMat);
+                cardR.position.set(w/2 - 0.75, 0, -2 + i*4); registerInteractable(cardR, "Expansion Card (USB-A / Storage)");
+                currentBaseGroup.add(cardR); addExplode(cardR, 4, 0, 0);
+            }
+
+            addSpeakerGrill(-w/2 + 3, -h_base/2 - 0.01, d/2 - 2, 2, 1, currentBaseGroup, false);
+            addSpeakerGrill(w/2 - 3, -h_base/2 - 0.01, d/2 - 2, 2, 1, currentBaseGroup, false);
+            addVents(0, -h_base/2 - 0.01, -3, w - 8, 1, 3, 'bottom', currentBaseGroup);
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-4, h_base - 0.3, 6), batteryMat);
+            battery.position.set(0, 0, d/2 - 4); registerInteractable(battery, "Removable 55Wh Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -2, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(18, 0.2, 8), boardMat);
+            mb.position.set(0, 0, -3); registerInteractable(mb, "Mainboard");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const ram = new THREE.Mesh(new THREE.BoxGeometry(3, 0.2, 1), chipMat);
+            ram.position.set(4, 0.2, -3); registerInteractable(ram, "DDR5 SO-DIMM RAM");
+            currentBaseGroup.add(ram); addExplode(ram, 0, 3, 0);
+
+            const ssd = new THREE.Mesh(new THREE.BoxGeometry(1, 0.2, 3), chipMat);
+            ssd.position.set(7, 0.2, -3); registerInteractable(ssd, "NVMe M.2 SSD");
+            currentBaseGroup.add(ssd); addExplode(ssd, 0, 3, 0);
+
+            const fan = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 0.5, 24), wireframeMaterial);
+            fan.position.set(-4, 0, -4); registerInteractable(fan, "Cooling Fan");
+            currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+        }
+
+        function buildAlienwareM18(w, d, h_base, h_lid, radius, hingeOffsetZ) {
+            buildChassis(w, d, h_base, h_lid, radius, hingeOffsetZ);
+            
+            // Massive rear thermal shelf
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(w, h_base, Math.abs(hingeOffsetZ)), matteMaterial);
+            shelf.position.set(0, 0, -d/2 - hingeOffsetZ/2); currentBaseGroup.add(shelf);
+            addVents(0, 0, -d/2 + 0.05, w-2, h_base-0.2, 0.5, 'back', currentBaseGroup);
+            addVents(-w/2 + 0.05, 0, -6, 4, 0.2, 0.2, 'side-l', currentBaseGroup);
+            addVents(w/2 - 0.05, 0, -6, 4, 0.2, 0.2, 'side-r', currentBaseGroup);
+            addVents(0, -h_base/2 - 0.01, -4, w - 8, 1, 8, 'bottom', currentBaseGroup);
+            
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.0, "RJ-45 Ethernet", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, 0, 0.2, 0.2, 0.6, "Audio Jack", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            // Rear Ports on the shelf
+            addPort(-2, 0, -d/2 - hingeOffsetZ + 0.05, 1.2, 0.2, 0.2, "Power In", currentBaseGroup);
+            addPort(2, 0, -d/2 - hingeOffsetZ + 0.05, 1.5, 0.2, 0.2, "HDMI 2.1", currentBaseGroup);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(32, 0.3, 15), boardMat);
+            mb.position.set(0, 0, -2); registerInteractable(mb, "Alienware Cyro-Tech Motherboard");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const vapor = new THREE.Mesh(new THREE.BoxGeometry(26, 0.5, 10), copperMat);
+            vapor.position.set(0, 0.3, -3); registerInteractable(vapor, "Element 31 Vapor Chamber");
+            currentBaseGroup.add(vapor); addExplode(vapor, 0, 4, 0);
+
+            [-12, -4, 4, 12].forEach((x, i) => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 2.5, 0.8, 24), wireframeMaterial);
+                fan.position.set(x, 0, -4); registerInteractable(fan, `Quad-Fan System 0${i+1}`);
+                currentBaseGroup.add(fan); addExplode(fan, 0, 5, 0);
+            });
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-4, h_base - 0.4, 7), batteryMat);
+            battery.position.set(0, 0, d/2 - 4); registerInteractable(battery, "97Wh Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -2, 0);
+
+            const logo = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 0.2, 3), highlightMaterial);
+            logo.rotateX(Math.PI/2); logo.position.set(0, (d-Math.abs(hingeOffsetZ))/2, -h_lid - 0.05);
+            registerInteractable(logo, "AlienFX Logo"); currentLidGroup.add(logo); addExplode(logo, 0, 0, -3);
+        }
+
+        function buildMSITitan(w, d, h_base, h_lid, radius, hingeOffsetZ) {
+            buildChassis(w, d, h_base, h_lid, radius, hingeOffsetZ);
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(w, h_base, Math.abs(hingeOffsetZ)), matteMaterial);
+            shelf.position.set(0, 0, -d/2 - hingeOffsetZ/2); currentBaseGroup.add(shelf);
+            
+            addVents(0, 0, -d/2 + 0.05, w-2, h_base-0.2, 0.5, 'back', currentBaseGroup);
+            addVents(-w/2 + 0.05, 0, -6, 5, 0.2, 0.2, 'side-l', currentBaseGroup);
+            addVents(w/2 - 0.05, 0, -6, 5, 0.2, 0.2, 'side-r', currentBaseGroup);
+            addVents(0, -h_base/2 - 0.01, -2, w - 8, 1, 10, 'bottom', currentBaseGroup);
+            
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.3, 1.2, "USB-A", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.2, 1.0, "Thunderbolt", currentBaseGroup);
+            addPort(-3, 0, -d/2 - hingeOffsetZ + 0.05, 1.5, 0.3, 0.2, "Proprietary Power", currentBaseGroup);
+            addPort(3, 0, -d/2 - hingeOffsetZ + 0.05, 1.5, 0.2, 0.2, "HDMI 2.1", currentBaseGroup);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(30, 0.3, 14), boardMat);
+            mb.position.set(0, 0, -2); registerInteractable(mb, "Titan Desktop-Class Motherboard");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+            
+            [-11, -3, 3, 11].forEach((x, i) => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(2.8, 2.8, 0.8, 24), wireframeMaterial);
+                fan.position.set(x, 0, -4); registerInteractable(fan, `Titan Cooler Boost Fan ${i+1}`);
+                currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+            });
+
+            for(let i=0; i<6; i++) {
+                const pipe = new THREE.Mesh(new THREE.BoxGeometry(26, 0.1, 0.4), copperMat);
+                pipe.position.set(0, 0.2 + i*0.05, -3 + i*0.5);
+                currentBaseGroup.add(pipe); addExplode(pipe, 0, 5, 0);
+            }
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-4, h_base - 0.4, 6), batteryMat);
+            battery.position.set(0, 0, d/2 - 3.5); registerInteractable(battery, "99.9Wh Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+        }
+
+        function buildPredator(w, d, h_base, h_lid, radius, hingeOffsetZ) {
+            buildChassis(w, d, h_base, h_lid, radius, hingeOffsetZ);
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(w, h_base, Math.abs(hingeOffsetZ)), matteMaterial);
+            shelf.position.set(0, 0, -d/2 - hingeOffsetZ/2); currentBaseGroup.add(shelf);
+            
+            addVents(0, 0, -d/2 + 0.05, w-2, h_base-0.2, 0.5, 'back', currentBaseGroup);
+            addVents(-w/2 + 0.05, 0, -4, 4, 0.2, 0.2, 'side-l', currentBaseGroup);
+            addVents(w/2 - 0.05, 0, -4, 4, 0.2, 0.2, 'side-r', currentBaseGroup);
+            addVents(0, -h_base/2 - 0.01, -2, w - 8, 1, 6, 'bottom', currentBaseGroup);
+            
+            addPort(-w/2 + 0.05, 0, -1, 0.2, 0.2, 1.0, "RJ-45 Ethernet", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -1, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(0, 0, -d/2 - hingeOffsetZ + 0.05, 1.2, 0.2, 0.2, "Power In", currentBaseGroup);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(28, 0.2, 12), boardMat);
+            mb.position.set(0, 0, -2); registerInteractable(mb, "Predator Mainboard");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            [-8, 8].forEach(x => {
+                const fan = new THREE.Mesh(new THREE.CylinderGeometry(3.0, 3.0, 0.8, 24), wireframeMaterial);
+                fan.position.set(x, 0, -3); registerInteractable(fan, "AeroBlade 3D Fan");
+                currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+            });
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-4, h_base - 0.4, 6), batteryMat);
+            battery.position.set(0, 0, d/2 - 3.5); registerInteractable(battery, "90Wh Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+        }
+
+        function buildLGGram(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -4, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -2, 0.2, 0.2, 1.0, "Thunderbolt 4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, 0, 0.2, 0.2, 1.5, "HDMI", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -4, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, 0, 0.2, 0.1, 1.0, "MicroSD", currentBaseGroup);
+
+            addSpeakerGrill(-w/2 + 3, -h_base/2 - 0.01, d/2 - 2, 3, 1, currentBaseGroup, false);
+            addSpeakerGrill(w/2 - 3, -h_base/2 - 0.01, d/2 - 2, 3, 1, currentBaseGroup, false);
+            addVents(0, -h_base/2 - 0.01, -4, w - 12, 1, 2, 'bottom', currentBaseGroup);
+
+            // LG Gram is mostly battery
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-2, h_base - 0.2, 9), batteryMat);
+            battery.position.set(0, 0, d/2 - 5); registerInteractable(battery, "Massive 80Wh High-Density Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(16, 0.15, 6), boardMat);
+            mb.position.set(-4, 0, -4); registerInteractable(mb, "Ultra-compact Mainboard");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const fan = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 0.3, 24), wireframeMaterial);
+            fan.position.set(6, 0, -4); registerInteractable(fan, "Single Cooling Fan");
+            currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+        }
+
+        function buildSystem76(w, d, h_base, h_lid, radius) {
+            buildChassis(w, d, h_base, h_lid, radius);
+            addPort(-w/2 + 0.05, 0, -5, 0.2, 0.2, 1.0, "Barrel Power", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -3, 0.2, 0.2, 1.0, "USB-C / TB4", currentBaseGroup);
+            addPort(-w/2 + 0.05, 0, -1, 0.2, 0.2, 1.5, "HDMI", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -4, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, -2, 0.2, 0.3, 1.2, "USB-A 3.2", currentBaseGroup);
+            addPort(w/2 - 0.05, 0, 0, 0.2, 0.1, 1.0, "MicroSD", currentBaseGroup);
+
+            addSpeakerGrill(-w/2 + 3, -h_base/2 - 0.01, d/2 - 2, 3, 1, currentBaseGroup, false);
+            addSpeakerGrill(w/2 - 3, -h_base/2 - 0.01, d/2 - 2, 3, 1, currentBaseGroup, false);
+            addVents(0, -h_base/2 - 0.01, -3, w - 10, 1, 3, 'bottom', currentBaseGroup);
+
+            const battery = new THREE.Mesh(new THREE.BoxGeometry(w-4, h_base - 0.3, 8), batteryMat);
+            battery.position.set(0, 0, d/2 - 4.5); registerInteractable(battery, "73Wh Battery");
+            currentBaseGroup.add(battery); addExplode(battery, 0, -1, 0);
+
+            const mb = new THREE.Mesh(new THREE.BoxGeometry(20, 0.2, 8), boardMat);
+            mb.position.set(0, 0, -3); registerInteractable(mb, "Open Hardware Mainboard");
+            currentBaseGroup.add(mb); addExplode(mb, 0, 2, 0);
+
+            const fan = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 0.4, 24), wireframeMaterial);
+            fan.position.set(-6, 0, -3); registerInteractable(fan, "Cooling Fan");
+            currentBaseGroup.add(fan); addExplode(fan, 0, 4, 0);
+        }
+
+        // INIT
+        generateLaptopModel("Apple MacBook Pro 16");
+
+        // --- Event Listeners & Kinematics ---
+
+        document.getElementById('btn-toggle-lid').addEventListener('click', (e) => {
+            isLidOpen = !isLidOpen;
+            targetLidAngle = isLidOpen ? LID_OPEN : LID_CLOSED;
+            
+            const span = e.currentTarget.querySelector('span');
+            if(span) span.innerText = isLidOpen ? "CLOSE LID" : "OPEN LID";
+            
+            if(isLidOpen) e.currentTarget.classList.add('active', 'bg-cyan-900/60');
+            else e.currentTarget.classList.remove('active', 'bg-cyan-900/60');
+
+            const tabletBtn = document.getElementById('btn-tablet-mode');
+            if(isLidOpen && currentLaptopIs2in1) {
+                tabletBtn.classList.remove('hidden'); tabletBtn.classList.add('flex');
+            } else {
+                tabletBtn.classList.add('hidden'); tabletBtn.classList.remove('flex');
+                if (isTabletMode) {
+                    isTabletMode = false;
+                    targetBaseRotZ = 0; // Flip back
+                    tabletBtn.classList.remove('active', 'bg-cyan-900/60');
+                    tabletBtn.querySelector('span').innerText = "TABLET MODE";
+                }
+            }
+
+            if(!isLidOpen && isExploded) { document.getElementById('btn-toggle-explode').click(); }
+        });
+
+        document.getElementById('btn-tablet-mode').addEventListener('click', (e) => {
+            if (!currentLaptopIs2in1) return;
+            isTabletMode = !isTabletMode;
+            
+            targetLidAngle = isTabletMode ? (-Math.PI * 1.5 + 0.05) : LID_OPEN; 
+            targetBaseRotZ = isTabletMode ? Math.PI : 0;
+            
+            const span = e.currentTarget.querySelector('span');
+            if(span) span.innerText = isTabletMode ? "LAPTOP MODE" : "TABLET MODE";
+            
+            if(isTabletMode) {
+                e.currentTarget.classList.add('active', 'bg-cyan-900/60');
+                if (isExploded) document.getElementById('btn-toggle-explode').click();
+            } else {
+                e.currentTarget.classList.remove('active', 'bg-cyan-900/60');
+            }
+        });
+
+        document.getElementById('btn-toggle-explode').addEventListener('click', (e) => {
+            isExploded = !isExploded;
+            
+            if(isExploded && !isLidOpen) { document.getElementById('btn-toggle-lid').click(); }
+            if(isExploded && isTabletMode) { document.getElementById('btn-tablet-mode').click(); }
+
+            const span = e.currentTarget.querySelector('span');
+            if(span) span.innerText = isExploded ? "RESET MODEL" : "EXPLODE MODEL";
+            
+            if(isExploded) e.currentTarget.classList.add('active', 'bg-cyan-900/60');
+            else e.currentTarget.classList.remove('active', 'bg-cyan-900/60');
+        });
+
+        document.getElementById('btn-rotate').addEventListener('click', (e) => {
+            isAutoRotate = !isAutoRotate;
+            document.getElementById('rotate-text').innerText = isAutoRotate ? 'AUTO-ROTATE: ON' : 'AUTO-ROTATE: OFF';
+            if(isAutoRotate) e.currentTarget.classList.add('active', 'bg-cyan-900/60');
+            else e.currentTarget.classList.remove('active', 'bg-cyan-900/60');
+        });
+
+        function onPointerMove(event) {
+            if (!vaultOverlay.classList.contains('hidden') || !selectorOverlay.classList.contains('hidden')) return;
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1; mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(raycastTargets, false);
+
+            if (intersects.length > 0) {
+                const object = intersects[0].object;
+                if (object.userData.name) {
+                    document.body.style.cursor = 'crosshair';
+                    tooltip.innerHTML = object.userData.name;
+                    tooltip.style.opacity = '1';
+                    tooltip.style.left = (event.clientX + 15) + 'px'; tooltip.style.top = (event.clientY + 15) + 'px';
+                }
+            } else {
+                document.body.style.cursor = 'default'; tooltip.style.opacity = '0';
+            }
+        }
+
+        function handleInteractionStart() { isInteracting = true; clearTimeout(idleTimer); }
+        function handleInteractionEnd() { clearTimeout(idleTimer); idleTimer = setTimeout(() => { isInteracting = false; }, 2000); }
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerdown', handleInteractionStart);
+        window.addEventListener('pointerup', handleInteractionEnd);
+        window.addEventListener('touchstart', handleInteractionStart, {passive: true});
+        window.addEventListener('touchend', handleInteractionEnd, {passive: true});
+        window.addEventListener('contextmenu', handleInteractionStart); // Right click for pan start
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight); composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            if (isAutoRotate && !isInteracting) { laptopGroup.rotation.y += autoRotateSpeed; }
+            if (!isInteracting) { 
+                // Very subtle idle bobbing so it doesn't fight panning too much
+                laptopGroup.position.y = THREE.MathUtils.lerp(laptopGroup.position.y, Math.sin(elapsedTime * 1.5) * 0.2, 0.1); 
+            }
+
+            // Smoothly animate Lid angle
+            if (currentLidGroup) {
+                currentLidGroup.rotation.x = THREE.MathUtils.lerp(currentLidGroup.rotation.x, targetLidAngle, 0.08);
+            }
+            
+            // Smoothly animate Laptop Flip (for Tablet Mode)
+            laptopGroup.rotation.z = THREE.MathUtils.lerp(laptopGroup.rotation.z, targetBaseRotZ, 0.08);
+
+            bloomPass.strength = 1.0 + Math.sin(elapsedTime * 2) * 0.2;
+
+            explodableMeshes.forEach(mesh => {
+                if(mesh.parent) {
+                    const targetPos = isExploded ? mesh.userData.expPos : mesh.userData.origPos;
+                    mesh.position.lerp(targetPos, 0.05);
+                }
+            });
+
+            controls.update(); composer.render();
+        }
+
+        setTimeout(() => {
+            document.getElementById('loading').style.opacity = '0';
+            setTimeout(() => document.getElementById('loading').remove(), 500);
+            document.getElementById('vault-password').focus();
+        }, 1500); 
+
+        animate();
+    </script>
+</body>
+</html>
