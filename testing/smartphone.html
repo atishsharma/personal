@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive 360° Smartphone Wireframe Viewer – Explore Top Smartphones</title>
+    <meta name="description" content="Interactive 360° smartphone wireframe viewer showing internal camera systems. Explore how telephoto, primary, and ultra-wide cameras work inside iPhone, Pixel, and Samsung flagship phones.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="360° Smartphone Wireframe Viewer">
+    <meta property="og:description" content="Explore smartphone camera systems in an interactive 3D wireframe viewer.">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-glow: #00f0ff;
+            --bg-color: #03060a;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            color: var(--primary-glow);
+            font-family: 'Courier New', Courier, monospace;
+            user-select: none;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 240, 255, 0.03) 51%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 5;
+            animation: scanlineScroll 10s linear infinite;
+        }
+
+        @keyframes scanlineScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 100%; }
+        }
+
+        .vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 40%, #000000 120%);
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        .hud-text {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+            letter-spacing: 0.2em;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 15, 25, 0.85);
+            border: 1px solid var(--primary-glow);
+            padding: 8px 12px;
+            color: var(--primary-glow);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4), inset 0 0 10px rgba(0, 240, 255, 0.2);
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease-out;
+            transform: translate(15px, 15px);
+            z-index: 20;
+        }
+
+        .tooltip::before, .tooltip::after {
+            content: ''; position: absolute; width: 5px; height: 5px;
+        }
+        .tooltip::before { top: -1px; left: -1px; border-top: 1px solid #fff; border-left: 1px solid #fff; }
+        .tooltip::after { bottom: -1px; right: -1px; border-bottom: 1px solid #fff; border-right: 1px solid #fff; }
+
+        #loading {
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+            background: #000; z-index: 200; transition: opacity 0.5s;
+        }
+
+        .loader {
+            border: 2px solid rgba(0, 240, 255, 0.2);
+            border-top: 2px solid var(--primary-glow);
+            border-radius: 50%; width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .layer-btn {
+            pointer-events: auto; backdrop-filter: blur(4px);
+        }
+        .layer-btn.active {
+            background-color: rgba(0, 150, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            border-color: var(--primary-glow);
+        }
+
+        @keyframes sciFiBlink {
+            0%, 100% { opacity: 1; border-color: var(--primary-glow); box-shadow: 0 0 15px rgba(0, 240, 255, 0.6); }
+            50% { opacity: 0.5; border-color: rgba(0, 240, 255, 0.2); box-shadow: 0 0 5px rgba(0, 240, 255, 0.1); }
+        }
+        .animate-blink { animation: sciFiBlink 1.5s infinite; }
+
+        .glass-panel {
+            background: rgba(3, 6, 10, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.1);
+        }
+    </style>
+
+    <script async src="https://unpkg.com/es-module-shims@1.8.0/dist/es-module-shims.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="loading">
+        <div class="flex flex-col items-center">
+            <div class="loader mb-4"></div>
+            <div class="hud-text text-xs">ESTABLISHING SECURE CONNECTION...</div>
+        </div>
+    </div>
+
+    <div id="vault-overlay" class="absolute inset-0 z-[100] bg-[#03060a] flex flex-col items-center justify-center font-mono transition-opacity duration-500">
+        <div class="scanlines"></div>
+        <div class="glass-panel p-12 flex flex-col items-center z-10 max-w-lg w-full text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400"></div>
+            <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyan-400"></div>
+            <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-400"></div>
+            <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400"></div>
+
+            <svg class="w-16 h-16 text-cyan-500 mb-6 drop-shadow-[0_0_10px_rgba(0,255,255,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
+            
+            <h1 class="text-cyan-400 text-2xl md:text-3xl mb-2 tracking-[0.3em] hud-text">ATS DESIGN STUDIO</h1>
+            <h2 class="text-cyan-600/80 text-xs md:text-sm mb-8 tracking-[0.5em]">SECURE VAULT ACCESS</h2>
+            
+            <div class="flex flex-col items-center gap-4 w-full">
+                <input type="password" id="vault-password" placeholder="ENTER PASSCODE" class="w-full max-w-[250px] bg-black/60 border border-cyan-500/50 text-cyan-400 px-4 py-3 text-center tracking-[0.5em] focus:outline-none focus:border-cyan-300 focus:shadow-[0_0_15px_rgba(0,255,255,0.3)] transition-all placeholder-cyan-800/50">
+                <p class="text-cyan-800/70 text-[10px] tracking-widest uppercase">Hint: 0000</p>
+                <button id="btn-unlock" class="border border-cyan-500/50 px-10 py-3 text-cyan-400 hover:bg-cyan-900/80 transition-all tracking-[0.2em] mt-2 w-full max-w-[250px] text-sm hover:shadow-[0_0_15px_rgba(0,255,255,0.4)]">AUTHENTICATE</button>
+            </div>
+            <p id="vault-error" class="text-red-500 mt-4 text-xs tracking-widest opacity-0 transition-opacity">ACCESS DENIED - INVALID CODE</p>
+        </div>
+    </div>
+
+    <div id="selector-overlay" class="absolute inset-0 z-[90] bg-[#03060a]/90 backdrop-blur-md hidden flex-col items-center justify-center font-mono p-4 transition-opacity duration-500 opacity-0">
+        <h2 class="text-cyan-400 text-2xl md:text-3xl mb-8 tracking-[0.3em] hud-text text-center mt-10">SELECT PROTOTYPE</h2>
+        <div id="phone-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 md:gap-6 max-w-6xl w-full overflow-y-auto pb-10 px-4"></div>
+    </div>
+
+    <div id="canvas-container"></div>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+
+    <div id="ui-layer">
+        <div class="p-6 flex justify-between items-start w-full">
+            <div>
+                <h1 id="hud-title" class="text-2xl md:text-5xl font-bold hud-text uppercase">IPHONE 17 PRO</h1>
+                <p id="project-name" class="text-xs md:text-sm mt-2 opacity-80 tracking-[0.3em] text-cyan-300">PROJECT: OMEGA // CLASSIFIED</p>
+            </div>
+            <div class="text-right hidden md:block">
+                <p class="text-xs opacity-70 tracking-widest mb-1">SYSTEM STATUS</p>
+                <p class="text-sm hud-text">ONLINE // SECURE</p>
+                <div class="w-32 h-1 bg-cyan-900/50 mt-2 ml-auto">
+                    <div class="w-full h-full bg-cyan-400 shadow-[0_0_10px_#00ffff]"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 flex justify-between items-end w-full pb-8 pointer-events-none">
+            <div class="flex gap-4 opacity-70 text-xs tracking-widest">
+                <div class="border border-cyan-500/30 p-2 backdrop-blur-sm hidden sm:block">DRAG TO ROTATE</div>
+                <div class="border border-cyan-500/30 p-2 backdrop-blur-sm hidden sm:block">SCROLL TO ZOOM</div>
+            </div>
+            <div id="dim-text" class="text-right opacity-60 text-[10px] md:text-xs tracking-[0.2em] font-sans text-cyan-200">
+                DIM: 149.6 x 71.5 x 8.3 mm<br>
+                GEO-MATRIX: HIGH-POLY
+            </div>
+        </div>
+
+        <div class="absolute right-6 top-1/2 transform -translate-y-1/2 flex flex-col gap-4 pointer-events-auto z-50">
+            <button id="btn-open-selector" class="layer-btn animate-blink border p-3 text-xs tracking-widest text-cyan-300 hover:bg-cyan-900/60 transition-all duration-300 w-40 text-center bg-cyan-950/80 mb-6 font-bold shadow-[0_0_15px_rgba(0,255,255,0.4)]">SELECT SMARTPHONE</button>
+            <button id="btn-explode" class="layer-btn border border-cyan-500/50 p-3 text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 w-40 text-center bg-black/40 shadow-[0_0_10px_rgba(0,255,255,0.2)]">EXPLODE MODEL</button>
+            <button id="btn-reset" class="layer-btn active border border-cyan-500/50 p-3 text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 w-40 text-center bg-cyan-900/60 shadow-[0_0_10px_rgba(0,255,255,0.2)]">RESET MODEL</button>
+            <button id="btn-rotate" class="layer-btn border border-cyan-500/50 p-3 text-xs tracking-widest text-cyan-400 hover:bg-cyan-900/60 transition-all duration-300 w-40 text-center bg-black/40 mt-8 shadow-[0_0_10px_rgba(0,255,255,0.2)]">AUTO-ROTATE: OFF</button>
+            <button id="btn-close-vault" class="layer-btn border border-red-500/50 p-3 text-xs tracking-widest text-red-400 hover:bg-red-900/60 transition-all duration-300 w-40 text-center bg-black/80 mt-2 shadow-[0_0_10px_rgba(255,0,0,0.2)]">CLOSE VAULT</button>
+        </div>
+
+        <div id="tooltip" class="tooltip">BUTTON_NAME</div>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+        import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+        import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+        let isExploded = false; let isAutoRotate = false; let isInteracting = false; 
+        let idleTimer = null; let autoRotateSpeed = 0.005;
+
+        const interactables = []; const explodableMeshes = []; const raycastTargets = [];
+
+        const wireframeMaterial = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x006688, wireframe: true, transparent: true, opacity: 0.3, side: THREE.DoubleSide });
+        const solidCoreMaterial = new THREE.MeshStandardMaterial({ color: 0x010203, roughness: 0.8, metalness: 0.5, transparent: true, opacity: 0.25, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
+        const highlightMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x00ffff, emissiveIntensity: 0.5, wireframe: true, transparent: true, opacity: 0.8 });
+        const internalMat = new THREE.MeshStandardMaterial({color: 0x00ffaa, emissive: 0x005522, wireframe: true, transparent: true, opacity: 0.8});
+        const boardMat = new THREE.MeshStandardMaterial({color: 0xffaa00, emissive: 0x884400, wireframe: true, transparent: true, opacity: 0.8});
+
+        const codeNames = ["AEGIS", "CHIMERA", "VALKYRIE", "NEXUS", "OBSIDIAN", "ORION", "TITAN", "SPECTER", "PHANTOM", "APOLLO", "SYNAPSE", "GLITCH"];
+
+        const phones = [
+            "Apple iPhone 17 Pro", "Apple iPhone 17", "Apple iPhone Air",
+            "Google Pixel 10 Pro", "Nothing Phone 4a Pro", "Samsung S26 Ultra", "Samsung S26",
+            "OnePlus 15", "Sony Xperia 1 VII", "Vivo X300 Pro",
+            "Oppo Find X9 Pro", "Xiaomi 17 Ultra", "Huawei Pura 80 Ultra"
+        ];
+
+        const vaultOverlay = document.getElementById('vault-overlay');
+        const selectorOverlay = document.getElementById('selector-overlay');
+        const passInput = document.getElementById('vault-password');
+        const errorMsg = document.getElementById('vault-error');
+        const hudTitle = document.getElementById('hud-title');
+        const projNameUI = document.getElementById('project-name');
+        const dimTextUI = document.getElementById('dim-text');
+        const phoneGrid = document.getElementById('phone-grid');
+        const tooltip = document.getElementById('tooltip');
+
+        phones.forEach(phone => {
+            const card = document.createElement('div');
+            card.className = "border border-cyan-500/30 bg-black/40 hover:bg-cyan-900/50 p-4 cursor-pointer transition-all hover:shadow-[0_0_15px_rgba(0,255,255,0.4)] group flex flex-col items-center gap-3 relative overflow-hidden";
+            card.innerHTML = `
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-cyan-900/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-12 h-20 border border-cyan-500/50 opacity-60 group-hover:opacity-100 transition-opacity flex items-center justify-center relative shadow-[inset_0_0_10px_rgba(0,255,255,0.1)]">
+                    <div class="w-8 h-16 border border-cyan-400/30 absolute"></div>
+                    <div class="w-2 h-2 rounded-full border border-cyan-400/40 absolute top-1"></div>
+                </div>
+                <span class="text-[10px] text-cyan-300 text-center tracking-widest mt-2 z-10">${phone.toUpperCase()}</span>
+            `;
+            
+            card.addEventListener('click', () => {
+                hudTitle.innerText = phone;
+                projNameUI.innerText = `PROJECT: ${codeNames[Math.floor(Math.random()*codeNames.length)]} // CLASSIFIED`;
+                
+                selectorOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    selectorOverlay.classList.add('hidden');
+                    selectorOverlay.classList.remove('flex');
+                    generatePhoneModel(phone);
+                }, 500);
+            });
+
+            phoneGrid.appendChild(card);
+        });
+
+        function unlockVault() {
+            if (passInput.value === '0000') {
+                errorMsg.style.opacity = '0';
+                vaultOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    vaultOverlay.classList.add('hidden');
+                    selectorOverlay.classList.remove('hidden');
+                    selectorOverlay.classList.add('flex');
+                    setTimeout(() => selectorOverlay.style.opacity = '1', 50);
+                }, 500);
+            } else {
+                errorMsg.style.opacity = '1';
+                passInput.value = ''; passInput.focus();
+            }
+        }
+
+        document.getElementById('btn-unlock').addEventListener('click', unlockVault);
+        passInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') unlockVault(); });
+
+        document.getElementById('btn-open-selector').addEventListener('click', () => {
+            selectorOverlay.classList.remove('hidden'); selectorOverlay.classList.add('flex');
+            setTimeout(() => selectorOverlay.style.opacity = '1', 50);
+        });
+
+        document.getElementById('btn-close-vault').addEventListener('click', () => {
+            vaultOverlay.classList.remove('hidden');
+            setTimeout(() => {
+                vaultOverlay.style.opacity = '1';
+                passInput.value = '';
+                errorMsg.style.opacity = '0';
+            }, 50);
+        });
+
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x03060a, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(20, 15, 30);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        container.appendChild(renderer.domElement);
+
+        const renderScene = new RenderPass(scene, camera);
+        const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+        bloomPass.threshold = 0.1; bloomPass.strength = 1.2; bloomPass.radius = 0.5;
+
+        const composer = new EffectComposer(renderer);
+        composer.addPass(renderScene); composer.addPass(bloomPass);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true; controls.dampingFactor = 0.05;
+        controls.minDistance = 15; controls.maxDistance = 50; controls.maxPolarAngle = Math.PI; 
+
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+        const pointLight = new THREE.PointLight(0x00ffff, 2, 50);
+        pointLight.position.set(10, 10, 10); scene.add(pointLight);
+
+        const gridHelper = new THREE.GridHelper(100, 100, 0x00ffff, 0x004455);
+        gridHelper.position.y = -8.5; gridHelper.material.opacity = 0.2; gridHelper.material.transparent = true;
+        scene.add(gridHelper);
+
+        const phoneGroup = new THREE.Group();
+        scene.add(phoneGroup);
+
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function addExplode(mesh, offsetX, offsetY, offsetZ) {
+            mesh.userData.origPos = mesh.position.clone();
+            mesh.userData.expPos = mesh.position.clone().add(new THREE.Vector3(offsetX, offsetY, offsetZ));
+            explodableMeshes.push(mesh);
+        }
+
+        function createRoundedRectShape(width, height, radius) {
+            const shape = new THREE.Shape();
+            const x = -width / 2; const y = -height / 2;
+            shape.moveTo(x + radius, y); shape.lineTo(x + width - radius, y); shape.quadraticCurveTo(x + width, y, x + width, y + radius);
+            shape.lineTo(x + width, y + height - radius); shape.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            shape.lineTo(x + radius, y + height); shape.quadraticCurveTo(x, y + height, x, y + height - radius);
+            shape.lineTo(x, y + radius); shape.quadraticCurveTo(x, y, x + radius, y);
+            return shape;
+        }
+
+        function createTriangleShape(size) {
+            const shape = new THREE.Shape();
+            shape.moveTo(-size, -size); shape.lineTo(size, -size); shape.lineTo(0, size); shape.lineTo(-size, -size);
+            return shape;
+        }
+
+        function registerInteractable(mesh, name) {
+            mesh.userData.name = name;
+            interactables.push(mesh);
+            const box = new THREE.Box3().setFromObject(mesh);
+            const size = box.getSize(new THREE.Vector3());
+            const hitGeo = new THREE.BoxGeometry(Math.max(size.x * 1.5, 0.5), Math.max(size.y * 1.5, 0.5), Math.max(size.z * 1.5, 0.5));
+            const hitMesh = new THREE.Mesh(hitGeo, new THREE.MeshBasicMaterial({ visible: false }));
+            hitMesh.position.set(0, 0, 0); hitMesh.userData = mesh.userData;
+            mesh.add(hitMesh); raycastTargets.push(hitMesh);
+            return mesh;
+        }
+
+        function drawLogo(brand, zPos) {
+            const logoGroup = new THREE.Group();
+            const mat = highlightMaterial;
+            if(brand === 'apple') {
+                const apple = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.6, 0.05, 32), mat);
+                apple.rotation.x = Math.PI/2;
+                const leaf = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.05), mat);
+                leaf.rotation.z = Math.PI/4; leaf.position.set(0.1, 0.8, 0);
+                logoGroup.add(apple); logoGroup.add(leaf);
+            } else if (brand === 'google') {
+                const g = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.08, 16, 32, Math.PI * 1.7), mat);
+                g.rotation.z = Math.PI * 0.15;
+                const cross = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.16, 0.05), mat);
+                cross.position.set(0.2, 0, 0);
+                logoGroup.add(g); logoGroup.add(cross);
+            } else if (brand === 'samsung') {
+                const ellipse = new THREE.Mesh(new THREE.TorusGeometry(0.8, 0.05, 16, 32), mat);
+                ellipse.scale.set(1, 0.4, 1); ellipse.rotation.z = -Math.PI/8;
+                logoGroup.add(ellipse);
+            } else if (brand === 'oneplus') {
+                const box = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 0.05), wireframeMaterial);
+                const plusV = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.4, 0.05), mat);
+                const plusH = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.1, 0.05), mat);
+                plusV.position.set(0.2, 0.2, 0); plusH.position.set(0.2, 0.2, 0);
+                const one = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.5, 0.05), mat);
+                one.position.set(-0.2, 0, 0);
+                logoGroup.add(box); logoGroup.add(plusV); logoGroup.add(plusH); logoGroup.add(one);
+            } else if (brand === 'nothing') {
+                for(let i=0; i<5; i++) {
+                    const dot = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 0.05), mat);
+                    dot.position.set(-0.4 + i*0.2, -0.4 + i*0.2, 0); logoGroup.add(dot);
+                    const dot2 = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.15, 0.05), mat);
+                    dot2.position.set(-0.4 + i*0.2, 0.4 - i*0.2, 0); logoGroup.add(dot2);
+                }
+            } else {
+                const badge = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.1, 16, 32), mat);
+                logoGroup.add(badge);
+            }
+            logoGroup.position.set(0, 0, zPos);
+            return logoGroup;
+        }
+
+        function addFlashAndSensors(baseX, baseY, baseZ, isVertical=false) {
+            const smallGeo = new THREE.CylinderGeometry(0.2, 0.2, 0.1, 16); smallGeo.rotateX(Math.PI/2);
+            const flash = new THREE.Mesh(smallGeo, highlightMaterial);
+            flash.position.set(baseX, baseY, baseZ); registerInteractable(flash, "LED Flash");
+            phoneGroup.add(flash); addExplode(flash, 0, 0, -4);
+
+            const sensor = new THREE.Mesh(smallGeo, wireframeMaterial);
+            sensor.position.set(isVertical ? baseX : baseX + 0.6, isVertical ? baseY - 0.6 : baseY, baseZ);
+            registerInteractable(sensor, "LiDAR / Spectral Sensor");
+            phoneGroup.add(sensor); addExplode(sensor, 0, 0, -4);
+        }
+
+        function addSideButtons(w, h, d, layout) {
+            const btnD = 0.15; const btnW = 0.15; const mat = highlightMaterial;
+            if (layout.startsWith('apple')) {
+                const power = new THREE.Mesh(new THREE.BoxGeometry(btnW, 1.4, btnD), mat);
+                power.position.set(w/2 + btnW/2, 1.5, 0); registerInteractable(power, "Power Button"); phoneGroup.add(power); addExplode(power, 2, 0, 0);
+                if (layout === 'apple-pro' || layout === 'apple-17') {
+                    const cc = new THREE.Mesh(new THREE.BoxGeometry(btnW*0.6, 1.4, btnD), mat);
+                    cc.position.set(w/2 + btnW*0.3, -2.0, 0); registerInteractable(cc, "Camera Control"); phoneGroup.add(cc); addExplode(cc, 2, 0, 0);
+                }
+                const action = new THREE.Mesh(new THREE.BoxGeometry(btnW, 0.8, btnD), mat);
+                action.position.set(-w/2 - btnW/2, 2.8, 0); registerInteractable(action, "Action Button"); phoneGroup.add(action); addExplode(action, -2, 0, 0);
+                const vUp = new THREE.Mesh(new THREE.BoxGeometry(btnW, 1.2, btnD), mat);
+                vUp.position.set(-w/2 - btnW/2, 1.2, 0); registerInteractable(vUp, "Volume Up"); phoneGroup.add(vUp); addExplode(vUp, -2, 0, 0);
+                const vDn = new THREE.Mesh(new THREE.BoxGeometry(btnW, 1.2, btnD), mat);
+                vDn.position.set(-w/2 - btnW/2, -0.4, 0); registerInteractable(vDn, "Volume Down"); phoneGroup.add(vDn); addExplode(vDn, -2, 0, 0);
+            } else if (layout === 'android' || layout === 'pixel' || layout === 'samsung' || layout === 'nothing') {
+                const vRocker = new THREE.Mesh(new THREE.BoxGeometry(btnW, 2.5, btnD), mat);
+                vRocker.position.set(w/2 + btnW/2, 1.5, 0); registerInteractable(vRocker, "Volume Rocker"); phoneGroup.add(vRocker); addExplode(vRocker, 2, 0, 0);
+                const power = new THREE.Mesh(new THREE.BoxGeometry(btnW, 1.2, btnD), mat);
+                power.position.set(w/2 + btnW/2, -0.5, 0); registerInteractable(power, "Power Button"); phoneGroup.add(power); addExplode(power, 2, 0, 0);
+            } else if (layout === 'sony') {
+                const vRocker = new THREE.Mesh(new THREE.BoxGeometry(btnW, 2.0, btnD), mat);
+                vRocker.position.set(w/2 + btnW/2, 2.0, 0); registerInteractable(vRocker, "Volume Rocker"); phoneGroup.add(vRocker); addExplode(vRocker, 2, 0, 0);
+                const power = new THREE.Mesh(new THREE.BoxGeometry(btnW, 1.2, btnD), mat);
+                power.position.set(w/2 + btnW/2, 0, 0); registerInteractable(power, "Power Button"); phoneGroup.add(power); addExplode(power, 2, 0, 0);
+                const shutter = new THREE.Mesh(new THREE.BoxGeometry(btnW, 1.0, btnD), mat);
+                shutter.position.set(w/2 + btnW/2, -3.5, 0); registerInteractable(shutter, "Shutter Button"); phoneGroup.add(shutter); addExplode(shutter, 2, 0, 0);
+            }
+        }
+
+        function buildGenericInternals(w, h, d, batteryW, batteryH) {
+            const batteryGeo = new THREE.BoxGeometry(batteryW, batteryH, 0.3);
+            const battery = new THREE.Mesh(batteryGeo, internalMat);
+            battery.position.set(-w/4, 0, 0); registerInteractable(battery, "Lithium-Ion Battery");
+            phoneGroup.add(battery); addExplode(battery, -1.5, 0, -1.5);
+
+            const boardGeo = new THREE.BoxGeometry(w/3, h/2.5, 0.25);
+            const board = new THREE.Mesh(boardGeo, boardMat);
+            board.position.set(w/4 + 0.2, h/4, 0); registerInteractable(board, "Main Logic Board");
+            phoneGroup.add(board); addExplode(board, 1.5, 0, -1.5);
+
+            const usbcPinGeo = new THREE.BoxGeometry(0.7, 0.02, 0.4);
+            const usbcPin = new THREE.Mesh(usbcPinGeo, boardMat);
+            usbcPin.position.set(0, -h/2 + 0.15, 0); registerInteractable(usbcPin, "USB-C Interface Pins");
+            phoneGroup.add(usbcPin); addExplode(usbcPin, 0, -1.5, 0);
+
+            const usbcPortGeo = new THREE.BoxGeometry(1.2, 0.15, 0.3);
+            const usbc = new THREE.Mesh(usbcPortGeo, highlightMaterial);
+            usbc.position.set(0, -h/2 - 0.075, 0); registerInteractable(usbc, "USB-C Port");
+            phoneGroup.add(usbc); addExplode(usbc, 0, -2, 0);
+        }
+
+        function clearScene() {
+            while(phoneGroup.children.length > 0){ phoneGroup.remove(phoneGroup.children[0]); }
+            interactables.length = 0; explodableMeshes.length = 0; raycastTargets.length = 0;
+            isExploded = false;
+            document.getElementById('btn-reset').classList.add('active', 'bg-cyan-900/60');
+            document.getElementById('btn-explode').classList.remove('active', 'bg-cyan-900/60');
+        }
+
+        function updateDimensionsDisplay(w, h, d) {
+            dimTextUI.innerHTML = `DIM: ${(h*10).toFixed(1)} x ${(w*10).toFixed(1)} x ${(d*10).toFixed(1)} mm<br>GEO-MATRIX: HIGH-POLY`;
+        }
+
+        function generatePhoneModel(modelName) {
+            clearScene();
+            let w=7.15, h=14.96, d=0.83, radius=1.2;
+
+            if (modelName === "Apple iPhone 17 Pro") { buildiPhone17ProBase(w, h, d, radius); } 
+            else if (modelName === "Apple iPhone 17") { buildiPhone17Base(w, h, d, radius); }
+            else if (modelName === "Apple iPhone Air") { d = 0.55; buildiPhoneAirBase(w, h, d, radius); }
+            else if (modelName === "Google Pixel 10 Pro") { w = 7.6; h = 16.2; radius = 0.9; buildPixel10ProBase(w, h, d, radius); }
+            else if (modelName === "Nothing Phone 4a Pro") { w = 7.6; h = 16.1; radius = 1.0; buildNothing4aProBase(w, h, d, radius); }
+            else if (modelName === "Samsung S26 Ultra") { w = 7.9; h = 16.2; d = 0.86; radius = 0.1; buildS26UltraBase(w, h, d, radius); }
+            else if (modelName === "Samsung S26") { w = 7.0; h = 14.7; d = 0.76; radius = 1.0; buildS26Base(w, h, d, radius); }
+            else if (modelName === "OnePlus 15") { w = 7.5; h = 16.3; d = 0.85; radius = 0.8; buildOnePlus15Base(w, h, d, radius); }
+            else if (modelName === "Sony Xperia 1 VII") { w = 7.1; h = 16.5; d = 0.82; radius = 0.6; buildSonyXperia1VIiBase(w, h, d, radius); }
+            else if (modelName === "Vivo X300 Pro") { w = 7.5; h = 16.4; d = 0.85; radius = 0.9; buildVivoX300ProBase(w, h, d, radius); }
+            else if (modelName === "Oppo Find X9 Pro") { w = 7.6; h = 16.4; d = 0.88; radius = 0.9; buildOppoFindX9ProBase(w, h, d, radius); }
+            else if (modelName === "Xiaomi 17 Ultra") { w = 7.5; h = 16.3; d = 0.90; radius = 0.9; buildXiaomi17UltraBase(w, h, d, radius); }
+            else if (modelName === "Huawei Pura 80 Ultra") { w = 7.5; h = 16.2; d = 0.84; radius = 0.8; buildHuaweiPura80UltraBase(w, h, d, radius); }
+            else { buildiPhone17ProBase(w, h, d, radius); }
+
+            updateDimensionsDisplay(w, h, d);
+            phoneGroup.rotation.set(0.1, -Math.PI / 4, 0);
+        }
+
+        function buildChassis(w, h, d, radius, opacityOverride=0.25) {
+            const bodyGeo = new THREE.ExtrudeGeometry(createRoundedRectShape(w, h, radius), { depth: d, bevelEnabled: true, bevelSize: 0.08, bevelThickness: 0.08, curveSegments: 12 });
+            bodyGeo.center(); 
+            const sMat = solidCoreMaterial.clone(); sMat.opacity = opacityOverride;
+            const bodySolid = new THREE.Mesh(bodyGeo, sMat);
+            const bodyWire = new THREE.Mesh(bodyGeo, wireframeMaterial);
+            phoneGroup.add(bodySolid); phoneGroup.add(bodyWire);
+            addExplode(bodySolid, 0, 0, 0); addExplode(bodyWire, 0, 0, 0);
+
+            const screenGeo = new THREE.PlaneGeometry(w - 0.4, h - 0.4);
+            const screen = new THREE.Mesh(screenGeo, new THREE.MeshBasicMaterial({ color: 0x002233, transparent: true, opacity: 0.2, side: THREE.DoubleSide }));
+            screen.position.z = d / 2 + 0.09;
+            phoneGroup.add(screen); addExplode(screen, 0, 0, 3);
+            return {w, h, d};
+        }
+
+        function addDynamicIsland(h, d, shape="pill") {
+            let islandGeo;
+            if(shape === "pill") islandGeo = new THREE.CapsuleGeometry(0.15, 0.8, 4, 16);
+            else islandGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.1, 16);
+            
+            const island = new THREE.Mesh(islandGeo, highlightMaterial);
+            if(shape==="pill") island.rotation.z = Math.PI / 2;
+            else island.rotation.x = Math.PI / 2;
+            
+            island.position.set(0, h/2 - 0.6, d/2 + 0.1);
+            registerInteractable(island, "Front Camera System");
+            phoneGroup.add(island); addExplode(island, 0, 0, 3.5);
+        }
+
+        function buildiPhone17ProBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d);
+            buildGenericInternals(w, h, d, 3.6, 8.5); addSideButtons(w, h, d, 'apple-pro');
+            const logo = drawLogo('apple', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const bumpW = w - 0.4; const bumpH = 4.2; const bumpD = 0.18;
+            const bumpGeo = new THREE.ExtrudeGeometry(createRoundedRectShape(bumpW, bumpH, 0.8), { depth: bumpD, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.03 });
+            bumpGeo.center(); const bump = new THREE.Mesh(bumpGeo, wireframeMaterial);
+            bump.position.set(0, h/2 - bumpH/2 - 0.2, -d/2 - bumpD/2);
+            registerInteractable(bump, "Pro Camera Array Module");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeo = new THREE.CylinderGeometry(0.7, 0.7, 0.25, 24); lensGeo.rotateX(Math.PI / 2);
+            [{x: 1.7, y: 1.0, n: "Wide"}, {x: 1.7, y: -1.0, n: "Telephoto"}, {x: 0.1, y: 0, n: "Ultrawide"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(bump.position.x + p.x, bump.position.y + p.y, bump.position.z - bumpD/2 - 0.1);
+                registerInteractable(lens, p.n + " Camera");
+                phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(bump.position.x - 1.9, bump.position.y + 0.5, bump.position.z - bumpD/2 - 0.05, true);
+        }
+
+        function buildiPhone17Base(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d);
+            buildGenericInternals(w, h, d, 3.4, 8.0); addSideButtons(w, h, d, 'apple-17');
+            const logo = drawLogo('apple', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const bumpW = 2.0; const bumpH = 4.0; const bumpD = 0.15;
+            const bumpGeo = new THREE.ExtrudeGeometry(createRoundedRectShape(bumpW, bumpH, 1.0), { depth: bumpD, bevelEnabled: true, bevelSize: 0.03, bevelThickness: 0.03 });
+            bumpGeo.center(); const bump = new THREE.Mesh(bumpGeo, wireframeMaterial);
+            bump.position.set(w/2 - bumpW/2 - 0.4, h/2 - bumpH/2 - 0.4, -d/2 - bumpD/2);
+            registerInteractable(bump, "Dual Camera Module");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeo = new THREE.CylinderGeometry(0.6, 0.6, 0.2, 24); lensGeo.rotateX(Math.PI / 2);
+            [{y: 0.8, n: "Main"}, {y: -0.8, n: "Ultrawide"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(bump.position.x, bump.position.y + p.y, bump.position.z - bumpD/2 - 0.1);
+                registerInteractable(lens, p.n + " Camera");
+                phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(bump.position.x + 1.5, bump.position.y, bump.position.z - bumpD/2 - 0.05, true);
+        }
+
+        function buildiPhoneAirBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d);
+            buildGenericInternals(w, h, d, 3.0, 7.5); addSideButtons(w, h, d, 'apple-standard');
+            const logo = drawLogo('apple', -d/2 - 0.02); phoneGroup.add(logo);
+
+            // iPhone Air Top Edge Pill
+            const bumpW = w * 0.8; const bumpH = 1.8; const bumpD = 0.12;
+            const bumpGeo = new THREE.ExtrudeGeometry(createRoundedRectShape(bumpW, bumpH, 0.8), { depth: bumpD, bevelEnabled: true, bevelSize: 0.02, bevelThickness: 0.02 });
+            bumpGeo.center(); const bump = new THREE.Mesh(bumpGeo, wireframeMaterial);
+            bump.position.set(0, h/2 - bumpH/2 + 0.05, -d/2 - bumpD/2); // Flush with top edge
+            registerInteractable(bump, "Air Edge Module");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.15, 24); lensGeo.rotateX(Math.PI / 2);
+            const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+            lens.position.set(-1.0, bump.position.y, bump.position.z - bumpD/2 - 0.05);
+            registerInteractable(lens, "Single Main Camera");
+            phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+
+            addFlashAndSensors(1.0, bump.position.y, bump.position.z - bumpD/2 - 0.05, false);
+        }
+
+        function buildPixel10ProBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d, "punch");
+            buildGenericInternals(w, h, d, 3.8, 9.0); addSideButtons(w, h, d, 'android');
+            const logo = drawLogo('google', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const bumpW = w; const bumpH = 2.0; const bumpD = 0.25;
+            const bumpGeo = new THREE.BoxGeometry(bumpW, bumpH, bumpD);
+            const bump = new THREE.Mesh(bumpGeo, wireframeMaterial);
+            bump.position.set(0, h/2 - 3.0, -d/2 - bumpD/2); // Moved higher
+            registerInteractable(bump, "Pixel Camera Visor");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.15, 24); lensGeo.rotateX(Math.PI / 2);
+            [{x: 1.5, n: "Telephoto"}, {x: 0, n: "Main"}, {x: -1.5, n: "Ultrawide"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(p.x, bump.position.y, bump.position.z - bumpD/2 - 0.05);
+                registerInteractable(lens, p.n + " Camera");
+                phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(2.8, bump.position.y, bump.position.z - bumpD/2 - 0.05, false);
+        }
+
+        function buildNothing4aProBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius, 0.1); // more transparent chassis
+            addDynamicIsland(h, d, "punch");
+            buildGenericInternals(w, h, d, 3.8, 8.5); addSideButtons(w, h, d, 'nothing');
+            const logo = drawLogo('nothing', -d/2 - 0.02); logo.position.y = -h/4; phoneGroup.add(logo);
+            
+            // Top module glass cover
+            const modW = w - 0.8; const modH = 4.0; const modD = 0.1;
+            const modGeo = new THREE.ExtrudeGeometry(createRoundedRectShape(modW, modH, 0.8), { depth: modD, bevelEnabled: true, bevelSize: 0.02, bevelThickness: 0.02 });
+            modGeo.center(); const mod = new THREE.Mesh(modGeo, wireframeMaterial);
+            mod.position.set(0, h/2 - modH/2 - 0.5, -d/2 - modD/2);
+            registerInteractable(mod, "Transparent Electronics Deck");
+            phoneGroup.add(mod); addExplode(mod, 0, 0, -1);
+
+            // Left pill (Camera)
+            const pillW = 1.8; const pillH = 3.2; const pillD = 0.15;
+            const pillGeo = new THREE.ExtrudeGeometry(createRoundedRectShape(pillW, pillH, 0.9), { depth: pillD, bevelEnabled: true, bevelSize: 0.02, bevelThickness: 0.02 });
+            pillGeo.center(); const pill = new THREE.Mesh(pillGeo, solidCoreMaterial);
+            pill.position.set(mod.position.x - 1.4, mod.position.y, mod.position.z - pillD/2);
+            registerInteractable(pill, "Dual Camera Island");
+            phoneGroup.add(pill); addExplode(pill, 0, 0, -3);
+
+            const lensGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.1, 24); lensGeo.rotateX(Math.PI/2);
+            [{y: 0.8, n: "Main 50MP"}, {y: -0.8, n: "Ultra Wide"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(pill.position.x, pill.position.y + p.y, pill.position.z - 0.05);
+                registerInteractable(lens, p.n); phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+
+            // Glyph LED Circle
+            const glyphRadius = 1.2;
+            const glyphGeo = new THREE.CylinderGeometry(glyphRadius, glyphRadius, 0.05, 32); glyphGeo.rotateX(Math.PI/2);
+            const glyph = new THREE.Mesh(glyphGeo, wireframeMaterial);
+            glyph.position.set(mod.position.x + 1.2, mod.position.y, mod.position.z - 0.05);
+            registerInteractable(glyph, "Glyph Interface LED Matrix");
+            phoneGroup.add(glyph); addExplode(glyph, 0, 0, -3);
+            
+            const dotGeo = new THREE.BoxGeometry(0.1, 0.1, 0.05);
+            for(let i=0; i<10; i++) {
+                for(let j=0; j<10; j++) {
+                    if (Math.random() > 0.6) {
+                        const dot = new THREE.Mesh(dotGeo, highlightMaterial);
+                        dot.position.set(glyph.position.x - 0.5 + i*0.12, glyph.position.y - 0.5 + j*0.12, glyph.position.z - 0.02);
+                        phoneGroup.add(dot); addExplode(dot, 0, 0, -3);
+                    }
+                }
+            }
+
+            // Bottom left acoustic indent
+            const indentGeo = new THREE.TorusGeometry(0.6, 0.05, 16, 32);
+            const indent = new THREE.Mesh(indentGeo, highlightMaterial);
+            indent.position.set(-w/2 + 1.2, -h/2 + 1.2, -d/2);
+            registerInteractable(indent, "Acoustic Port Design");
+            phoneGroup.add(indent); addExplode(indent, 0, 0, -1);
+
+            addFlashAndSensors(mod.position.x - 0.2, mod.position.y + 0.5, mod.position.z - 0.05, false);
+        }
+
+        function buildS26UltraBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d, "punch");
+            buildGenericInternals(w, h, d, 4.0, 9.5); addSideButtons(w, h, d, 'android');
+            const logo = drawLogo('samsung', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const lensGeoLarge = new THREE.CylinderGeometry(0.6, 0.6, 0.2, 24); lensGeoLarge.rotateX(Math.PI / 2);
+            const lensGeoSmall = new THREE.CylinderGeometry(0.3, 0.3, 0.15, 16); lensGeoSmall.rotateX(Math.PI / 2);
+            
+            [{y: 1.5, n: "Ultra Wide"}, {y: 0, n: "200MP Main"}, {y: -1.5, n: "50MP Periscope"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeoLarge, highlightMaterial);
+                lens.position.set(w/2 - 1.2, h/4 + p.y, -d/2 - 0.1); registerInteractable(lens, p.n);
+                phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+
+            [{y: 1.0, n: "Laser AF"}, {y: -0.5, n: "10MP Telephoto"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeoSmall, highlightMaterial);
+                lens.position.set(w/2 - 2.8, h/4 + p.y, -d/2 - 0.05); registerInteractable(lens, p.n);
+                phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(w/2 - 2.8, h/4 + 0.2, -d/2 - 0.1, true);
+
+            const spenGeo = new THREE.CylinderGeometry(0.2, 0.2, h - 2, 12);
+            const spen = new THREE.Mesh(spenGeo, highlightMaterial);
+            spen.position.set(-w/2 + 0.6, -1.0, 0); registerInteractable(spen, "S-Pen Stylus");
+            phoneGroup.add(spen); addExplode(spen, 0, -5, 0);
+        }
+
+        function buildS26Base(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d, "punch");
+            buildGenericInternals(w, h, d, 3.4, 8.0); addSideButtons(w, h, d, 'android');
+            const logo = drawLogo('samsung', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const lensGeo = new THREE.CylinderGeometry(0.55, 0.55, 0.18, 24); lensGeo.rotateX(Math.PI / 2);
+            [{y: 1.3, n: "Ultra Wide"}, {y: 0, n: "Main"}, {y: -1.3, n: "Telephoto"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(w/2 - 1.0, h/4 + p.y, -d/2 - 0.1); registerInteractable(lens, p.n);
+                phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(w/2 - 2.2, h/4, -d/2 - 0.1, true);
+        }
+
+        function buildOnePlus15Base(w, h, d, radius) {
+            buildChassis(w, h, d, radius); buildGenericInternals(w, h, d, 3.8, 9.0); addSideButtons(w, h, d, 'android');
+            const logo = drawLogo('oneplus', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const punchGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.1, 16); punchGeo.rotateX(Math.PI/2);
+            const punch = new THREE.Mesh(punchGeo, highlightMaterial);
+            punch.position.set(-w/2 + 1.0, h/2 - 0.6, d/2 + 0.1); registerInteractable(punch, "Front Camera");
+            phoneGroup.add(punch); addExplode(punch, 0, 0, 3.5);
+
+            const bumpR = 2.4; const bumpD = 0.2;
+            const bumpGeo = new THREE.CylinderGeometry(bumpR, bumpR, bumpD, 32); bumpGeo.rotateX(Math.PI/2);
+            const bump = new THREE.Mesh(bumpGeo, wireframeMaterial);
+            bump.position.set(0, h/4, -d/2 - bumpD/2); registerInteractable(bump, "Hasselblad Module");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.1, 24); lensGeo.rotateX(Math.PI / 2);
+            [{x: 0.8, y: 0.8, n: "Main"}, {x: -0.8, y: 0.8, n: "Ultra Wide"}, {x: 0.8, y: -0.8, n: "Periscope"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(bump.position.x + p.x, bump.position.y + p.y, bump.position.z - bumpD/2 - 0.05);
+                registerInteractable(lens, p.n); phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(bump.position.x - 0.8, bump.position.y - 0.8, bump.position.z - bumpD/2 - 0.05, false);
+        }
+
+        function buildSonyXperia1VIiBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d, "punch"); buildGenericInternals(w, h, d, 3.2, 9.5);
+            addSideButtons(w, h, d, 'sony'); const logo = drawLogo('generic', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const bumpW = 1.4; const bumpH = 4.5; const bumpD = 0.15;
+            const bumpGeo = new THREE.ExtrudeGeometry(createRoundedRectShape(bumpW, bumpH, 0.7), { depth: bumpD, bevelEnabled: true, bevelSize: 0.02, bevelThickness: 0.02 });
+            bumpGeo.center(); const bump = new THREE.Mesh(bumpGeo, wireframeMaterial);
+            bump.position.set(w/2 - bumpW/2 - 0.5, h/2 - bumpH/2 - 0.5, -d/2 - bumpD/2);
+            registerInteractable(bump, "Zeiss Optics Array");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.15, 24); lensGeo.rotateX(Math.PI / 2);
+            [{y: 1.2, n: "Main"}, {y: 0, n: "Ultra Wide"}, {y: -1.2, n: "Telephoto"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(bump.position.x, bump.position.y + p.y, bump.position.z - bumpD/2 - 0.1);
+                registerInteractable(lens, p.n); phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(bump.position.x, bump.position.y + 2.0, bump.position.z - bumpD/2 - 0.05, true);
+        }
+
+        function buildVivoX300ProBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d, "punch"); buildGenericInternals(w, h, d, 3.8, 9.0);
+            addSideButtons(w, h, d, 'android'); const logo = drawLogo('generic', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const bumpR = 2.6; const bumpD = 0.25;
+            const bumpGeo = new THREE.CylinderGeometry(bumpR, bumpR, bumpD, 32); bumpGeo.rotateX(Math.PI/2);
+            const bump = new THREE.Mesh(bumpGeo, wireframeMaterial);
+            bump.position.set(0, h/4, -d/2 - bumpD/2); registerInteractable(bump, "Zeiss Circular Module");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeo = new THREE.CylinderGeometry(0.55, 0.55, 0.1, 24); lensGeo.rotateX(Math.PI / 2);
+            [{x: 1.0, y: 0, n: "Main"}, {x: -1.0, y: 0, n: "Ultra Wide"}, {x: 0, y: 1.0, n: "Periscope"}, {x: 0, y: -1.0, n: "Portrait"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(bump.position.x + p.x, bump.position.y + p.y, bump.position.z - bumpD/2 - 0.05);
+                registerInteractable(lens, p.n); phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(2.5, bump.position.y + 2.5, -d/2 - 0.1, false);
+        }
+
+        function buildOppoFindX9ProBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d, "punch"); buildGenericInternals(w, h, d, 3.8, 9.0);
+            addSideButtons(w, h, d, 'android'); const logo = drawLogo('generic', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const bumpW = 5.0; const bumpH = 5.0; const bumpD = 0.2;
+            const bumpGeo = new THREE.ExtrudeGeometry(createRoundedRectShape(bumpW, bumpH, 1.5), { depth: bumpD, bevelEnabled: true, bevelSize: 0.05, bevelThickness: 0.05 });
+            bumpGeo.center(); const bump = new THREE.Mesh(bumpGeo, wireframeMaterial);
+            bump.position.set(0, h/4, -d/2 - bumpD/2); registerInteractable(bump, "Hasselblad Squircle");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeo = new THREE.CylinderGeometry(0.6, 0.6, 0.15, 24); lensGeo.rotateX(Math.PI / 2);
+            [{x: 1.2, y: 1.2, n: "Main"}, {x: -1.2, y: 1.2, n: "Ultra Wide"}, {x: 1.2, y: -1.2, n: "Telephoto 1"}, {x: -1.2, y: -1.2, n: "Telephoto 2"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(bump.position.x + p.x, bump.position.y + p.y, bump.position.z - bumpD/2 - 0.05);
+                registerInteractable(lens, p.n); phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(0, bump.position.y, bump.position.z - bumpD/2 - 0.05, false);
+        }
+
+        function buildXiaomi17UltraBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d, "punch"); buildGenericInternals(w, h, d, 3.9, 9.0);
+            addSideButtons(w, h, d, 'android'); const logo = drawLogo('generic', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const slopeGeo = new THREE.BoxGeometry(w, h/2, 0.15);
+            const slope = new THREE.Mesh(slopeGeo, solidCoreMaterial);
+            slope.position.set(0, h/4, -d/2 - 0.075); phoneGroup.add(slope); addExplode(slope, 0, 0, -1);
+
+            const bumpR = 2.8; const bumpD = 0.3;
+            const bumpGeo = new THREE.CylinderGeometry(bumpR, bumpR, bumpD, 32); bumpGeo.rotateX(Math.PI/2);
+            const bump = new THREE.Mesh(bumpGeo, wireframeMaterial);
+            bump.position.set(0, h/4, -d/2 - 0.15 - bumpD/2); registerInteractable(bump, "Leica Summicron Array");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeo = new THREE.CylinderGeometry(0.55, 0.55, 0.15, 24); lensGeo.rotateX(Math.PI / 2);
+            [{x: 1.2, y: 1.2, n: "1-inch Main"}, {x: -1.2, y: 1.2, n: "Ultra Wide"}, {x: 1.2, y: -1.2, n: "Telephoto"}, {x: -1.2, y: -1.2, n: "Periscope"}].forEach(p => {
+                const lens = new THREE.Mesh(lensGeo, highlightMaterial);
+                lens.position.set(bump.position.x + p.x, bump.position.y + p.y, bump.position.z - bumpD/2 - 0.05);
+                registerInteractable(lens, p.n); phoneGroup.add(lens); addExplode(lens, 0, 0, -4);
+            });
+            addFlashAndSensors(0, bump.position.y - 2.0, bump.position.z - bumpD/2 - 0.05, false);
+        }
+
+        function buildHuaweiPura80UltraBase(w, h, d, radius) {
+            buildChassis(w, h, d, radius); addDynamicIsland(h, d, "punch"); buildGenericInternals(w, h, d, 3.8, 8.8);
+            addSideButtons(w, h, d, 'android'); const logo = drawLogo('generic', -d/2 - 0.02); phoneGroup.add(logo);
+
+            const triGeo = new THREE.ExtrudeGeometry(createTriangleShape(2.2), { depth: 0.2, bevelEnabled: true, bevelSize: 0.1, bevelThickness: 0.1 });
+            const bump = new THREE.Mesh(triGeo, wireframeMaterial);
+            bump.position.set(w/2 - 2.5, h/2 - 3.0, -d/2 - 0.1); registerInteractable(bump, "XMAGE Triangle Array");
+            phoneGroup.add(bump); addExplode(bump, 0, 0, -2);
+
+            const lensGeoBig = new THREE.CylinderGeometry(0.7, 0.7, 0.15, 24); lensGeoBig.rotateX(Math.PI / 2);
+            const lensGeoSmall = new THREE.CylinderGeometry(0.4, 0.4, 0.15, 24); lensGeoSmall.rotateX(Math.PI / 2);
+            
+            const mainLens = new THREE.Mesh(lensGeoBig, highlightMaterial);
+            mainLens.position.set(bump.position.x, bump.position.y + 0.5, bump.position.z - 0.15);
+            registerInteractable(mainLens, "Retractable Main Lens"); phoneGroup.add(mainLens); addExplode(mainLens, 0, 0, -4);
+
+            const ultraLens = new THREE.Mesh(lensGeoSmall, highlightMaterial);
+            ultraLens.position.set(bump.position.x - 1.0, bump.position.y - 1.0, bump.position.z - 0.15);
+            registerInteractable(ultraLens, "Ultra Wide"); phoneGroup.add(ultraLens); addExplode(ultraLens, 0, 0, -4);
+
+            const teleLens = new THREE.Mesh(lensGeoSmall, highlightMaterial);
+            teleLens.position.set(bump.position.x + 1.0, bump.position.y - 1.0, bump.position.z - 0.15);
+            registerInteractable(teleLens, "Macro Telephoto"); phoneGroup.add(teleLens); addExplode(teleLens, 0, 0, -4);
+
+            addFlashAndSensors(bump.position.x, bump.position.y - 2.5, bump.position.z - 0.1, false);
+        }
+
+        // INIT
+        generatePhoneModel("Apple iPhone Air");
+
+
+        document.getElementById('btn-explode').addEventListener('click', (e) => {
+            isExploded = true;
+            e.target.classList.add('active', 'bg-cyan-900/60');
+            document.getElementById('btn-reset').classList.remove('active', 'bg-cyan-900/60');
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', (e) => {
+            isExploded = false;
+            e.target.classList.add('active', 'bg-cyan-900/60');
+            document.getElementById('btn-explode').classList.remove('active', 'bg-cyan-900/60');
+        });
+
+        document.getElementById('btn-rotate').addEventListener('click', (e) => {
+            isAutoRotate = !isAutoRotate;
+            e.target.innerText = isAutoRotate ? 'AUTO-ROTATE: ON' : 'AUTO-ROTATE: OFF';
+            if(isAutoRotate) { e.target.classList.add('active', 'bg-cyan-900/60'); } 
+            else { e.target.classList.remove('active', 'bg-cyan-900/60'); }
+        });
+
+        function onPointerMove(event) {
+            if (!vaultOverlay.classList.contains('hidden') || !selectorOverlay.classList.contains('hidden')) return;
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1; mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(raycastTargets, false);
+
+            if (intersects.length > 0) {
+                const object = intersects[0].object;
+                if (object.userData.name) {
+                    document.body.style.cursor = 'crosshair';
+                    tooltip.innerHTML = object.userData.name;
+                    tooltip.style.opacity = '1';
+                    tooltip.style.left = (event.clientX + 15) + 'px'; tooltip.style.top = (event.clientY + 15) + 'px';
+                }
+            } else {
+                document.body.style.cursor = 'default'; tooltip.style.opacity = '0';
+            }
+        }
+
+        function handleInteractionStart() { isInteracting = true; clearTimeout(idleTimer); }
+        function handleInteractionEnd() { clearTimeout(idleTimer); idleTimer = setTimeout(() => { isInteracting = false; }, 2000); }
+
+        window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointerdown', handleInteractionStart);
+        window.addEventListener('pointerup', handleInteractionEnd);
+        window.addEventListener('touchstart', handleInteractionStart, {passive: true});
+        window.addEventListener('touchend', handleInteractionEnd, {passive: true});
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight); composer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const elapsedTime = clock.getElapsedTime();
+
+            if (isAutoRotate && !isInteracting) { phoneGroup.rotation.y += autoRotateSpeed; }
+            if (!isInteracting) { phoneGroup.position.y = Math.sin(elapsedTime * 1.5) * 0.2; }
+
+            bloomPass.strength = 1.0 + Math.sin(elapsedTime * 2) * 0.3;
+
+            explodableMeshes.forEach(mesh => {
+                if(mesh.parent) {
+                    const targetPos = isExploded ? mesh.userData.expPos : mesh.userData.origPos;
+                    mesh.position.lerp(targetPos, 0.05);
+                }
+            });
+
+            controls.update(); composer.render();
+        }
+
+        setTimeout(() => {
+            document.getElementById('loading').style.opacity = '0';
+            setTimeout(() => document.getElementById('loading').remove(), 500);
+            document.getElementById('vault-password').focus();
+        }, 1500); 
+
+        animate();
+    </script>
+</body>
+</html>
