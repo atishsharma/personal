@@ -5,22 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ATS Testing | Portfolio 2026</title>
     
-    <!-- PWA & Mobile Optimization -->
+    <!-- PWA Primary Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ATS Testing">
-    
-    <!-- Web App Manifest (Data URI for Single File Support) -->
+    <meta name="theme-color" content="#030712">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Web App Manifest -->
     <link rel="manifest" href='data:application/manifest+json,{"name":"ATS Testing","short_name":"ATS","start_url":".","display":"standalone","background_color":"#030712","theme_color":"#030712","icons":[{"src":"https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg","sizes":"400x400","type":"image/png"}]}'>
 
     <!-- Icons -->
     <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <link rel="apple-touch-icon" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     
-    <!-- Tailwind CSS -->
+    <!-- Scripts & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Inter & Space Grotesk -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
@@ -34,37 +34,38 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
             color: #f8fafc;
-            overflow: hidden; /* Prevent scrolling when modules are open */
+            overflow: hidden;
             -webkit-tap-highlight-color: transparent;
             height: 100vh;
             width: 100vw;
+            display: flex;
+            flex-direction: column;
         }
 
-        .heading-font {
-            font-family: 'Space Grotesk', sans-serif;
-        }
+        .heading-font { font-family: 'Space Grotesk', sans-serif; }
 
         .glass {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .card-hover:hover {
-            transform: translateY(-5px);
-            border-color: var(--accent);
-            box-shadow: 0 0 30px var(--accent-glow);
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .glow-text {
-            text-shadow: 0 0 10px var(--accent-glow);
+        .card-hover:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 40px -10px var(--accent-glow);
         }
 
         .bg-grid {
-            background-size: 40px 40px;
+            background-size: 50px 50px;
             background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+                linear-gradient(to right, rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
         }
 
         @keyframes scanline {
@@ -74,168 +75,122 @@
 
         .scanline {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.05), transparent);
-            animation: scanline 8s linear infinite;
+            top: 0; left: 0; width: 100%; height: 20vh;
+            background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.03), transparent);
+            animation: scanline 6s linear infinite;
             pointer-events: none;
             z-index: 100;
         }
 
-        /* Module View */
-        #moduleOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 200;
-            background: var(--bg);
-            display: none;
-            flex-direction: column;
+        /* App Shell - Module Overlay */
+        #appShell {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1000; background: var(--bg); display: none; flex-direction: column;
         }
 
-        #moduleFrame {
-            width: 100%;
-            flex: 1;
-            border: none;
+        #appShell iframe { width: 100%; flex: 1; border: none; }
+
+        .loading-bar {
+            height: 2px;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.3s;
         }
 
-        /* Hide scrollbars */
-        ::-webkit-scrollbar { display: none; }
+        ::-webkit-scrollbar { width: 0; background: transparent; }
     </style>
 </head>
-<body class="bg-grid min-h-screen flex flex-col">
+<body class="bg-grid">
 
     <div class="scanline"></div>
 
     <!-- Header -->
-    <header class="sticky top-0 z-40 px-6 py-4 flex items-center justify-between glass border-b border-white/10">
+    <header class="z-40 px-6 py-4 flex items-center justify-between glass border-b border-white/10 shrink-0">
         <div class="flex items-center gap-3">
             <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" 
-                 alt="ATS Logo" 
-                 class="w-10 h-10 rounded-xl border border-white/20">
+                 alt="ATS Logo" class="w-10 h-10 rounded-xl border border-white/20">
             <div>
-                <h1 class="heading-font text-lg font-bold tracking-tight glow-text uppercase">ATS Testing</h1>
-                <p class="text-[10px] text-blue-400 font-mono tracking-widest uppercase">System v2026.4</p>
+                <h1 class="heading-font text-lg font-bold tracking-tight uppercase">ATS Testing</h1>
+                <p class="text-[10px] text-blue-400 font-mono tracking-widest uppercase">PWA v2.1.26</p>
             </div>
         </div>
-        <button onclick="toggleInstallPrompt()" class="p-2 rounded-full glass border border-white/20 hover:bg-white/10 transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-square"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+        <button onclick="toggleInstallPrompt()" class="p-2.5 rounded-full glass border border-white/20 hover:bg-white/10 active:scale-95 transition-all">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
         </button>
     </header>
 
-    <!-- Main Content -->
-    <main id="mainContainer" class="flex-1 px-6 py-12 max-w-4xl mx-auto w-full overflow-y-auto">
-        
-        <div class="mb-12 text-center md:text-left">
-            <span class="inline-block px-3 py-1 mb-4 text-[10px] font-bold tracking-widest text-blue-400 border border-blue-400/30 rounded-full uppercase">Operational Hub</span>
-            <h2 class="heading-font text-4xl md:text-5xl font-bold mb-4">Select <span class="text-blue-500">Module</span></h2>
-            <p class="text-slate-400 max-w-lg">Advanced interactive hardware visualization environments. Authenticated access to 2026 prototype simulations.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            
-            <!-- Smartphone Card -->
-            <div onclick="openModule('https://atishaksharma.com/testing/smartphone.html')" class="group cursor-pointer relative block rounded-2xl overflow-hidden glass transition-all duration-500 card-hover">
-                <div class="aspect-[4/5] bg-slate-900 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                    <div class="flex items-center justify-center h-full opacity-40 group-hover:opacity-100 transition-opacity">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-                    </div>
-                </div>
-                <div class="absolute bottom-0 left-0 right-0 p-5 z-20">
-                    <p class="text-[10px] font-mono text-blue-400 mb-1">PROJECT: OMEGA</p>
-                    <h3 class="heading-font text-xl font-bold">Smartphone Vault</h3>
-                    <p class="text-xs text-slate-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">360° Wireframe Viewer • iPhone 17 Pro</p>
-                </div>
+    <!-- Content Area -->
+    <main class="flex-1 overflow-y-auto px-6 py-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="mb-10 text-center md:text-left">
+                <span class="inline-block px-3 py-1 mb-4 text-[10px] font-bold tracking-[0.2em] text-blue-400 border border-blue-400/30 rounded-full uppercase">Authenticated Access</span>
+                <h2 class="heading-font text-4xl md:text-6xl font-bold mb-4 tracking-tighter">System <span class="text-blue-500">Selection</span></h2>
+                <p class="text-slate-400 max-w-lg leading-relaxed">Select a terminal to begin hardware verification. Modules run in secure independent instances.</p>
             </div>
 
-            <!-- Camera Card -->
-            <div onclick="openModule('https://atishaksharma.com/testing/camera.html')" class="group cursor-pointer relative block rounded-2xl overflow-hidden glass transition-all duration-500 card-hover">
-                <div class="aspect-[4/5] bg-slate-900 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                    <div class="flex items-center justify-center h-full opacity-40 group-hover:opacity-100 transition-opacity">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Smartphone -->
+                <div onclick="openApp('https://atishaksharma.com/testing/smartphone.html')" class="group cursor-pointer relative rounded-3xl overflow-hidden glass border-white/5 card-hover">
+                    <div class="aspect-[4/5] bg-slate-900/50 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500/40 group-hover:scale-110 transition-transform duration-500"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                    </div>
+                    <div class="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
+                        <p class="text-[10px] font-mono text-blue-400 mb-1">UNIT: OMEGA-1</p>
+                        <h3 class="heading-font text-xl font-bold">Smartphone</h3>
                     </div>
                 </div>
-                <div class="absolute bottom-0 left-0 right-0 p-5 z-20">
-                    <p class="text-[10px] font-mono text-blue-400 mb-1">PROJECT: OPTICS</p>
-                    <h3 class="heading-font text-xl font-bold">Camera Lab</h3>
-                    <p class="text-xs text-slate-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Interactive 3D Teardown • Lens Array</p>
-                </div>
-            </div>
 
-            <!-- Laptop Card -->
-            <div onclick="openModule('https://atishaksharma.com/testing/laptop.html')" class="group cursor-pointer relative block rounded-2xl overflow-hidden glass transition-all duration-500 card-hover">
-                <div class="aspect-[4/5] bg-slate-900 overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
-                    <div class="flex items-center justify-center h-full opacity-40 group-hover:opacity-100 transition-opacity">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/><path d="M12 11h.01"/></svg>
+                <!-- Camera -->
+                <div onclick="openApp('https://atishaksharma.com/testing/camera.html')" class="group cursor-pointer relative rounded-3xl overflow-hidden glass border-white/5 card-hover">
+                    <div class="aspect-[4/5] bg-slate-900/50 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500/40 group-hover:scale-110 transition-transform duration-500"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                    </div>
+                    <div class="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
+                        <p class="text-[10px] font-mono text-blue-400 mb-1">UNIT: OPTIC-7</p>
+                        <h3 class="heading-font text-xl font-bold">Camera Lab</h3>
                     </div>
                 </div>
-                <div class="absolute bottom-0 left-0 right-0 p-5 z-20">
-                    <p class="text-[10px] font-mono text-blue-400 mb-1">PROJECT: SILICON</p>
-                    <h3 class="heading-font text-xl font-bold">Laptop Vault</h3>
-                    <p class="text-xs text-slate-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">Interactive 360° Viewer • MacBook Pro 16</p>
+
+                <!-- Laptop -->
+                <div onclick="openApp('https://atishaksharma.com/testing/laptop.html')" class="group cursor-pointer relative rounded-3xl overflow-hidden glass border-white/5 card-hover">
+                    <div class="aspect-[4/5] bg-slate-900/50 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500/40 group-hover:scale-110 transition-transform duration-500"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/><path d="M12 11h.01"/></svg>
+                    </div>
+                    <div class="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-black via-black/80 to-transparent">
+                        <p class="text-[10px] font-mono text-blue-400 mb-1">UNIT: SILICON-X</p>
+                        <h3 class="heading-font text-xl font-bold">Laptop Hub</h3>
+                    </div>
                 </div>
             </div>
-
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="p-8 text-center border-t border-white/5 bg-black/20">
-        <p class="text-xs font-mono text-slate-500 tracking-widest uppercase">© 2026 ATS Design Studio • All Assets Secure</p>
-    </footer>
-
-    <!-- Module Overlay (Iframe Shell) -->
-    <div id="moduleOverlay">
-        <header class="p-4 flex items-center justify-between glass border-b border-white/10">
-            <button onclick="closeModule()" class="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-blue-400">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
-                Return to Hub
+    <!-- App Shell Shell (The Native-App Container) -->
+    <div id="appShell">
+        <header class="p-4 flex items-center justify-between glass border-b border-white/10 shrink-0">
+            <button onclick="closeApp()" class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-blue-400">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                Terminal Home
             </button>
-            <span id="moduleTitle" class="heading-font text-[10px] font-bold tracking-[0.2em] uppercase opacity-50">Secure View</span>
+            <div id="loadingIndicator" class="loading-bar absolute bottom-0 left-0"></div>
+            <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" class="w-6 h-6 rounded-md opacity-50">
         </header>
-        <iframe id="moduleFrame" src="about:blank"></iframe>
+        <iframe id="appFrame" name="appFrame" src="about:blank"></iframe>
     </div>
 
-    <!-- Add to Home Screen Modal -->
-    <div id="installModal" class="fixed inset-0 z-[300] flex items-end justify-center bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none p-4 pb-12">
-        <div class="w-full max-w-sm glass rounded-3xl p-6 text-center transform translate-y-10 transition-transform duration-300 shadow-2xl">
-            <div class="flex justify-center mb-6">
-                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" class="w-16 h-16 rounded-2xl shadow-xl border-2 border-blue-500/50">
-            </div>
+    <!-- PWA Install Modal -->
+    <div id="installModal" class="fixed inset-0 z-[2000] flex items-end justify-center bg-black/80 backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none p-4 pb-12">
+        <div class="w-full max-w-sm glass rounded-[2.5rem] p-8 text-center transform translate-y-10 transition-transform duration-500 shadow-2xl border-white/10">
+            <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" class="w-20 h-20 mx-auto rounded-3xl shadow-2xl border-2 border-blue-500 mb-6">
             <h2 class="heading-font text-2xl font-bold mb-2">Install ATS Testing</h2>
-            <p class="text-slate-400 text-sm mb-8 leading-relaxed">Add this hub to your home screen for a full-screen, native app experience.</p>
+            <p class="text-slate-400 text-sm mb-8">Run this suite as a native application for full-screen immersive testing.</p>
             
-            <div class="space-y-4">
-                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10 text-left">
-                    <div class="p-2 bg-blue-500/20 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
-                    </div>
-                    <div class="text-xs">
-                        <p class="font-bold mb-1">1. Tap the Share Button</p>
-                        <p class="text-slate-500">Look for the share icon in your browser menu.</p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10 text-left">
-                    <div class="p-2 bg-blue-500/20 rounded-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
-                    </div>
-                    <div class="text-xs">
-                        <p class="font-bold mb-1">2. "Add to Home Screen"</p>
-                        <p class="text-slate-500">Scroll down and select the Add to Home Screen option.</p>
-                    </div>
-                </div>
+            <div id="installInstructions" class="space-y-4 mb-8 text-left">
+                <!-- Dynamic Content -->
             </div>
 
-            <button onclick="toggleInstallPrompt()" id="installConfirmBtn" class="mt-8 w-full py-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-colors">
-                Got it
+            <button onclick="toggleInstallPrompt()" id="pwaActionBtn" class="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition-all active:scale-95 shadow-lg shadow-blue-500/20">
+                Continue to Portal
             </button>
         </div>
     </div>
@@ -243,11 +198,66 @@
     <script>
         let deferredPrompt;
 
+        // Detection Utilities
+        const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = () => /Android/i.test(navigator.userAgent);
+        const isStandalone = () => window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+
+        // App Shell Management
+        function openApp(url) {
+            const shell = document.getElementById('appShell');
+            const frame = document.getElementById('appFrame');
+            const loader = document.getElementById('loadingIndicator');
+            
+            loader.style.width = '30%';
+            frame.src = url;
+            shell.style.display = 'flex';
+            
+            frame.onload = () => {
+                loader.style.width = '100%';
+                setTimeout(() => loader.style.width = '0%', 400);
+            };
+        }
+
+        function closeApp() {
+            const shell = document.getElementById('appShell');
+            const frame = document.getElementById('appFrame');
+            frame.src = 'about:blank';
+            shell.style.display = 'none';
+        }
+
+        // Install UI
         function toggleInstallPrompt() {
             const modal = document.getElementById('installModal');
             const content = modal.querySelector('div');
+            const instructions = document.getElementById('installInstructions');
             
             if (modal.classList.contains('opacity-0')) {
+                if (deferredPrompt) {
+                    instructions.innerHTML = `<div class="p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl text-xs text-blue-200">Native installer ready. System will prompt for desktop/home screen addition.</div>`;
+                    document.getElementById('pwaActionBtn').innerText = "Install Now";
+                } else if (isIOS()) {
+                    instructions.innerHTML = `
+                        <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <div class="text-blue-400 bg-blue-500/10 p-2.5 rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg></div>
+                            <p class="text-xs">1. Tap the <b>Share</b> icon below.</p>
+                        </div>
+                        <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <div class="text-blue-400 bg-blue-500/10 p-2.5 rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg></div>
+                            <p class="text-xs">2. Select <b>Add to Home Screen</b>.</p>
+                        </div>`;
+                } else if (isAndroid()) {
+                    instructions.innerHTML = `
+                        <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <div class="text-blue-400 font-bold text-xl px-2">⋮</div>
+                            <p class="text-xs">1. Open the <b>Chrome Menu</b> (Top-Right).</p>
+                        </div>
+                        <div class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5">
+                            <div class="text-blue-400 bg-blue-500/10 p-2.5 rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg></div>
+                            <p class="text-xs">2. Tap <b>Install App</b>.</p>
+                        </div>`;
+                }
+
                 modal.classList.remove('opacity-0', 'pointer-events-none');
                 setTimeout(() => content.classList.remove('translate-y-10'), 10);
             } else {
@@ -256,53 +266,30 @@
             }
         }
 
-        function openModule(url) {
-            const overlay = document.getElementById('moduleOverlay');
-            const frame = document.getElementById('moduleFrame');
-            const title = document.getElementById('moduleTitle');
-            
-            // Set title based on URL
-            if(url.includes('smartphone')) title.innerText = "Module: Smartphone Vault";
-            if(url.includes('camera')) title.innerText = "Module: Camera Lab";
-            if(url.includes('laptop')) title.innerText = "Module: Laptop Vault";
-
-            frame.src = url;
-            overlay.style.display = 'flex';
-        }
-
-        function closeModule() {
-            const overlay = document.getElementById('moduleOverlay');
-            const frame = document.getElementById('moduleFrame');
-            frame.src = 'about:blank';
-            overlay.style.display = 'none';
-        }
-
-        // Handle native Chrome A2HS prompt
+        // PWA Native Events
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            const btn = document.getElementById('installConfirmBtn');
-            btn.innerText = "Install Now";
+            const btn = document.getElementById('pwaActionBtn');
             btn.onclick = async () => {
-                toggleInstallPrompt();
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
                 deferredPrompt = null;
+                toggleInstallPrompt();
             };
         });
 
-        window.addEventListener('load', () => {
-            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-            
-            // If the app is refreshed while standalone, the iframe is naturally cleared
-            // because the src starts as about:blank. This fulfills the "open first page again" requirement.
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log("SW failed", err));
+            });
+        }
 
-            // Show prompt immediately if not standalone
-            if (!isStandalone) {
-                // Short timeout to ensure visual transition is smooth
-                setTimeout(() => {
-                    toggleInstallPrompt();
-                }, 500);
+        // Initial check
+        window.addEventListener('load', () => {
+            if (!isStandalone()) {
+                setTimeout(toggleInstallPrompt, 1500);
             }
         });
     </script>
