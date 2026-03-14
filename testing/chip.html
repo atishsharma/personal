@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Universal Chip Explorer - Infinite Zoom</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="Explore the microscopic architecture of modern silicon chips including Apple M1, AMD Ryzen, Intel Core, NVIDIA RTX, Qualcomm Snapdragon, and WD SSDs with this interactive 3D infinite zoom viewer.">
+    <meta name="keywords" content="ATS Design Studio, Chip Design, Silicon Architecture, Infinite Zoom, Microchip, 3D Viewer">
+    <meta name="author" content="ATS Design Studio">
+    <meta property="og:title" content="ATS Design Studio - Chip Design Viewer">
+    <meta property="og:description" content="Interactive 3D infinite zoom viewer for modern microchip architectures.">
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <style>
+        :root {
+            --bg-color: #030305;
+            --text-main: #ffffff;
+            --text-muted: #888899;
+            --theme-color: #ffffff;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            overscroll-behavior: none;
+            cursor: grab;
+        }
+
+        body:active { cursor: grabbing; }
+
+        canvas {
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        /* --- Header & Footer --- */
+        header {
+            position: absolute; top: 0; left: 0; width: 100%; height: 60px;
+            background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(12px);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; box-sizing: border-box; z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .logo { display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: 1px; text-decoration: none; }
+        .logo img { width: 32px; height: 32px; border-radius: 50%; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .brand-text { display: flex; flex-direction: column; }
+        .brand-name { font-size: 1rem; color: #fff; }
+        .brand-sub { font-size: 0.65rem; color: var(--theme-color); text-transform: uppercase; letter-spacing: 1.5px; transition: color 0.3s; }
+
+        footer {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 40px;
+            background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(12px);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 0.75rem; color: #888; z-index: 100;
+            border-top: 1px solid rgba(255,255,255,0.05); letter-spacing: 1px;
+        }
+
+        /* --- UI Overlay --- */
+        #top-ui {
+            position: absolute;
+            top: 80px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        #chip-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .chip-btn, .action-btn {
+            pointer-events: auto;
+            background: rgba(20, 20, 25, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .chip-btn:hover, .action-btn:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(40, 40, 50, 0.8);
+        }
+
+        .chip-btn.active, .action-btn.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--theme-color);
+            box-shadow: 0 0 15px var(--theme-color);
+        }
+
+        .desktop-chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        #mobile-chips { display: none; }
+        .divider { width: 2px; height: 20px; background: rgba(255,255,255,0.2); margin: 0 5px; align-self: center; }
+        .action-btn { display: flex; align-items: center; gap: 8px; justify-content: center; }
+
+        #ui-layer {
+            position: absolute;
+            bottom: 60px;
+            width: 100%;
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px;
+        }
+
+        .text-block {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.1s linear, transform 0.2s ease-out;
+            transform: translateY(10px);
+        }
+
+        .text-block.active { transform: translateY(0); }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+
+        p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-muted);
+            margin-top: 12px;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+        }
+
+        #text0 h1 { text-shadow: 0 0 30px var(--theme-color); }
+        #text1 h1 { color: #88aaff; text-shadow: 0 0 30px rgba(136, 170, 255, 0.4); }
+        #text2 h1 { color: #00ffff; text-shadow: 0 0 30px rgba(0, 255, 255, 0.5); }
+        #text3 h1 { color: #ffd700; text-shadow: 0 0 30px rgba(255, 215, 0, 0.4); }
+
+        #scroll-hint {
+            text-align: center;
+            opacity: 0.6;
+            animation: pulse 2s infinite ease-in-out;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            color: #fff;
+        }
+
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+        .progress-bar {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            z-index: 10;
+        }
+
+        .progress-fill {
+            width: 100%;
+            background: var(--theme-color);
+            height: 0%;
+            box-shadow: 0 0 10px var(--theme-color);
+            transition: background 0.5s, box-shadow 0.5s;
+        }
+
+        #context-badge {
+            position: absolute;
+            top: 150px;
+            left: 20px;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid #333;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .progress-bar { display: none; }
+            #context-badge { top: auto; bottom: 25%; left: 50%; transform: translateX(-50%); }
+            
+            header { padding: 0 15px; }
+            .brand-name { font-size: 0.9rem; }
+            
+            .desktop-chips { display: none; }
+            #mobile-chips {
+                display: block; pointer-events: auto;
+                background: rgba(20, 20, 25, 0.9); color: #fff;
+                border: 1px solid rgba(255,255,255,0.2);
+                padding: 8px 12px; border-radius: 8px; font-size: 0.9rem;
+                outline: none; backdrop-filter: blur(10px);
+                font-family: inherit; font-weight: 600; text-transform: uppercase;
+            }
+            .orbit-text { display: none; }
+            .action-btn { padding: 8px; border-radius: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo">
+            <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="ATS Logo">
+            <div class="brand-text">
+                <span class="brand-name">ATS Design Studio</span>
+                <span class="brand-sub">Chip Design Viewer</span>
+            </div>
+        </a>
+    </header>
+
+    <div id="top-ui">
+        <div id="chip-selector">
+            <div class="desktop-chips">
+                <button class="chip-btn active" onclick="selectChip('apple')" data-chip="apple">Apple</button>
+                <button class="chip-btn" onclick="selectChip('amd')" data-chip="amd">AMD</button>
+                <button class="chip-btn" onclick="selectChip('intel')" data-chip="intel">Intel</button>
+                <button class="chip-btn" onclick="selectChip('nvidia')" data-chip="nvidia">NVIDIA</button>
+                <button class="chip-btn" onclick="selectChip('qualcomm')" data-chip="qualcomm">Qualcomm</button>
+                <button class="chip-btn" onclick="selectChip('wd')" data-chip="wd">WD SSD</button>
+            </div>
+            
+            <select id="mobile-chips" onchange="selectChip(this.value)">
+                <option value="apple">Apple M1</option>
+                <option value="amd">AMD Ryzen</option>
+                <option value="intel">Intel Core</option>
+                <option value="nvidia">NVIDIA RTX</option>
+                <option value="qualcomm">Snapdragon</option>
+                <option value="wd">WD SSD</option>
+            </select>
+            
+            <div class="divider"></div>
+            <button class="action-btn" id="orbit-btn" onclick="toggleOrbit()">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9m-9 9a9 9 0 0 1 9-9"></path></svg>
+                <span class="orbit-text">3D Orbit: OFF</span>
+            </button>
+        </div>
+        <div id="scroll-hint">SCROLL TO ZOOM • DRAG TO EXPLORE</div>
+    </div>
+    
+    <div id="context-badge">REGION: LOGIC</div>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progress"></div>
+    </div>
+
+    <canvas id="zoomCanvas"></canvas>
+
+    <div id="ui-layer">
+        <div class="text-block" id="text0">
+            <h1 id="title0">APPLE M1</h1>
+            <p id="desc0">System on a Chip. Free-roaming architecture.</p>
+        </div>
+        <div class="text-block" id="text1">
+            <h1 id="title1">SILICON LAYOUT</h1>
+            <p id="desc1">Explore Macro architecture and functional blocks.</p>
+        </div>
+        <div class="text-block" id="text2">
+            <h1 id="title2">LOGIC GATES</h1>
+            <p id="desc2">Millions of diverse routing pathways processing data.</p>
+        </div>
+        <div class="text-block" id="text3">
+            <h1 id="title3">5nm FinFET</h1>
+            <p id="desc3">Transistor level. The foundation of the entire chip.</p>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 ATS Design Studio. All architectural layouts are illustrative.
+    </footer>
+
+    <script>
+        // --- CHIP DEFINITIONS ---
+        const CHIP_DATA = {
+            apple: {
+                themeColor: '#ffffff',
+                l0Text: ' M1', l0Sub: 'APPLE SILICON',
+                t0Name: 'APPLE M1', t0Desc: 'System on a Chip (SoC)',
+                regions: [
+                    { x: -2200, y: -2200, w: 1800, h: 4400, color: '#1a103c', stroke: '#442288', name: 'GPU CLUSTER', type: 'LOGIC' },
+                    { x: -200, y: -2200, w: 2400, h: 1400, color: '#3c1020', stroke: '#882244', name: 'PERFORMANCE CORES', type: 'LOGIC' },
+                    { x: -200, y: -800, w: 2400, h: 1600, color: '#102a3c', stroke: '#226688', name: 'SYSTEM CACHE', type: 'MEMORY' },
+                    { x: -200, y: 800, w: 2400, h: 1400, color: '#103c20', stroke: '#228844', name: 'EFFICIENCY CORES', type: 'LOGIC' },
+                ]
+            },
+            amd: {
+                themeColor: '#ff4400',
+                l0Text: 'RYZEN', l0Sub: 'ZEN ARCHITECTURE',
+                t0Name: 'AMD RYZEN', t0Desc: 'Chiplet Architecture (CCDs + IOD)',
+                regions: [
+                    { x: -2200, y: -2200, w: 1600, h: 4400, color: '#1a2a3c', stroke: '#224488', name: 'I/O DIE (IOD)', type: 'LOGIC' },
+                    { x: -400, y: -2200, w: 2600, h: 1200, color: '#3c1a10', stroke: '#884422', name: 'ZEN CORES', type: 'LOGIC' },
+                    { x: -400, y: -1000, w: 2600, h: 900, color: '#2a103c', stroke: '#662288', name: 'L3 CACHE', type: 'MEMORY' },
+                    { x: -400, y: 100, w: 2600, h: 1200, color: '#3c1a10', stroke: '#884422', name: 'ZEN CORES', type: 'LOGIC' },
+                    { x: -400, y: 1300, w: 2600, h: 900, color: '#2a103c', stroke: '#662288', name: 'L3 CACHE', type: 'MEMORY' },
+                ]
+            },
+            intel: {
+                themeColor: '#0066ff',
+                l0Text: 'CORE i9', l0Sub: 'HYBRID ARCHITECTURE',
+                t0Name: 'INTEL CORE', t0Desc: 'Monolithic Hybrid CPU (P-Cores & E-Cores)',
+                regions: [
+                    { x: -2200, y: -2200, w: 1200, h: 4400, color: '#102a3c', stroke: '#226688', name: 'iGPU', type: 'LOGIC' },
+                    { x: -800, y: -2200, w: 1400, h: 4400, color: '#101a3c', stroke: '#224488', name: 'P-CORES', type: 'LOGIC' },
+                    { x: 800, y: -2200, w: 600, h: 4400, color: '#3c2a10', stroke: '#886622', name: 'RING BUS / L3', type: 'MEMORY' },
+                    { x: 1600, y: -2200, w: 600, h: 4400, color: '#3c1020', stroke: '#882244', name: 'E-CORES', type: 'LOGIC' },
+                ]
+            },
+            nvidia: {
+                themeColor: '#76b900',
+                l0Text: 'RTX', l0Sub: 'ADA LOVELACE',
+                t0Name: 'NVIDIA RTX', t0Desc: 'Massive Parallel GPU Architecture',
+                regions: [
+                    { x: -2200, y: -2200, w: 4400, h: 400, color: '#2a3c10', stroke: '#668822', name: 'GDDR CTRL', type: 'LOGIC' },
+                    { x: -2200, y: 1800, w: 4400, h: 400, color: '#2a3c10', stroke: '#668822', name: 'GDDR CTRL', type: 'LOGIC' },
+                    { x: -2200, y: -1600, w: 1600, h: 3200, color: '#1a3c1a', stroke: '#228844', name: 'SM ARRAYS', type: 'LOGIC' },
+                    { x: 600, y: -1600, w: 1600, h: 3200, color: '#1a3c1a', stroke: '#228844', name: 'SM ARRAYS', type: 'LOGIC' },
+                    { x: -400, y: -1600, w: 800, h: 3200, color: '#3c2a1a', stroke: '#886622', name: 'GLOBAL L2 CACHE', type: 'MEMORY' },
+                ]
+            },
+            qualcomm: {
+                themeColor: '#ff0033',
+                l0Text: 'SNAPDRAGON', l0Sub: 'MOBILE PLATFORM',
+                t0Name: 'SNAPDRAGON', t0Desc: 'Highly Integrated Mobile SoC',
+                regions: [
+                    { x: -2200, y: -2200, w: 1800, h: 1800, color: '#3c1a10', stroke: '#882222', name: 'PRIME CORE', type: 'LOGIC' },
+                    { x: -200, y: -2200, w: 2400, h: 1800, color: '#3c2a10', stroke: '#884422', name: 'PERF CORES', type: 'LOGIC' },
+                    { x: -2200, y: -200, w: 2000, h: 2400, color: '#1a103c', stroke: '#442288', name: 'ADRENO GPU', type: 'LOGIC' },
+                    { x: 0, y: -200, w: 2200, h: 1100, color: '#103c2a', stroke: '#228866', name: 'HEXAGON DSP', type: 'LOGIC' },
+                    { x: 0, y: 1100, w: 2200, h: 1100, color: '#102a3c', stroke: '#226688', name: '5G MODEM', type: 'LOGIC' },
+                ]
+            },
+            wd: {
+                themeColor: '#00aaff',
+                l0Text: 'BiCS FLASH', l0Sub: '3D NAND SSD',
+                t0Name: 'WD SSD', t0Desc: 'High-Density 3D NAND Storage',
+                regions: [
+                    { x: -2200, y: -2200, w: 4400, h: 600, color: '#102a3c', stroke: '#226688', name: 'SSD CONTROLLER', type: 'LOGIC' },
+                    { x: -2200, y: -1400, w: 2000, h: 3600, color: '#3c1a3c', stroke: '#882288', name: 'NAND FLASH ARRAY', type: 'NAND' },
+                    { x: 200, y: -1400, w: 2000, h: 3600, color: '#3c1a3c', stroke: '#882288', name: 'NAND FLASH ARRAY', type: 'NAND' },
+                ]
+            }
+        };
+
+        // --- GLOBAL STATE ---
+        const canvas = document.getElementById('zoomCanvas');
+        const ctx = canvas.getContext('2d');
+        const scrollHint = document.getElementById('scroll-hint');
+        const contextBadge = document.getElementById('context-badge');
+        const textBlocks = [
+            document.getElementById('text0'), document.getElementById('text1'),
+            document.getElementById('text2'), document.getElementById('text3')
+        ];
+
+        let currentChip = 'apple';
+        let dpr = 1, cx = 0, cy = 0;
+        const MAX_ZOOM = 3.2, SCALE_PER_LEVEL = 15;
+        let currentZoom = 0, targetZoom = 0;
+        let panX = 0, panY = 0, targetPanX = 0, targetPanY = 0;
+        
+        let isDragging = false, lastClientX = 0, lastClientY = 0, initialPinchDist = null;
+        let currentRegionType = 'LOGIC';
+
+        // 3D Rotation State
+        let isOrbitMode = false;
+        let rotX = 0, rotY = 0, targetRotX = 0, targetRotY = 0;
+
+        function resize() {
+            dpr = window.devicePixelRatio || 1;
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = window.innerHeight + 'px';
+            cx = window.innerWidth / 2; cy = window.innerHeight / 2;
+        }
+        window.addEventListener('resize', resize); resize();
+
+        // --- UI SELECTION ---
+        window.selectChip = function(id) {
+            currentChip = id;
+            const chip = CHIP_DATA[id];
+            
+            // Update UI Theme
+            document.documentElement.style.setProperty('--theme-color', chip.themeColor);
+            document.getElementById('title0').innerText = chip.t0Name;
+            document.getElementById('desc0').innerText = chip.t0Desc;
+            
+            // Reset Camera
+            targetZoom = 0; targetPanX = 0; targetPanY = 0;
+            targetRotX = 0; targetRotY = 0;
+
+            // Sync Desktop Buttons
+            document.querySelectorAll('.desktop-chips .chip-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.chip === id);
+            });
+            
+            // Sync Mobile Select
+            document.getElementById('mobile-chips').value = id;
+        }
+
+        window.toggleOrbit = function() {
+            isOrbitMode = !isOrbitMode;
+            const btn = document.getElementById('orbit-btn');
+            const textSpan = btn.querySelector('.orbit-text');
+            textSpan.innerText = `3D Orbit: ${isOrbitMode ? 'ON' : 'OFF'}`;
+            btn.classList.toggle('active', isOrbitMode);
+            
+            if (!isOrbitMode) { 
+                targetRotX = 0; targetRotY = 0; 
+            } else if (targetZoom > 0.3) {
+                targetZoom = 0; // Zoom out to orbit
+            }
+        }
+
+        function disableOrbitOnZoom() {
+            if (isOrbitMode) {
+                isOrbitMode = false;
+                targetRotX = 0; targetRotY = 0;
+                const btn = document.getElementById('orbit-btn');
+                const textSpan = btn.querySelector('.orbit-text');
+                textSpan.innerText = `3D Orbit: OFF`;
+                btn.classList.remove('active');
+            }
+        }
+
+        // --- INPUT HANDLING ---
+        function handleZoom(deltaY, x, y) {
+            let zoomDelta = deltaY * -0.0015;
+            let prevTargetZoom = targetZoom;
+            targetZoom = Math.max(0, Math.min(MAX_ZOOM, targetZoom + zoomDelta));
+
+            // Force exit orbit mode if we start zooming deeply
+            if (targetZoom > 0.1 && zoomDelta > 0) {
+                disableOrbitOnZoom();
+            }
+
+            if (targetZoom !== prevTargetZoom) {
+                let oldScale = Math.pow(SCALE_PER_LEVEL, prevTargetZoom);
+                let newScale = Math.pow(SCALE_PER_LEVEL, targetZoom);
+                let localX = (x - cx - targetPanX) / oldScale;
+                let localY = (y - cy - targetPanY) / oldScale;
+                targetPanX = x - cx - localX * newScale;
+                targetPanY = y - cy - localY * newScale;
+            }
+            scrollHint.style.opacity = 0;
+        }
+
+        window.addEventListener('wheel', e => { e.preventDefault(); handleZoom(e.deltaY, e.clientX, e.clientY); }, { passive: false });
+        
+        window.addEventListener('mousedown', e => { isDragging = true; lastClientX = e.clientX; lastClientY = e.clientY; });
+        
+        window.addEventListener('mousemove', e => {
+            if (isDragging) { 
+                if (isOrbitMode) {
+                    targetRotY += (e.clientX - lastClientX) * 0.01;
+                    targetRotX -= (e.clientY - lastClientY) * 0.01; // Negative for natural feeling pitch
+                } else {
+                    targetPanX += e.clientX - lastClientX; 
+                    targetPanY += e.clientY - lastClientY; 
+                }
+                lastClientX = e.clientX; 
+                lastClientY = e.clientY; 
+                scrollHint.style.opacity = 0; 
+            }
+        });
+        
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mouseleave', () => isDragging = false);
+        
+        window.addEventListener('touchstart', e => {
+            if (e.touches.length === 1) {
+                isDragging = true; lastClientX = e.touches[0].clientX; lastClientY = e.touches[0].clientY;
+            } else if (e.touches.length === 2) {
+                isDragging = false; initialPinchDist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+            }
+        }, { passive: true });
+        
+        window.addEventListener('touchmove', e => {
+            if (e.touches.length === 1 && isDragging) {
+                if (isOrbitMode) {
+                    targetRotY += (e.touches[0].clientX - lastClientX) * 0.01;
+                    targetRotX -= (e.touches[0].clientY - lastClientY) * 0.01;
+                } else {
+                    targetPanX += e.touches[0].clientX - lastClientX; 
+                    targetPanY += e.touches[0].clientY - lastClientY; 
+                }
+                lastClientX = e.touches[0].clientX; 
+                lastClientY = e.touches[0].clientY; 
+                scrollHint.style.opacity = 0;
+            } else if (e.touches.length === 2 && initialPinchDist) {
+                let dist = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                let mx = (e.touches[0].clientX + e.touches[1].clientX) / 2; let my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                handleZoom(dist / initialPinchDist > 1 ? -20 : 20, mx, my); initialPinchDist = dist; 
+            }
+        }, { passive: false });
+        window.addEventListener('touchend', () => { isDragging = false; initialPinchDist = null; });
+
+        // --- UTILS ---
+        function getRegionType(x, y, scaleFromL1) {
+            let l1x = x / scaleFromL1; let l1y = y / scaleFromL1;
+            const regions = CHIP_DATA[currentChip].regions;
+            for(let r of regions) {
+                if (l1x >= r.x && l1x <= r.x + r.w && l1y >= r.y && l1y <= r.y + r.h) return r.type;
+            }
+            return 'LOGIC'; // default
+        }
+
+        function getVisibleBounds(scaleMultiplier, globalScale) {
+            let effScale = globalScale * scaleMultiplier;
+            return {
+                left: (-cx - panX) / effScale, right: (window.innerWidth - cx - panX) / effScale,
+                top: (-cy - panY) / effScale, bottom: (window.innerHeight - cy - panY) / effScale
+            };
+        }
+        function hash(x, y) { return Math.abs(Math.sin(x * 12.9898 + y * 78.233)) * 4343.14159; }
+
+        // --- RENDERING LAYERS ---
+
+        function drawLayer0Front(ctx, t) {
+            // Chip Substrate
+            ctx.fillStyle = '#0a140a';
+            ctx.beginPath(); ctx.roundRect(-350, -200, 700, 400, 15); ctx.fill();
+            
+            ctx.lineWidth = 1; ctx.strokeStyle = '#142814';
+            for(let i = -300; i < 300; i += 20) { ctx.beginPath(); ctx.moveTo(i, -180); ctx.lineTo(i, 180); ctx.stroke(); }
+
+            // Die housing outline
+            ctx.strokeStyle = '#555'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.roundRect(-155, -155, 310, 310, 8); ctx.stroke();
+        }
+
+        function drawLayer0Back(ctx) {
+            // Chip Substrate (Back Side)
+            ctx.fillStyle = '#060a06';
+            ctx.beginPath(); ctx.roundRect(-350, -200, 700, 400, 15); ctx.fill();
+
+            // Draw Gold Pins (LGA / PGA style array)
+            ctx.fillStyle = '#ccaa00'; 
+            ctx.shadowBlur = 3; ctx.shadowColor = '#ffff00';
+            for(let px = -320; px <= 320; px += 20) {
+                for(let py = -170; py <= 170; py += 20) {
+                    // Leave middle empty for Surface Mount Components (typical on back of CPUs)
+                    if (Math.abs(px) < 110 && Math.abs(py) < 110) continue;
+                    ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI*2); ctx.fill();
+                }
+            }
+            ctx.shadowBlur = 0;
+            
+            // Bottom center capacitors/resistors area
+            ctx.fillStyle = '#111';
+            ctx.beginPath(); ctx.roundRect(-100, -100, 200, 200, 5); ctx.fill();
+            ctx.fillStyle = '#886622';
+            for(let i = -80; i <= 80; i+= 30) {
+                for(let j = -80; j <= 80; j+= 30) {
+                    ctx.fillRect(i-10, j-6, 20, 12);
+                    // Add tiny silver contacts to components
+                    ctx.fillStyle = '#ccc';
+                    ctx.fillRect(i-10, j-6, 4, 12);
+                    ctx.fillRect(i+6, j-6, 4, 12);
+                    ctx.fillStyle = '#886622';
+                }
+            }
+        }
+
+        function drawLayer1(ctx, t, alpha) {
+            ctx.globalAlpha = alpha;
+            ctx.fillStyle = '#080812';
+            ctx.fillRect(-2325, -2325, 4650, 4650);
+
+            const regions = CHIP_DATA[currentChip].regions;
+            regions.forEach(r => {
+                ctx.fillStyle = r.color; ctx.fillRect(r.x, r.y, r.w, r.h);
+                ctx.strokeStyle = r.stroke; ctx.lineWidth = 15; ctx.strokeRect(r.x, r.y, r.w, r.h);
+
+                // Grid detail based on type
+                ctx.strokeStyle = 'rgba(255,255,255,0.05)'; 
+                ctx.lineWidth = r.type === 'NAND' ? 2 : 4;
+                let step = r.type === 'NAND' ? 50 : 200;
+                
+                for(let i = r.x + step; i < r.x + r.w; i += step) { ctx.beginPath(); ctx.moveTo(i, r.y); ctx.lineTo(i, r.y + r.h); ctx.stroke(); }
+                for(let i = r.y + step; i < r.y + r.h; i += step) { ctx.beginPath(); ctx.moveTo(r.x, i); ctx.lineTo(r.x + r.w, i); ctx.stroke(); }
+
+                if (r.w > 150 && r.h > 150) {
+                    ctx.fillStyle = r.stroke; 
+                    // Calculate a dynamic font size that perfectly fits both the width and height of the region
+                    let fontSize = Math.min(120, r.h * 0.3, (r.w * 0.85) / (r.name.length * 0.6));
+                    ctx.font = `bold ${fontSize}px monospace`;
+                    ctx.textAlign = 'center'; 
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(r.name, r.x + r.w/2, r.y + r.h/2);
+                }
+            });
+            ctx.globalAlpha = 1;
+        }
+
+        function drawLayer2(ctx, t, bounds) {
+            const MAX_EXTENT = 2325 * 15; 
+            let logicStep = 1200, memStep = 300, nandStep = 150;
+
+            let sX = Math.max(-MAX_EXTENT, Math.floor(bounds.left / logicStep) * logicStep);
+            let eX = Math.min(MAX_EXTENT, Math.ceil(bounds.right / logicStep) * logicStep);
+            let sY = Math.max(-MAX_EXTENT, Math.floor(bounds.top / logicStep) * logicStep);
+            let eY = Math.min(MAX_EXTENT, Math.ceil(bounds.bottom / logicStep) * logicStep);
+            if (sX > MAX_EXTENT || eX < -MAX_EXTENT) return;
+
+            // DRAW PASS 1: Dense Memory (SRAM & NAND)
+            ctx.lineWidth = 6;
+            for (let x = bounds.left - memStep; x <= bounds.right + memStep; x += memStep) {
+                for (let y = bounds.top - memStep; y <= bounds.bottom + memStep; y += memStep) {
+                    let rx = Math.floor(x/memStep)*memStep; let ry = Math.floor(y/memStep)*memStep;
+                    let type = getRegionType(rx, ry, 15);
+                    
+                    if (type === 'MEMORY') {
+                        ctx.strokeStyle = 'rgba(0, 200, 255, 0.5)'; ctx.beginPath(); ctx.moveTo(rx - memStep/2, ry); ctx.lineTo(rx + memStep/2, ry); ctx.stroke();
+                        ctx.strokeStyle = 'rgba(255, 100, 0, 0.5)'; ctx.beginPath(); ctx.moveTo(rx, ry - memStep/2); ctx.lineTo(rx, ry + memStep/2); ctx.stroke();
+                        if ((t*1000 + hash(rx,ry)) % 2000 < 100) {
+                            ctx.fillStyle = '#fff'; ctx.shadowBlur = 20; ctx.shadowColor = '#00ffff';
+                            ctx.beginPath(); ctx.arc(rx, ry, 15, 0, Math.PI*2); ctx.fill(); ctx.shadowBlur = 0;
+                        } else {
+                            ctx.fillStyle = '#335'; ctx.beginPath(); ctx.arc(rx, ry, 10, 0, Math.PI*2); ctx.fill();
+                        }
+                    } else if (type === 'NAND' && rx % nandStep === 0 && ry % nandStep === 0) {
+                        // Dense NAND arrays (dots representing vertical blocks)
+                        ctx.fillStyle = 'rgba(255, 0, 255, 0.3)';
+                        ctx.fillRect(rx - 60, ry - 60, 120, 120);
+                        if ((t*500 + hash(rx,ry)) % 1000 < 50) {
+                            ctx.fillStyle = '#f0f'; ctx.fillRect(rx - 60, ry - 60, 120, 120);
+                        }
+                    }
+                }
+            }
+
+            // DRAW PASS 2: Logic Gates
+            ctx.lineCap = 'round';
+            for (let x = sX; x <= eX; x += logicStep) {
+                for (let y = sY; y <= eY; y += logicStep) {
+                    if (getRegionType(x, y, 15) === 'LOGIC') {
+                        let h = hash(x, y); let gateType = Math.floor(h % 3); 
+                        ctx.save(); ctx.translate(x, y); ctx.rotate(Math.floor((h*10) % 4) * (Math.PI/2));
+
+                        ctx.strokeStyle = 'rgba(255, 0, 255, 0.3)'; ctx.lineWidth = 15;
+                        ctx.beginPath(); ctx.moveTo(-logicStep/2, -logicStep/2); ctx.lineTo(-150, -150);
+                        ctx.moveTo(logicStep/2, logicStep/2); ctx.lineTo(150, 150); ctx.stroke();
+                        
+                        if (h % 2 > 1.5) {
+                            ctx.strokeStyle = '#fff'; ctx.lineWidth = 8; ctx.setLineDash([80, 400]); ctx.lineDashOffset = -(t * 800);
+                            ctx.beginPath(); ctx.moveTo(-logicStep/2, -logicStep/2); ctx.lineTo(-150, -150); ctx.stroke(); ctx.setLineDash([]);
+                        }
+
+                        ctx.fillStyle = '#111820'; ctx.strokeStyle = '#00ffcc'; ctx.lineWidth = 12;
+                        ctx.shadowBlur = 30; ctx.shadowColor = '#00aa88'; ctx.beginPath();
+                        if (gateType === 0) {
+                            ctx.moveTo(-100, -100); ctx.lineTo(0, -100); ctx.arc(0, 0, 100, -Math.PI/2, Math.PI/2); ctx.lineTo(-100, 100); ctx.closePath();
+                        } else if (gateType === 1) {
+                            ctx.moveTo(-100, -100); ctx.quadraticCurveTo(50, -100, 100, 0); ctx.quadraticCurveTo(50, 100, -100, 100); ctx.quadraticCurveTo(-50, 0, -100, -100);
+                        } else {
+                            ctx.moveTo(-80, -100); ctx.quadraticCurveTo(70, -100, 120, 0); ctx.quadraticCurveTo(70, 100, -80, 100); ctx.quadraticCurveTo(-30, 0, -80, -100);
+                            ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-120, -100); ctx.quadraticCurveTo(-70, 0, -120, 100);
+                        }
+                        ctx.fill(); ctx.stroke(); ctx.restore();
+                    }
+                }
+            }
+        }
+
+        // LAYER 3: Transistor Levels (FinFET vs SRAM vs 3D NAND)
+        function drawLayer3(ctx, t, bounds) {
+            const MAX_EXTENT = 2325 * 15 * 15; 
+            const STEP_X = 4000, STEP_Y = 3000;
+
+            let startX = Math.max(-MAX_EXTENT, Math.floor(bounds.left / STEP_X) * STEP_X);
+            let endX = Math.min(MAX_EXTENT, Math.ceil(bounds.right / STEP_X) * STEP_X);
+            let startY = Math.max(-MAX_EXTENT, Math.floor(bounds.top / STEP_Y) * STEP_Y);
+            let endY = Math.min(MAX_EXTENT, Math.ceil(bounds.bottom / STEP_Y) * STEP_Y);
+
+            if (startX > MAX_EXTENT || endX < -MAX_EXTENT) return;
+
+            for (let x = startX; x <= endX; x += STEP_X) {
+                for (let y = startY; y <= endY; y += STEP_Y) {
+                    let type = getRegionType(x, y, 15*15);
+                    if (type === 'MEMORY') draw6TSRAMCell(ctx, x, y, t);
+                    else if (type === 'NAND') drawNANDCell(ctx, x, y, t);
+                    else drawSingleFinFET(ctx, x, y, t);
+                }
+            }
+        }
+
+        function drawSingleFinFET(ctx, cx, cy, t) {
+            ctx.save(); ctx.translate(cx, cy);
+            ctx.fillStyle = '#111'; ctx.fillRect(-1600, 600, 3200, 800);
+            ctx.fillStyle = '#445566'; ctx.lineWidth = 8; ctx.strokeStyle = '#88aacc';
+            [-800, -125, 550].forEach(fx => { ctx.fillRect(fx, -800, 250, 1600); ctx.strokeRect(fx, -800, 250, 1600); });
+
+            ctx.shadowBlur = 100; ctx.shadowColor = 'rgba(255, 215, 0, 0.6)';
+            ctx.fillStyle = 'rgba(255, 200, 0, 0.1)'; ctx.fillRect(-1400, -200, 2800, 400);
+            ctx.shadowBlur = 0; ctx.strokeStyle = '#ffcc00'; ctx.lineWidth = 20; ctx.strokeRect(-1400, -200, 2800, 400);
+
+            let pulse = Math.abs(Math.sin(t * 3 + (cx+cy)*0.001));
+            ctx.fillStyle = `rgba(0, 255, 255, ${0.1 + pulse*0.3})`;
+            ctx.shadowBlur = 60; ctx.shadowColor = '#00ffff';
+            ctx.fillRect(-1000, -700, 2000, 300); ctx.fillRect(-1000, 400, 2000, 300);
+            ctx.restore();
+        }
+
+        function draw6TSRAMCell(ctx, cx, cy, t) {
+            ctx.save(); ctx.translate(cx, cy);
+            ctx.strokeStyle = '#223'; ctx.lineWidth = 10; ctx.strokeRect(-1800, -1300, 3600, 2600);
+            ctx.fillStyle = '#0a0a11'; ctx.fillRect(-1800, -1300, 3600, 2600);
+
+            ctx.fillStyle = 'rgba(255, 200, 0, 0.2)'; ctx.shadowBlur = 50; ctx.shadowColor = '#ffaa00';
+            ctx.fillRect(-1900, -150, 3800, 300); ctx.strokeStyle = '#ffcc00'; ctx.lineWidth = 15; ctx.shadowBlur = 0; ctx.strokeRect(-1900, -150, 3800, 300);
+
+            ctx.fillStyle = 'rgba(0, 200, 255, 0.15)'; ctx.strokeStyle = '#00aaff';
+            ctx.fillRect(-1600, -1400, 300, 2800); ctx.strokeRect(-1600, -1400, 300, 2800); 
+            ctx.fillRect(1300, -1400, 300, 2800);  ctx.strokeRect(1300, -1400, 300, 2800);  
+
+            ctx.fillStyle = '#445566'; ctx.strokeStyle = '#88aacc'; ctx.lineWidth = 6;
+            [{x: -600, y: -900}, {x: -200, y: -900}, {x: -600, y: 500}, {x: -200, y: 500}, {x: 200, y: -900}, {x: 600, y: -900}, {x: 200, y: 500}, {x: 600, y: 500}].forEach(f => {
+                ctx.fillRect(f.x, f.y, 150, 600); ctx.strokeRect(f.x, f.y, 150, 600);
+            });
+
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 25; ctx.lineCap = 'square';
+            ctx.beginPath(); ctx.moveTo(-400, -300); ctx.lineTo(400, 300); ctx.moveTo(-400, 300); ctx.lineTo(400, -300); ctx.stroke();
+
+            let bitState = Math.sin(t + hash(cx,cy)*100) > 0;
+            ctx.fillStyle = bitState ? '#00ff44' : '#ff0044'; ctx.shadowBlur = 80; ctx.shadowColor = ctx.fillStyle;
+            ctx.beginPath(); ctx.arc(-100, -100, 80, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = !bitState ? '#00ff44' : '#ff0044'; ctx.shadowColor = ctx.fillStyle;
+            ctx.beginPath(); ctx.arc(100, 100, 80, 0, Math.PI*2); ctx.fill();
+            ctx.restore();
+        }
+
+        function drawNANDCell(ctx, cx, cy, t) {
+            ctx.save(); ctx.translate(cx, cy);
+            
+            for(let ox = -1000; ox <= 1000; ox += 1000) {
+                for(let oy = -1000; oy <= 1000; oy += 1000) {
+                    ctx.save(); ctx.translate(ox, oy);
+                    
+                    ctx.fillStyle = '#2a1a3c'; ctx.fillRect(-500, -500, 1000, 1000);
+                    ctx.strokeStyle = '#4a2a6c'; ctx.lineWidth = 10; ctx.strokeRect(-500, -500, 1000, 1000);
+
+                    ctx.shadowBlur = 100; ctx.shadowColor = '#ff00ff';
+                    ctx.fillStyle = 'rgba(255, 0, 255, 0.1)';
+                    ctx.beginPath(); ctx.arc(0, 0, 400, 0, Math.PI*2); ctx.fill();
+                    ctx.shadowBlur = 0;
+
+                    ctx.strokeStyle = '#ff00ff'; ctx.lineWidth = 40; ctx.beginPath(); ctx.arc(0, 0, 350, 0, Math.PI*2); ctx.stroke();
+                    ctx.strokeStyle = '#ffff00'; ctx.lineWidth = 60; ctx.beginPath(); ctx.arc(0, 0, 250, 0, Math.PI*2); ctx.stroke();
+                    
+                    let active = Math.sin(t*5 + hash(cx+ox, cy+oy)*10) > 0.5;
+                    ctx.fillStyle = active ? '#ffffff' : '#444'; 
+                    ctx.shadowBlur = active ? 50 : 0; ctx.shadowColor = '#fff';
+                    ctx.beginPath(); ctx.arc(0, 0, 120, 0, Math.PI*2); ctx.fill();
+                    
+                    ctx.restore();
+                }
+            }
+            ctx.restore();
+        }
+
+        // --- RENDER LOOP ---
+        function render() {
+            // Smooth Camera Easing
+            currentZoom += (targetZoom - currentZoom) * 0.1;
+            panX += (targetPanX - panX) * 0.15; panY += (targetPanY - panY) * 0.15;
+            
+            // Smooth 3D Rotation Easing
+            rotX += (targetRotX - rotX) * 0.1;
+            rotY += (targetRotY - rotY) * 0.1;
+
+            const globalScale = Math.pow(SCALE_PER_LEVEL, currentZoom);
+
+            currentRegionType = getRegionType(-panX / globalScale, -panY / globalScale, 1);
+
+            document.getElementById('progress').style.height = (currentZoom / MAX_ZOOM) * 100 + '%';
+            
+            if (currentZoom > 0.5) {
+                contextBadge.style.opacity = 1;
+                if (currentRegionType === 'MEMORY') {
+                    contextBadge.innerText = 'REGION: SRAM CACHE'; contextBadge.style.borderColor = '#00aaff'; contextBadge.style.boxShadow = '0 0 10px rgba(0, 170, 255, 0.4)';
+                    document.getElementById('title2').innerText = 'SRAM ARRAYS'; document.getElementById('desc2').innerText = 'Dense crossbar architecture for ultra-fast cache.';
+                    document.getElementById('title3').innerText = '6T SRAM CELL'; document.getElementById('desc3').innerText = 'Six transistors storing a single volatile bit.';
+                } else if (currentRegionType === 'NAND') {
+                    contextBadge.innerText = 'REGION: 3D NAND'; contextBadge.style.borderColor = '#ff00ff'; contextBadge.style.boxShadow = '0 0 10px rgba(255, 0, 255, 0.4)';
+                    document.getElementById('title2').innerText = 'FLASH ARRAYS'; document.getElementById('desc2').innerText = 'Massive high-density storage blocks.';
+                    document.getElementById('title3').innerText = 'CHARGE TRAP CELL'; document.getElementById('desc3').innerText = 'Vertical 3D pillars trapping electrons to store data.';
+                } else {
+                    contextBadge.innerText = 'REGION: LOGIC CORES'; contextBadge.style.borderColor = CHIP_DATA[currentChip].themeColor; contextBadge.style.boxShadow = `0 0 10px ${CHIP_DATA[currentChip].themeColor}`;
+                    document.getElementById('title2').innerText = 'LOGIC GATES'; document.getElementById('desc2').innerText = 'Diverse logic gates (AND, OR, XOR) processing data.';
+                    document.getElementById('title3').innerText = 'FinFET NODE'; document.getElementById('desc3').innerText = 'The physical transistor foundation of logic execution.';
+                }
+            } else { contextBadge.style.opacity = 0; }
+
+            for (let i = 0; i < textBlocks.length; i++) {
+                let opacity = Math.max(0, 1 - Math.abs(currentZoom - i) * 1.5);
+                textBlocks[i].style.opacity = opacity;
+                if (opacity > 0) textBlocks[i].classList.add('active'); else textBlocks[i].classList.remove('active');
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#030305'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const t = performance.now() / 1000;
+            ctx.save(); 
+            ctx.scale(dpr, dpr); 
+            ctx.translate(cx + panX, cy + panY); 
+            ctx.scale(globalScale, globalScale);
+
+            const chip = CHIP_DATA[currentChip];
+            
+            // Draw Chip Name OUTSIDE the block, unrotated so it is always readable
+            ctx.fillStyle = '#d0d0d5'; ctx.font = '600 45px sans-serif';
+            ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; 
+            ctx.fillText(chip.l0Text, -350, -225);
+            
+            ctx.fillStyle = chip.themeColor; ctx.font = '400 16px sans-serif'; 
+            ctx.shadowBlur = 10; ctx.shadowColor = chip.themeColor;
+            ctx.fillText(chip.l0Sub, -350, -205);
+            ctx.shadowBlur = 0;
+
+            // Apply 3D Projection Scaling
+            ctx.scale(Math.cos(rotY), Math.cos(rotX));
+
+            // Determine if we are looking at the front or the back based on 3D rotation vectors
+            let isFront = Math.cos(rotY) * Math.cos(rotX) > 0;
+
+            if (isFront) {
+                drawLayer0Front(ctx, t);
+                
+                // Clip and draw internals only if we are looking at the front
+                ctx.beginPath(); ctx.roundRect(-155, -155, 310, 310, 8); ctx.clip();
+
+                ctx.scale(1/SCALE_PER_LEVEL, 1/SCALE_PER_LEVEL);
+                drawLayer1(ctx, t, Math.max(0, 1 - (currentZoom - 1.5)));
+
+                ctx.scale(1/SCALE_PER_LEVEL, 1/SCALE_PER_LEVEL);
+                if (currentZoom > 0.5) drawLayer2(ctx, t, getVisibleBounds(1 / Math.pow(SCALE_PER_LEVEL, 2), globalScale));
+
+                ctx.scale(1/SCALE_PER_LEVEL, 1/SCALE_PER_LEVEL);
+                if (currentZoom > 1.5) drawLayer3(ctx, t, getVisibleBounds(1 / Math.pow(SCALE_PER_LEVEL, 3), globalScale));
+            } else {
+                drawLayer0Back(ctx);
+            }
+
+            ctx.restore(); requestAnimationFrame(render);
+        }
+
+        requestAnimationFrame(render);
+    </script>
+</body>
+</html>
