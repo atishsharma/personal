@@ -43,6 +43,23 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+        /* Modern Grid Pattern */
+        .bg-grid-pattern {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        
+        /* Accordion Styles */
+        summary::-webkit-details-marker { display: none; }
+        summary { list-style: none; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-200 selection:bg-emerald-500/30 antialiased overflow-x-hidden">
@@ -69,37 +86,52 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="relative pt-48 pb-32 px-6 overflow-hidden">
+    <!-- Modern Hero Section (WiseDev Style) -->
+    <section id="home" class="relative pt-32 pb-20 md:pt-40 md:pb-32 px-6 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
         
-        <!-- Unsplash Background with Gradient Overlay -->
-        <div class="absolute inset-0 -z-20">
-            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Abstract Dark Background" class="w-full h-full object-cover opacity-30" />
-            <div class="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-slate-950/80 to-slate-950"></div>
+        <!-- Grid Pattern Overlay -->
+        <div class="absolute inset-0 -z-30 bg-grid-pattern [mask-image:linear-gradient(to_bottom,white,transparent)] opacity-50"></div>
+
+        <!-- Unsplash Background with Vignette Overlay -->
+        <div class="absolute inset-0 -z-40">
+            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Abstract Dark Background" class="w-full h-full object-cover opacity-20" />
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#020617_100%)]"></div>
+            <div class="absolute inset-0 bg-slate-950/70"></div>
         </div>
 
         <!-- Ambient glows -->
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[500px] bg-emerald-600/20 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
-        <div class="absolute top-40 right-0 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-emerald-600/20 blur-[120px] rounded-full -z-20 pointer-events-none"></div>
+        <div class="absolute top-10 right-20 w-80 h-80 bg-blue-600/10 blur-[100px] rounded-full -z-20 pointer-events-none"></div>
 
-        <div class="max-w-7xl mx-auto text-center space-y-8 relative z-10">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 backdrop-blur-sm">
-                <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
-                copyright Ats Design Studio
+        <div class="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
+            
+            <!-- Modern Avatar Pill Badge -->
+            <div class="inline-flex items-center gap-3 px-1.5 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl transition-transform hover:scale-105 cursor-default mb-8">
+                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Atish Ak Sharma" class="w-7 h-7 rounded-full object-cover border border-white/20">
+                <div class="flex items-center gap-2 pr-4">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
+                    <span class="text-[10px] font-bold text-red-400 uppercase tracking-widest">copyright Ats Design Studio</span>
+                </div>
             </div>
 
-            <h1 class="text-5xl sm:text-7xl md:text-8xl font-black tracking-tighter leading-none">
-                <span class="gradient-text drop-shadow-lg">Welcome To My Portfolio</span>
+            <h1 class="text-5xl sm:text-7xl md:text-[5.5rem] font-black tracking-tighter leading-[1.05] mb-6">
+                <span class="text-white drop-shadow-sm">Welcome To My</span><br/>
+                <span class="gradient-text drop-shadow-lg">Portfolio</span>
             </h1>
-            <p class="text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed mt-4 drop-shadow-sm">
+            
+            <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed drop-shadow-sm mb-10">
                 A developer's garden of <span class="text-white font-medium">experiments, tools, and research</span>. 
                 Documenting the journey of ATS Design Studio.
             </p>
-            <div class="flex flex-wrap justify-center gap-4 pt-6">
-                <a href="#portfolio" class="px-8 py-4 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black rounded-2xl transition-all shadow-[0_0_30px_-5px_rgba(16,185,129,0.4)] transform hover:-translate-y-1">
+            
+            <!-- Modern Pill Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+                <a href="#portfolio" class="w-full sm:w-auto px-8 py-3.5 bg-white text-slate-950 hover:bg-slate-200 font-bold rounded-full transition-all shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
                     Explore Portfolio
+                    <svg class="w-4 h-4 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                 </a>
-                <a href="#contact" class="px-8 py-4 glass border border-white/10 hover:bg-white/10 text-white rounded-2xl transition-all font-bold transform hover:-translate-y-1">
+                <a href="#contact" class="w-full sm:w-auto px-8 py-3.5 glass border border-white/10 hover:bg-white/10 text-white rounded-full transition-all font-bold transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     Direct Contact
                 </a>
             </div>
@@ -119,168 +151,256 @@
 
             <div class="grid lg:grid-cols-2 gap-8">
                 
+                <!-- Open Source Projects (Spans Full Width at Top) -->
+                <div class="p-8 sm:p-10 bg-slate-900/50 border border-white/5 rounded-[2.5rem] hover:border-indigo-500/30 transition-all group backdrop-blur-sm lg:col-span-2">
+                    <details class="group/details" open>
+                        <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
+                            <div class="flex items-center gap-4">
+                                <div class="p-4 bg-indigo-500/10 text-indigo-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold">Open Source Projects</h3>
+                                    <p class="text-xs text-slate-500 mt-1">Major software applications and open-source contributions.</p>
+                                </div>
+                            </div>
+                            <div class="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors shrink-0 ml-4">
+                                <svg class="w-5 h-5 text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </summary>
+                        <div class="grid md:grid-cols-3 gap-4 mt-8 animate-fadeIn">
+                            <a href="https://github.com/atishsharma/AT-Music-Player" target="_blank" class="flex flex-col p-6 bg-slate-950/50 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 group/link">
+                                <div class="flex items-center justify-between mb-4">
+                                    <svg class="w-8 h-8 text-indigo-400 group-hover/link:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                                    <svg class="w-4 h-4 text-slate-500 group-hover/link:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <span class="font-bold text-lg block text-indigo-100 mb-2">AT Music Player</span>
+                                <span class="text-sm text-slate-400 leading-relaxed mb-4 flex-grow">A feature-rich, open-source music player project.</span>
+                                <div class="flex gap-2 mt-auto">
+                                    <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">App</span>
+                                    <span class="text-[10px] bg-indigo-900/30 px-2 py-1 rounded text-indigo-300 uppercase font-mono">Audio</span>
+                                </div>
+                            </a>
+                            
+                            <a href="https://github.com/atishsharma/Tulip-File-Explorer" target="_blank" class="flex flex-col p-6 bg-slate-950/50 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 group/link">
+                                <div class="flex items-center justify-between mb-4">
+                                    <svg class="w-8 h-8 text-blue-400 group-hover/link:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                                    <svg class="w-4 h-4 text-slate-500 group-hover/link:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <span class="font-bold text-lg block text-blue-100 mb-2">Tulip File Explorer</span>
+                                <span class="text-sm text-slate-400 leading-relaxed mb-4 flex-grow">An open-source, cross-platform file management utility.</span>
+                                <div class="flex gap-2 mt-auto">
+                                    <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Utility</span>
+                                    <span class="text-[10px] bg-blue-900/30 px-2 py-1 rounded text-blue-300 uppercase font-mono">System</span>
+                                </div>
+                            </a>
+
+                            <a href="https://github.com/atishsharma/ats-hindu-calendar-widget" target="_blank" class="flex flex-col p-6 bg-slate-950/50 rounded-2xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 group/link">
+                                <div class="flex items-center justify-between mb-4">
+                                    <svg class="w-8 h-8 text-orange-400 group-hover/link:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    <svg class="w-4 h-4 text-slate-500 group-hover/link:text-orange-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                </div>
+                                <span class="font-bold text-lg block text-orange-100 mb-2">Hindu Calendar Widget</span>
+                                <span class="text-sm text-slate-400 leading-relaxed mb-4 flex-grow">A cross-platform desktop widget for tracking dates and events.</span>
+                                <div class="flex gap-2 mt-auto">
+                                    <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Widget</span>
+                                    <span class="text-[10px] bg-orange-900/30 px-2 py-1 rounded text-orange-300 uppercase font-mono">Desktop</span>
+                                </div>
+                            </a>
+                        </div>
+                    </details>
+                </div>
+
                 <!-- 1. Experimental Labs -->
                 <div class="p-8 sm:p-10 bg-slate-900/50 border border-white/5 rounded-[2.5rem] hover:border-emerald-500/30 transition-all group backdrop-blur-sm">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="p-4 bg-emerald-500/10 text-emerald-400 rounded-2xl group-hover:scale-110 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold">Experimental Labs</h3>
-                            <p class="text-xs text-slate-500 mt-1">Hardware simulations & research prototypes.</p>
-                        </div>
-                    </div>
-                    <div class="space-y-3">
-                        <a href="https://atishaksharma.com/testing/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-emerald-100">Testing Grounds (Main)</span>
-                                <span class="text-xs text-slate-500">Root hub for hardware interfaces.</span>
+                    <details class="group/details">
+                        <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
+                            <div class="flex items-center gap-4">
+                                <div class="p-4 bg-emerald-500/10 text-emerald-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold">Experimental Labs</h3>
+                                    <p class="text-xs text-slate-500 mt-1">Hardware simulations & research prototypes.</p>
+                                </div>
                             </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Index</span>
-                        </a>
-                        <!-- Sub-items for Testing -->
-                        <div class="pl-4 border-l-2 border-white/5 space-y-2 ml-4 mb-4">
-                            <a href="https://atishaksharma.com/testing/camera.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> Camera Sim
+                            <div class="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors shrink-0 ml-4">
+                                <svg class="w-5 h-5 text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </summary>
+                        <div class="space-y-3 mt-8 animate-fadeIn">
+                            <a href="https://atishaksharma.com/testing/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-emerald-100">Testing Grounds (Main)</span>
+                                    <span class="text-xs text-slate-500">Root hub for hardware interfaces.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Index</span>
                             </a>
-                            <a href="https://atishaksharma.com/testing/chip.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg> Chip Logic
+                            <!-- Sub-items for Testing -->
+                            <div class="pl-4 border-l-2 border-white/5 space-y-2 ml-4 mb-4">
+                                <a href="https://atishaksharma.com/testing/camera.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> Camera Sim
+                                </a>
+                                <a href="https://atishaksharma.com/testing/chip.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg> Chip Logic
+                                </a>
+                                <a href="https://atishaksharma.com/testing/fold.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg> Fold Interaction
+                                </a>
+                                <a href="https://atishaksharma.com/testing/laptop.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> Laptop & Desktop
+                                </a>
+                                <a href="https://atishaksharma.com/testing/smartphone.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Smartphone
+                                </a>
+                            </div>
+                            <a href="https://atishaksharma.com/lab/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-emerald-100">The Lab</span>
+                                    <span class="text-xs text-slate-500">General experimental web API playground.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Research</span>
                             </a>
-                            <a href="https://atishaksharma.com/testing/fold.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg> Fold Interaction
-                            </a>
-                            <a href="https://atishaksharma.com/testing/laptop.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> Laptop & Desktop
-                            </a>
-                            <a href="https://atishaksharma.com/testing/smartphone.html" class="flex items-center gap-3 py-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Smartphone
+                            <a href="https://atishaksharma.com/concept/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-emerald-100">Concept Hub</span>
+                                    <span class="text-xs text-slate-500">Experimental design concepts.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Idea</span>
                             </a>
                         </div>
-                        <a href="https://atishaksharma.com/lab/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-emerald-100">The Lab</span>
-                                <span class="text-xs text-slate-500">General experimental web API playground.</span>
-                            </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Research</span>
-                        </a>
-                        <a href="https://atishaksharma.com/concept/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-emerald-100">Concept Hub</span>
-                                <span class="text-xs text-slate-500">Experimental design concepts.</span>
-                            </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Idea</span>
-                        </a>
-                    </div>
+                    </details>
                 </div>
 
                 <!-- 2. Business & Research -->
                 <div class="p-8 sm:p-10 bg-slate-900/50 border border-white/5 rounded-[2.5rem] hover:border-orange-500/30 transition-all group backdrop-blur-sm">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="p-4 bg-orange-500/10 text-orange-400 rounded-2xl group-hover:scale-110 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold">Business & Research</h3>
-                            <p class="text-xs text-slate-500 mt-1">Strategic research and brand feasibility.</p>
-                        </div>
-                    </div>
-                    <div class="space-y-3">
-                        <a href="https://atishaksharma.com/ember/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-orange-100">Ember Core</span>
-                                <span class="text-xs text-slate-500">Main hub for Ember project.</span>
-                            </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Index</span>
-                        </a>
-                        <a href="https://atishaksharma.com/ember/studio/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-orange-100">Ember Studio</span>
-                                <span class="text-xs text-slate-500">Brand identity & visual research.</span>
-                            </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Design</span>
-                        </a>
-                        <a href="https://atishaksharma.com/ember/market.html" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-orange-100">Ember Market</span>
-                                <span class="text-xs text-slate-500">Feasibility and positioning strategy.</span>
-                            </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Strategy</span>
-                        </a>
-                        <a href="https://atishaksharma.com/ember/Scented%20Candle%20Business%20Feasibility%20Report.pdf" target="_blank" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 mt-2 border-dashed border-orange-500/20">
-                            <div class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <details class="group/details">
+                        <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
+                            <div class="flex items-center gap-4">
+                                <div class="p-4 bg-orange-500/10 text-orange-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                                </div>
                                 <div>
-                                    <span class="font-bold text-sm block text-orange-100">Feasibility Report</span>
-                                    <span class="text-xs text-slate-500">PDF Document Analysis</span>
+                                    <h3 class="text-2xl font-bold">Business & Research</h3>
+                                    <p class="text-xs text-slate-500 mt-1">Strategic research and brand feasibility.</p>
                                 </div>
                             </div>
-                        </a>
-                    </div>
+                            <div class="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors shrink-0 ml-4">
+                                <svg class="w-5 h-5 text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </summary>
+                        <div class="space-y-3 mt-8 animate-fadeIn">
+                            <a href="https://atishaksharma.com/ember/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-orange-100">Ember Core</span>
+                                    <span class="text-xs text-slate-500">Main hub for Ember project.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Index</span>
+                            </a>
+                            <a href="https://atishaksharma.com/ember/studio/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-orange-100">Ember Studio</span>
+                                    <span class="text-xs text-slate-500">Brand identity & visual research.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Design</span>
+                            </a>
+                            <a href="https://atishaksharma.com/ember/market.html" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-orange-100">Ember Market</span>
+                                    <span class="text-xs text-slate-500">Feasibility and positioning strategy.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Strategy</span>
+                            </a>
+                            <a href="https://atishaksharma.com/ember/Scented%20Candle%20Business%20Feasibility%20Report.pdf" target="_blank" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10 mt-2 border-dashed border-orange-500/20">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    <div>
+                                        <span class="font-bold text-sm block text-orange-100">Feasibility Report</span>
+                                        <span class="text-xs text-slate-500">PDF Document Analysis</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </details>
                 </div>
 
                 <!-- 3. Personal Utilities -->
                 <div class="p-8 sm:p-10 bg-slate-900/50 border border-white/5 rounded-[2.5rem] hover:border-blue-500/30 transition-all group backdrop-blur-sm">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="p-4 bg-blue-500/10 text-blue-400 rounded-2xl group-hover:scale-110 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    <details class="group/details">
+                        <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
+                            <div class="flex items-center gap-4">
+                                <div class="p-4 bg-blue-500/10 text-blue-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold">Personal Utilities</h3>
+                                    <p class="text-xs text-slate-500 mt-1">Internal tools for productivity & organization.</p>
+                                </div>
+                            </div>
+                            <div class="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors shrink-0 ml-4">
+                                <svg class="w-5 h-5 text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </summary>
+                        <div class="space-y-3 mt-8 animate-fadeIn">
+                            <a href="https://atishaksharma.com/hub/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-blue-100">Personal Hub</span>
+                                    <span class="text-xs text-slate-500">Personal bookmark manager.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">PWA</span>
+                            </a>
+                            <a href="https://atishaksharma.com/memo/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-blue-100">Memo Vault</span>
+                                    <span class="text-xs text-slate-500">Minimalist note-taking & logging.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Tools</span>
+                            </a>
+                            <a href="https://atishaksharma.com/calendar/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-blue-100">Time Calendar</span>
+                                    <span class="text-xs text-slate-500">Custom scheduling & event tracking.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">App</span>
+                            </a>
                         </div>
-                        <div>
-                            <h3 class="text-2xl font-bold">Personal Utilities</h3>
-                            <p class="text-xs text-slate-500 mt-1">Internal tools for productivity & organization.</p>
-                        </div>
-                    </div>
-                    <div class="space-y-3">
-                        <a href="https://atishaksharma.com/hub/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-blue-100">Personal Hub</span>
-                                <span class="text-xs text-slate-500">Personal bookmark manager.</span>
-                            </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">PWA</span>
-                        </a>
-                        <a href="https://atishaksharma.com/memo/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-blue-100">Memo Vault</span>
-                                <span class="text-xs text-slate-500">Minimalist note-taking & logging.</span>
-                            </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Tools</span>
-                        </a>
-                        <a href="https://atishaksharma.com/calendar/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-blue-100">Time Calendar</span>
-                                <span class="text-xs text-slate-500">Custom scheduling & event tracking.</span>
-                            </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">App</span>
-                        </a>
-                    </div>
+                    </details>
                 </div>
 
                 <!-- 4. Design Systems -->
                 <div class="p-8 sm:p-10 bg-slate-900/50 border border-white/5 rounded-[2.5rem] hover:border-purple-500/30 transition-all group backdrop-blur-sm">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="p-4 bg-purple-500/10 text-purple-400 rounded-2xl group-hover:scale-110 transition-transform">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold">Design Systems</h3>
-                            <p class="text-xs text-slate-500 mt-1">Visual redesigns & UI framework explorations.</p>
-                        </div>
-                    </div>
-                    <div class="space-y-3">
-                        <a href="https://atishaksharma.com/tulip/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-purple-100">Tulip Framework</span>
-                                <span class="text-xs text-slate-500">Visual-first CSS layout exploration.</span>
+                    <details class="group/details">
+                        <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
+                            <div class="flex items-center gap-4">
+                                <div class="p-4 bg-purple-500/10 text-purple-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-bold">Design Systems</h3>
+                                    <p class="text-xs text-slate-500 mt-1">Visual redesigns & UI framework explorations.</p>
+                                </div>
                             </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Layout</span>
-                        </a>
-                        <a href="https://atishaksharma.com/core1987remote/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
-                            <div>
-                                <span class="font-bold text-sm block text-purple-100">Core1987 Remote</span>
-                                <span class="text-xs text-slate-500">Nostalgic interface for management.</span>
+                            <div class="p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors shrink-0 ml-4">
+                                <svg class="w-5 h-5 text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
-                            <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Legacy</span>
-                        </a>
-                    </div>
+                        </summary>
+                        <div class="space-y-3 mt-8 animate-fadeIn">
+                            <a href="https://atishaksharma.com/tulip/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-purple-100">Tulip Framework</span>
+                                    <span class="text-xs text-slate-500">Visual-first CSS layout exploration.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Layout</span>
+                            </a>
+                            <a href="https://atishaksharma.com/core1987remote/" class="flex items-center justify-between p-4 bg-slate-950/50 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10">
+                                <div>
+                                    <span class="font-bold text-sm block text-purple-100">Core1987 Remote</span>
+                                    <span class="text-xs text-slate-500">Nostalgic interface for management.</span>
+                                </div>
+                                <span class="text-[10px] bg-slate-900 px-2 py-1 rounded text-slate-400 uppercase font-mono">Legacy</span>
+                            </a>
+                        </div>
+                    </details>
                 </div>
 
             </div>
