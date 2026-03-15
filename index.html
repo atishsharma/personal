@@ -145,7 +145,7 @@
             </button>
             <div class="flex items-center gap-4">
                 <div id="viewer-title" class="hidden sm:block text-sm font-bold text-slate-800 dark:text-slate-300 uppercase tracking-widest truncate max-w-[200px] drop-shadow-sm">Preview</div>
-                <a id="viewer-external-link" href="#" target="_blank" class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors" title="Open in new tab (Use this if blocked)">
+                <a id="viewer-external-link" href="#" target="_blank" class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors" title="Open in new tab">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </a>
             </div>
@@ -194,7 +194,8 @@
                     <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
                 </button>
 
-                <a href="https://github.com/atishsharma" target="_blank" aria-label="GitHub Profile" class="app-link p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors shrink-0 drop-shadow-sm" data-title="GitHub Profile">
+                <!-- Note: External links do NOT have the .app-link class so they bypass the iframe viewer natively -->
+                <a href="https://github.com/atishsharma" target="_blank" aria-label="GitHub Profile" class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors shrink-0 drop-shadow-sm">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"></path></svg>
                 </a>
             </div>
@@ -202,7 +203,7 @@
     </nav>
 
     <!-- Modern Hero Section -->
-    <section id="home" class="relative pt-32 pb-20 md:pt-40 md:pb-32 px-6 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
+    <section id="home" class="relative pt-32 pb-16 md:pt-40 md:pb-24 px-6 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
         
         <!-- Floating Ambient glows -->
         <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-emerald-500/20 dark:bg-emerald-600/30 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
@@ -215,7 +216,7 @@
                 <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Atish Ak Sharma" class="w-7 h-7 rounded-full object-cover border border-white/50 dark:border-white/20">
                 <div class="flex items-center gap-2 pr-4">
                     <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
-                    <span class="text-[10px] font-bold text-red-600 dark:text-red-400 uppercase tracking-widest">copyright Ats Design Studio</span>
+                    <span class="text-[10px] font-bold text-red-600 dark:text-red-400 uppercase tracking-widest">&copy; Ats Design Studio</span>
                 </div>
             </div>
 
@@ -242,9 +243,9 @@
             </div>
             
             <!-- Blinking Scroll Down Arrow -->
-            <div class="mt-16 md:mt-24 animate-bounce">
-                <a href="#portfolio" aria-label="Scroll to Portfolio" class="p-2 block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors drop-shadow-md">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            <div class="mt-16 md:mt-24">
+                <a href="#portfolio" aria-label="Scroll to Portfolio" class="p-4 block text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors drop-shadow-md animate-bounce">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                 </a>
             </div>
         </div>
@@ -284,7 +285,8 @@
                         
                         <!-- 3 columns on Laptop (lg) -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 animate-fadeIn">
-                            <a href="https://github.com/atishsharma/AT-Music-Player" class="app-link flex flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link" data-title="AT Music Player">
+                            <!-- Notice: target="_blank" is used and .app-link is omitted for external domains -->
+                            <a href="https://github.com/atishsharma/AT-Music-Player" target="_blank" class="flex flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link">
                                 <div class="flex items-center justify-between mb-4">
                                     <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400 group-hover/link:scale-110 transition-transform drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
                                     <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover/link:text-indigo-600 dark:group-hover/link:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
@@ -297,7 +299,7 @@
                                 </div>
                             </a>
                             
-                            <a href="https://github.com/atishsharma/Tulip-File-Explorer" class="app-link flex flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link" data-title="Tulip File Explorer">
+                            <a href="https://github.com/atishsharma/Tulip-File-Explorer" target="_blank" class="flex flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link">
                                 <div class="flex items-center justify-between mb-4">
                                     <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 group-hover/link:scale-110 transition-transform drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
                                     <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover/link:text-blue-600 dark:group-hover/link:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
@@ -310,7 +312,7 @@
                                 </div>
                             </a>
 
-                            <a href="https://github.com/atishsharma/ats-hindu-calendar-widget" class="app-link flex flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link" data-title="Hindu Calendar Widget">
+                            <a href="https://github.com/atishsharma/ats-hindu-calendar-widget" target="_blank" class="flex flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link">
                                 <div class="flex items-center justify-between mb-4">
                                     <svg class="w-8 h-8 text-orange-600 dark:text-orange-400 group-hover/link:scale-110 transition-transform drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                                     <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover/link:text-orange-600 dark:group-hover/link:text-orange-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
@@ -426,7 +428,8 @@
                                 </div>
                                 <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Strategy</span>
                             </a>
-                            <a href="https://atishaksharma.com/ember/Scented%20Candle%20Business%20Feasibility%20Report.pdf" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors mt-2 border-dashed !border-orange-500/30" data-title="Feasibility Report">
+                            <!-- External link handled natively by not using app-link class and using target="_blank" -->
+                            <a href="https://atishaksharma.com/ember/Scented%20Candle%20Business%20Feasibility%20Report.pdf" target="_blank" class="flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors mt-2 border-dashed !border-orange-500/30">
                                 <div class="flex items-center gap-3">
                                     <svg class="w-5 h-5 text-orange-600 dark:text-orange-400 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                                     <div>
@@ -434,6 +437,7 @@
                                         <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">PDF Document Analysis</span>
                                     </div>
                                 </div>
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                             </a>
                         </div>
                     </details>
@@ -524,25 +528,67 @@
 
     <!-- Contact Section -->
     <section id="contact" class="py-24 px-6 relative overflow-hidden z-10">
-        <div class="max-w-4xl mx-auto text-center space-y-12 relative z-10">
+        <div class="max-w-5xl mx-auto text-center space-y-12 relative z-10">
             <div class="space-y-4">
                 <h2 class="text-4xl font-black text-slate-900 dark:text-white drop-shadow-sm">Direct Communication</h2>
-                <p class="text-slate-700 dark:text-slate-300 font-medium drop-shadow-sm">For collaboration, research inquiries, or project access.</p>
+                <p class="text-slate-700 dark:text-slate-300 font-medium drop-shadow-sm">Connect with me across the web @atishaksharma</p>
             </div>
-            <div class="grid sm:grid-cols-2 gap-6 text-left">
-                <a href="mailto:mail@atishaksharma.com" class="p-8 glass-panel hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all group flex items-center justify-between rounded-[2rem]">
+            
+            <!-- 3 Column Social Grid -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+                
+                <!-- Official Email -->
+                <a href="mailto:mail@atishaksharma.com" target="_blank" class="p-6 glass-panel hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all group flex items-center justify-between rounded-[2rem]">
                     <div>
-                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Email Protocol</p>
-                        <p class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">mail@atishaksharma.com</p>
+                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Official Email</p>
+                        <p class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors truncate">mail@atishaksharma.com</p>
                     </div>
-                    <svg class="w-8 h-8 text-emerald-600 dark:text-emerald-400 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <svg class="w-6 h-6 text-emerald-600 dark:text-emerald-400 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                 </a>
-                <a href="https://github.com/atishsharma" target="_blank" class="app-link p-8 glass-panel hover:border-blue-500/50 dark:hover:border-blue-500/50 transition-all group flex items-center justify-between rounded-[2rem]" data-title="GitHub Profile">
+                
+                <!-- Gmail -->
+                <a href="mailto:atishaksharma@gmail.com" target="_blank" class="p-6 glass-panel hover:border-red-500/50 dark:hover:border-red-500/50 transition-all group flex items-center justify-between rounded-[2rem]">
                     <div>
-                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Repository Access</p>
-                        <p class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">@atishsharma</p>
+                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Google Mail</p>
+                        <p class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">@atishaksharma</p>
                     </div>
-                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                    <svg class="w-6 h-6 text-red-600 dark:text-red-400 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M22 6l-10 7L2 6"></path></svg>
+                </a>
+
+                <!-- GitHub -->
+                <a href="https://github.com/atishsharma" target="_blank" class="p-6 glass-panel hover:border-blue-500/50 dark:hover:border-blue-500/50 transition-all group flex items-center justify-between rounded-[2rem]">
+                    <div>
+                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">GitHub</p>
+                        <p class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">@atishsharma</p>
+                    </div>
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md shrink-0 ml-3" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                </a>
+
+                <!-- Instagram -->
+                <a href="https://instagram.com/atishaksharma" target="_blank" class="p-6 glass-panel hover:border-pink-500/50 dark:hover:border-pink-500/50 transition-all group flex items-center justify-between rounded-[2rem]">
+                    <div>
+                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Instagram</p>
+                        <p class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition-colors">@atishaksharma</p>
+                    </div>
+                    <svg class="w-6 h-6 text-pink-600 dark:text-pink-400 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md shrink-0 ml-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                </a>
+
+                <!-- Twitter (X) -->
+                <a href="https://twitter.com/atishaksharma" target="_blank" class="p-6 glass-panel hover:border-slate-800/50 dark:hover:border-slate-300/50 transition-all group flex items-center justify-between rounded-[2rem]">
+                    <div>
+                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Twitter / X</p>
+                        <p class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-black dark:group-hover:text-slate-300 transition-colors">@atishaksharma</p>
+                    </div>
+                    <svg class="w-6 h-6 text-slate-800 dark:text-slate-200 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md shrink-0 ml-3" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 4.07H5.078z"/></svg>
+                </a>
+
+                <!-- Facebook -->
+                <a href="https://facebook.com/atishaksharma" target="_blank" class="p-6 glass-panel hover:border-indigo-600/50 dark:hover:border-indigo-500/50 transition-all group flex items-center justify-between rounded-[2rem]">
+                    <div>
+                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Facebook</p>
+                        <p class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-indigo-700 dark:group-hover:text-indigo-400 transition-colors">@atishaksharma</p>
+                    </div>
+                    <svg class="w-6 h-6 text-indigo-600 dark:text-indigo-500 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md shrink-0 ml-3" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
                 </a>
             </div>
         </div>
@@ -552,7 +598,7 @@
     <footer class="py-12 px-6 text-center text-slate-700 dark:text-slate-400 glass-nav border-t-0 relative z-20">
         <div class="max-w-7xl mx-auto flex flex-col items-center justify-center gap-2">
             <p class="text-sm font-bold drop-shadow-sm">
-                &copy; <script>document.write(new Date().getFullYear())</script> Atish Ak Sharma.
+                &copy; <script>document.write(new Date().getFullYear())</script> All The Rights Reserved By Atish Ak Sharma
             </p>
         </div>
     </footer>
@@ -602,11 +648,14 @@
                     // Do not intercept mailto or basic hashes
                     if (url.startsWith('mailto:') || url.startsWith('#')) return;
 
-                    // Fallback check to let completely external URLs open in new tabs
+                    // Robust safety fallback: Let external domains always open in new tabs naturally
                     try {
-                        const linkUrl = new URL(url);
-                        if (linkUrl.hostname !== window.location.hostname && linkUrl.hostname !== 'atishaksharma.com' && window.location.hostname !== '') {
-                            return; // Let the browser handle standard link behavior
+                        const linkUrl = new URL(url, window.location.href);
+                        if (linkUrl.hostname !== window.location.hostname && linkUrl.hostname !== 'atishaksharma.com' && linkUrl.hostname !== '') {
+                            // If we hit an external domain that somehow got the app-link class, force new tab behavior
+                            e.preventDefault();
+                            window.open(url, '_blank');
+                            return; 
                         }
                     } catch(err) {}
                     
