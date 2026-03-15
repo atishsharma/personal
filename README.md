@@ -1,4 +1,4 @@
-# Atish Ak Sharma | Official Portfolio & Testing Gallery
+# Atish Ak Sharma | Official Portfolio
 
 Welcome to My Personal Repository. This project serves as a central hub for my developer journey, documenting a Testing of experiments, interactive web tools, and research modules under the **ATS Design Studio**.
 
