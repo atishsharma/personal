@@ -48,13 +48,44 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         
-        .glass { 
-            background: rgba(248, 250, 252, 0.85); /* slate-50 */
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px); 
+        /* High-End Glassmorphism Utilities */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
         }
-        .dark .glass {
-            background: rgba(15, 23, 42, 0.85); /* slate-900 */
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.5);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.35);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 24px 40px -8px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255,255,255,0.2);
+        }
+        .dark .glass-panel {
+            background: rgba(17, 24, 39, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 24px 40px -8px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255,255,255,0.05);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .dark .glass-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         
         .gradient-text {
@@ -68,10 +99,10 @@
             -webkit-text-fill-color: transparent;
         }
         
-        /* Modern Grid Pattern */
+        /* Modern Grid Pattern overlaying the wallpaper */
         .bg-grid-pattern {
-            background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
-                              linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-image: linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px);
             background-size: 32px 32px;
         }
         .dark .bg-grid-pattern {
@@ -91,66 +122,79 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-200 selection:bg-emerald-500/30 antialiased overflow-x-hidden transition-colors duration-300">
+<body class="text-slate-900 dark:text-slate-200 selection:bg-emerald-500/30 antialiased overflow-x-hidden transition-colors duration-300 bg-transparent">
 
-    <!-- App-Like Full Screen Viewer Overlay -->
-    <div id="app-viewer" class="fixed inset-0 z-[100] bg-slate-100 dark:bg-slate-950 flex flex-col hidden transition-opacity duration-300 opacity-0">
-        <div class="h-16 glass border-b border-black/10 dark:border-white/10 flex items-center px-4 justify-between shrink-0 shadow-lg">
-            <button id="close-viewer" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-colors font-medium text-sm">
+    <!-- Global Fixed Wallpaper & Grid Background -->
+    <div class="fixed inset-0 z-[-100]">
+        <!-- Light Mode Wallpaper (Colorful Abstract Fluid) -->
+        <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?q=80&w=2564&auto=format&fit=crop" class="w-full h-full object-cover dark:hidden transition-opacity duration-700" alt="Background Light">
+        <!-- Dark Mode Wallpaper (Deep Abstract Liquid) -->
+        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="w-full h-full object-cover hidden dark:block transition-opacity duration-700" alt="Background Dark">
+        
+        <!-- Overlays for readability and texture -->
+        <div class="absolute inset-0 bg-white/30 dark:bg-slate-950/60 backdrop-blur-[4px]"></div>
+        <div class="absolute inset-0 bg-grid-pattern [mask-image:linear-gradient(to_bottom,white,transparent)] opacity-60"></div>
+    </div>
+
+    <!-- App-Like Full Screen Viewer Overlay (Glassmorphism) -->
+    <div id="app-viewer" class="fixed inset-0 z-[100] bg-white/40 dark:bg-slate-950/60 backdrop-blur-2xl flex flex-col hidden transition-opacity duration-300 opacity-0">
+        <div class="h-16 glass-nav flex items-center px-4 justify-between shrink-0">
+            <button id="close-viewer" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 transition-colors font-medium text-sm border border-white/40 dark:border-white/10 shadow-sm">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 Back to Portfolio
             </button>
             <div class="flex items-center gap-4">
-                <div id="viewer-title" class="hidden sm:block text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest truncate max-w-[200px]">Preview</div>
-                <a id="viewer-external-link" href="#" target="_blank" class="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors" title="Open in new tab (Use this if blocked)">
+                <div id="viewer-title" class="hidden sm:block text-sm font-bold text-slate-800 dark:text-slate-300 uppercase tracking-widest truncate max-w-[200px] drop-shadow-sm">Preview</div>
+                <a id="viewer-external-link" href="#" target="_blank" class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors" title="Open in new tab (Use this if blocked)">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </a>
             </div>
         </div>
-        <div class="relative flex-grow bg-slate-50 dark:bg-slate-900 w-full h-full">
+        <div class="relative flex-grow w-full h-full p-2 sm:p-4">
             <div class="absolute inset-0 flex items-center justify-center -z-10">
-                <svg class="w-8 h-8 text-emerald-500 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                <svg class="w-8 h-8 text-emerald-500 animate-spin drop-shadow-lg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
             </div>
-            <iframe id="viewer-frame" class="w-full h-full border-none bg-white relative z-10" src=""></iframe>
+            <!-- Wrapped iframe in a glass card for better app feel -->
+            <div class="w-full h-full glass-card rounded-2xl overflow-hidden shadow-2xl">
+                <iframe id="viewer-frame" class="w-full h-full border-none bg-slate-50 dark:bg-slate-950 relative z-10" src=""></iframe>
+            </div>
         </div>
     </div>
 
-    <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 glass border-b border-black/5 dark:border-white/5 transition-all duration-300">
+    <!-- Floating Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
             
             <!-- Left: Logo & Desktop Title -->
             <div class="flex items-center w-1/4 md:w-auto shrink-0">
                 <a href="#home" class="group flex items-center gap-3">
-                    <div class="w-10 h-10 border border-black/10 dark:border-white/10 rounded-xl overflow-hidden shadow-lg group-hover:rotate-12 transition-transform shrink-0">
+                    <div class="w-10 h-10 border border-white/40 dark:border-white/20 rounded-xl overflow-hidden shadow-lg group-hover:rotate-12 transition-transform shrink-0">
                         <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Atish Ak Sharma Logo" class="w-full h-full object-cover">
                     </div>
-                    <span class="font-bold text-xl tracking-tight hidden md:block gradient-text-alt whitespace-nowrap">Atish Ak Sharma</span>
+                    <span class="font-bold text-xl tracking-tight hidden md:block gradient-text-alt whitespace-nowrap drop-shadow-sm">Atish Ak Sharma</span>
                 </a>
             </div>
             
             <!-- Center: Title (Visible only on Mobile) -->
             <div class="flex items-center justify-center w-2/4 md:hidden text-center shrink-0">
-                <span class="font-bold text-[1.1rem] tracking-tight gradient-text-alt whitespace-nowrap">Atish Ak Sharma</span>
+                <span class="font-bold text-[1.1rem] tracking-tight gradient-text-alt whitespace-nowrap drop-shadow-sm">Atish Ak Sharma</span>
             </div>
 
             <!-- Right: Links, Theme Toggle & GitHub -->
             <div class="flex items-center justify-end w-1/4 md:w-auto gap-2 sm:gap-4 shrink-0">
-                <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mr-2">
-                    <a href="#home" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Home</a>
-                    <a href="#portfolio" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Portfolio</a>
-                    <a href="#contact" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">Contact</a>
+                <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300 mr-2">
+                    <a href="#home" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors drop-shadow-sm">Home</a>
+                    <a href="#portfolio" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors drop-shadow-sm">Portfolio</a>
+                    <a href="#contact" class="hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors drop-shadow-sm">Contact</a>
                 </div>
                 
                 <!-- Theme Toggle Button -->
-                <button id="theme-toggle" type="button" aria-label="Toggle Dark Mode" class="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors">
-                    <!-- Dark mode moon icon (shown in light mode) -->
+                <button id="theme-toggle" type="button" aria-label="Toggle Dark Mode" class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors drop-shadow-sm">
                     <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                    <!-- Light mode sun icon (shown in dark mode) -->
                     <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
                 </button>
 
-                <a href="https://github.com/atishsharma" target="_blank" aria-label="GitHub Profile" class="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 rounded-full transition-colors shrink-0">
+                <a href="https://github.com/atishsharma" target="_blank" aria-label="GitHub Profile" class="app-link p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors shrink-0 drop-shadow-sm" data-title="GitHub Profile">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"></path></svg>
                 </a>
             </div>
@@ -160,25 +204,15 @@
     <!-- Modern Hero Section -->
     <section id="home" class="relative pt-32 pb-20 md:pt-40 md:pb-32 px-6 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
         
-        <!-- Grid Pattern Overlay -->
-        <div class="absolute inset-0 -z-30 bg-grid-pattern [mask-image:linear-gradient(to_bottom,white,transparent)] opacity-20 dark:opacity-50"></div>
-
-        <!-- Unsplash Background with Vignette Overlay -->
-        <div class="absolute inset-0 -z-40">
-            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" alt="Abstract Background" class="w-full h-full object-cover opacity-10 dark:opacity-20" />
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,#f8fafc_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,#020617_100%)]"></div>
-            <div class="absolute inset-0 bg-slate-50/70 dark:bg-slate-950/70"></div>
-        </div>
-
-        <!-- Ambient glows -->
-        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-emerald-600/10 dark:bg-emerald-600/20 blur-[120px] rounded-full -z-20 pointer-events-none"></div>
-        <div class="absolute top-10 right-20 w-80 h-80 bg-blue-600/10 blur-[100px] rounded-full -z-20 pointer-events-none"></div>
+        <!-- Floating Ambient glows -->
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-emerald-500/20 dark:bg-emerald-600/30 blur-[120px] rounded-full -z-10 pointer-events-none"></div>
+        <div class="absolute top-10 right-20 w-80 h-80 bg-blue-500/20 dark:bg-blue-600/20 blur-[100px] rounded-full -z-10 pointer-events-none"></div>
 
         <div class="max-w-4xl mx-auto text-center relative z-10 flex flex-col items-center">
             
             <!-- Modern Avatar Pill Badge -->
-            <div class="inline-flex items-center gap-3 px-1.5 py-1.5 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-md shadow-lg dark:shadow-2xl transition-transform hover:scale-105 cursor-default mb-8">
-                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Atish Ak Sharma" class="w-7 h-7 rounded-full object-cover border border-black/10 dark:border-white/20">
+            <div class="inline-flex items-center gap-3 px-1.5 py-1.5 rounded-full border border-white/60 dark:border-white/20 bg-white/40 dark:bg-black/30 backdrop-blur-xl shadow-xl transition-transform hover:scale-105 cursor-default mb-8">
+                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Atish Ak Sharma" class="w-7 h-7 rounded-full object-cover border border-white/50 dark:border-white/20">
                 <div class="flex items-center gap-2 pr-4">
                     <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_rgba(239,68,68,0.8)]"></span>
                     <span class="text-[10px] font-bold text-red-600 dark:text-red-400 uppercase tracking-widest">copyright Ats Design Studio</span>
@@ -186,99 +220,106 @@
             </div>
 
             <h1 class="text-5xl sm:text-7xl md:text-[5.5rem] font-black tracking-tighter leading-[1.05] mb-6">
-                <span class="text-slate-900 dark:text-white drop-shadow-sm">Welcome To My</span><br/>
-                <span class="gradient-text drop-shadow-lg">Portfolio</span>
+                <span class="text-slate-900 dark:text-white drop-shadow-md">Welcome To My</span><br/>
+                <span class="gradient-text drop-shadow-xl">Portfolio</span>
             </h1>
             
-            <p class="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed drop-shadow-sm mb-10">
-                A developer's garden of <span class="text-slate-900 dark:text-white font-medium">experiments, tools, and research</span>. 
+            <p class="text-lg md:text-xl text-slate-800 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed drop-shadow-md mb-10 font-medium">
+                A developer's garden of <span class="text-slate-900 dark:text-white font-bold">experiments, tools, and research</span>. 
                 Documenting the journey of ATS Design Studio.
             </p>
             
             <!-- Modern Pill Buttons -->
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-                <a href="#portfolio" class="w-full sm:w-auto px-8 py-3.5 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 font-bold rounded-full transition-all shadow-xl dark:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                <a href="#portfolio" class="w-full sm:w-auto px-8 py-3.5 bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 font-bold rounded-full transition-all shadow-xl dark:shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] transform hover:-translate-y-0.5 flex items-center justify-center gap-2 border border-slate-700 dark:border-white">
                     Explore Portfolio
                     <svg class="w-4 h-4 text-white dark:text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
                 </a>
-                <a href="#contact" class="w-full sm:w-auto px-8 py-3.5 bg-black/5 border border-black/10 hover:bg-black/10 text-slate-900 dark:bg-white/5 dark:border-white/10 dark:hover:bg-white/10 dark:text-white rounded-full transition-all font-bold transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                <a href="#contact" class="w-full sm:w-auto px-8 py-3.5 glass-card hover:bg-white/80 dark:hover:bg-white/10 text-slate-900 dark:text-white rounded-full transition-all font-bold transform hover:-translate-y-0.5 flex items-center justify-center gap-2 shadow-lg">
+                    <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                     Direct Contact
+                </a>
+            </div>
+            
+            <!-- Blinking Scroll Down Arrow -->
+            <div class="mt-16 md:mt-24 animate-bounce">
+                <a href="#portfolio" aria-label="Scroll to Portfolio" class="p-2 block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors drop-shadow-md">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </a>
             </div>
         </div>
     </section>
 
     <!-- Portfolio Section -->
-    <section id="portfolio" class="py-24 px-6 bg-slate-50 dark:bg-slate-950 relative">
+    <section id="portfolio" class="py-24 px-6 relative z-10">
         <div class="max-w-7xl mx-auto">
             <div class="mb-16">
-                <h2 class="text-3xl md:text-4xl font-black mb-4 flex items-center gap-4 text-slate-900 dark:text-white">
-                    <svg class="w-8 h-8 text-emerald-600 dark:text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                <h2 class="text-3xl md:text-4xl font-black mb-4 flex items-center gap-4 text-slate-900 dark:text-white drop-shadow-sm">
+                    <svg class="w-8 h-8 text-emerald-600 dark:text-emerald-500 drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
                     MY PORTFOLIO
                 </h2>
-                <p class="text-slate-600 dark:text-slate-500 text-lg">Categorized access to all internal tools, system redesigns, and research modules.</p>
+                <p class="text-slate-700 dark:text-slate-400 text-lg font-medium drop-shadow-sm">Categorized access to all internal tools, system redesigns, and research modules.</p>
             </div>
 
-            <!-- Notice: items-start allows independent accordion closing without stretching sibling columns -->
+            <!-- items-start allows independent accordion closing -->
             <div class="grid lg:grid-cols-2 gap-8 items-start">
                 
                 <!-- Open Source Projects -->
-                <div class="p-8 sm:p-10 bg-white/50 dark:bg-slate-900/50 border border-black/5 dark:border-white/5 rounded-[2.5rem] hover:border-indigo-500/30 transition-all group backdrop-blur-sm lg:col-span-2 shadow-sm dark:shadow-none">
+                <div class="p-6 sm:p-10 glass-panel rounded-[2.5rem] hover:border-indigo-500/50 dark:hover:border-indigo-500/50 transition-colors group lg:col-span-2">
                     <details class="group/details" open>
                         <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
                             <div class="flex items-center gap-4">
-                                <div class="p-4 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                <div class="p-4 bg-indigo-500/20 text-indigo-700 dark:text-indigo-400 rounded-2xl group-hover:scale-110 transition-transform shadow-sm">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Open Source Projects</h3>
-                                    <p class="text-xs text-slate-500 mt-1">Major software applications and open-source contributions.</p>
+                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-sm">Open Source Projects</h3>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium">Major software applications and open-source contributions.</p>
                                 </div>
                             </div>
-                            <div class="p-2 bg-black/5 dark:bg-white/5 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0 ml-4">
-                                <svg class="w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <div class="p-2 bg-white/40 dark:bg-black/20 border border-white/50 dark:border-white/10 rounded-full hover:bg-white/60 dark:hover:bg-white/10 transition-colors shrink-0 ml-4 shadow-sm">
+                                <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                         </summary>
                         
                         <!-- 3 columns on Laptop (lg) -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 animate-fadeIn">
-                            <a href="https://github.com/atishsharma/AT-Music-Player" class="portfolio-link flex flex-col p-6 bg-slate-100/50 dark:bg-slate-950/50 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10 group/link">
+                            <a href="https://github.com/atishsharma/AT-Music-Player" class="app-link flex flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link" data-title="AT Music Player">
                                 <div class="flex items-center justify-between mb-4">
-                                    <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400 group-hover/link:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
-                                    <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover/link:text-indigo-600 dark:group-hover/link:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    <svg class="w-8 h-8 text-indigo-600 dark:text-indigo-400 group-hover/link:scale-110 transition-transform drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                                    <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover/link:text-indigo-600 dark:group-hover/link:text-indigo-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                 </div>
-                                <span class="font-bold text-lg block text-indigo-900 dark:text-indigo-100 mb-2">AT Music Player</span>
-                                <span class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4 flex-grow">A feature-rich, open-source music player project.</span>
+                                <span class="font-bold text-lg block text-indigo-950 dark:text-indigo-100 mb-2">AT Music Player</span>
+                                <span class="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed mb-4 flex-grow">A feature-rich, open-source music player project.</span>
                                 <div class="flex gap-2 mt-auto">
-                                    <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">App</span>
-                                    <span class="text-[10px] bg-indigo-100 dark:bg-indigo-900/30 px-2 py-1 rounded text-indigo-700 dark:text-indigo-300 uppercase font-mono">Audio</span>
+                                    <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">App</span>
+                                    <span class="text-[10px] bg-indigo-200/80 dark:bg-indigo-900/50 px-2 py-1 rounded text-indigo-800 dark:text-indigo-200 uppercase font-bold border border-indigo-500/10 dark:border-indigo-500/20">Audio</span>
                                 </div>
                             </a>
                             
-                            <a href="https://github.com/atishsharma/Tulip-File-Explorer" class="portfolio-link flex flex-col p-6 bg-slate-100/50 dark:bg-slate-950/50 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10 group/link">
+                            <a href="https://github.com/atishsharma/Tulip-File-Explorer" class="app-link flex flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link" data-title="Tulip File Explorer">
                                 <div class="flex items-center justify-between mb-4">
-                                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 group-hover/link:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
-                                    <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover/link:text-blue-600 dark:group-hover/link:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 group-hover/link:scale-110 transition-transform drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path></svg>
+                                    <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover/link:text-blue-600 dark:group-hover/link:text-blue-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                 </div>
-                                <span class="font-bold text-lg block text-blue-900 dark:text-blue-100 mb-2">Tulip File Explorer</span>
-                                <span class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4 flex-grow">An open-source, cross-platform file management utility.</span>
+                                <span class="font-bold text-lg block text-blue-950 dark:text-blue-100 mb-2">Tulip File Explorer</span>
+                                <span class="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed mb-4 flex-grow">An open-source, cross-platform file management utility.</span>
                                 <div class="flex gap-2 mt-auto">
-                                    <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Utility</span>
-                                    <span class="text-[10px] bg-blue-100 dark:bg-blue-900/30 px-2 py-1 rounded text-blue-700 dark:text-blue-300 uppercase font-mono">System</span>
+                                    <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Utility</span>
+                                    <span class="text-[10px] bg-blue-200/80 dark:bg-blue-900/50 px-2 py-1 rounded text-blue-800 dark:text-blue-200 uppercase font-bold border border-blue-500/10 dark:border-blue-500/20">System</span>
                                 </div>
                             </a>
 
-                            <a href="https://github.com/atishsharma/ats-hindu-calendar-widget" class="portfolio-link flex flex-col p-6 bg-slate-100/50 dark:bg-slate-950/50 rounded-2xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10 group/link">
+                            <a href="https://github.com/atishsharma/ats-hindu-calendar-widget" class="app-link flex flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link" data-title="Hindu Calendar Widget">
                                 <div class="flex items-center justify-between mb-4">
-                                    <svg class="w-8 h-8 text-orange-600 dark:text-orange-400 group-hover/link:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                    <svg class="w-4 h-4 text-slate-400 dark:text-slate-500 group-hover/link:text-orange-600 dark:group-hover/link:text-orange-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                    <svg class="w-8 h-8 text-orange-600 dark:text-orange-400 group-hover/link:scale-110 transition-transform drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    <svg class="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover/link:text-orange-600 dark:group-hover/link:text-orange-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                 </div>
-                                <span class="font-bold text-lg block text-orange-900 dark:text-orange-100 mb-2">Hindu Calendar Widget</span>
-                                <span class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-4 flex-grow">A cross-platform desktop widget for tracking dates and events.</span>
+                                <span class="font-bold text-lg block text-orange-950 dark:text-orange-100 mb-2">Hindu Calendar Widget</span>
+                                <span class="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed mb-4 flex-grow">A cross-platform desktop widget for tracking dates and events.</span>
                                 <div class="flex gap-2 mt-auto">
-                                    <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Widget</span>
-                                    <span class="text-[10px] bg-orange-100 dark:bg-orange-900/30 px-2 py-1 rounded text-orange-700 dark:text-orange-300 uppercase font-mono">Desktop</span>
+                                    <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Widget</span>
+                                    <span class="text-[10px] bg-orange-200/80 dark:bg-orange-900/50 px-2 py-1 rounded text-orange-800 dark:text-orange-200 uppercase font-bold border border-orange-500/10 dark:border-orange-500/20">Desktop</span>
                                 </div>
                             </a>
                         </div>
@@ -286,111 +327,111 @@
                 </div>
 
                 <!-- 1. Experimental Labs -->
-                <div class="p-8 sm:p-10 bg-white/50 dark:bg-slate-900/50 border border-black/5 dark:border-white/5 rounded-[2.5rem] hover:border-emerald-500/30 transition-all group backdrop-blur-sm shadow-sm dark:shadow-none">
+                <div class="p-6 sm:p-10 glass-panel rounded-[2.5rem] hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-colors group">
                     <details class="group/details" open>
                         <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
                             <div class="flex items-center gap-4">
-                                <div class="p-4 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                <div class="p-4 bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 rounded-2xl group-hover:scale-110 transition-transform shadow-sm">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Experimental Labs</h3>
-                                    <p class="text-xs text-slate-500 mt-1">Hardware simulations & research prototypes.</p>
+                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-sm">Experimental Labs</h3>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium">Hardware simulations & research prototypes.</p>
                                 </div>
                             </div>
-                            <div class="p-2 bg-black/5 dark:bg-white/5 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0 ml-4">
-                                <svg class="w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <div class="p-2 bg-white/40 dark:bg-black/20 border border-white/50 dark:border-white/10 rounded-full hover:bg-white/60 dark:hover:bg-white/10 transition-colors shrink-0 ml-4 shadow-sm">
+                                <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                         </summary>
                         <div class="space-y-3 mt-8 animate-fadeIn">
-                            <a href="https://atishaksharma.com/testing/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/testing/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Testing Grounds">
                                 <div>
-                                    <span class="font-bold text-sm block text-emerald-900 dark:text-emerald-100">Testing Grounds (Main)</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Root hub for hardware interfaces.</span>
+                                    <span class="font-bold text-sm block text-emerald-950 dark:text-emerald-100">Testing Grounds (Main)</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Root hub for hardware interfaces.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Index</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Index</span>
                             </a>
                             <!-- Sub-items for Testing -->
-                            <div class="pl-4 border-l-2 border-black/10 dark:border-white/5 space-y-2 ml-4 mb-4">
-                                <a href="https://atishaksharma.com/testing/camera.html" class="portfolio-link flex items-center gap-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> <span class="font-bold">Camera Sim</span>
+                            <div class="pl-4 border-l-2 border-slate-400/30 dark:border-white/20 space-y-2 ml-4 mb-4">
+                                <a href="https://atishaksharma.com/testing/camera.html" class="app-link flex items-center gap-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium" data-title="Camera Sim">
+                                    <svg class="w-4 h-4 shrink-0 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> <span>Camera Sim</span>
                                 </a>
-                                <a href="https://atishaksharma.com/testing/chip.html" class="portfolio-link flex items-center gap-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg> <span class="font-bold">Chip Logic</span>
+                                <a href="https://atishaksharma.com/testing/chip.html" class="app-link flex items-center gap-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium" data-title="Chip Logic">
+                                    <svg class="w-4 h-4 shrink-0 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg> <span>Chip Logic</span>
                                 </a>
-                                <a href="https://atishaksharma.com/testing/fold.html" class="portfolio-link flex items-center gap-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg> <span class="font-bold">Fold Interaction</span>
+                                <a href="https://atishaksharma.com/testing/fold.html" class="app-link flex items-center gap-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium" data-title="Fold Interaction">
+                                    <svg class="w-4 h-4 shrink-0 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg> <span>Fold Interaction</span>
                                 </a>
-                                <a href="https://atishaksharma.com/testing/laptop.html" class="portfolio-link flex items-center gap-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> <span class="font-bold">Laptop & Desktop</span>
+                                <a href="https://atishaksharma.com/testing/laptop.html" class="app-link flex items-center gap-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium" data-title="Laptop & Desktop">
+                                    <svg class="w-4 h-4 shrink-0 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg> <span>Laptop & Desktop</span>
                                 </a>
-                                <a href="https://atishaksharma.com/testing/smartphone.html" class="portfolio-link flex items-center gap-3 py-2 text-sm text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
-                                    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> <span class="font-bold">Smartphone</span>
+                                <a href="https://atishaksharma.com/testing/smartphone.html" class="app-link flex items-center gap-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors font-medium" data-title="Smartphone">
+                                    <svg class="w-4 h-4 shrink-0 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> <span>Smartphone</span>
                                 </a>
                             </div>
-                            <a href="https://atishaksharma.com/lab/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/lab/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="The Lab">
                                 <div>
-                                    <span class="font-bold text-sm block text-emerald-900 dark:text-emerald-100">The Lab</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">General experimental web API playground.</span>
+                                    <span class="font-bold text-sm block text-emerald-950 dark:text-emerald-100">The Lab</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">General experimental web API playground.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Research</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Research</span>
                             </a>
-                            <a href="https://atishaksharma.com/concept/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/concept/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Concept Hub">
                                 <div>
-                                    <span class="font-bold text-sm block text-emerald-900 dark:text-emerald-100">Concept Hub</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Experimental design concepts.</span>
+                                    <span class="font-bold text-sm block text-emerald-950 dark:text-emerald-100">Concept Hub</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Experimental design concepts.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Idea</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Idea</span>
                             </a>
                         </div>
                     </details>
                 </div>
 
                 <!-- 2. Business & Research -->
-                <div class="p-8 sm:p-10 bg-white/50 dark:bg-slate-900/50 border border-black/5 dark:border-white/5 rounded-[2.5rem] hover:border-orange-500/30 transition-all group backdrop-blur-sm shadow-sm dark:shadow-none">
+                <div class="p-6 sm:p-10 glass-panel rounded-[2.5rem] hover:border-orange-500/50 dark:hover:border-orange-500/50 transition-colors group">
                     <details class="group/details" open>
                         <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
                             <div class="flex items-center gap-4">
-                                <div class="p-4 bg-orange-500/10 text-orange-600 dark:text-orange-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                <div class="p-4 bg-orange-500/20 text-orange-700 dark:text-orange-400 rounded-2xl group-hover:scale-110 transition-transform shadow-sm">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Business & Research</h3>
-                                    <p class="text-xs text-slate-500 mt-1">Strategic research and brand feasibility.</p>
+                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-sm">Business & Research</h3>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium">Strategic research and brand feasibility.</p>
                                 </div>
                             </div>
-                            <div class="p-2 bg-black/5 dark:bg-white/5 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0 ml-4">
-                                <svg class="w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <div class="p-2 bg-white/40 dark:bg-black/20 border border-white/50 dark:border-white/10 rounded-full hover:bg-white/60 dark:hover:bg-white/10 transition-colors shrink-0 ml-4 shadow-sm">
+                                <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                         </summary>
                         <div class="space-y-3 mt-8 animate-fadeIn">
-                            <a href="https://atishaksharma.com/ember/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/ember/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Ember Core">
                                 <div>
-                                    <span class="font-bold text-sm block text-orange-900 dark:text-orange-100">Ember Core</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Main hub for Ember project.</span>
+                                    <span class="font-bold text-sm block text-orange-950 dark:text-orange-100">Ember Core</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Main hub for Ember project.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Index</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Index</span>
                             </a>
-                            <a href="https://atishaksharma.com/ember/studio/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/ember/studio/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Ember Studio">
                                 <div>
-                                    <span class="font-bold text-sm block text-orange-900 dark:text-orange-100">Ember Studio</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Brand identity & visual research.</span>
+                                    <span class="font-bold text-sm block text-orange-950 dark:text-orange-100">Ember Studio</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Brand identity & visual research.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Design</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Design</span>
                             </a>
-                            <a href="https://atishaksharma.com/ember/market.html" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/ember/market.html" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Ember Market">
                                 <div>
-                                    <span class="font-bold text-sm block text-orange-900 dark:text-orange-100">Ember Market</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Feasibility and positioning strategy.</span>
+                                    <span class="font-bold text-sm block text-orange-950 dark:text-orange-100">Ember Market</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Feasibility and positioning strategy.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Strategy</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Strategy</span>
                             </a>
-                            <a href="https://atishaksharma.com/ember/Scented%20Candle%20Business%20Feasibility%20Report.pdf" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10 mt-2 border-dashed border-orange-500/20">
+                            <a href="https://atishaksharma.com/ember/Scented%20Candle%20Business%20Feasibility%20Report.pdf" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors mt-2 border-dashed !border-orange-500/30" data-title="Feasibility Report">
                                 <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    <svg class="w-5 h-5 text-orange-600 dark:text-orange-400 drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                                     <div>
-                                        <span class="font-bold text-sm block text-orange-900 dark:text-orange-100">Feasibility Report</span>
-                                        <span class="text-xs text-slate-600 dark:text-slate-500">PDF Document Analysis</span>
+                                        <span class="font-bold text-sm block text-orange-950 dark:text-orange-100">Feasibility Report</span>
+                                        <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">PDF Document Analysis</span>
                                     </div>
                                 </div>
                             </a>
@@ -399,79 +440,79 @@
                 </div>
 
                 <!-- 3. Personal Utilities -->
-                <div class="p-8 sm:p-10 bg-white/50 dark:bg-slate-900/50 border border-black/5 dark:border-white/5 rounded-[2.5rem] hover:border-blue-500/30 transition-all group backdrop-blur-sm shadow-sm dark:shadow-none">
+                <div class="p-6 sm:p-10 glass-panel rounded-[2.5rem] hover:border-blue-500/50 dark:hover:border-blue-500/50 transition-colors group">
                     <details class="group/details" open>
                         <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
                             <div class="flex items-center gap-4">
-                                <div class="p-4 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                <div class="p-4 bg-blue-500/20 text-blue-700 dark:text-blue-400 rounded-2xl group-hover:scale-110 transition-transform shadow-sm">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Personal Utilities</h3>
-                                    <p class="text-xs text-slate-500 mt-1">Internal tools for productivity & organization.</p>
+                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-sm">Personal Utilities</h3>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium">Internal tools for productivity & organization.</p>
                                 </div>
                             </div>
-                            <div class="p-2 bg-black/5 dark:bg-white/5 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0 ml-4">
-                                <svg class="w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <div class="p-2 bg-white/40 dark:bg-black/20 border border-white/50 dark:border-white/10 rounded-full hover:bg-white/60 dark:hover:bg-white/10 transition-colors shrink-0 ml-4 shadow-sm">
+                                <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                         </summary>
                         <div class="space-y-3 mt-8 animate-fadeIn">
-                            <a href="https://atishaksharma.com/hub/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/hub/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Personal Hub">
                                 <div>
-                                    <span class="font-bold text-sm block text-blue-900 dark:text-blue-100">Personal Hub</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Personal bookmark manager.</span>
+                                    <span class="font-bold text-sm block text-blue-950 dark:text-blue-100">Personal Hub</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Personal bookmark manager.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">PWA</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">PWA</span>
                             </a>
-                            <a href="https://atishaksharma.com/memo/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/memo/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Memo Vault">
                                 <div>
-                                    <span class="font-bold text-sm block text-blue-900 dark:text-blue-100">Memo Vault</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Minimalist note-taking & logging.</span>
+                                    <span class="font-bold text-sm block text-blue-950 dark:text-blue-100">Memo Vault</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Minimalist note-taking & logging.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Tools</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Tools</span>
                             </a>
-                            <a href="https://atishaksharma.com/calendar/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/calendar/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Time Calendar">
                                 <div>
-                                    <span class="font-bold text-sm block text-blue-900 dark:text-blue-100">Time Calendar</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Custom scheduling & event tracking.</span>
+                                    <span class="font-bold text-sm block text-blue-950 dark:text-blue-100">Time Calendar</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Custom scheduling & event tracking.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">App</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">App</span>
                             </a>
                         </div>
                     </details>
                 </div>
 
                 <!-- 4. Design Systems -->
-                <div class="p-8 sm:p-10 bg-white/50 dark:bg-slate-900/50 border border-black/5 dark:border-white/5 rounded-[2.5rem] hover:border-purple-500/30 transition-all group backdrop-blur-sm shadow-sm dark:shadow-none">
+                <div class="p-6 sm:p-10 glass-panel rounded-[2.5rem] hover:border-purple-500/50 dark:hover:border-purple-500/50 transition-colors group">
                     <details class="group/details" open>
                         <summary class="flex items-center justify-between cursor-pointer outline-none select-none">
                             <div class="flex items-center gap-4">
-                                <div class="p-4 bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-2xl group-hover:scale-110 transition-transform">
+                                <div class="p-4 bg-purple-500/20 text-purple-700 dark:text-purple-400 rounded-2xl group-hover:scale-110 transition-transform shadow-sm">
                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
                                 </div>
                                 <div>
-                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Design Systems</h3>
-                                    <p class="text-xs text-slate-500 mt-1">Visual redesigns & UI framework explorations.</p>
+                                    <h3 class="text-2xl font-bold text-slate-900 dark:text-white drop-shadow-sm">Design Systems</h3>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 font-medium">Visual redesigns & UI framework explorations.</p>
                                 </div>
                             </div>
-                            <div class="p-2 bg-black/5 dark:bg-white/5 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors shrink-0 ml-4">
-                                <svg class="w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            <div class="p-2 bg-white/40 dark:bg-black/20 border border-white/50 dark:border-white/10 rounded-full hover:bg-white/60 dark:hover:bg-white/10 transition-colors shrink-0 ml-4 shadow-sm">
+                                <svg class="w-5 h-5 text-slate-700 dark:text-slate-300 transition-transform duration-300 group-open/details:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </div>
                         </summary>
                         <div class="space-y-3 mt-8 animate-fadeIn">
-                            <a href="https://atishaksharma.com/tulip/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/tulip/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Tulip Framework">
                                 <div>
-                                    <span class="font-bold text-sm block text-purple-900 dark:text-purple-100">Tulip Framework</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Visual-first CSS layout exploration.</span>
+                                    <span class="font-bold text-sm block text-purple-950 dark:text-purple-100">Tulip Framework</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Visual-first CSS layout exploration.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Layout</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Layout</span>
                             </a>
-                            <a href="https://atishaksharma.com/core1987remote/" class="portfolio-link flex items-center justify-between p-4 bg-slate-100/50 dark:bg-slate-950/50 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-colors border border-transparent hover:border-black/10 dark:hover:border-white/10">
+                            <a href="https://atishaksharma.com/core1987remote/" class="app-link flex items-center justify-between p-4 glass-card rounded-xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors" data-title="Core1987 Remote">
                                 <div>
-                                    <span class="font-bold text-sm block text-purple-900 dark:text-purple-100">Core1987 Remote</span>
-                                    <span class="text-xs text-slate-600 dark:text-slate-500">Nostalgic interface for management.</span>
+                                    <span class="font-bold text-sm block text-purple-950 dark:text-purple-100">Core1987 Remote</span>
+                                    <span class="text-xs text-slate-700 dark:text-slate-400 font-medium">Nostalgic interface for management.</span>
                                 </div>
-                                <span class="text-[10px] bg-slate-200 dark:bg-slate-900 px-2 py-1 rounded text-slate-600 dark:text-slate-400 uppercase font-mono">Legacy</span>
+                                <span class="text-[10px] bg-slate-200/80 dark:bg-slate-800/80 px-2 py-1 rounded text-slate-700 dark:text-slate-300 uppercase font-bold border border-black/5 dark:border-white/5">Legacy</span>
                             </a>
                         </div>
                     </details>
@@ -482,44 +523,35 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-24 px-6 relative overflow-hidden">
-        
-        <!-- Unsplash Background with Glass Overlay -->
-        <div class="absolute inset-0 -z-20">
-            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2000&auto=format&fit=crop" alt="Tech Abstract Dark" class="w-full h-full object-cover opacity-10 dark:opacity-20" />
-            <div class="absolute inset-0 bg-slate-50/90 dark:bg-slate-950/80 backdrop-blur-sm"></div>
-        </div>
-
-        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-600/5 blur-[150px] rounded-full -z-10 pointer-events-none"></div>
-        
+    <section id="contact" class="py-24 px-6 relative overflow-hidden z-10">
         <div class="max-w-4xl mx-auto text-center space-y-12 relative z-10">
             <div class="space-y-4">
-                <h2 class="text-4xl font-black text-slate-900 dark:text-white">Direct Communication</h2>
-                <p class="text-slate-600 dark:text-slate-300">For collaboration, research inquiries, or project access.</p>
+                <h2 class="text-4xl font-black text-slate-900 dark:text-white drop-shadow-sm">Direct Communication</h2>
+                <p class="text-slate-700 dark:text-slate-300 font-medium drop-shadow-sm">For collaboration, research inquiries, or project access.</p>
             </div>
             <div class="grid sm:grid-cols-2 gap-6 text-left">
-                <a href="mailto:mail@atishaksharma.com" class="p-8 glass border border-black/5 dark:border-white/5 hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all group flex items-center justify-between rounded-[2rem] shadow-xl">
+                <a href="mailto:mail@atishaksharma.com" class="p-8 glass-panel hover:border-emerald-500/50 dark:hover:border-emerald-500/50 transition-all group flex items-center justify-between rounded-[2rem]">
                     <div>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Email Protocol</p>
-                        <p class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">mail@atishaksharma.com</p>
+                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Email Protocol</p>
+                        <p class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">mail@atishaksharma.com</p>
                     </div>
-                    <svg class="w-8 h-8 text-emerald-500 opacity-30 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    <svg class="w-8 h-8 text-emerald-600 dark:text-emerald-400 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
                 </a>
-                <a href="https://github.com/atishsharma" target="_blank" class="p-8 glass border border-black/5 dark:border-white/5 hover:border-blue-500/50 dark:hover:border-blue-500/50 transition-all group flex items-center justify-between rounded-[2rem] shadow-xl">
+                <a href="https://github.com/atishsharma" target="_blank" class="app-link p-8 glass-panel hover:border-blue-500/50 dark:hover:border-blue-500/50 transition-all group flex items-center justify-between rounded-[2rem]" data-title="GitHub Profile">
                     <div>
-                        <p class="text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Repository Access</p>
-                        <p class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">@atishsharma</p>
+                        <p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">Repository Access</p>
+                        <p class="font-bold text-lg text-slate-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">@atishsharma</p>
                     </div>
-                    <svg class="w-8 h-8 text-blue-500 opacity-30 group-hover:opacity-100 transition-opacity" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-400 opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"></path></svg>
                 </a>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-12 px-6 text-center text-slate-600 dark:text-slate-500 bg-slate-100 dark:bg-slate-950 border-t border-black/5 dark:border-white/5 relative z-20">
+    <footer class="py-12 px-6 text-center text-slate-700 dark:text-slate-400 glass-nav border-t-0 relative z-20">
         <div class="max-w-7xl mx-auto flex flex-col items-center justify-center gap-2">
-            <p class="text-sm font-medium">
+            <p class="text-sm font-bold drop-shadow-sm">
                 &copy; <script>document.write(new Date().getFullYear())</script> Atish Ak Sharma.
             </p>
         </div>
@@ -561,7 +593,7 @@
             const viewerTitle = document.getElementById('viewer-title');
             const extLinkBtn = document.getElementById('viewer-external-link');
             
-            const projectLinks = document.querySelectorAll('.portfolio-link');
+            const projectLinks = document.querySelectorAll('.app-link');
             
             projectLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
@@ -569,12 +601,26 @@
                     
                     // Do not intercept mailto or basic hashes
                     if (url.startsWith('mailto:') || url.startsWith('#')) return;
+
+                    // Fallback check to let completely external URLs open in new tabs
+                    try {
+                        const linkUrl = new URL(url);
+                        if (linkUrl.hostname !== window.location.hostname && linkUrl.hostname !== 'atishaksharma.com' && window.location.hostname !== '') {
+                            return; // Let the browser handle standard link behavior
+                        }
+                    } catch(err) {}
                     
                     e.preventDefault();
                     
                     // Grab Title text
-                    const titleEl = link.querySelector('.font-bold');
-                    viewerTitle.textContent = titleEl ? titleEl.textContent : 'Preview';
+                    let titleText = 'Preview';
+                    if (link.hasAttribute('data-title')) {
+                        titleText = link.getAttribute('data-title');
+                    } else {
+                        const titleEl = link.querySelector('.font-bold');
+                        if (titleEl) titleText = titleEl.textContent;
+                    }
+                    viewerTitle.textContent = titleText;
                     
                     // Set src and link targets
                     frame.src = url;
