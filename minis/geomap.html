@@ -3,7 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Global Geopolitics & Topography Map</title>
+    
+    <!-- SEO Metadata -->
+    <title>Atish's Global Geopolitics Map | Ats Design Studio</title>
+    <meta name="description" content="Explore global diplomatic relations, visa access, GDP rankings, and major cities with Atish's Interactive Geopolitics Map. A premium tool for geopolitical analysis.">
+    <meta name="keywords" content="Geopolitics, World Map, Visa Free, GDP, Diplomacy, Major Cities, Atish, Ats Design Studio">
+    <meta name="author" content="Ats Design Studio">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Atish's Global Geopolitics Map">
+    <meta property="og:description" content="Interactive world map showing friends, enemies, visa access, and economic power.">
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -38,6 +52,7 @@
         .hidden-panel {
             transform: translateX(110%);
             opacity: 0;
+            pointer-events: none;
         }
         .hidden-panel-left {
             transform: translateX(-120%);
@@ -96,17 +111,17 @@
     <!-- Header -->
     <header class="glass z-[2000] relative px-6 py-4 flex justify-between items-center shrink-0">
         <div class="flex items-center gap-3">
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Logo" class="w-8 h-8 rounded-lg shadow-sm">
             <h1 class="text-xl font-bold text-slate-800 tracking-tight">Atish's Global Geopolitics Map</h1>
         </div>
-        <div class="text-sm text-slate-500 font-medium hidden sm:block">Select any country to analyze relations</div>
+        <div class="text-sm text-slate-500 font-medium hidden sm:block italic">Ats Design Studio Intelligence</div>
     </header>
 
     <!-- Loading Screen -->
     <div id="loader">
         <div class="spinner mb-4"></div>
-        <h2 class="text-xl font-bold tracking-wider">INITIALIZING GLOBAL DATA</h2>
-        <p class="text-sm text-gray-400 mt-2">Loading Political Borders...</p>
+        <h2 class="text-xl font-bold tracking-wider uppercase">Loading Atish's Map Engine</h2>
+        <p class="text-sm text-gray-400 mt-2 italic">Fetching global border and city data...</p>
     </div>
 
     <!-- Main Content Area -->
@@ -116,7 +131,7 @@
         <div id="map" class="absolute inset-0 z-0"></div>
 
         <!-- Floating Legend -->
-        <div class="absolute bottom-6 left-6 z-[1000] glass-panel rounded-xl p-4">
+        <div class="absolute bottom-6 left-6 z-[1000] glass-panel rounded-xl p-4 hidden md:block">
             <h3 class="font-bold text-gray-800 mb-2 text-sm uppercase tracking-wide">Relationship Legend</h3>
             <div class="flex items-center gap-2 mb-1">
                 <div class="w-6 h-4 bg-[#22c55e] border border-gray-300 rounded-sm"></div>
@@ -136,14 +151,13 @@
             </div>
             <div class="flex items-center gap-2 mt-3 pt-2 border-t border-gray-300/50">
                 <div class="w-3 h-3 bg-blue-500 rounded-full border border-white"></div>
-                <span class="text-xs text-gray-700 font-medium">Capital City (Click to zoom)</span>
+                <span class="text-xs text-gray-700 font-medium">Major City (Click to zoom)</span>
             </div>
         </div>
 
         <!-- Left Information Panel (Detailed Profile) -->
-        <div id="left-info-panel" class="absolute top-6 left-6 z-[1000] w-80 glass-panel rounded-2xl hidden-panel-left overflow-hidden flex flex-col max-h-[90vh]">
-            <!-- Header -->
-            <div class="bg-blue-800/90 p-5 text-white relative">
+        <div id="left-info-panel" class="absolute top-4 sm:top-6 left-4 sm:left-6 z-[1000] w-[calc(100%-2rem)] sm:w-80 glass-panel rounded-2xl hidden-panel-left overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh]">
+            <div class="bg-blue-800/90 p-5 text-white relative shrink-0">
                 <button onclick="closeLeftPanel()" class="absolute top-3 right-3 text-blue-200 hover:text-white transition">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
@@ -152,7 +166,12 @@
             </div>
             <div class="p-5 overflow-y-auto flex-1 text-sm">
                 <div class="mb-4">
-                    <span class="block text-[11px] font-bold text-gray-500 uppercase tracking-wide">GDP & Global Rank</span>
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="block text-[11px] font-bold text-gray-500 uppercase tracking-wide">GDP & Global Rank</span>
+                        <a id="link-gdp" href="#" target="_blank" class="text-blue-500 hover:text-blue-700 transition" title="View GDP Data">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
                     <div class="flex items-end gap-2">
                         <span id="stat-gdp" class="block font-black text-xl text-slate-800">--</span>
                         <span id="stat-rank" class="block font-bold text-blue-600 text-md pb-0.5">--</span>
@@ -177,32 +196,21 @@
                     <span class="block text-xs text-slate-500 mt-1">Annual Vol: <span id="stat-export-vol" class="font-bold text-slate-700">--</span></span>
                 </div>
                 <div class="mb-4">
-                    <span class="block text-[11px] font-bold text-gray-500 uppercase tracking-wide">Est. Military Strength</span>
-                    <span id="stat-military" class="block font-semibold text-lg text-slate-800">--</span>
-                </div>
-                <div class="mb-4">
                     <span class="block text-[11px] font-bold text-gray-500 uppercase tracking-wide">Capital City</span>
                     <span id="stat-capital" class="block font-bold text-md text-slate-800">--</span>
                 </div>
                 <div class="mb-2">
-                    <span class="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-2">Major Cities (Click to Zoom)</span>
+                    <span class="block text-[11px] font-bold text-gray-500 uppercase tracking-wide mb-2">Populous Major Cities (Click Zoom)</span>
                     <div id="stat-cities" class="space-y-2">
                         <!-- Cities injected here -->
                     </div>
                 </div>
             </div>
-            <!-- Added Focus on Borders to Left Panel -->
-            <div class="p-5 border-t border-slate-200 bg-slate-50/50">
-                <button onclick="zoomToSelected()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition shadow-md">
-                    Focus on Borders
-                </button>
-            </div>
         </div>
 
         <!-- Information Panel (Right Side - Diplomatic Dossier) -->
-        <div id="info-panel" class="absolute top-6 right-6 z-[1000] w-80 glass-panel rounded-2xl hidden-panel overflow-hidden flex flex-col max-h-[90vh]">
-            <!-- Header -->
-            <div class="bg-slate-800/90 p-5 text-white relative">
+        <div id="info-panel" class="absolute top-4 sm:top-6 right-4 sm:right-6 z-[1000] w-[calc(100%-2rem)] sm:w-80 glass-panel rounded-2xl hidden-panel overflow-hidden flex flex-col max-h-[85vh] sm:max-h-[90vh]">
+            <div class="bg-slate-800/90 p-5 text-white relative shrink-0">
                 <button onclick="closePanel()" class="absolute top-3 right-3 text-gray-300 hover:text-white transition">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
@@ -211,12 +219,8 @@
             </div>
             
             <div class="p-5 overflow-y-auto flex-1">
-                <!-- Visa Section -->
                 <div class="mb-5">
-                    <h3 class="flex items-center text-sm font-bold text-gray-700 mb-2 uppercase">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                        Passport Power
-                    </h3>
+                    <h3 class="flex items-center text-sm font-bold text-gray-700 mb-2 uppercase">Passport Power</h3>
                     <div class="grid grid-cols-3 gap-2 text-center">
                         <div class="bg-green-50 rounded-lg p-2 border border-green-100">
                             <div id="visa-free" class="text-xl font-bold text-green-600">--</div>
@@ -233,43 +237,20 @@
                     </div>
                 </div>
 
-                <!-- Relationships Section -->
                 <div class="mb-4">
-                    <h3 class="flex items-center text-sm font-bold text-gray-700 mb-2 uppercase">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
-                        Geopolitics
-                    </h3>
-                    
-                    <div class="mb-3">
-                        <div class="text-xs font-bold text-green-600 mb-1">Key Allies & Friends</div>
-                        <div id="friends-list" class="text-sm text-gray-600 flex flex-wrap gap-1"></div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <div class="text-xs font-bold text-red-600 mb-1">Hostile / Adversaries</div>
-                        <div id="enemies-list" class="text-sm text-gray-600 flex flex-wrap gap-1"></div>
-                    </div>
-                    
-                    <div>
-                        <div class="text-xs font-bold text-orange-500 mb-1">Complicated / Frenemies</div>
-                        <div id="frenemies-list" class="text-sm text-gray-600 flex flex-wrap gap-1"></div>
-                    </div>
+                    <h3 class="flex items-center text-sm font-bold text-gray-700 mb-2 uppercase">Geopolitics</h3>
+                    <div class="mb-3"><div class="text-xs font-bold text-green-600 mb-1">Friends</div><div id="friends-list" class="text-sm text-gray-600 flex flex-wrap gap-1"></div></div>
+                    <div class="mb-3"><div class="text-xs font-bold text-red-600 mb-1">Enemies</div><div id="enemies-list" class="text-sm text-gray-600 flex flex-wrap gap-1"></div></div>
+                    <div><div class="text-xs font-bold text-orange-500 mb-1">Frenemies</div><div id="frenemies-list" class="text-sm text-gray-600 flex flex-wrap gap-1"></div></div>
                 </div>
                 
                 <div class="pt-4 border-t border-slate-200">
-                    <button onclick="toggleLeftPanel()" class="w-full mb-2 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg text-sm font-medium transition shadow-sm flex justify-center items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        View Full Country Profile
-                    </button>
-
-                    <a id="foreign-office-link" href="#" target="_blank" class="w-full mb-2 py-2 bg-transparent hover:bg-slate-50 text-blue-600 border border-blue-200 rounded-lg text-sm font-medium transition flex justify-center items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
-                        Official Foreign Office
-                    </a>
-
-                    <button onclick="zoomToSelected()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition shadow-md">
-                        Focus on Borders
-                    </button>
+                    <button onclick="toggleLeftPanel()" class="w-full mb-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg text-sm font-medium transition flex justify-center items-center gap-2">View Full Country Profile</button>
+                    <div class="flex gap-2 mb-3">
+                        <a id="wiki-link" href="#" target="_blank" class="flex-1 flex justify-center items-center gap-1 py-1.5 text-slate-700 border border-slate-200 rounded-lg text-xs font-medium transition">Wikipedia</a>
+                        <a id="gov-link" href="#" target="_blank" class="flex-1 flex justify-center items-center gap-1 py-1.5 text-slate-700 border border-slate-200 rounded-lg text-xs font-medium transition">Foreign Office</a>
+                    </div>
+                    <button onclick="zoomToSelected()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition shadow-md">Focus on Borders</button>
                 </div>
             </div>
         </div>
@@ -278,8 +259,8 @@
     <!-- Footer -->
     <footer class="glass z-[2000] relative px-6 py-2 flex justify-between items-center shrink-0 border-t border-white/50">
         <span class="text-xs text-slate-500 font-medium">© 2026 Ats Design Studio</span>
-        <span class="text-xs font-semibold text-blue-700 bg-blue-100/60 px-3 py-1 rounded-md border border-blue-200/50 shadow-sm">Database Updated: February 2026</span>
-        <span class="text-xs text-slate-400 hidden md:block">Powered by Leaflet & OpenStreetMap</span>
+        <span class="text-xs font-semibold text-blue-700 bg-blue-100/60 px-3 py-1 rounded-md border border-blue-200/50 shadow-sm hidden sm:block">Database Updated: March 2026</span>
+        <span class="text-xs text-slate-400 hidden md:block italic">Designed by Atish</span>
     </footer>
 
     <!-- Leaflet JS -->
@@ -294,401 +275,277 @@
             maxBounds: [[-90, -180], [90, 180]]
         });
 
-        // Minimal political basemap
         const baseLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            attribution: '&copy; Atish Geopolitics &copy; <a href="https://carto.com/attributions">CARTO</a>',
             maxZoom: 17
         }).addTo(map);
 
-        // Global variables for interactivity
         let geojsonLayer;
         let selectedCountryLayer = null;
         let selectedCountryName = null;
         let currentRelations = null;
-        let isFocusedMode = false; // Tracks if we are in "Focus" mode
-        const countryLayersMap = {}; // Maps country name to its Leaflet Layer
-        const countryDataList = [];  // List of all country names for random fallback
+        let isFocusedMode = false; 
+        let isCityMode = false;    
+        const countryLayersMap = {}; 
+        const countryDataList = [];  
+        const cityMarkers = []; // Global store for city markers
 
-        // --- 3. DATA GENERATORS ---
-        
-        // Diplomatic Data Generator
+        // --- 2. EXTENDED HARDCODED DATABASE (Wikipedia-Sourced) ---
+        const countryDatabase = {
+            "United States of America": { 
+                pop: "335 Million", area: "9,833,520 sq km", cap: "Washington, D.C.", 
+                gdp: "$27.9 Trillion", rank: "Rank #1", exp: "Aircraft, Tech, Refined Petroleum", expVol: "$2.1 Trillion", mil: "Rank #1",
+                cities: [
+                    { name: "New York City", pop: "8.3M", famous: "Global Finance", lat: 40.7128, lng: -74.0060 },
+                    { name: "Los Angeles", pop: "3.8M", famous: "Entertainment", lat: 34.0522, lng: -118.2437 },
+                    { name: "Chicago", pop: "2.6M", famous: "Commerce/Arch", lat: 41.8781, lng: -87.6298 },
+                    { name: "Houston", pop: "2.3M", famous: "Energy/Space", lat: 29.7604, lng: -95.3698 },
+                    { name: "Washington, D.C.", pop: "0.7M", famous: "Political Center", lat: 38.8951, lng: -77.0364, isCap: true }
+                ]
+            },
+            "China": { 
+                pop: "1.41 Billion", area: "9,596,961 sq km", cap: "Beijing", 
+                gdp: "$18.5 Trillion", rank: "Rank #2", exp: "Electronics, Machinery", expVol: "$3.6 Trillion", mil: "Rank #3",
+                cities: [
+                    { name: "Shanghai", pop: "24M", famous: "Finance/Port", lat: 31.2304, lng: 121.4737 },
+                    { name: "Beijing", pop: "21M", famous: "Capital/History", lat: 39.9042, lng: 116.4074, isCap: true },
+                    { name: "Guangzhou", pop: "15M", famous: "Manufacturing", lat: 23.1291, lng: 113.2644 },
+                    { name: "Shenzhen", pop: "12M", famous: "Tech Hub", lat: 22.5431, lng: 114.0579 },
+                    { name: "Chongqing", pop: "31M", famous: "Inland Logistics", lat: 29.5630, lng: 106.5516 }
+                ]
+            },
+            "India": { 
+                pop: "1.42 Billion", area: "3,287,263 sq km", cap: "New Delhi", 
+                gdp: "$3.9 Trillion", rank: "Rank #5", exp: "Petroleum, Meds, IT", expVol: "$450 Billion", mil: "Rank #4",
+                cities: [
+                    { name: "Mumbai", pop: "21M", famous: "Financial Hub", lat: 19.0760, lng: 72.8777 },
+                    { name: "Delhi", pop: "32M", famous: "National Capital", lat: 28.6139, lng: 77.2090, isCap: true },
+                    { name: "Bangalore", pop: "13M", famous: "Silicon Valley", lat: 12.9716, lng: 77.5946 },
+                    { name: "Hyderabad", pop: "10M", famous: "Pharma/Tech", lat: 17.3850, lng: 78.4867 },
+                    { name: "Chennai", pop: "11M", famous: "Automobiles", lat: 13.0827, lng: 80.2707 }
+                ]
+            },
+            "Russia": { 
+                pop: "144 Million", area: "17,098,246 sq km", cap: "Moscow", 
+                gdp: "$2.0 Trillion", rank: "Rank #11", exp: "Oil, Gas, Wheat", expVol: "$480 Billion", mil: "Rank #2",
+                cities: [
+                    { name: "Moscow", pop: "13M", famous: "Political Center", lat: 55.7558, lng: 37.6173, isCap: true },
+                    { name: "St. Petersburg", pop: "5M", famous: "Cultural Capital", lat: 59.9311, lng: 30.3609 },
+                    { name: "Novosibirsk", pop: "1.6M", famous: "Siberian Hub", lat: 55.0084, lng: 82.9357 },
+                    { name: "Yekaterinburg", pop: "1.5M", famous: "Industrial Core", lat: 56.8389, lng: 60.6057 }
+                ]
+            },
+            "United Kingdom": { 
+                pop: "68 Million", area: "242,495 sq km", cap: "London", 
+                gdp: "$3.4 Trillion", rank: "Rank #6", exp: "Machinery, Cars, Services", expVol: "$480 Billion", mil: "Rank #5",
+                cities: [
+                    { name: "London", pop: "8.9M", famous: "Global Finance", lat: 51.5074, lng: -0.1278, isCap: true },
+                    { name: "Birmingham", pop: "1.1M", famous: "Manufacturing", lat: 52.4862, lng: -1.8904 },
+                    { name: "Manchester", pop: "0.5M", famous: "Culture/Sports", lat: 53.4808, lng: -2.2426 },
+                    { name: "Glasgow", pop: "0.6M", famous: "Shipbuilding/Art", lat: 55.8642, lng: -4.2518 }
+                ]
+            },
+            "Brazil": {
+                pop: "216 Million", area: "8,515,767 sq km", cap: "Brasília",
+                gdp: "$2.2 Trillion", rank: "Rank #9", exp: "Soy, Iron, Oil", expVol: "$340 Billion", mil: "Rank #12",
+                cities: [
+                    { name: "São Paulo", pop: "12M", famous: "Finance/Industry", lat: -23.5505, lng: -46.6333 },
+                    { name: "Rio de Janeiro", pop: "6.7M", famous: "Tourism/Culture", lat: -22.9068, lng: -43.1729 },
+                    { name: "Brasília", pop: "3M", famous: "Planned Capital", lat: -15.7975, lng: -47.8919, isCap: true },
+                    { name: "Salvador", pop: "2.8M", famous: "Colonial History", lat: -12.9714, lng: -38.5014 }
+                ]
+            }
+        };
+
+        function getCountryData(name, layer) {
+            if (countryDatabase[name]) return countryDatabase[name];
+            
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) hash += name.charCodeAt(i);
+            const center = layer.getBounds().getCenter();
+            
+            return {
+                pop: `${(hash % 80) + 1} Million`,
+                area: `${(hash % 300) * 2000 + 10000} sq km`,
+                cap: `${name} City`, 
+                gdp: `$${(hash % 150) + 5} Billion`,
+                rank: `Rank #${(hash % 100) + 50}`,
+                exp: "Agricultural/Resource Products",
+                expVol: `$${(hash % 30) + 2} Billion`,
+                mil: `Rank #${(hash % 80) + 30}`,
+                cities: [{ name: `${name} City`, famous: "Political Center", lat: center.lat, lng: center.lng, isCap: true }]
+            };
+        }
+
+        // --- 3. DIPLOMATIC DATA ---
         const hardcodedRelations = {
-            "United States of America": { friends: ["United Kingdom", "Canada", "Japan", "Australia", "France"], enemies: ["Russia", "Iran", "North Korea"], frenemies: ["China", "Saudi Arabia"] },
+            "United States of America": { friends: ["United Kingdom", "Canada", "Japan", "Australia", "France", "Germany"], enemies: ["Russia", "Iran", "North Korea"], frenemies: ["China", "Saudi Arabia"] },
             "China": { friends: ["Russia", "Pakistan", "North Korea"], enemies: ["United States of America", "Japan", "India"], frenemies: ["Australia", "South Korea"] },
             "Russia": { friends: ["China", "Belarus", "Syria"], enemies: ["United States of America", "Ukraine", "United Kingdom", "Poland"], frenemies: ["India", "Turkey"] },
             "India": { friends: ["Russia", "United States of America", "Japan", "France", "Israel"], enemies: ["Pakistan", "China"], frenemies: ["Bangladesh"] },
-            "United Kingdom": { friends: ["United States of America", "Australia", "Canada", "France"], enemies: ["Russia", "Iran"], frenemies: ["China"] },
-            "Ukraine": { friends: ["United States of America", "United Kingdom", "Poland", "Germany"], enemies: ["Russia", "Belarus"], frenemies: ["Hungary"] }
+            "United Kingdom": { friends: ["United States of America", "Australia", "Canada", "France"], enemies: ["Russia", "Iran"], frenemies: ["China", "Argentina"] }
         };
 
         function generateRelations(countryName) {
             if (hardcodedRelations[countryName]) return hardcodedRelations[countryName];
-            
-            let hash = 0;
-            for (let i = 0; i < countryName.length; i++) hash = ((hash << 5) - hash) + countryName.charCodeAt(i);
-            hash = Math.abs(hash);
-
+            let hash = 0; for (let i = 0; i < countryName.length; i++) hash = ((hash << 5) - hash) + countryName.charCodeAt(i);
             const getCountries = (count, offset) => {
                 const results = [];
                 for(let i=0; i<count; i++) {
-                    const idx = (hash + offset + i * 13) % countryDataList.length;
+                    const idx = (Math.abs(hash) + offset + i * 13) % countryDataList.length;
                     const name = countryDataList[idx];
                     if (name !== countryName && !results.includes(name)) results.push(name);
                 }
                 return results;
             };
-
-            return { friends: getCountries(3, 0), enemies: getCountries(1, 100), frenemies: getCountries(2, 200) };
+            return { friends: getCountries(2, 0), enemies: getCountries(1, 100), frenemies: getCountries(1, 200) };
         }
 
         function generateVisaData(countryName) {
-            let hash = 0;
-            for (let i = 0; i < countryName.length; i++) hash += countryName.charCodeAt(i);
-            
-            let baseFree = 40;
-            if (["United States of America", "United Kingdom", "Germany", "France", "Japan"].includes(countryName)) baseFree = 180;
-            if (["Afghanistan", "Syria", "Iraq"].includes(countryName)) baseFree = 25;
-
-            const visaFree = Math.min(190, baseFree + (hash % 60));
-            const voa = (hash % 35) + 10;
-            const required = 198 - visaFree - voa;
-            
-            return { visaFree, voa, required: Math.max(0, required) };
+            let hash = 0; for (let i = 0; i < countryName.length; i++) hash += countryName.charCodeAt(i);
+            let base = 50;
+            if (["United States of America", "United Kingdom", "Germany", "France", "Japan"].includes(countryName)) base = 180;
+            const vf = Math.min(194, base + (hash % 60));
+            return { vf, voa: (hash % 30) + 5, req: Math.max(0, 198 - vf - 15) };
         }
 
-        // Detailed Country Info Generator
-        function generateDetailedStats(countryName, layer) {
-            const center = layer.getBounds().getCenter();
-            
-            // Overrides for major powers for realism
-            if(countryName === "United States of America") return { gdp: "$25.4 Trillion", rank: "Rank #1", pop: "333 Million", area: "9.8M sq km", exports: "Technology, Aircraft, Petroleum", expVol: "$2.1 Trillion", military: "Rank #1", capital: "Washington D.C.", cities: [{name: "New York City", famousFor: "Global Finance & Culture", lat: 40.7128, lng: -74.0060}, {name: "Los Angeles", famousFor: "Entertainment & Hollywood", lat: 34.0522, lng: -118.2437}, {name: "Chicago", famousFor: "Architecture & Commerce", lat: 41.8781, lng: -87.6298}, {name: "Houston", famousFor: "Space Exploration & Energy", lat: 29.7604, lng: -95.3698}] };
-            if(countryName === "China") return { gdp: "$17.9 Trillion", rank: "Rank #2", pop: "1.41 Billion", area: "9.6M sq km", exports: "Electronics, Machinery, Textiles", expVol: "$3.5 Trillion", military: "Rank #3", capital: "Beijing", cities: [{name: "Shanghai", famousFor: "Global Finance & Port", lat: 31.2304, lng: 121.4737}, {name: "Shenzhen", famousFor: "Technology & Innovation", lat: 22.5431, lng: 114.0579}, {name: "Guangzhou", famousFor: "Manufacturing & Trade", lat: 23.1291, lng: 113.2644}] };
-            if(countryName === "India") return { gdp: "$3.4 Trillion", rank: "Rank #5", pop: "1.42 Billion", area: "3.2M sq km", exports: "Petroleum, Gems, Pharmaceuticals", expVol: "$450 Billion", military: "Rank #4", capital: "New Delhi", cities: [{name: "Mumbai", famousFor: "Finance & Bollywood", lat: 19.0760, lng: 72.8777}, {name: "Bangalore", famousFor: "IT & Silicon Valley of India", lat: 12.9716, lng: 77.5946}, {name: "Chennai", famousFor: "Automobile & Culture", lat: 13.0827, lng: 80.2707}] };
-            if(countryName === "Russia") return { gdp: "$2.2 Trillion", rank: "Rank #8", pop: "143 Million", area: "17.1M sq km", exports: "Oil, Gas, Precious Metals", expVol: "$490 Billion", military: "Rank #2", capital: "Moscow", cities: [{name: "Saint Petersburg", famousFor: "History & Arts", lat: 59.9311, lng: 30.3609}, {name: "Novosibirsk", famousFor: "Science & Industry", lat: 55.0084, lng: 82.9357}, {name: "Yekaterinburg", famousFor: "Ural Mountains Hub", lat: 56.8389, lng: 60.6057}] };
-            if(countryName === "United Kingdom") return { gdp: "$3.1 Trillion", rank: "Rank #6", pop: "67 Million", area: "242K sq km", exports: "Machinery, Cars, Pharmaceuticals", expVol: "$460 Billion", military: "Rank #5", capital: "London", cities: [{name: "Manchester", famousFor: "Industry & Sports", lat: 53.4808, lng: -2.2426}, {name: "Edinburgh", famousFor: "History & Festivals", lat: 55.9533, lng: -3.1883}, {name: "Birmingham", famousFor: "Manufacturing", lat: 52.4862, lng: -1.8904}] };
-            if(countryName === "France") return { gdp: "$2.7 Trillion", rank: "Rank #7", pop: "68 Million", area: "551K sq km", exports: "Aircraft, Luxury Goods, Wine", expVol: "$580 Billion", military: "Rank #6", capital: "Paris", cities: [{name: "Lyon", famousFor: "Gastronomy & History", lat: 45.7640, lng: 4.8357}, {name: "Marseille", famousFor: "Major Seaport & Culture", lat: 43.2965, lng: 5.3698}, {name: "Toulouse", famousFor: "Aerospace Industry", lat: 43.6047, lng: 1.4442}] };
-            if(countryName === "Japan") return { gdp: "$4.2 Trillion", rank: "Rank #4", pop: "125 Million", area: "377K sq km", exports: "Vehicles, Tech, Machinery", expVol: "$710 Billion", military: "Rank #7", capital: "Tokyo", cities: [{name: "Osaka", famousFor: "Food & Commerce", lat: 34.6937, lng: 135.5023}, {name: "Kyoto", famousFor: "Tradition & Temples", lat: 35.0116, lng: 135.7681}, {name: "Yokohama", famousFor: "Maritime Trade & Tech", lat: 35.4437, lng: 139.6380}] };
-            
-            // Deterministic random generation for the rest
-            let hash = 0;
-            for (let i = 0; i < countryName.length; i++) hash += countryName.charCodeAt(i);
-            
-            const gdpBase = (hash % 250) * 8 + 15; // Billion
-            const gdpRank = (hash % 180) + 15;
-            const popBase = (hash % 120) * 1.5 + 2; // Million
-            const areaBase = (hash % 400) * 5000 + 20000;
-            
-            const exportCategories = ["Machinery & Electronics", "Mineral Fuels & Oil", "Vehicles & Automotive", "Plastics & Chemicals", "Precious Metals", "Agricultural Products", "Textiles & Apparel"];
-            const exp1 = exportCategories[hash % exportCategories.length];
-            const exp2 = exportCategories[(hash + 3) % exportCategories.length];
-            
-            const exportVol = ((hash % 50) * 3) + 5; // Billion
-            
-            return {
-                gdp: `$${gdpBase.toFixed(1)} Billion`,
-                rank: `Rank #${gdpRank}`,
-                pop: `${popBase.toFixed(1)} Million`,
-                area: `${areaBase.toLocaleString()} sq km`,
-                exports: `${exp1}, ${exp2}`,
-                expVol: `$${exportVol} Billion`,
-                military: `Rank #${(hash % 130) + 10}`,
-                capital: `${countryName} Metropolis`,
-                cities: [
-                    { name: `North ${countryName} Hub`, famousFor: "Regional Commerce", lat: center.lat + 1.2, lng: center.lng + 1.2 },
-                    { name: `Historic ${countryName} Center`, famousFor: "Culture & Tourism", lat: center.lat - 1.0, lng: center.lng - 0.8 },
-                    { name: `New ${countryName} Port`, famousFor: "Trade & Industry", lat: center.lat + 0.8, lng: center.lng - 1.5 }
-                ]
-            };
-        }
+        // --- 4. MAP STYLING ---
+        const defaultStyle = { fillColor: '#ffffff', weight: 1, opacity: 1, color: '#94a3b8', fillOpacity: 0.9, className: '' };
 
-        // --- 4. MAP STYLING & COLOR CODING ---
-        
-        const defaultStyle = {
-            fillColor: '#ffffff', // White base for countries
-            weight: 1,
-            opacity: 1,
-            color: '#94a3b8', // Slate 400 borders
-            fillOpacity: 0.9,
-            className: ''
-        };
-
-        function getCountryStyle(countryName) {
+        function getCountryStyle(name) {
+            if (isCityMode) return defaultStyle;
             if (!selectedCountryName || !currentRelations) return defaultStyle;
-            
-            if (countryName === selectedCountryName) {
-                return { 
-                    ...defaultStyle, 
-                    fillColor: '#3b82f6', 
-                    color: isFocusedMode ? '#fbbf24' : '#1e3a8a', 
-                    weight: isFocusedMode ? 4 : 2, 
-                    fillOpacity: 0.9,
-                    className: isFocusedMode ? 'blink-path' : '' 
-                }; 
-            }
-            
-            if (isFocusedMode) {
-                return { ...defaultStyle, fillColor: '#f8fafc', fillOpacity: 0.4, color: '#cbd5e1' }; 
-            }
-
-            if (currentRelations.friends.includes(countryName)) {
-                return { ...defaultStyle, fillColor: '#22c55e', color: '#14532d', weight: 1.5, fillOpacity: 0.85 }; 
-            }
-            if (currentRelations.enemies.includes(countryName)) {
-                return { ...defaultStyle, fillColor: '#ef4444', color: '#7f1d1d', weight: 1.5, fillOpacity: 0.85 }; 
-            }
-            if (currentRelations.frenemies.includes(countryName)) {
-                return { ...defaultStyle, fillColor: '#f97316', color: '#7c2d12', weight: 1.5, fillOpacity: 0.85 }; 
-            }
-            
-            return { ...defaultStyle, fillColor: '#f8fafc', fillOpacity: 0.6, color: '#cbd5e1' }; 
+            if (name === selectedCountryName) return { ...defaultStyle, fillColor: '#3b82f6', color: isFocusedMode ? '#fbbf24' : '#1e3a8a', weight: isFocusedMode ? 4 : 2, fillOpacity: 0.9, className: isFocusedMode ? 'blink-path' : '' };
+            if (isFocusedMode) return { ...defaultStyle, fillColor: '#f8fafc', fillOpacity: 0.4, color: '#cbd5e1' };
+            if (currentRelations.friends.includes(name)) return { ...defaultStyle, fillColor: '#22c55e', fillOpacity: 0.85 };
+            if (currentRelations.enemies.includes(name)) return { ...defaultStyle, fillColor: '#ef4444', fillOpacity: 0.85 };
+            if (currentRelations.frenemies.includes(name)) return { ...defaultStyle, fillColor: '#f97316', fillOpacity: 0.85 };
+            return { ...defaultStyle, fillColor: '#f8fafc', fillOpacity: 0.6 };
         }
 
-        function updateMapColors() {
-            if(geojsonLayer) {
-                geojsonLayer.eachLayer((layer) => {
-                    const name = layer.feature.properties.name;
-                    layer.setStyle(getCountryStyle(name));
-                });
-            }
-        }
-
-        // --- 5. INTERACTIVITY & RENDERING ---
-
-        function highlightFeature(e) {
-            const layer = e.target;
-            const name = layer.feature.properties.name;
-            const baseStyle = getCountryStyle(name);
-            
-            layer.setStyle({
-                ...baseStyle,
-                weight: 3,
-                color: '#1e293b', 
-                fillOpacity: Math.min(baseStyle.fillOpacity + 0.2, 1)
-            });
-            
-            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
-                layer.bringToFront();
-            }
-        }
-
-        function resetHighlight(e) {
-            const layer = e.target;
-            const name = layer.feature.properties.name;
-            layer.setStyle(getCountryStyle(name));
-        }
-
-        function createBadges(list, colorClass) {
-            if (!list || list.length === 0) return '<span class="text-gray-400 italic">None</span>';
-            return list.map(name => `<span class="px-2 py-0.5 rounded-md ${colorClass} text-[11px] font-semibold">${name}</span>`).join('');
-        }
-
+        // --- 5. INTERACTIVITY ---
         function selectCountry(e, preventPan = false) {
             const layer = e.target || e; 
-            const props = layer.feature.properties;
-            const countryName = props.name;
-
+            const name = layer.feature.properties.name;
             selectedCountryLayer = layer;
-            selectedCountryName = countryName;
-            isFocusedMode = false; 
+            selectedCountryName = name;
+            isFocusedMode = false; isCityMode = false;
+            currentRelations = generateRelations(name);
             
-            currentRelations = generateRelations(countryName);
-            updateMapColors();
-            
-            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge && layer.bringToFront) {
-                layer.bringToFront();
-            }
+            geojsonLayer.eachLayer(l => l.setStyle(getCountryStyle(l.feature.properties.name)));
+            if (layer.bringToFront) layer.bringToFront();
 
-            const sourceCenter = layer.getBounds().getCenter();
+            // UI Updates
+            document.getElementById('country-name').textContent = name;
+            document.getElementById('left-country-name').textContent = name;
+            document.getElementById('wiki-link').href = `https://en.wikipedia.org/wiki/${encodeURIComponent(name)}`;
+            document.getElementById('gov-link').href = `https://www.google.com/search?q=${encodeURIComponent('Official Ministry of Foreign Affairs ' + name)}`;
+            document.getElementById('link-gdp').href = `https://www.google.com/search?q=${encodeURIComponent('World Bank GDP ' + name)}`;
 
-            // --- Update UI Panels ---
-            document.getElementById('country-name').textContent = countryName;
-            document.getElementById('left-country-name').textContent = countryName;
-            
-            // Set Dynamic URL for Foreign Office
-            const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(countryName + " Ministry of Foreign Affairs official website")}`;
-            document.getElementById('foreign-office-link').href = searchUrl;
-
-            // Passport Data
-            const visa = generateVisaData(countryName);
-            animateValue("visa-free", 0, visa.visaFree, 1000);
+            const visa = generateVisaData(name);
+            animateValue("visa-free", 0, visa.vf, 1000);
             animateValue("visa-voa", 0, visa.voa, 1000);
-            animateValue("visa-req", 0, visa.required, 1000);
+            animateValue("visa-req", 0, visa.req, 1000);
 
-            // Diplomatic Data
-            document.getElementById('friends-list').innerHTML = createBadges(currentRelations.friends, 'bg-green-100 text-green-800 border border-green-200');
-            document.getElementById('enemies-list').innerHTML = createBadges(currentRelations.enemies, 'bg-red-100 text-red-800 border border-red-200');
-            document.getElementById('frenemies-list').innerHTML = createBadges(currentRelations.frenemies, 'bg-orange-100 text-orange-800 border border-orange-200');
-
-            // Detailed Stats Data
-            const stats = generateDetailedStats(countryName, layer);
+            const stats = getCountryData(name, layer);
             document.getElementById('stat-gdp').textContent = stats.gdp;
             document.getElementById('stat-rank').textContent = stats.rank;
             document.getElementById('stat-pop').textContent = stats.pop;
             document.getElementById('stat-area').textContent = stats.area;
-            document.getElementById('stat-exports').textContent = stats.exports;
+            document.getElementById('stat-exports').textContent = stats.exp;
             document.getElementById('stat-export-vol').textContent = stats.expVol;
-            document.getElementById('stat-military').textContent = stats.military;
-            document.getElementById('stat-capital').textContent = stats.capital;
-            
-            // Build Cities HTML
-            const citiesHtml = stats.cities.map(city => `
-                <button onclick="zoomToCity(${city.lat}, ${city.lng}, '${city.name}')" class="w-full text-left p-2 rounded-lg bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-300 transition group shadow-sm">
-                    <div class="font-bold text-slate-700 group-hover:text-blue-700 text-[12px]">${city.name}</div>
-                    <div class="text-[10px] text-slate-500 group-hover:text-blue-600 mt-0.5">Famous for: ${city.famousFor}</div>
+            document.getElementById('stat-capital').textContent = stats.cap;
+
+            document.getElementById('friends-list').innerHTML = createBadges(currentRelations.friends, 'bg-green-100 text-green-800');
+            document.getElementById('enemies-list').innerHTML = createBadges(currentRelations.enemies, 'bg-red-100 text-red-800');
+            document.getElementById('frenemies-list').innerHTML = createBadges(currentRelations.frenemies, 'bg-orange-100 text-orange-800');
+
+            document.getElementById('stat-cities').innerHTML = stats.cities.map(c => `
+                <button onclick="zoomToCity(${c.lat}, ${c.lng}, '${c.name}')" class="w-full text-left p-2 rounded-lg bg-blue-50 border border-blue-200 transition hover:border-blue-400 group shadow-sm">
+                    <div class="font-bold text-blue-800 text-[12px] uppercase">${c.name} ${c.isCap ? '<span class="text-[8px] bg-blue-200 px-1 rounded ml-1">CAP</span>' : ''}</div>
+                    <div class="text-[10px] text-slate-500 mt-0.5">${c.pop ? 'Pop: '+c.pop : ''} • Famous: ${c.famous}</div>
                 </button>
             `).join('');
-            document.getElementById('stat-cities').innerHTML = citiesHtml;
 
-            // Show Panel
             document.getElementById('info-panel').classList.remove('hidden-panel');
-            
-            // Close left panel initially on new selection to avoid crowding
-            closeLeftPanel();
+            document.getElementById('left-info-panel').classList.add('hidden-panel-left');
+            if (!preventPan) map.panTo(layer.getBounds().getCenter(), {animate: true, duration: 0.5});
+        }
 
-            if (!preventPan) {
-                map.panTo(sourceCenter, {animate: true, duration: 0.5});
+        function zoomToCity(lat, lng, name) {
+            isCityMode = true; isFocusedMode = false;
+            geojsonLayer.eachLayer(l => l.setStyle(getCountryStyle(l.feature.properties.name)));
+            map.flyTo([lat, lng], 10, { animate: true, duration: 1.5 });
+            L.popup().setLatLng([lat, lng]).setContent(`<div class="font-bold text-blue-700 text-sm">${name}</div><div class="text-[10px] uppercase mt-1">Focused Hub</div>`).openOn(map);
+            if(window.innerWidth < 768) {
+                document.getElementById('info-panel').classList.add('hidden-panel');
+                document.getElementById('left-info-panel').classList.add('hidden-panel-left');
             }
-        }
-
-        function onEachFeature(feature, layer) {
-            const countryName = feature.properties.name;
-            countryLayersMap[countryName] = layer;
-            countryDataList.push(countryName);
-
-            layer.on({
-                mouseover: highlightFeature,
-                mouseout: resetHighlight,
-                click: selectCountry
-            });
-        }
-
-        // --- 6. UTILITIES & DATA FETCHING ---
-
-        function zoomToCity(lat, lng, cityName) {
-            map.flyTo([lat, lng], 10, {
-                animate: true,
-                duration: 1.5
-            });
-            
-            // Show a temporary popup to identify the city location
-            L.popup()
-                .setLatLng([lat, lng])
-                .setContent(`<div class="font-bold text-blue-700 text-sm">${cityName}</div><div class="text-[10px] text-gray-500 uppercase mt-1">Focused View</div>`)
-                .openOn(map);
         }
 
         function zoomToSelected() {
             if (selectedCountryLayer) {
-                isFocusedMode = true;
-                updateMapColors(); 
-                
-                map.flyToBounds(selectedCountryLayer.getBounds(), {
-                    padding: [50, 50],
-                    animate: true,
-                    duration: 1
-                });
+                isFocusedMode = true; isCityMode = false;
+                geojsonLayer.eachLayer(l => l.setStyle(getCountryStyle(l.feature.properties.name)));
+                map.flyToBounds(selectedCountryLayer.getBounds(), { padding: [50, 50], animate: true, duration: 1 });
+                if(window.innerWidth < 768) document.getElementById('info-panel').classList.add('hidden-panel');
             }
         }
 
-        function toggleLeftPanel() {
-            const panel = document.getElementById('left-info-panel');
-            if(panel.classList.contains('hidden-panel-left')) {
-                panel.classList.remove('hidden-panel-left');
-                // Adjust map padding slightly if needed
-            } else {
-                panel.classList.add('hidden-panel-left');
-            }
+        function onEachFeature(f, l) {
+            const name = f.properties.name;
+            countryDataList.push(name);
+            l.on({ 
+                mouseover: (e) => { e.target.setStyle({ weight: 3, color: '#1e293b' }); },
+                mouseout: (e) => { e.target.setStyle(getCountryStyle(e.target.feature.properties.name)); },
+                click: selectCountry 
+            });
         }
 
-        function closeLeftPanel() {
-            document.getElementById('left-info-panel').classList.add('hidden-panel-left');
+        // UI HELPERS
+        function toggleLeftPanel() { 
+            const p = document.getElementById('left-info-panel');
+            p.classList.toggle('hidden-panel-left');
+            if(!p.classList.contains('hidden-panel-left') && window.innerWidth < 768) document.getElementById('info-panel').classList.add('hidden-panel');
         }
-
-        function closePanel() {
-            document.getElementById('info-panel').classList.add('hidden-panel');
-            closeLeftPanel(); // Also close left panel
-            
-            selectedCountryLayer = null;
-            selectedCountryName = null;
-            currentRelations = null;
-            isFocusedMode = false;
-            updateMapColors(); 
-        }
-
-        function animateValue(id, start, end, duration) {
-            const obj = document.getElementById(id);
-            if (!obj) return;
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                obj.innerHTML = Math.floor(easeOut * (end - start) + start);
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    obj.innerHTML = end; 
-                }
+        function closeLeftPanel() { document.getElementById('left-info-panel').classList.add('hidden-panel-left'); }
+        function closePanel() { document.getElementById('info-panel').classList.add('hidden-panel'); closeLeftPanel(); selectedCountryName = null; geojsonLayer.eachLayer(l => l.setStyle(getCountryStyle(l.feature.properties.name))); }
+        function createBadges(list, cls) { return list.length ? list.map(n => `<span class="px-2 py-0.5 rounded ${cls} text-[10px] font-bold">${n}</span>`).join('') : '<span class="text-xs text-gray-400 italic">None</span>'; }
+        function animateValue(id, start, end, dur) {
+            const o = document.getElementById(id); if(!o) return;
+            let st = null;
+            const step = (t) => {
+                if(!st) st = t; const p = Math.min((t - st) / dur, 1);
+                o.innerHTML = Math.floor((1 - Math.pow(1 - p, 3)) * (end - start) + start);
+                if(p < 1) window.requestAnimationFrame(step); else o.innerHTML = end;
             };
             window.requestAnimationFrame(step);
         }
 
-        // Fetch the global GeoJSON data
+        // LOAD DATA
         fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
-            .then(response => {
-                if (!response.ok) throw new Error("Network response was not ok");
-                return response.json();
-            })
-            .then(data => {
-                geojsonLayer = L.geoJSON(data, {
-                    style: function(feature) {
-                        return getCountryStyle(feature.properties.name);
-                    },
-                    onEachFeature: onEachFeature
-                }).addTo(map);
-
-                // Dynamically generate a capital city marker for every country
-                geojsonLayer.eachLayer(layer => {
-                    const countryName = layer.feature.properties.name;
-                    const center = layer.getBounds().getCenter();
-                    
-                    // Manual adjustments for massive multipolygon countries to keep cities on land
-                    if (countryName === "United States of America") { center.lat = 38.9072; center.lng = -77.0369; } // Washington D.C.
-                    else if (countryName === "France") { center.lat = 48.8566; center.lng = 2.3522; } // Paris
-                    else if (countryName === "United Kingdom") { center.lat = 51.5074; center.lng = -0.1278; } // London
-                    else if (countryName === "Russia") { center.lat = 55.7558; center.lng = 37.6173; } // Moscow
-                    else if (countryName === "Canada") { center.lat = 45.4215; center.lng = -75.6972; } // Ottawa
-                    else if (countryName === "China") { center.lat = 39.9042; center.lng = 116.4074; } // Beijing
-                    else if (countryName === "India") { center.lat = 28.6139; center.lng = 77.2090; } // New Delhi
-
-                    const icon = L.divIcon({ className: 'city-marker', iconSize: [10, 10] });
-                    const marker = L.marker(center, { icon: icon }).addTo(map);
-                    
-                    marker.bindPopup(`<b>${countryName} Capital</b><br><span class="text-xs text-gray-500">Click to focus on borders</span>`);
-                    
-                    marker.on('click', (e) => {
-                        L.DomEvent.stopPropagation(e);
-                        selectCountry(layer, true);    
-                        zoomToSelected();              
+            .then(res => res.json())
+            .then(geoData => {
+                geojsonLayer = L.geoJSON(geoData, { style: () => defaultStyle, onEachFeature: onEachFeature }).addTo(map);
+                
+                // Static Marker Generation for Hardcoded Cities
+                Object.keys(countryDatabase).forEach(cName => {
+                    const data = countryDatabase[cName];
+                    data.cities.forEach(city => {
+                        const icon = L.divIcon({ className: 'city-marker', iconSize: [10, 10] });
+                        const marker = L.marker([city.lat, city.lng], { icon }).addTo(map);
+                        marker.bindPopup(`<b>${city.name}</b><br><span class="text-xs text-gray-500">${city.isCap ? 'Official Capital' : 'Major City'} of ${cName}</span>`);
+                        marker.on('click', (e) => { 
+                            L.DomEvent.stopPropagation(e);
+                            const layer = geojsonLayer.getLayers().find(l => l.feature.properties.name === cName);
+                            if(layer) selectCountry(layer, true);
+                            zoomToCity(city.lat, city.lng, city.name);
+                        });
                     });
                 });
 
-                // Hide loader
-                setTimeout(() => {
-                    const loader = document.getElementById('loader');
-                    loader.style.opacity = '0';
-                    loader.style.transition = 'opacity 0.8s ease';
-                    setTimeout(() => loader.style.display = 'none', 800);
-                }, 500);
-            })
-            .catch(error => {
-                console.error("Error loading map data:", error);
-                document.getElementById('loader').innerHTML = `
-                    <div class="text-red-500 font-bold text-xl mb-2">Error Loading Data</div>
-                    <p class="text-sm text-gray-400">Please check your internet connection and refresh.</p>
-                `;
+                document.getElementById('loader').style.display = 'none';
             });
-
     </script>
 </body>
 </html>
