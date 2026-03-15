@@ -1,6 +1,6 @@
-# Atish Ak Sharma | Official Portfolio & Digital Garden
+# Atish Ak Sharma | Official Portfolio & Testing Gallery
 
-Welcome to my personal repository. This project serves as a central hub for my developer journey, documenting a garden of experiments, interactive web tools, and research modules under the **ATS Design Studio** banner.
+Welcome to My Personal Repository. This project serves as a central hub for my developer journey, documenting a Testing of experiments, interactive web tools, and research modules under the **ATS Design Studio**.
 
 🏠 **Live Site:** [atishaksharma.com](https://atishaksharma.com/)
 
