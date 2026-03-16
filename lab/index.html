@@ -14,21 +14,23 @@
     <style>
         body { margin: 0; overflow: hidden; background-color: #1a202c; color: white; font-family: 'Inter', sans-serif; transition: background-color 0.3s ease; }
         #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+        
+        /* UI Layer setup for perfect desktop/mobile flexbox */
+        #ui-layer { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
         .pointer-events-auto { pointer-events: auto; }
         
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #2d3748; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 3px; }
         ::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #718096; }
 
-        input[type=range] { accent-color: #3b82f6; }
+        input[type=range] { accent-color: #3b82f6; width: 100%; cursor: pointer; }
 
         /* 3D Hover Tooltip */
         #tooltip {
             position: absolute;
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.9);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             color: white;
@@ -44,14 +46,15 @@
         }
 
         /* Light Mode Overrides */
-        body.light-mode .ui-panel { background-color: rgba(255, 255, 255, 0.95); border-color: #cbd5e1; }
+        body.light-mode .ui-panel { background-color: rgba(255, 255, 255, 0.95); border-color: #cbd5e1; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         body.light-mode #main-header { background-color: rgba(255, 255, 255, 0.95); border-color: #cbd5e1; }
         body.light-mode .text-white { color: #0f172a !important; }
+        body.light-mode .text-gray-200 { color: #1e293b !important; }
         body.light-mode .text-gray-300 { color: #334155 !important; }
         body.light-mode .text-gray-400 { color: #475569 !important; }
         body.light-mode .text-gray-500 { color: #64748b !important; }
-        body.light-mode .bg-gray-800 { background-color: #f1f5f9 !important; border-color: #cbd5e1 !important; }
-        body.light-mode .border-gray-600, body.light-mode .border-gray-700 { border-color: #cbd5e1 !important; }
+        body.light-mode .bg-gray-800 { background-color: #f8fafc !important; border-color: #cbd5e1 !important; }
+        body.light-mode .border-gray-600, body.light-mode .border-gray-700, body.light-mode .border-gray-800 { border-color: #cbd5e1 !important; }
         body.light-mode .border-b { border-bottom-color: #cbd5e1 !important; }
         body.light-mode .border-t { border-top-color: #cbd5e1 !important; }
         body.light-mode footer { background-color: rgba(255, 255, 255, 0.95) !important; border-top-color: #cbd5e1 !important; color: #475569 !important; }
@@ -65,47 +68,36 @@
 
     <!-- 3 Block Header Architecture (Responsive) -->
     <header class="fixed top-0 w-full bg-gray-900/90 backdrop-blur-md border-b border-gray-700 z-40 p-2 md:p-3 flex justify-between items-center shadow-md transition-colors duration-300" id="main-header">
-        
-        <!-- Left: Logo -->
         <div class="flex items-center justify-start w-1/4 pl-2">
             <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Logo" class="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-green-500 shadow-md">
         </div>
-
-        <!-- Center: Title -->
         <div class="flex items-center justify-center w-2/4">
             <h1 class="text-sm md:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 pointer-events-auto tracking-wide text-center truncate px-2">
                 Atish's Mushroom Lab
             </h1>
         </div>
-
-        <!-- Right: Action Icons -->
         <div class="flex items-center justify-end w-1/4 gap-3 md:gap-5 pr-2">
-            <button id="toggle-theme-btn" class="text-white text-lg md:text-xl hover:scale-110 transition cursor-pointer pointer-events-auto" title="Toggle Light Theme">
-                ☀️
-            </button>
-            <button id="toggle-ui-btn" class="text-white text-xl md:text-2xl hover:scale-110 transition cursor-pointer pointer-events-auto" title="Settings">
-                ⚙️
-            </button>
+            <button id="toggle-theme-btn" class="text-white text-lg md:text-xl hover:scale-110 transition cursor-pointer pointer-events-auto" title="Toggle Light Theme">☀️</button>
+            <button id="toggle-ui-btn" class="text-white text-xl md:text-2xl hover:scale-110 transition cursor-pointer pointer-events-auto" title="Settings">⚙️</button>
         </div>
     </header>
 
     <div id="canvas-container"></div>
 
-    <!-- UI Layer: Responsive Single Block on Mobile -->
-    <div id="ui-layer" class="hidden absolute top-0 left-0 w-full h-full p-4 pt-20 pb-16 flex-col md:flex-row justify-between items-start gap-4 transition-all duration-300 overflow-y-auto md:overflow-y-hidden pointer-events-none z-10">
+    <!-- UI Layer: Responsive Container -->
+    <div id="ui-layer" class="hidden flex flex-col md:flex-row justify-between items-start gap-4 pt-24 pb-16 px-4 overflow-y-auto md:overflow-y-hidden">
         
-        <!-- Controls & Environment Simulation -->
-        <div class="ui-panel bg-gray-900/90 backdrop-blur-md border border-gray-700 shadow-2xl p-5 rounded-xl pointer-events-auto w-full md:w-80 flex flex-col gap-4 flex-shrink-0">
+        <!-- Left Block: Controls & Environment Simulation -->
+        <div class="ui-panel bg-gray-900/95 backdrop-blur-md border border-gray-700 shadow-2xl p-5 rounded-xl pointer-events-auto w-full md:w-[22rem] flex flex-col gap-4 flex-shrink-0 md:max-h-[85vh] md:overflow-y-auto transition-colors">
             
             <h1 class="text-xl font-bold text-yellow-400 border-b border-gray-700 pb-2 transition-colors">Environment Simulation</h1>
-            <p class="text-xs text-gray-400 mb-2 transition-colors">Use sliders or click buttons for direct control.</p>
             
-            <div class="flex flex-col gap-4 bg-gray-800 p-3 rounded-lg border border-gray-700 transition-colors">
+            <div class="flex flex-col gap-4 bg-gray-800 p-4 rounded-lg border border-gray-700 transition-colors shadow-inner">
                 <div>
                     <div class="flex justify-between text-sm text-gray-300 mb-1 transition-colors">
                         <span>Time of Day (RTC)</span> <span id="val-time" class="font-bold text-purple-400">12:00</span>
                     </div>
-                    <input type="range" id="sim-time" min="0" max="24" step="0.5" value="12" class="w-full">
+                    <input type="range" id="sim-time" min="0" max="24" step="0.5" value="12">
                     <div class="text-[10px] text-gray-500 mt-1 transition-colors">Triggers LEDs (06:00 - 18:00)</div>
                 </div>
 
@@ -113,7 +105,7 @@
                     <div class="flex justify-between text-sm text-gray-300 mb-1 transition-colors">
                         <span>Room Temperature</span> <span id="val-temp" class="font-bold text-cyan-400">22°C</span>
                     </div>
-                    <input type="range" id="sim-temp" min="17" max="27" value="22" class="w-full">
+                    <input type="range" id="sim-temp" min="17" max="27" value="22">
                     <div class="text-[10px] text-gray-500 mt-1 transition-colors">Maintains 22°C (Triggers AC Unit if > 22°C)</div>
                 </div>
 
@@ -121,7 +113,7 @@
                     <div class="flex justify-between text-sm text-gray-300 mb-1 transition-colors">
                         <span>Humidity (RH)</span> <span id="val-hum" class="font-bold text-blue-400">85%</span>
                     </div>
-                    <input type="range" id="sim-hum" min="40" max="100" value="85" class="w-full">
+                    <input type="range" id="sim-hum" min="40" max="100" value="85">
                     <div class="text-[10px] text-gray-500 mt-1 transition-colors">Maintains 85% (Triggers Humidifier < 85%)</div>
                 </div>
 
@@ -129,7 +121,7 @@
                     <div class="flex justify-between text-sm text-gray-300 mb-1 transition-colors">
                         <span>Humidifier Tank (5L)</span> <span id="val-tank" class="font-bold text-blue-300">5.0 L</span>
                     </div>
-                    <input type="range" id="sim-tank" min="0" max="5" step="0.1" value="5" class="w-full">
+                    <input type="range" id="sim-tank" min="0" max="5" step="0.1" value="5">
                     <div class="text-[10px] text-gray-500 mt-1 transition-colors">Auto-refills via RO purifier when <= 1L</div>
                 </div>
 
@@ -137,71 +129,72 @@
                     <div class="flex justify-between text-sm text-gray-300 mb-1 transition-colors">
                         <span>CO2 Level</span> <span id="val-co2" class="font-bold text-emerald-400">600 ppm</span>
                     </div>
-                    <input type="range" id="sim-co2" min="400" max="2000" step="50" value="600" class="w-full">
+                    <input type="range" id="sim-co2" min="400" max="2000" step="50" value="600">
                     <div class="text-[10px] text-gray-500 mt-1 transition-colors">Triggers FAE Fans (> 800 ppm)</div>
                 </div>
             </div>
 
             <!-- Direct Independent Buttons -->
-            <div class="grid grid-cols-2 gap-2 mt-2">
-                <button id="btn-leds" class="text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer">Rack LEDs OFF</button>
-                <button id="btn-ac" class="text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer">AC Unit OFF</button>
-                <button id="btn-hum" class="text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer">Humidifier OFF</button>
-                <button id="btn-fans" class="text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer">Airflow Fans OFF</button>
-                <div id="status-ro" class="col-span-2 text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400">RO Water Refill OFF</div>
+            <div class="grid grid-cols-2 gap-2">
+                <button id="btn-leds" class="text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">Rack LEDs OFF</button>
+                <button id="btn-uv" class="text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">UV Lamp OFF</button>
+                <button id="btn-ac" class="text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">AC Unit OFF</button>
+                <button id="btn-hum" class="text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">Humidifier OFF</button>
+                <button id="btn-fans" class="col-span-2 text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">Airflow Fans OFF</button>
+                <div id="status-ro" class="col-span-2 text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400 transition-colors">RO Water Refill OFF</div>
             </div>
 
-            <h1 class="text-lg font-bold text-green-400 border-b border-gray-700 pb-2 mt-4 transition-colors">Visibility Filters</h1>
+            <h1 class="text-lg font-bold text-green-400 border-b border-gray-700 pb-2 mt-2 transition-colors">Visibility Filters</h1>
             <div class="flex flex-col gap-2">
-                <label class="flex items-center space-x-3 cursor-pointer">
+                <label class="flex items-center space-x-3 cursor-pointer bg-gray-800/50 p-2 rounded hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-700">
                     <input type="checkbox" id="toggle-power" checked class="form-checkbox h-4 w-4 text-red-500 rounded bg-gray-800 border-gray-600">
-                    <span class="text-gray-300 text-sm transition-colors">Power Wiring (220V)</span>
+                    <span class="text-gray-300 text-sm transition-colors font-medium">Power Wiring (220V)</span>
                 </label>
-                <label class="flex items-center space-x-3 cursor-pointer">
+                <label class="flex items-center space-x-3 cursor-pointer bg-gray-800/50 p-2 rounded hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-700">
                     <input type="checkbox" id="toggle-auto" checked class="form-checkbox h-4 w-4 text-blue-500 rounded bg-gray-800 border-gray-600">
-                    <span class="text-gray-300 text-sm transition-colors">Automation (Low V)</span>
+                    <span class="text-gray-300 text-sm transition-colors font-medium">Automation (Low V)</span>
                 </label>
-                <label class="flex items-center space-x-3 cursor-pointer">
-                    <input type="checkbox" id="toggle-water" checked class="form-checkbox h-4 w-4 text-white rounded bg-gray-800 border-gray-600">
-                    <span class="text-gray-300 text-sm transition-colors">Water Piping (RO Line)</span>
+                <label class="flex items-center space-x-3 cursor-pointer bg-gray-800/50 p-2 rounded hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-700">
+                    <input type="checkbox" id="toggle-water" checked class="form-checkbox h-4 w-4 text-blue-300 rounded bg-gray-800 border-gray-600">
+                    <span class="text-gray-300 text-sm transition-colors font-medium">Water Piping (RO Line)</span>
                 </label>
-                <label class="flex items-center space-x-3 cursor-pointer">
+                <label class="flex items-center space-x-3 cursor-pointer bg-gray-800/50 p-2 rounded hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-700">
                     <input type="checkbox" id="toggle-roof" checked class="form-checkbox h-4 w-4 text-gray-500 rounded bg-gray-800 border-gray-600">
-                    <span class="text-gray-300 text-sm transition-colors">Show Ceiling</span>
+                    <span class="text-gray-300 text-sm transition-colors font-medium">Show Ceiling</span>
                 </label>
-                <label class="flex items-center space-x-3 cursor-pointer">
+                <label class="flex items-center space-x-3 cursor-pointer bg-gray-800/50 p-2 rounded hover:bg-gray-800 transition-colors border border-transparent hover:border-gray-700">
                     <input type="checkbox" id="toggle-lights" checked class="form-checkbox h-4 w-4 text-yellow-300 rounded bg-gray-800 border-gray-600">
-                    <span class="text-gray-300 text-sm transition-colors">Ceiling Lights</span>
+                    <span class="text-gray-300 text-sm transition-colors font-medium">Ceiling Lights</span>
                 </label>
             </div>
         </div>
 
-        <!-- Equipment Map & Electrical Info -->
-        <div class="ui-panel bg-gray-900/90 backdrop-blur-md border border-gray-700 shadow-2xl p-5 rounded-xl pointer-events-auto w-full md:w-80 flex-shrink-0 md:ml-auto">
+        <!-- Right Block: Equipment Map & Electrical Info -->
+        <div class="ui-panel bg-gray-900/95 backdrop-blur-md border border-gray-700 shadow-2xl p-5 rounded-xl pointer-events-auto w-full md:w-[24rem] flex flex-col flex-shrink-0 md:max-h-[85vh] md:overflow-y-auto transition-colors md:ml-auto">
             
             <h1 class="text-xl font-bold text-blue-400 border-b border-gray-700 pb-2 mb-4 transition-colors">System Architecture</h1>
             
             <div class="mb-5">
-                <h3 class="text-sm font-bold text-red-400 flex items-center gap-2 mb-2 uppercase tracking-wider">
+                <h3 class="text-sm font-bold text-red-400 flex items-center gap-2 mb-3 uppercase tracking-wider">
                     Electrical Load Distribution
                 </h3>
-                <ul class="text-[11px] space-y-2 text-gray-300 transition-colors">
-                    <li class="bg-gray-800 p-2 rounded border-l-2 border-red-500 transition-colors">
-                        <span class="font-bold text-white transition-colors">Circuit 1 (20A MCB):</span> Autoclave (High Draw).
+                <ul class="text-xs space-y-2 text-gray-300 transition-colors">
+                    <li class="bg-gray-800 p-3 rounded border-l-4 border-red-500 transition-colors shadow-sm">
+                        <span class="font-bold text-white transition-colors block mb-0.5">Circuit 1 (20A MCB):</span> Autoclave (High Draw).
                     </li>
-                    <li class="bg-gray-800 p-2 rounded border-l-2 border-red-500 transition-colors">
-                        <span class="font-bold text-white transition-colors">Circuit 2 (16A MCB):</span> 1-Ton AC Unit & Dehydrator.
+                    <li class="bg-gray-800 p-3 rounded border-l-4 border-red-500 transition-colors shadow-sm">
+                        <span class="font-bold text-white transition-colors block mb-0.5">Circuit 2 (16A MCB):</span> 1-Ton AC Unit & Dehydrator.
                     </li>
-                    <li class="bg-gray-800 p-2 rounded border-l-2 border-red-500 transition-colors">
-                        <span class="font-bold text-white transition-colors">Circuit 3 (10A MCB):</span> Refrigerator & Laminar Flow Hood.
+                    <li class="bg-gray-800 p-3 rounded border-l-4 border-red-500 transition-colors shadow-sm">
+                        <span class="font-bold text-white transition-colors block mb-0.5">Circuit 3 (10A MCB):</span> Refrigerator & Laminar Flow Hood.
                     </li>
-                    <li class="bg-gray-800 p-2 rounded border-l-2 border-red-500 transition-colors">
-                        <span class="font-bold text-white transition-colors">Circuit 4 (10A MCB):</span> Automation Panel, Fans, Humidifier, LEDs, Purifier & CCTV.
+                    <li class="bg-gray-800 p-3 rounded border-l-4 border-red-500 transition-colors shadow-sm">
+                        <span class="font-bold text-white transition-colors block mb-0.5">Circuit 4 (10A MCB):</span> Automation Panel, Fans, Humidifier, LEDs, UV Lamp, Purifier & CCTV.
                     </li>
                 </ul>
             </div>
 
-            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mt-2 mb-3 border-b border-gray-700 pb-1 transition-colors">Equipment Map</h2>
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mt-2 mb-3 border-b border-gray-700 pb-2 transition-colors">Equipment Map</h2>
             <div class="grid grid-cols-1 gap-2 text-xs" id="legend">
                 <!-- Populated by JS -->
             </div>
@@ -215,6 +208,7 @@
     <script>
         let isLightMode = false;
         let scene, camera, renderer, controls;
+        let lampUVLight, hoodUVLight; // References to the UV light point sources
 
         window.onload = function() {
             initUI();
@@ -224,9 +218,9 @@
         function initUI() {
             const btnUI = document.getElementById('toggle-ui-btn');
             const layerUI = document.getElementById('ui-layer');
+            
             btnUI.addEventListener('click', () => {
                 layerUI.classList.toggle('hidden');
-                // Auto scroll to top on mobile toggle
                 if(!layerUI.classList.contains('hidden')) layerUI.scrollTop = 0;
             });
 
@@ -268,10 +262,10 @@
             controls.update();
 
             // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
 
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
             dirLight.position.set(10, 20, 10);
             dirLight.castShadow = true;
             dirLight.shadow.mapSize.width = 2048;
@@ -374,7 +368,7 @@
                 mesh.position.set(x, y + height/2, z);
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
-                mesh.userData = { name, socketInfo }; // Store info for raycasting tooltip
+                mesh.userData = { name, socketInfo }; 
                 scene.add(mesh);
                 
                 const connectionPoint = new THREE.Vector3(x, y + height, z);
@@ -389,7 +383,7 @@
             const cHumid = '#14b8a6'; const cIntake = '#10b981'; const cExhaust = '#f43f5e';
             const cDehyd = '#d946ef'; const cPurifier = '#38bdf8';
 
-            let waterStream, waterStreamMat; // To control the tap animation
+            let waterStream, waterStreamMat; 
 
             // 1. Main Panel 
             const panelX = doorOffset - doorWidth - 0.5;
@@ -412,27 +406,227 @@
             const autoclaveConn = new THREE.Vector3(3, 3, -roomDepth/2 + 1.5);
             equipments.push({ name: "Autoclave", mesh: autoclaveMesh, color: cAutoC, pos: autoclaveConn, socketInfo: "20A Industrial Socket / 220V" });
 
-            // 5. Right Wall Items 
-            const rWallX = roomWidth/2 - 1.25;
-            const dehydrator = createEquipment("Dehydrator", 2.5, 4, 2, cDehyd, rWallX, 0, -2.5, "16A Socket / 220V");
-            createEquipment("Prep Table", 2.5, 3, 3, cTable, rWallX, 0, 0.5, "N/A (No Power)"); 
-            const flowHood = createEquipment("Laminar Flow Hood", 2, 2.5, 2.8, cHood, rWallX + 0.25, 3, 0.5, "10A Socket / 220V"); 
+            // 4b. Autoclave Wall Additions (Lab Coats & Supplies moved near dehydrator at X=7.0)
+            const wallSuppliesGroup = new THREE.Group();
+            wallSuppliesGroup.position.set(5.0, 5.5, -roomDepth/2 + 0.3); 
+            scene.add(wallSuppliesGroup);
+
+            const shelf = new THREE.Mesh(new THREE.BoxGeometry(3, 0.1, 0.6), new THREE.MeshStandardMaterial({ color: '#64748b' }));
+            shelf.position.set(0, 0, 0);
+            shelf.userData = { name: "Wall Shelf & Supplies", socketInfo: "N/A" };
+            wallSuppliesGroup.add(shelf);
+
+            const box1 = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.6, 0.5), new THREE.MeshStandardMaterial({ color: '#d97706' }));
+            box1.position.set(-0.8, 0.35, 0);
+            wallSuppliesGroup.add(box1);
+
+            const box2 = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.8, 0.5), new THREE.MeshStandardMaterial({ color: '#059669' }));
+            box2.position.set(0.6, 0.45, 0);
+            wallSuppliesGroup.add(box2);
+
+            const coatGeo = new THREE.BoxGeometry(0.6, 2.5, 0.1);
+            const coatMat = new THREE.MeshStandardMaterial({ color: '#f8fafc', roughness: 0.9 });
             
-            // Custom Hollow Wash Sink
+            const coat1 = new THREE.Mesh(coatGeo, coatMat);
+            coat1.position.set(-0.6, -1.3, 0.1);
+            coat1.userData = { name: "Lab Coat", socketInfo: "N/A" };
+            wallSuppliesGroup.add(coat1);
+
+            const coat2 = new THREE.Mesh(coatGeo, coatMat);
+            coat2.position.set(0.6, -1.3, 0.1);
+            coat2.userData = { name: "Lab Coat", socketInfo: "N/A" };
+            wallSuppliesGroup.add(coat2);
+
+            equipments.push({ name: "Wall Supplies & Coats", mesh: shelf, color: '#f8fafc', pos: new THREE.Vector3(5.0, 5.5, -4.2), socketInfo: "N/A" });
+
+            // 5. Right Wall Items 
+            const rWallX = roomWidth/2 - 1.25; 
+            
+            // Prep Table (Custom 3-Tier with 2 lower shelves)
+            const tableGroup = new THREE.Group();
+            tableGroup.position.set(rWallX, 0, -1.25);
+            scene.add(tableGroup);
+
+            const tableMat = new THREE.MeshStandardMaterial({ color: cTable, roughness: 0.6 });
+            
+            for(let y of [0.8, 1.8, 2.95]) { // Bottom shelf, Middle shelf, Top surface
+                const shelf = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.1, 6.5), tableMat);
+                shelf.position.set(0, y, 0);
+                shelf.castShadow = true; shelf.receiveShadow = true;
+                tableGroup.add(shelf);
+            }
+            for(let x of [-1.15, 1.15]) {
+                for(let z of [-3.15, 3.15]) {
+                    const leg = new THREE.Mesh(new THREE.BoxGeometry(0.1, 3, 0.1), tableMat);
+                    leg.position.set(x, 1.5, z);
+                    leg.castShadow = true; leg.receiveShadow = true;
+                    tableGroup.add(leg);
+                }
+            }
+            
+            tableGroup.userData = { name: "Prep Table (with Shelves)", socketInfo: "N/A (No Power)" };
+            equipments.push({ name: "Prep Table", mesh: tableGroup, color: cTable, pos: new THREE.Vector3(rWallX, 3, -1.25), socketInfo: "N/A" });
+
+            // Rotating Stools
+            window.rotatingStools = [];
+            const stoolMat = new THREE.MeshStandardMaterial({ color: '#475569', metalness: 0.5, roughness: 0.5 });
+            const seatMat = new THREE.MeshStandardMaterial({ color: '#ef4444', roughness: 0.8 }); // Changed to Red
+
+            const createStool = (x, z) => {
+                const stoolGroup = new THREE.Group();
+                stoolGroup.position.set(x, 0, z);
+                scene.add(stoolGroup);
+                
+                const base = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 0.1, 16), stoolMat); // Increased size
+                base.position.set(0, 0.05, 0);
+                base.castShadow = true; base.receiveShadow = true;
+                stoolGroup.add(base);
+                
+                const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.4, 16), stoolMat); // Thicker pole
+                pole.position.set(0, 0.7, 0);
+                pole.castShadow = true; pole.receiveShadow = true;
+                stoolGroup.add(pole);
+                
+                const seat = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.1, 16), seatMat); // Increased seat size
+                seat.position.set(0, 1.45, 0);
+                seat.castShadow = true; seat.receiveShadow = true;
+                stoolGroup.add(seat);
+                
+                window.rotatingStools.push(seat); 
+                
+                stoolGroup.userData = { name: "Rotating Lab Stool", socketInfo: "N/A" };
+                return stoolGroup;
+            };
+            
+            const stool1 = createStool(rWallX - 2.0, -0.5);
+            const stool2 = createStool(rWallX - 2.0, -2.0);
+            equipments.push({ name: "Lab Stools", mesh: stool1, color: '#ef4444', pos: new THREE.Vector3(rWallX - 2.0, 1.5, -0.5), socketInfo: "N/A" });
+            
+            // Dehydrator moved near back wall (Z=-3.5)
+            const dehydrator = createEquipment("Dehydrator", 2.5, 2, 2, cDehyd, rWallX, 3, -3.5, "16A Socket / 220V");
+            
+            // Laminar Flow Hood (Custom Hollow with Transparent Glass and Internal UV)
+            const hoodW = 2, hoodH = 2.5, hoodD = 2.5, hoodT = 0.1;
+            const flowHoodGroup = new THREE.Group();
+            flowHoodGroup.position.set(rWallX + 0.25, 4.25, 0.5); // Centered at Y = 3 + 1.25 = 4.25
+            scene.add(flowHoodGroup);
+
+            const hoodBodyMat = new THREE.MeshStandardMaterial({ color: cHood, roughness: 0.6 });
+            const hoodGlassMat = new THREE.MeshPhysicalMaterial({ color: '#93c5fd', transmission: 0.9, opacity: 0.3, transparent: true, roughness: 0.1 });
+            const hoodData = { name: "Laminar Flow Hood", socketInfo: "10A Socket / 220V" };
+
+            // Casing Walls
+            const hBack = new THREE.Mesh(new THREE.BoxGeometry(hoodT, hoodH, hoodD), hoodBodyMat);
+            hBack.position.set(hoodW/2 - hoodT/2, 0, 0); hBack.userData = hoodData; flowHoodGroup.add(hBack);
+            const hTop = new THREE.Mesh(new THREE.BoxGeometry(hoodW, hoodT, hoodD), hoodBodyMat);
+            hTop.position.set(0, hoodH/2 - hoodT/2, 0); hTop.userData = hoodData; flowHoodGroup.add(hTop);
+            const hBottom = new THREE.Mesh(new THREE.BoxGeometry(hoodW, hoodT, hoodD), hoodBodyMat);
+            hBottom.position.set(0, -hoodH/2 + hoodT/2, 0); hBottom.userData = hoodData; flowHoodGroup.add(hBottom);
+            const hSide1 = new THREE.Mesh(new THREE.BoxGeometry(hoodW, hoodH, hoodT), hoodBodyMat);
+            hSide1.position.set(0, 0, -hoodD/2 + hoodT/2); hSide1.userData = hoodData; flowHoodGroup.add(hSide1);
+            const hSide2 = new THREE.Mesh(new THREE.BoxGeometry(hoodW, hoodH, hoodT), hoodBodyMat);
+            hSide2.position.set(0, 0, hoodD/2 - hoodT/2); hSide2.userData = hoodData; flowHoodGroup.add(hSide2);
+
+            // Transparent Front Glass
+            const hGlass = new THREE.Mesh(new THREE.BoxGeometry(hoodT, hoodH - hoodT*2, hoodD - hoodT*2), hoodGlassMat);
+            hGlass.position.set(-hoodW/2 + hoodT/2, 0, 0); 
+            hGlass.userData = { ...hoodData, isGlass: true }; // Flag for raycaster
+            flowHoodGroup.add(hGlass);
+
+            // Internal HEPA Filter
+            const hepa = new THREE.Mesh(new THREE.BoxGeometry(0.2, hoodH - 0.4, hoodD - 0.4), new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9 }));
+            hepa.position.set(hoodW/2 - 0.2, 0, 0);
+            flowHoodGroup.add(hepa);
+
+            // Internal UV Light
+            hoodUVLight = new THREE.PointLight(0x8a2be2, 0, 5); 
+            hoodUVLight.position.set(0, 0, 0);
+            flowHoodGroup.add(hoodUVLight);
+
+            const hoodConn = new THREE.Vector3(rWallX + 0.25, 5.5, 0.5); // Connection point on top
+            equipments.push({ name: "Laminar Flow Hood", mesh: flowHoodGroup, color: cHood, pos: hoodConn, socketInfo: "10A Socket / 220V" });
+            
+            // 5b. Glassware Shelf (In gap between hood and dehydrator, Z=-1.7)
+            const shelfGroup = new THREE.Group();
+            shelfGroup.position.set(rWallX + 0.5, 3, -1.7); 
+            scene.add(shelfGroup);
+            
+            const smallShelfMat = new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.5, roughness: 0.5 });
+            for(let i=0; i<3; i++) {
+                const sh = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.05, 1.2), smallShelfMat);
+                sh.position.set(0, i * 0.6 + 0.025, 0); 
+                shelfGroup.add(sh);
+            }
+            const sideL = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.3, 0.05), smallShelfMat);
+            sideL.position.set(0, 0.65, -0.6); shelfGroup.add(sideL);
+            const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.3, 0.05), smallShelfMat);
+            sideR.position.set(0, 0.65, 0.6); shelfGroup.add(sideR);
+
+            shelfGroup.userData = { name: "Glassware Shelf", socketInfo: "N/A" };
+            
+            const glassMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', transmission: 0.9, opacity: 1, transparent: true, roughness: 0.1 });
+            const beakerGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.25, 16);
+            const dishGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.05, 16);
+            
+            const sJarGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.3, 16);
+            const sLidGeo = new THREE.CylinderGeometry(0.13, 0.13, 0.05, 16);
+
+            for(let z=-0.4; z<=0.4; z+=0.3) {
+                const b = new THREE.Mesh(beakerGeo, glassMat);
+                b.position.set(0, 0.05 + 0.125, z);
+                shelfGroup.add(b);
+            }
+            for(let z=-0.4; z<=0.4; z+=0.25) {
+                const d = new THREE.Mesh(dishGeo, glassMat);
+                d.position.set(0, 0.65 + 0.025, z);
+                shelfGroup.add(d);
+            }
+            for(let z=-0.4; z<=0.4; z+=0.3) {
+                const j = new THREE.Mesh(sJarGeo, glassMat); 
+                j.position.set(0, 1.25 + 0.15, z);
+                const l = new THREE.Mesh(sLidGeo, new THREE.MeshStandardMaterial({ color: '#ffffff' }));
+                l.position.set(0, 0.15, 0); j.add(l);
+                shelfGroup.add(j);
+            }
+            equipments.push({ name: "Glassware Shelf", mesh: shelfGroup, color: '#94a3b8', pos: new THREE.Vector3(rWallX+0.5, 4.5, -1.7), socketInfo: "N/A" });
+
+            // 5c. UV Table Lamp (Moved next to the metal glassware shelf at Z=-1.2)
+            const lampGroup = new THREE.Group();
+            lampGroup.position.set(rWallX - 0.2, 3, -1.2); 
+            scene.add(lampGroup);
+
+            const lampBase = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.05, 16), new THREE.MeshStandardMaterial({color: '#333333'}));
+            lampBase.position.set(0, 0.025, 0); lampGroup.add(lampBase);
+            
+            const lampArm = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.6, 16), new THREE.MeshStandardMaterial({color: '#555555'}));
+            lampArm.rotation.z = Math.PI / 8;
+            lampArm.position.set(-0.1, 0.3, 0); lampGroup.add(lampArm);
+
+            const lampHead = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.15, 0.2, 16), new THREE.MeshStandardMaterial({color: '#111111'}));
+            lampHead.rotation.z = Math.PI / 4;
+            lampHead.position.set(-0.25, 0.6, 0); lampGroup.add(lampHead);
+
+            lampUVLight = new THREE.PointLight(0x8a2be2, 0, 5); 
+            lampUVLight.position.set(-0.35, 0.5, 0);
+            lampGroup.add(lampUVLight);
+
+            lampBase.userData = { name: "UV Table Lamp", socketInfo: "5A Socket / 220V" };
+            equipments.push({ name: "UV Table Lamp", mesh: lampBase, color: '#8a2be2', pos: new THREE.Vector3(rWallX - 0.2, 3.5, -1.2), socketInfo: "5A Socket / 220V" });
+
+
+            // 5d. Custom Hollow Wash Sink
             const sinkGroup = new THREE.Group();
-            sinkGroup.position.set(rWallX, 0, 3.25);
+            sinkGroup.position.set(rWallX, 0, 3.25); 
             scene.add(sinkGroup);
 
-            // Base Cabinet
             const sinkBaseMat = new THREE.MeshStandardMaterial({ color: cSink, roughness: 0.6 });
             const sinkBase = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2.5, 2.5), sinkBaseMat);
             sinkBase.position.set(0, 1.25, 0);
             sinkGroup.add(sinkBase);
 
-            // Hollow Basin (Stainless Steel)
             const basinMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 0.6, roughness: 0.3 });
             const basinBottom = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.1, 2.3), basinMat);
-            basinBottom.position.set(0, 2.55, 0); // Floor of the basin
+            basinBottom.position.set(0, 2.55, 0); 
             sinkGroup.add(basinBottom);
 
             const wL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.5, 2.5), basinMat);
@@ -451,38 +645,34 @@
             wF.position.set(0, 2.75, 1.2);
             sinkGroup.add(wF);
 
-            // Tap & Spout
             const tapMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 0.8 });
             const tapStand = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.3, 16), tapMat);
-            tapStand.position.set(0, 3.15, -1.0);
+            tapStand.position.set(1.1, 3.15, 0); 
             
             const tapSpout = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.5, 16), tapMat);
-            tapSpout.rotation.x = Math.PI / 2;
-            tapSpout.position.set(0, 3.25, -0.75);
+            tapSpout.rotation.z = Math.PI / 2; 
+            tapSpout.position.set(0.85, 3.25, 0); 
 
             const tapKnob = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.1, 16), new THREE.MeshStandardMaterial({ color: '#ef4444' }));
-            tapKnob.position.set(0, 3.35, -1.0);
+            tapKnob.position.set(1.1, 3.35, 0); 
 
-            // Make tap parts clickable
             const tapData = { isTap: true, name: "Sink Tap", socketInfo: "Click to Toggle Water Flow" };
             tapStand.userData = tapData; tapSpout.userData = tapData; tapKnob.userData = tapData;
             
             sinkGroup.add(tapStand); sinkGroup.add(tapSpout); sinkGroup.add(tapKnob);
 
-            // Animated Water Stream
             waterStreamMat = new THREE.MeshBasicMaterial({ color: '#60a5fa', transparent: true, opacity: 0.7 });
             waterStream = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.65, 16), waterStreamMat);
-            waterStream.position.set(0, 2.9, -0.5); // Falls straight down from spout tip
+            waterStream.position.set(0.6, 2.9, 0); 
             waterStream.visible = false;
             sinkGroup.add(waterStream);
 
-            // Add sink to legend mapping
             equipments.push({ name: "Wash Sink", mesh: sinkBase, color: cSink, pos: new THREE.Vector3(rWallX, 3, 3.25), socketInfo: "N/A (Plumbing Only)" });
             sinkBase.userData = { name: "Wash Sink", socketInfo: "N/A (Plumbing Only)" };
 
 
-            // 6. Water Purifier 
-            const purifier = createEquipment("RO Water Purifier", 0.8, 1.2, 0.6, cPurifier, roomWidth/2 - 0.5, 4, 3.25, "10A Socket / 220V");
+            // 6. Large RO Water Purifier 
+            const purifier = createEquipment("RO Water Purifier", 0.8, 1.8, 1.0, cPurifier, 9.6, 4.0, 3.25, "10A Socket / 220V");
 
             // 6b. CCTV Camera 
             const cctvGroup = new THREE.Group();
@@ -646,12 +836,10 @@
             const outdoorAcGeo = new THREE.BoxGeometry(2, 1.5, 1.2);
             const outdoorAcMat = new THREE.MeshStandardMaterial({ color: '#e2e8f0', roughness: 0.7 });
             const outdoorAc = new THREE.Mesh(outdoorAcGeo, outdoorAcMat);
-            // Placed outside front wall (z=5.1), 4 feet off ground (bottom is y=4, center is y=4.75), close to left AC wall (x=-8)
             outdoorAc.position.set(-8, 4.75, 5.1);
             outdoorAc.userData = { name: "Outdoor AC Compressor", socketInfo: "Powered via Indoor AC" };
             scene.add(outdoorAc);
             
-            // Compressor Fan Detail
             const outdoorFanGeo = new THREE.CylinderGeometry(0.5, 0.5, 1.25, 16);
             const outdoorFanMat = new THREE.MeshStandardMaterial({ color: '#111111' });
             const outdoorFan = new THREE.Mesh(outdoorFanGeo, outdoorFanMat);
@@ -663,9 +851,9 @@
 
             // 11. Roof 300L Water Tank
             const roofTankGeo = new THREE.CylinderGeometry(1.2, 1.2, 2.5, 32);
-            const roofTankMat = new THREE.MeshStandardMaterial({ color: '#1e3a8a', roughness: 0.3 }); // Dark Blue Plastic
+            const roofTankMat = new THREE.MeshStandardMaterial({ color: '#1e3a8a', roughness: 0.3 }); 
             const roofTank = new THREE.Mesh(roofTankGeo, roofTankMat);
-            roofTank.position.set(rWallX, 10.75, 3.25); // Placed on top of the 9.5ft roof directly over the sink
+            roofTank.position.set(rWallX, 10.75, 3.25); 
             roofTank.userData = { name: "300L Water Tank", socketInfo: "N/A (Gravity Fed)" };
             scene.add(roofTank);
             equipments.push({ name: "300L Water Tank", mesh: roofTank, color: '#1e3a8a', pos: new THREE.Vector3(rWallX, 12, 3.25), socketInfo: "N/A (Gravity Fed)" });
@@ -700,8 +888,9 @@
             drawConduit(pStart, ac.connectionPoint, powerWires, matPowerWire, 0.1);
             drawConduit(pStart, autoclaveConn, powerWires, matPowerWire, 0.2);
             drawConduit(pStart, fridge.connectionPoint, powerWires, matPowerWire, 0.3);
-            drawConduit(pStart, flowHood.connectionPoint, powerWires, matPowerWire, 0.4);
+            drawConduit(pStart, hoodConn, powerWires, matPowerWire, 0.4); // Updated Flow Hood connection
             drawConduit(pStart, dehydrator.connectionPoint, powerWires, matPowerWire, 0.5);
+            drawConduit(pStart, new THREE.Vector3(rWallX - 0.2, 3.5, -1.2), powerWires, matPowerWire, 0.7); // Updated UV Lamp Power
 
             drawConduit(pStart, ac.connectionPoint, autoWires, matAutoWire, 0.6); 
             drawConduit(pStart, humConn, autoWires, matAutoWire, -0.1);
@@ -712,47 +901,40 @@
             drawConduit(pStart, purifier.connectionPoint, autoWires, matAutoWire, -0.6);
 
             // Water Piping (White)
-            // Main gravity line from Roof Tank downwards
             const tankPipePoints = [
-                new THREE.Vector3(rWallX, 9.5, 3.25), // Tank bottom
-                new THREE.Vector3(rWallX, 4, 3.25)    // Down to Purifier height
+                new THREE.Vector3(rWallX, 9.5, 3.25), 
+                new THREE.Vector3(9.8, 9.5, 3.25),   
+                new THREE.Vector3(9.8, 4.5, 3.25)    
             ];
             const tankPipeLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(tankPipePoints), matWaterPipe);
             waterPipes.add(tankPipeLine);
 
-            // Branch to Purifier
             const branchPurifierPoints = [
-                new THREE.Vector3(rWallX, 4, 3.25),
-                new THREE.Vector3(roomWidth/2 - 0.5, 4, 3.25) // Into purifier
+                new THREE.Vector3(9.8, 4.5, 3.25),
+                new THREE.Vector3(9.6, 4.5, 3.25)
             ];
             const branchPurifierLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(branchPurifierPoints), matWaterPipe);
             waterPipes.add(branchPurifierLine);
 
-            // Branch to Sink Tap
             const branchTapPoints = [
-                new THREE.Vector3(rWallX, 4, 3.25),
-                new THREE.Vector3(rWallX, 3.15, 3.25),
-                new THREE.Vector3(rWallX, 3.15, 2.25) // Into back of tap
+                new THREE.Vector3(9.8, 4.5, 3.25),
+                new THREE.Vector3(9.8, 3.15, 3.25),
+                new THREE.Vector3(9.85, 3.15, 3.25) 
             ];
             const branchTapLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(branchTapPoints), matWaterPipe);
             waterPipes.add(branchTapLine);
 
-            // Purifier out to Humidifier
             drawConduit(purifier.connectionPoint, humConn, waterPipes, matWaterPipe, 0.8);
 
-            const drainPoints = [new THREE.Vector3(-9.5, 7, -1.5), new THREE.Vector3(-9.5, 0, -1.5)];
-            const drainLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(drainPoints), matWaterPipe);
-            waterPipes.add(drainLine);
-
-            // AC Refrigerant Pipes (Red & Blue) from Indoor to Outdoor Unit
+            // AC Refrigerant Pipes
             const redPipeMat = new THREE.LineBasicMaterial({ color: 0xef4444, linewidth: 3 });
             const bluePipeMat = new THREE.LineBasicMaterial({ color: 0x3b82f6, linewidth: 3 });
 
             const redPipePoints = [
-                new THREE.Vector3(-9.5, 7.2, -1),      // Indoor AC
-                new THREE.Vector3(-9.5, 7.2, 4.8),     // To Front Wall
-                new THREE.Vector3(-8.2, 7.2, 4.8),     // Run along Front Wall exterior
-                new THREE.Vector3(-8.2, 5.5, 4.8)      // Drop to Outdoor Unit
+                new THREE.Vector3(-9.5, 7.2, -1),     
+                new THREE.Vector3(-9.5, 7.2, 4.8),    
+                new THREE.Vector3(-8.2, 7.2, 4.8),     
+                new THREE.Vector3(-8.2, 5.5, 4.8)      
             ];
             const bluePipePoints = [
                 new THREE.Vector3(-9.5, 7.0, -1),
@@ -765,6 +947,11 @@
             const bluePipeLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(bluePipePoints), bluePipeMat);
             scene.add(redPipeLine);
             scene.add(bluePipeLine);
+
+            // AC drain
+            const drainPoints = [new THREE.Vector3(-9.5, 7, -1.5), new THREE.Vector3(-9.5, 0, -1.5)];
+            const drainLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(drainPoints), matWaterPipe);
+            waterPipes.add(drainLine);
 
             const floorDrain = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.1, 16), new THREE.MeshStandardMaterial({ color: 0x333333 }));
             floorDrain.position.set(-9.5, 0.05, -1.5);
@@ -787,6 +974,7 @@
             document.getElementById('toggle-water').addEventListener('change', (e) => waterPipes.visible = e.target.checked);
             document.getElementById('toggle-roof').addEventListener('change', (e) => roof.visible = e.target.checked);
             document.getElementById('toggle-lights').addEventListener('change', (e) => ceilingLightsGroup.visible = e.target.checked);
+
             // --- RAYCASTER FOR 3D TOOLTIPS & CLICKS ---
             const raycaster = new THREE.Raycaster();
             const mouseCoords = new THREE.Vector2(-1, -1);
@@ -800,14 +988,13 @@
                 mouseScreen.y = event.clientY;
             });
 
-            // Tap Click Listener
             window.addEventListener('click', (event) => {
                 raycaster.setFromCamera(mouseCoords, camera);
                 const intersects = raycaster.intersectObjects(scene.children, true);
                 for (let inter of intersects) {
                     let hitObj = inter.object;
                     if (!hitObj.visible) continue;
-                    if (hitObj.material && hitObj.material.transparent && hitObj.material.opacity <= 0.2 && !hitObj.userData.isTap) continue;
+                    if (hitObj.material && hitObj.material.transparent && hitObj.material.opacity <= 0.2 && !hitObj.userData.isTap && !hitObj.userData.isGlass) continue;
                     
                     let foundTap = false;
                     while(hitObj) {
@@ -821,7 +1008,6 @@
                     if (foundTap) break;
                 }
             });
-
 
             // --- DYNAMIC AIRFLOW PARTICLES ---
             const airflowGroup = new THREE.Group();
@@ -842,9 +1028,8 @@
                 return mesh;
             });
 
-
             // --- SIMULATION LOGIC ---
-            const state = { leds: false, fans: false, ac: false, hum: false, waterVolume: 5.0, refilling: false, sinkWaterFlow: false };
+            const state = { leds: false, uv: false, fans: false, ac: false, hum: false, waterVolume: 5.0, refilling: false, sinkWaterFlow: false };
 
             function formatTime(val) {
                 const h = Math.floor(val);
@@ -854,12 +1039,16 @@
 
             function applyState() {
                 const getBtnClass = (isOn, onColor) => isOn 
-                    ? `text-xs text-center py-2 rounded bg-gray-800 border border-${onColor}-500 text-${onColor}-400 font-bold shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:bg-gray-700 transition` 
-                    : `text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition`;
+                    ? `text-xs text-center py-3 rounded bg-gray-800 border border-${onColor}-500 text-${onColor}-400 font-bold shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:bg-gray-700 transition shadow-sm` 
+                    : `text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition font-medium shadow-sm`;
                 
                 const btnLeds = document.getElementById('btn-leds');
                 btnLeds.className = getBtnClass(state.leds, 'purple');
                 btnLeds.innerText = state.leds ? 'Rack LEDs ON' : 'Rack LEDs OFF';
+
+                const btnUv = document.getElementById('btn-uv');
+                btnUv.className = getBtnClass(state.uv, 'purple');
+                btnUv.innerText = state.uv ? 'UV Lamp ON' : 'UV Lamp OFF';
 
                 const btnAc = document.getElementById('btn-ac');
                 btnAc.className = getBtnClass(state.ac, 'cyan');
@@ -875,8 +1064,8 @@
 
                 const statusRo = document.getElementById('status-ro');
                 statusRo.className = state.refilling 
-                    ? `col-span-2 text-xs text-center py-2 rounded bg-gray-800 border border-blue-500 text-blue-400 font-bold shadow-[0_0_10px_rgba(255,255,255,0.1)]`
-                    : `col-span-2 text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400`;
+                    ? `col-span-2 text-xs text-center py-2 rounded bg-gray-800 border border-blue-500 text-blue-400 font-bold shadow-[0_0_10px_rgba(255,255,255,0.1)] transition-colors`
+                    : `col-span-2 text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400 transition-colors`;
                 statusRo.innerText = state.refilling ? 'RO System Refilling Tank...' : 'RO Refill OFF';
 
                 if(state.leds) {
@@ -886,6 +1075,9 @@
                     ledMat.color.setHex(0x222222); ledMat.emissive.setHex(0x000000);
                     r1Light.intensity = 0; 
                 }
+
+                if (lampUVLight) lampUVLight.intensity = state.uv ? 1.5 : 0;
+                if (hoodUVLight) hoodUVLight.intensity = state.uv ? 2.5 : 0;
             }
 
             function handleSliderChange() {
@@ -918,6 +1110,7 @@
             });
 
             document.getElementById('btn-leds').addEventListener('click', () => { state.leds = !state.leds; applyState(); });
+            document.getElementById('btn-uv').addEventListener('click', () => { state.uv = !state.uv; applyState(); });
             document.getElementById('btn-ac').addEventListener('click', () => { state.ac = !state.ac; applyState(); });
             document.getElementById('btn-hum').addEventListener('click', () => { state.hum = !state.hum; applyState(); });
             document.getElementById('btn-fans').addEventListener('click', () => { state.fans = !state.fans; applyState(); });
@@ -939,11 +1132,10 @@
                 for (let inter of intersects) {
                     let hitObj = inter.object;
                     
-                    // Skip invisible meshes and intentionally transparent bounding geometry (walls)
                     if (!hitObj.visible) continue;
                     if (hitObj.material) {
                         if (hitObj.material.visible === false) continue;
-                        if (hitObj.material.transparent && hitObj.material.opacity <= 0.2) continue;
+                        if (hitObj.material.transparent && hitObj.material.opacity <= 0.2 && !hitObj.userData.isGlass) continue;
                     }
                     if (hitObj.type === "Line") continue;
 
@@ -969,10 +1161,15 @@
                 }
 
                 // --- EQUIPMENT ANIMATIONS ---
-                // Sink Tap Water Flow Animation
+                if (window.rotatingStools) {
+                    window.rotatingStools.forEach((seat, idx) => {
+                        seat.rotation.y += (idx === 0 ? 0.005 : -0.008); 
+                    });
+                }
+
                 if (state.sinkWaterFlow) {
                     waterStream.visible = true;
-                    waterStreamMat.opacity = 0.5 + Math.sin(timeStr * 40) * 0.3; // Flutter effect
+                    waterStreamMat.opacity = 0.5 + Math.sin(timeStr * 40) * 0.3; 
                 } else {
                     waterStream.visible = false;
                 }
