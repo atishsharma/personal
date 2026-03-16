@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atish's Mushroom Lab 3D</title>
+    <title>Atish's Mushroom Lab 3D - Interactive Design</title>
     <meta name="description" content="Interactive 3D Mushroom Lab wiring, layout, and automation system featuring climate control, airflow simulation, and electrical routing.">
     <meta name="keywords" content="Mushroom Lab, 3D Automation, Mycology, HVAC, Laminar Flow Hood">
-    <meta name="author" content="Atish">
+    <meta name="author" content="Atish Ak Sharma">
     <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -140,8 +140,8 @@
                 <button id="btn-uv" class="text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">UV Lamp OFF</button>
                 <button id="btn-ac" class="text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">AC Unit OFF</button>
                 <button id="btn-hum" class="text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">Humidifier OFF</button>
-                <button id="btn-fans" class="col-span-2 text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">Airflow Fans OFF</button>
-                <div id="status-ro" class="col-span-2 text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400 transition-colors">RO Water Refill OFF</div>
+                <button id="btn-fans" class="text-xs text-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 hover:bg-gray-700 transition cursor-pointer font-medium shadow-sm">Airflow Fans OFF</button>
+                <div id="status-ro" class="text-xs text-center flex items-center justify-center py-3 rounded bg-gray-800 border border-gray-600 text-gray-400 transition-colors font-medium shadow-sm">RO Water Refill OFF</div>
             </div>
 
             <h1 class="text-lg font-bold text-green-400 border-b border-gray-700 pb-2 mt-2 transition-colors">Visibility Filters</h1>
@@ -338,25 +338,45 @@
             fwTop.position.set(doorOffset, doorHeight + fwTopHeight/2, roomDepth/2 + wallThickness/2);
             walls.add(fwTop);
 
-            // Airtight Door
-            const matAirtightDoor = new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.6, roughness: 0.4 });
-            const door = new THREE.Mesh(new THREE.BoxGeometry(doorWidth - 0.05, doorHeight - 0.05, wallThickness * 0.8), matAirtightDoor);
-            door.position.set(doorOffset, doorHeight / 2, roomDepth / 2 + wallThickness / 2);
-            
-            const doorWindowGeo = new THREE.BoxGeometry(1.5, 2, wallThickness * 0.9);
-            const doorWindowMat = new THREE.MeshStandardMaterial({ color: '#93c5fd', roughness: 0.4 });
-            const doorWindow = new THREE.Mesh(doorWindowGeo, doorWindowMat);
-            doorWindow.position.set(0, 1, 0); 
-            door.add(doorWindow);
+            // Full Glass Door
+            const doorGroup = new THREE.Group();
+            doorGroup.position.set(doorOffset, doorHeight / 2, roomDepth / 2 + wallThickness / 2);
 
-            const handleGeo = new THREE.CylinderGeometry(0.05, 0.05, 0.8, 16);
+            // The Glass Panel (Frosted Blue Finish)
+            const doorGlassMat = new THREE.MeshPhysicalMaterial({ color: '#60a5fa', transmission: 0.8, opacity: 0.7, transparent: true, roughness: 0.75, clearcoat: 0.3 });
+            const doorGlass = new THREE.Mesh(new THREE.BoxGeometry(doorWidth - 0.1, doorHeight - 0.1, wallThickness * 0.3), doorGlassMat);
+            doorGroup.add(doorGlass);
+
+            // Door Frame (thin metal border)
+            const frameMat = new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.6, roughness: 0.4 });
+            const frameTop = new THREE.Mesh(new THREE.BoxGeometry(doorWidth, 0.1, wallThickness * 0.4), frameMat);
+            frameTop.position.set(0, doorHeight/2 - 0.05, 0);
+            doorGroup.add(frameTop);
+            const frameBot = new THREE.Mesh(new THREE.BoxGeometry(doorWidth, 0.1, wallThickness * 0.4), frameMat);
+            frameBot.position.set(0, -doorHeight/2 + 0.05, 0);
+            doorGroup.add(frameBot);
+            const frameL = new THREE.Mesh(new THREE.BoxGeometry(0.1, doorHeight, wallThickness * 0.4), frameMat);
+            frameL.position.set(-doorWidth/2 + 0.05, 0, 0);
+            doorGroup.add(frameL);
+            const frameR = new THREE.Mesh(new THREE.BoxGeometry(0.1, doorHeight, wallThickness * 0.4), frameMat);
+            frameR.position.set(doorWidth/2 - 0.05, 0, 0);
+            doorGroup.add(frameR);
+
+            // Door Handle
+            const handleGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.8, 16);
             const handleMat = new THREE.MeshStandardMaterial({ color: '#333333', metalness: 0.8 });
             const doorHandle = new THREE.Mesh(handleGeo, handleMat);
-            doorHandle.position.set(doorWidth/2 - 0.4, 0, wallThickness * 0.5);
-            door.add(doorHandle);
+            doorHandle.position.set(doorWidth/2 - 0.3, 0, wallThickness * 0.3); // Positioned on the glass
+            doorGroup.add(doorHandle);
 
-            door.userData = { name: "Lab Entry Door", socketInfo: "N/A" };
-            scene.add(door);
+            // Tooltip data
+            const doorData = { name: "Lab Entry Door", socketInfo: "N/A", isGlass: true };
+            doorGlass.userData = doorData;
+            doorHandle.userData = doorData;
+            frameTop.userData = doorData; frameBot.userData = doorData;
+            frameL.userData = doorData; frameR.userData = doorData;
+
+            scene.add(doorGroup);
             scene.add(walls);
 
             // --- EQUIPMENT ---
@@ -1064,9 +1084,9 @@
 
                 const statusRo = document.getElementById('status-ro');
                 statusRo.className = state.refilling 
-                    ? `col-span-2 text-xs text-center py-2 rounded bg-gray-800 border border-blue-500 text-blue-400 font-bold shadow-[0_0_10px_rgba(255,255,255,0.1)] transition-colors`
-                    : `col-span-2 text-xs text-center py-2 rounded bg-gray-800 border border-gray-600 text-gray-400 transition-colors`;
-                statusRo.innerText = state.refilling ? 'RO System Refilling Tank...' : 'RO Refill OFF';
+                    ? `text-xs text-center py-3 flex items-center justify-center rounded bg-gray-800 border border-blue-500 text-blue-400 font-bold shadow-[0_0_10px_rgba(255,255,255,0.1)] transition-colors`
+                    : `text-xs text-center py-3 flex items-center justify-center rounded bg-gray-800 border border-gray-600 text-gray-400 transition-colors font-medium shadow-sm`;
+                statusRo.innerText = state.refilling ? 'RO System Refilling Tank...' : 'RO Water Refill OFF';
 
                 if(state.leds) {
                     ledMat.color.setHex(0xa78bfa); ledMat.emissive.setHex(0xa78bfa);
