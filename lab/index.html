@@ -84,7 +84,7 @@
 
     <div id="canvas-container"></div>
 
-    <!-- UI Layer: Responsive Container (Fixed display logic) -->
+    <!-- UI Layer: Responsive Container -->
     <div id="ui-layer" style="display: none;" class="flex-col md:flex-row justify-between items-start gap-4 pt-24 pb-16 px-4 overflow-y-auto md:overflow-y-hidden absolute inset-0 z-10 pointer-events-none">
         
         <!-- Left Block: Controls & Environment Simulation -->
@@ -194,7 +194,7 @@
                 </ul>
             </div>
 
-            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mt-2 mb-3 border-b border-gray-700 pb-2 transition-colors">Equipment Map</h2>
+            <h2 class="text-sm font-semibold text-gray-400 uppercase tracking-wider mt-2 mb-3 border-b border-gray-700 pb-2 transition-colors">Equipment Map <span class="text-[10px] lowercase text-yellow-500 ml-1">(Shift+Click to Remove)</span></h2>
             <div class="grid grid-cols-1 gap-2 text-xs" id="legend">
                 <!-- Populated by JS -->
             </div>
@@ -209,6 +209,10 @@
         let isLightMode = false;
         let scene, camera, renderer, controls;
         let lampUVLight, hoodUVLight; 
+        
+        let doorGroup, doorOffset, doorWidth;
+        let fridgeDoorGroup, dehydDoorGroup, hoodDoorLeftGroup, hoodDoorRightGroup;
+        let equipments = [];
 
         // Bulletproof Initialization to prevent iframe loading bugs
         let isInitialized = false;
@@ -252,8 +256,18 @@
             });
         }
 
+        function updateLegend() {
+            const legendDiv = document.getElementById('legend');
+            legendDiv.innerHTML = '';
+            equipments.forEach(eq => {
+                const row = document.createElement('div');
+                row.className = "flex items-center justify-between gap-2 border-b border-gray-800 pb-1 transition-colors";
+                row.innerHTML = `<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full shadow-sm border border-gray-600 transition-colors" style="background-color: ${eq.color};"></div> <span class="text-gray-300 font-medium transition-colors">${eq.name}</span></div> <span class="text-[10px] text-yellow-400 opacity-80">${eq.socketInfo}</span>`;
+                legendDiv.appendChild(row);
+            });
+        }
+
         function init3DScene() {
-            // Scene Setup
             scene = new THREE.Scene();
             scene.background = new THREE.Color('#111827');
             scene.fog = new THREE.FogExp2('#111827', 0.02);
@@ -276,7 +290,6 @@
             controls.target.set(0, 5, 0); 
             controls.update();
 
-            // Lighting
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
 
@@ -287,13 +300,11 @@
             dirLight.shadow.mapSize.height = 2048;
             scene.add(dirLight);
 
-            // Room Dimensions 
             const roomWidth = 20;
             const roomDepth = 9;
             const roomHeight = 9; 
             const wallThickness = 0.5;
 
-            // Materials
             const matFloor = new THREE.MeshStandardMaterial({ color: '#000000', roughness: 0.9 });
             const matWall = new THREE.MeshPhysicalMaterial({ 
                 color: '#e2e8f0', transparent: true, opacity: 0.2, 
@@ -301,14 +312,12 @@
             });
             const matRoof = new THREE.MeshStandardMaterial({ color: '#000000' });
 
-            // Floor 
             const floorGeo = new THREE.PlaneGeometry(roomWidth + 10, roomDepth + 10);
             const floor = new THREE.Mesh(floorGeo, matFloor);
             floor.rotation.x = -Math.PI / 2;
             floor.receiveShadow = true;
             scene.add(floor);
 
-            // Ceiling/Roof 
             const roofThickness = 0.5;
             const roofGeo = new THREE.BoxGeometry(roomWidth + wallThickness*2, roofThickness, roomDepth + wallThickness*2);
             const roof = new THREE.Mesh(roofGeo, matRoof);
@@ -316,7 +325,6 @@
             roof.visible = true; 
             scene.add(roof);
 
-            // Walls 
             const walls = new THREE.Group();
             
             const backWallGeo = new THREE.BoxGeometry(roomWidth + wallThickness*2, roomHeight, wallThickness);
@@ -334,9 +342,9 @@
             rightWall.position.set(roomWidth/2 + wallThickness/2, roomHeight/2, 0);
             walls.add(rightWall);
 
-            const doorWidth = 2.4; 
+            doorWidth = 2.8; 
             const doorHeight = 6; 
-            const doorOffset = 2.5; // Moved 1 foot closer to the right (sink side)
+            doorOffset = 2.5; 
 
             const fwLeftWidth = (roomWidth/2) + doorOffset - doorWidth/2;
             const fwLeft = new THREE.Mesh(new THREE.BoxGeometry(fwLeftWidth, roomHeight, wallThickness), matWall);
@@ -353,37 +361,85 @@
             fwTop.position.set(doorOffset, doorHeight + fwTopHeight/2, roomDepth/2 + wallThickness/2);
             walls.add(fwTop);
 
-            // Full Glass Door
-            const doorGroup = new THREE.Group();
-            doorGroup.position.set(doorOffset, doorHeight / 2, roomDepth / 2 + wallThickness / 2);
+            // Structure: Square Metal Frame above the door to the roof
+            const upperFrameGroup = new THREE.Group();
+            upperFrameGroup.position.set(doorOffset, doorHeight, roomDepth/2 + wallThickness/2);
+            const frameMat = new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.6, roughness: 0.4 });
+            
+            const upL = new THREE.Mesh(new THREE.BoxGeometry(0.1, roomHeight - doorHeight, wallThickness * 0.4), frameMat);
+            upL.position.set(-doorWidth/2 + 0.05, (roomHeight - doorHeight)/2, 0);
+            upperFrameGroup.add(upL);
 
-            const doorGlassMat = new THREE.MeshPhysicalMaterial({ color: '#60a5fa', transmission: 0.8, opacity: 0.7, transparent: true, roughness: 0.75, clearcoat: 0.3 });
+            const upR = new THREE.Mesh(new THREE.BoxGeometry(0.1, roomHeight - doorHeight, wallThickness * 0.4), frameMat);
+            upR.position.set(doorWidth/2 - 0.05, (roomHeight - doorHeight)/2, 0);
+            upperFrameGroup.add(upR);
+
+            const upT = new THREE.Mesh(new THREE.BoxGeometry(doorWidth, 0.1, wallThickness * 0.4), frameMat);
+            upT.position.set(0, roomHeight - doorHeight - 0.05, 0);
+            upperFrameGroup.add(upT);
+            scene.add(upperFrameGroup);
+
+            // Structure: Horizontal beam below the roof above the fans
+            const beamHeight = 0.5;
+            const beamDepth = 0.6;
+            const frontBeamGeo = new THREE.BoxGeometry(roomWidth, beamHeight, beamDepth);
+            const frontBeamMat = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9 });
+            const frontBeam = new THREE.Mesh(frontBeamGeo, frontBeamMat);
+            frontBeam.position.set(0, roomHeight - beamHeight/2, roomDepth/2 - beamDepth/2);
+            frontBeam.castShadow = true; frontBeam.receiveShadow = true;
+            scene.add(frontBeam);
+
+            // Full Glass Swinging Door
+            doorGroup = new THREE.Group();
+            doorGroup.position.set(doorOffset - doorWidth / 2, doorHeight / 2, roomDepth / 2 + wallThickness / 2); // Left hinge
+
+            const doorGlassMat = new THREE.MeshPhysicalMaterial({ color: '#1e3a8a', transmission: 0.6, opacity: 0.85, transparent: true, roughness: 0.8, clearcoat: 0.1 });
             const doorGlass = new THREE.Mesh(new THREE.BoxGeometry(doorWidth - 0.1, doorHeight - 0.1, wallThickness * 0.3), doorGlassMat);
+            doorGlass.position.set(doorWidth / 2, 0, 0); // Offset from hinge
             doorGroup.add(doorGlass);
 
-            const frameMat = new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.6, roughness: 0.4 });
             const frameTop = new THREE.Mesh(new THREE.BoxGeometry(doorWidth, 0.1, wallThickness * 0.4), frameMat);
-            frameTop.position.set(0, doorHeight/2 - 0.05, 0);
+            frameTop.position.set(doorWidth / 2, doorHeight/2 - 0.05, 0);
             doorGroup.add(frameTop);
+            
             const frameBot = new THREE.Mesh(new THREE.BoxGeometry(doorWidth, 0.1, wallThickness * 0.4), frameMat);
-            frameBot.position.set(0, -doorHeight/2 + 0.05, 0);
+            frameBot.position.set(doorWidth / 2, -doorHeight/2 + 0.05, 0);
             doorGroup.add(frameBot);
+            
             const frameL = new THREE.Mesh(new THREE.BoxGeometry(0.1, doorHeight, wallThickness * 0.4), frameMat);
-            frameL.position.set(-doorWidth/2 + 0.05, 0, 0);
+            frameL.position.set(0.05, 0, 0);
             doorGroup.add(frameL);
+            
             const frameR = new THREE.Mesh(new THREE.BoxGeometry(0.1, doorHeight, wallThickness * 0.4), frameMat);
-            frameR.position.set(doorWidth/2 - 0.05, 0, 0);
+            frameR.position.set(doorWidth - 0.05, 0, 0);
             doorGroup.add(frameR);
 
-            const handleGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.8, 16);
-            const handleMat = new THREE.MeshStandardMaterial({ color: '#333333', metalness: 0.8 });
-            const doorHandle = new THREE.Mesh(handleGeo, handleMat);
-            doorHandle.position.set(doorWidth/2 - 0.3, 0, wallThickness * 0.3); 
-            doorGroup.add(doorHandle);
+            // Detailed Swinging Door Handle
+            const doorHandleGroup = new THREE.Group();
+            const handleBarOut = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.8, 16), new THREE.MeshStandardMaterial({ color: '#e2e8f0', metalness: 0.8 }));
+            handleBarOut.position.set(doorWidth - 0.2, 0, wallThickness * 0.35); // Outside handle
+            doorHandleGroup.add(handleBarOut);
+            
+            const handleBarIn = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.8, 16), new THREE.MeshStandardMaterial({ color: '#e2e8f0', metalness: 0.8 }));
+            handleBarIn.position.set(doorWidth - 0.2, 0, -wallThickness * 0.35); // Inside handle
+            doorHandleGroup.add(handleBarIn);
 
-            const doorData = { name: "Lab Entry Door", socketInfo: "N/A", isGlass: true };
+            const handleConn1 = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, wallThickness * 0.7), new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.6 }));
+            handleConn1.rotation.x = Math.PI / 2;
+            handleConn1.position.set(doorWidth - 0.2, 0.3, 0);
+            doorHandleGroup.add(handleConn1);
+
+            const handleConn2 = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, wallThickness * 0.7), new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.6 }));
+            handleConn2.rotation.x = Math.PI / 2;
+            handleConn2.position.set(doorWidth - 0.2, -0.3, 0);
+            doorHandleGroup.add(handleConn2);
+
+            doorGroup.add(doorHandleGroup);
+
+            const doorData = { name: "Lab Entry Door", socketInfo: "Click to Swing Open/Close", isGlass: true, isDoor: true, removable: false };
             doorGlass.userData = doorData;
-            doorHandle.userData = doorData;
+            handleBarOut.userData = doorData; handleBarIn.userData = doorData;
+            handleConn1.userData = doorData; handleConn2.userData = doorData;
             frameTop.userData = doorData; frameBot.userData = doorData;
             frameL.userData = doorData; frameR.userData = doorData;
 
@@ -391,15 +447,14 @@
             scene.add(walls);
 
             // --- EQUIPMENT ---
-            const equipments = [];
-            const createEquipment = (name, width, height, depth, color, x, y, z, socketInfo) => {
+            const createEquipment = (name, width, height, depth, color, x, y, z, socketInfo, isRemovable = true) => {
                 const geo = new THREE.BoxGeometry(width, height, depth);
                 const mat = new THREE.MeshStandardMaterial({ color: color, roughness: 0.6 });
                 const mesh = new THREE.Mesh(geo, mat);
                 mesh.position.set(x, y + height/2, z);
                 mesh.castShadow = true;
                 mesh.receiveShadow = true;
-                mesh.userData = { name, socketInfo }; 
+                mesh.userData = { name, socketInfo, removable: isRemovable, rootGroup: mesh }; 
                 scene.add(mesh);
                 
                 const connectionPoint = new THREE.Vector3(x, y + height, z);
@@ -407,8 +462,7 @@
                 return { mesh, connectionPoint };
             };
 
-            // Colors
-            const cPanel = '#9333ea'; const cFridge = '#ef4444'; const cAC = '#06b6d4';
+            const cPanel = '#9333ea'; const cFridge = '#7f1d1d'; const cAC = '#06b6d4';
             const cAutoC = '#f97316'; const cSink = '#ec4899'; const cTable = '#64748b';
             const cHood = '#3b82f6'; const cRack1 = '#22c55e'; const cRack2 = '#84cc16';
             const cHumid = '#14b8a6'; const cIntake = '#10b981'; const cExhaust = '#f43f5e';
@@ -416,31 +470,108 @@
 
             let waterStream, waterStreamMat; 
 
-            // 0. Structural Round Pole / Pillar (1ft diameter)
-            const pillarRadius = 0.5; // 1.0 feet diameter = 0.5 radius
-            const pillarGeo = new THREE.CylinderGeometry(pillarRadius, pillarRadius, roomHeight, 32);
-            const pillarMat = new THREE.MeshStandardMaterial({ color: '#94a3b8', roughness: 0.9 });
+            // 0. Structural Square Pillar (1ft wide, white)
+            const pillarSize = 1.0; 
+            const pillarGeo = new THREE.BoxGeometry(pillarSize, roomHeight, pillarSize);
+            const pillarMat = new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9 });
             const pillar = new THREE.Mesh(pillarGeo, pillarMat);
-            // Placed just to the left of the door, against the front wall
-            const pillarX = doorOffset - (doorWidth / 2) - pillarRadius - 0.2;
-            const pillarZ = roomDepth / 2 - pillarRadius / 2;
+            const pillarX = doorOffset - (doorWidth / 2) - (pillarSize / 2); 
+            const pillarZ = roomDepth / 2 - (pillarSize / 2);
             pillar.position.set(pillarX, roomHeight / 2, pillarZ);
-            pillar.castShadow = true;
-            pillar.receiveShadow = true;
-            pillar.userData = { name: "Support Pillar", socketInfo: "N/A (Structural)" };
+            pillar.castShadow = true; pillar.receiveShadow = true;
+            pillar.userData = { name: "Support Pillar", socketInfo: "N/A (Structural)", removable: false };
             scene.add(pillar);
-            equipments.push({ name: "Support Pillar", mesh: pillar, color: '#94a3b8', pos: new THREE.Vector3(pillarX, roomHeight, pillarZ), socketInfo: "N/A (Structural)" });
+            equipments.push({ name: "Support Pillar", mesh: pillar, color: '#ffffff', pos: new THREE.Vector3(pillarX, roomHeight, pillarZ), socketInfo: "N/A (Structural)" });
 
-            // Calculate fridge placement right next to the right side of the door (Swapped)
-            const fridgeWidth = 2.5;
-            const fridgeX = doorOffset + (doorWidth / 2) + (fridgeWidth / 2) + 0.4; // 0.4 is a small gap
+            const fridgeWidth = 2.0; 
+            const fridgeHeight = 4.0;
+            const fridgeDepth = 2.5;
+            const fridgeX = doorOffset + (doorWidth / 2) + (fridgeWidth / 2) + 0.05; 
 
-            // 1. Main Panel (Moved above the fridge)
-            const panelX = fridgeX;
-            const panel = createEquipment("Automation Panel", 1.5, 1.5, 0.4, cPanel, panelX, 6, roomDepth/2, "Hardwired MDB / 40A Main IN");
+            // 1. Main Panel (Above fridge)
+            const panel = createEquipment("Automation Panel", 1.5, 1.5, 0.4, cPanel, fridgeX, 6, roomDepth/2, "Hardwired MDB / 40A Main IN", false);
 
-            // 2. Refrigerator (Moved right next to the door)
-            const fridge = createEquipment("Refrigerator", fridgeWidth, 5, 2.5, cFridge, fridgeX, 0, 3.25, "10A Socket / 220V");
+            // 2. Detailed Interactive Refrigerator 
+            const fridgeGroup = new THREE.Group();
+            fridgeGroup.position.set(fridgeX, fridgeHeight/2, 3.25);
+            scene.add(fridgeGroup);
+
+            const fMat = new THREE.MeshStandardMaterial({ color: cFridge, roughness: 0.5 });
+            const fInsideMat = new THREE.MeshStandardMaterial({ color: '#f1f5f9', roughness: 0.9 });
+            const fT = 0.1; 
+            
+            const fBack = new THREE.Mesh(new THREE.BoxGeometry(fridgeWidth, fridgeHeight, fT), fMat);
+            fBack.position.set(0, 0, fridgeDepth/2 - fT/2); fridgeGroup.add(fBack);
+            const fLeft = new THREE.Mesh(new THREE.BoxGeometry(fT, fridgeHeight, fridgeDepth), fMat);
+            fLeft.position.set(-fridgeWidth/2 + fT/2, 0, 0); fridgeGroup.add(fLeft);
+            const fRight = new THREE.Mesh(new THREE.BoxGeometry(fT, fridgeHeight, fridgeDepth), fMat);
+            fRight.position.set(fridgeWidth/2 - fT/2, 0, 0); fridgeGroup.add(fRight);
+            const fTop = new THREE.Mesh(new THREE.BoxGeometry(fridgeWidth, fT, fridgeDepth), fMat);
+            fTop.position.set(0, fridgeHeight/2 - fT/2, 0); fridgeGroup.add(fTop);
+            const fBot = new THREE.Mesh(new THREE.BoxGeometry(fridgeWidth, fT, fridgeDepth), fMat);
+            fBot.position.set(0, -fridgeHeight/2 + fT/2, 0); fridgeGroup.add(fBot);
+
+            for(let i=-1; i<=1; i++) {
+                const fShelf = new THREE.Mesh(new THREE.BoxGeometry(fridgeWidth - fT*2, 0.05, fridgeDepth - fT*2), fInsideMat);
+                fShelf.position.set(0, i * 0.8, 0);
+                fridgeGroup.add(fShelf);
+                const item = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.4, 0.4), new THREE.MeshStandardMaterial({color: '#3b82f6'}));
+                item.position.set(-0.3, i*0.8 + 0.225, 0);
+                fridgeGroup.add(item);
+                const item2 = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.5, 0.3), new THREE.MeshStandardMaterial({color: '#10b981'}));
+                item2.position.set(0.3, i*0.8 + 0.275, -0.2);
+                fridgeGroup.add(item2);
+            }
+
+            fridgeDoorGroup = new THREE.Group();
+            fridgeDoorGroup.position.set(-fridgeWidth/2, 0, -fridgeDepth/2 + fT/2);
+            fridgeGroup.add(fridgeDoorGroup);
+            
+            const fDoorGroup = new THREE.Group();
+            fDoorGroup.position.set(fridgeWidth/2, 0, 0); 
+            
+            const fGlassMat = new THREE.MeshPhysicalMaterial({ color: '#93c5fd', transmission: 0.8, opacity: 0.5, transparent: true, roughness: 0.2 });
+            const fGlass = new THREE.Mesh(new THREE.BoxGeometry(fridgeWidth - 0.2, fridgeHeight - 0.2, fT*0.5), fGlassMat);
+            fDoorGroup.add(fGlass);
+
+            const fFrameMat = new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.6, roughness: 0.4 });
+            const ffTop = new THREE.Mesh(new THREE.BoxGeometry(fridgeWidth, 0.2, fT), fFrameMat);
+            ffTop.position.set(0, fridgeHeight/2 - 0.1, 0); fDoorGroup.add(ffTop);
+            const ffBot = new THREE.Mesh(new THREE.BoxGeometry(fridgeWidth, 0.2, fT), fFrameMat);
+            ffBot.position.set(0, -fridgeHeight/2 + 0.1, 0); fDoorGroup.add(ffBot);
+            const ffL = new THREE.Mesh(new THREE.BoxGeometry(0.2, fridgeHeight, fT), fFrameMat);
+            ffL.position.set(-fridgeWidth/2 + 0.1, 0, 0); fDoorGroup.add(ffL);
+            const ffR = new THREE.Mesh(new THREE.BoxGeometry(0.2, fridgeHeight, fT), fFrameMat);
+            ffR.position.set(fridgeWidth/2 - 0.1, 0, 0); fDoorGroup.add(ffR);
+
+            const fHandleGroup = new THREE.Group();
+            const fHandleBar = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.8, 16), new THREE.MeshStandardMaterial({color: '#e2e8f0', metalness: 0.8}));
+            fHandleBar.position.set(fridgeWidth/2 - 0.15, 0, -0.12);
+            fHandleGroup.add(fHandleBar);
+
+            const fHandleConn1 = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.12, 16), new THREE.MeshStandardMaterial({color: '#94a3b8', metalness: 0.6}));
+            fHandleConn1.rotation.x = Math.PI / 2;
+            fHandleConn1.position.set(fridgeWidth/2 - 0.15, 0.3, -0.06);
+            fHandleGroup.add(fHandleConn1);
+
+            const fHandleConn2 = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.12, 16), new THREE.MeshStandardMaterial({color: '#94a3b8', metalness: 0.6}));
+            fHandleConn2.rotation.x = Math.PI / 2;
+            fHandleConn2.position.set(fridgeWidth/2 - 0.15, -0.3, -0.06);
+            fHandleGroup.add(fHandleConn2);
+
+            fDoorGroup.add(fHandleGroup);
+            fridgeDoorGroup.add(fDoorGroup);
+
+            const fridgeData = { name: "Refrigerator", socketInfo: "10A Socket / Click to Open", isFridge: true, removable: true, rootGroup: fridgeGroup };
+            fGlass.userData = { ...fridgeData, isGlass: true };
+            ffTop.userData = fridgeData; ffBot.userData = fridgeData;
+            ffL.userData = fridgeData; ffR.userData = fridgeData;
+            fHandleBar.userData = fridgeData;
+            fHandleConn1.userData = fridgeData; fHandleConn2.userData = fridgeData;
+
+            const fridgeConn = new THREE.Vector3(fridgeX, fridgeHeight, 3.25);
+            equipments.push({ name: "Refrigerator", mesh: fridgeGroup, color: cFridge, pos: fridgeConn, socketInfo: "10A Socket / 220V" });
+
 
             // 3. 1-Ton AC 
             const ac = createEquipment("1-Ton AC Unit", 1, 1, 3, cAC, -roomWidth/2 + 0.5, 7, -1, "16A Socket / 220V");
@@ -449,11 +580,11 @@
             const autoclaveGeo = new THREE.CylinderGeometry(1.2, 1.2, 3, 32);
             const autoclaveMat = new THREE.MeshStandardMaterial({ color: cAutoC, roughness: 0.3 });
             const autoclaveMesh = new THREE.Mesh(autoclaveGeo, autoclaveMat);
-            autoclaveMesh.position.set(3, 1.5, -roomDepth/2 + 1.5);
+            autoclaveMesh.position.set(0, 1.5, -roomDepth/2 + 1.5);
             autoclaveMesh.castShadow = true;
-            autoclaveMesh.userData = { name: "Autoclave", socketInfo: "20A Industrial Socket / 220V" };
+            autoclaveMesh.userData = { name: "Autoclave", socketInfo: "20A Industrial Socket / 220V", removable: true, rootGroup: autoclaveMesh };
             scene.add(autoclaveMesh);
-            const autoclaveConn = new THREE.Vector3(3, 3, -roomDepth/2 + 1.5);
+            const autoclaveConn = new THREE.Vector3(0, 3, -roomDepth/2 + 1.5);
             equipments.push({ name: "Autoclave", mesh: autoclaveMesh, color: cAutoC, pos: autoclaveConn, socketInfo: "20A Industrial Socket / 220V" });
 
             // 4b. Autoclave Wall Additions
@@ -463,7 +594,7 @@
 
             const shelf = new THREE.Mesh(new THREE.BoxGeometry(3, 0.1, 0.6), new THREE.MeshStandardMaterial({ color: '#64748b' }));
             shelf.position.set(0, 0, 0);
-            shelf.userData = { name: "Wall Shelf & Supplies", socketInfo: "N/A" };
+            shelf.userData = { name: "Wall Shelf & Supplies", socketInfo: "N/A", removable: true, rootGroup: wallSuppliesGroup };
             wallSuppliesGroup.add(shelf);
 
             const box1 = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.6, 0.5), new THREE.MeshStandardMaterial({ color: '#d97706' }));
@@ -479,12 +610,12 @@
             
             const coat1 = new THREE.Mesh(coatGeo, coatMat);
             coat1.position.set(-0.6, -1.3, 0.1);
-            coat1.userData = { name: "Lab Coat", socketInfo: "N/A" };
+            coat1.userData = { name: "Lab Coat", socketInfo: "N/A", removable: true, rootGroup: wallSuppliesGroup };
             wallSuppliesGroup.add(coat1);
 
             const coat2 = new THREE.Mesh(coatGeo, coatMat);
             coat2.position.set(0.6, -1.3, 0.1);
-            coat2.userData = { name: "Lab Coat", socketInfo: "N/A" };
+            coat2.userData = { name: "Lab Coat", socketInfo: "N/A", removable: true, rootGroup: wallSuppliesGroup };
             wallSuppliesGroup.add(coat2);
 
             equipments.push({ name: "Wall Supplies & Coats", mesh: shelf, color: '#f8fafc', pos: new THREE.Vector3(5.0, 5.5, -4.2), socketInfo: "N/A" });
@@ -499,10 +630,10 @@
 
             const tableMat = new THREE.MeshStandardMaterial({ color: cTable, roughness: 0.6 });
             for(let y of [0.8, 1.8, 2.95]) { 
-                const shelf = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.1, 6.5), tableMat);
-                shelf.position.set(0, y, 0);
-                shelf.castShadow = true; shelf.receiveShadow = true;
-                tableGroup.add(shelf);
+                const tshelf = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.1, 6.5), tableMat);
+                tshelf.position.set(0, y, 0);
+                tshelf.castShadow = true; tshelf.receiveShadow = true;
+                tableGroup.add(tshelf);
             }
             for(let x of [-1.15, 1.15]) {
                 for(let z of [-3.15, 3.15]) {
@@ -513,7 +644,7 @@
                 }
             }
             
-            tableGroup.userData = { name: "Prep Table (with Shelves)", socketInfo: "N/A (No Power)" };
+            tableGroup.userData = { name: "Prep Table (with Shelves)", socketInfo: "N/A (No Power)", removable: true, rootGroup: tableGroup };
             equipments.push({ name: "Prep Table", mesh: tableGroup, color: cTable, pos: new THREE.Vector3(rWallX, 3, -1.25), socketInfo: "N/A" });
 
             // Rotating Stools
@@ -528,22 +659,18 @@
                 
                 const base = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.55, 0.1, 16), stoolMat); 
                 base.position.set(0, 0.05, 0);
-                base.castShadow = true; base.receiveShadow = true;
                 stoolGroup.add(base);
                 
                 const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.4, 16), stoolMat); 
                 pole.position.set(0, 0.7, 0);
-                pole.castShadow = true; pole.receiveShadow = true;
                 stoolGroup.add(pole);
                 
                 const seat = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.1, 16), seatMat); 
                 seat.position.set(0, 1.45, 0);
-                seat.castShadow = true; seat.receiveShadow = true;
                 stoolGroup.add(seat);
                 
                 window.rotatingStools.push(seat); 
-                
-                stoolGroup.userData = { name: "Rotating Lab Stool", socketInfo: "N/A" };
+                stoolGroup.userData = { name: "Rotating Lab Stool", socketInfo: "N/A", removable: true, rootGroup: stoolGroup };
                 return stoolGroup;
             };
             
@@ -551,8 +678,71 @@
             const stool2 = createStool(rWallX - 2.0, -2.0);
             equipments.push({ name: "Lab Stools", mesh: stool1, color: '#ef4444', pos: new THREE.Vector3(rWallX - 2.0, 1.5, -0.5), socketInfo: "N/A" });
             
-            // Dehydrator
-            const dehydrator = createEquipment("Dehydrator", 2.5, 2, 2, cDehyd, rWallX, 3, -3.5, "16A Socket / 220V");
+            // Dehydrator (Transparent with Shelves)
+            const dehydW = 2.5, dehydH = 2.0, dehydD = 2.0;
+            const dehydGroup = new THREE.Group();
+            dehydGroup.position.set(rWallX, 3 + dehydH/2, -3.5);
+            scene.add(dehydGroup);
+
+            const dMat = new THREE.MeshStandardMaterial({ color: cDehyd, roughness: 0.6 });
+            const dT = 0.05;
+
+            const dBack = new THREE.Mesh(new THREE.BoxGeometry(dT, dehydH, dehydD), dMat);
+            dBack.position.set(dehydW/2 - dT/2, 0, 0); dehydGroup.add(dBack);
+            const dSide1 = new THREE.Mesh(new THREE.BoxGeometry(dehydW, dehydH, dT), dMat);
+            dSide1.position.set(0, 0, dehydD/2 - dT/2); dehydGroup.add(dSide1);
+            const dSide2 = new THREE.Mesh(new THREE.BoxGeometry(dehydW, dehydH, dT), dMat);
+            dSide2.position.set(0, 0, -dehydD/2 + dT/2); dehydGroup.add(dSide2);
+            const dTop = new THREE.Mesh(new THREE.BoxGeometry(dehydW, dT, dehydD), dMat);
+            dTop.position.set(0, dehydH/2 - dT/2, 0); dehydGroup.add(dTop);
+            const dBot = new THREE.Mesh(new THREE.BoxGeometry(dehydW, dT, dehydD), dMat);
+            dBot.position.set(0, -dehydH/2 + dT/2, 0); dehydGroup.add(dBot);
+
+            // Dehydrator Door (Oven-style)
+            dehydDoorGroup = new THREE.Group();
+            dehydDoorGroup.position.set(-dehydW/2 + dT/2, -dehydH/2 + dT, 0); 
+            dehydGroup.add(dehydDoorGroup);
+
+            const dGlassMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', transmission: 0.9, opacity: 0.3, transparent: true, roughness: 0.2 });
+            const dGlass = new THREE.Mesh(new THREE.BoxGeometry(dT, dehydH - dT*2, dehydD - dT*2), dGlassMat);
+            dGlass.position.set(0, (dehydH - dT*2)/2, 0); 
+            dehydDoorGroup.add(dGlass);
+
+            const dFrameMat = new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.6, roughness: 0.4 });
+            const dFrameTop = new THREE.Mesh(new THREE.BoxGeometry(dT*1.2, 0.1, dehydD - dT*2), dFrameMat);
+            dFrameTop.position.set(0, (dehydH - dT*2) - 0.05, 0); dehydDoorGroup.add(dFrameTop);
+            const dFrameBot = new THREE.Mesh(new THREE.BoxGeometry(dT*1.2, 0.1, dehydD - dT*2), dFrameMat);
+            dFrameBot.position.set(0, 0.05, 0); dehydDoorGroup.add(dFrameBot);
+            const dFrameL = new THREE.Mesh(new THREE.BoxGeometry(dT*1.2, dehydH - dT*2, 0.1), dFrameMat);
+            dFrameL.position.set(0, (dehydH - dT*2)/2, (dehydD - dT*2)/2 - 0.05); dehydDoorGroup.add(dFrameL);
+            const dFrameR = new THREE.Mesh(new THREE.BoxGeometry(dT*1.2, dehydH - dT*2, 0.1), dFrameMat);
+            dFrameR.position.set(0, (dehydH - dT*2)/2, -(dehydD - dT*2)/2 + 0.05); dehydDoorGroup.add(dFrameR);
+
+            const dHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.6, 16), new THREE.MeshStandardMaterial({color: '#e2e8f0', metalness: 0.8}));
+            dHandle.rotation.x = Math.PI / 2; 
+            dHandle.position.set(-0.05, dehydH - dT*2 - 0.15, 0); 
+            dehydDoorGroup.add(dHandle);
+
+            const dShelfMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 0.5 });
+            const dFoodMat = new THREE.MeshStandardMaterial({ color: '#b45309' }); 
+            for(let i=0; i<4; i++) {
+                const yPos = -dehydH/2 + 0.4 + i*0.4;
+                const dshelf = new THREE.Mesh(new THREE.BoxGeometry(dehydW - dT*2, 0.02, dehydD - dT*2), dShelfMat);
+                dshelf.position.set(0, yPos, 0); dehydGroup.add(dshelf);
+                for(let j=0; j<3; j++) {
+                    const food = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.04, 16), dFoodMat);
+                    food.position.set(0, yPos + 0.03, -0.5 + j*0.5); dehydGroup.add(food);
+                }
+            }
+
+            const dehydData = { name: "Dehydrator", socketInfo: "16A Socket / Click to Open", isDehyd: true, removable: true, rootGroup: dehydGroup };
+            dGlass.userData = { ...dehydData, isGlass: true };
+            dHandle.userData = dehydData;
+            dFrameTop.userData = dehydData; dFrameBot.userData = dehydData;
+            dFrameL.userData = dehydData; dFrameR.userData = dehydData;
+            dehydGroup.userData = dehydData;
+            const dehydConn = new THREE.Vector3(rWallX, 3 + dehydH, -3.5);
+            equipments.push({ name: "Dehydrator", mesh: dehydGroup, color: cDehyd, pos: dehydConn, socketInfo: "16A Socket / 220V" });
             
             // Laminar Flow Hood 
             const hoodW = 2, hoodH = 2.5, hoodD = 2.5, hoodT = 0.1;
@@ -562,7 +752,7 @@
 
             const hoodBodyMat = new THREE.MeshStandardMaterial({ color: cHood, roughness: 0.6 });
             const hoodGlassMat = new THREE.MeshPhysicalMaterial({ color: '#93c5fd', transmission: 0.9, opacity: 0.3, transparent: true, roughness: 0.1 });
-            const hoodData = { name: "Laminar Flow Hood", socketInfo: "10A Socket / 220V" };
+            const hoodData = { name: "Laminar Flow Hood", socketInfo: "10A Socket / 220V", removable: true, rootGroup: flowHoodGroup };
 
             const hBack = new THREE.Mesh(new THREE.BoxGeometry(hoodT, hoodH, hoodD), hoodBodyMat);
             hBack.position.set(hoodW/2 - hoodT/2, 0, 0); hBack.userData = hoodData; flowHoodGroup.add(hBack);
@@ -575,10 +765,60 @@
             const hSide2 = new THREE.Mesh(new THREE.BoxGeometry(hoodW, hoodH, hoodT), hoodBodyMat);
             hSide2.position.set(0, 0, hoodD/2 - hoodT/2); hSide2.userData = hoodData; flowHoodGroup.add(hSide2);
 
-            const hGlass = new THREE.Mesh(new THREE.BoxGeometry(hoodT, hoodH - hoodT*2, hoodD - hoodT*2), hoodGlassMat);
-            hGlass.position.set(-hoodW/2 + hoodT/2, 0, 0); 
-            hGlass.userData = { ...hoodData, isGlass: true }; 
-            flowHoodGroup.add(hGlass);
+            // Double Glass Doors
+            hoodDoorLeftGroup = new THREE.Group();
+            hoodDoorLeftGroup.position.set(-hoodW/2 + hoodT/2, 0, hoodD/2 - hoodT); // Left hinge (+Z)
+            flowHoodGroup.add(hoodDoorLeftGroup);
+
+            hoodDoorRightGroup = new THREE.Group();
+            hoodDoorRightGroup.position.set(-hoodW/2 + hoodT/2, 0, -hoodD/2 + hoodT); // Right hinge (-Z)
+            flowHoodGroup.add(hoodDoorRightGroup);
+
+            const hGlassW = hoodT;
+            const hGlassH = hoodH - hoodT*2;
+            const hGlassD = (hoodD - hoodT*2) / 2; 
+
+            const hGlassLeft = new THREE.Mesh(new THREE.BoxGeometry(hGlassW, hGlassH, hGlassD), hoodGlassMat);
+            hGlassLeft.position.set(0, 0, -hGlassD/2); 
+            hoodDoorLeftGroup.add(hGlassLeft);
+
+            const hGlassRight = new THREE.Mesh(new THREE.BoxGeometry(hGlassW, hGlassH, hGlassD), hoodGlassMat);
+            hGlassRight.position.set(0, 0, hGlassD/2); 
+            hoodDoorRightGroup.add(hGlassRight);
+
+            const hFrameMat = new THREE.MeshStandardMaterial({ color: '#94a3b8', metalness: 0.6, roughness: 0.4 });
+            const hlTop = new THREE.Mesh(new THREE.BoxGeometry(hGlassW*1.2, 0.08, hGlassD), hFrameMat);
+            hlTop.position.set(0, hGlassH/2 - 0.04, -hGlassD/2); hoodDoorLeftGroup.add(hlTop);
+            const hlBot = new THREE.Mesh(new THREE.BoxGeometry(hGlassW*1.2, 0.08, hGlassD), hFrameMat);
+            hlBot.position.set(0, -hGlassH/2 + 0.04, -hGlassD/2); hoodDoorLeftGroup.add(hlBot);
+            const hlSide1 = new THREE.Mesh(new THREE.BoxGeometry(hGlassW*1.2, hGlassH, 0.08), hFrameMat);
+            hlSide1.position.set(0, 0, -0.04); hoodDoorLeftGroup.add(hlSide1);
+            const hlSide2 = new THREE.Mesh(new THREE.BoxGeometry(hGlassW*1.2, hGlassH, 0.08), hFrameMat);
+            hlSide2.position.set(0, 0, -hGlassD + 0.04); hoodDoorLeftGroup.add(hlSide2);
+
+            const hrTop = new THREE.Mesh(new THREE.BoxGeometry(hGlassW*1.2, 0.08, hGlassD), hFrameMat);
+            hrTop.position.set(0, hGlassH/2 - 0.04, hGlassD/2); hoodDoorRightGroup.add(hrTop);
+            const hrBot = new THREE.Mesh(new THREE.BoxGeometry(hGlassW*1.2, 0.08, hGlassD), hFrameMat);
+            hrBot.position.set(0, -hGlassH/2 + 0.04, hGlassD/2); hoodDoorRightGroup.add(hrBot);
+            const hrSide1 = new THREE.Mesh(new THREE.BoxGeometry(hGlassW*1.2, hGlassH, 0.08), hFrameMat);
+            hrSide1.position.set(0, 0, 0.04); hoodDoorRightGroup.add(hrSide1);
+            const hrSide2 = new THREE.Mesh(new THREE.BoxGeometry(hGlassW*1.2, hGlassH, 0.08), hFrameMat);
+            hrSide2.position.set(0, 0, hGlassD - 0.04); hoodDoorRightGroup.add(hrSide2);
+
+            const hHandleL = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.4, 16), new THREE.MeshStandardMaterial({color: '#e2e8f0', metalness: 0.8}));
+            hHandleL.position.set(-0.05, 0, -hGlassD + 0.1); 
+            hoodDoorLeftGroup.add(hHandleL);
+
+            const hHandleR = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.4, 16), new THREE.MeshStandardMaterial({color: '#e2e8f0', metalness: 0.8}));
+            hHandleR.position.set(-0.05, 0, hGlassD - 0.1); 
+            hoodDoorRightGroup.add(hHandleR);
+
+            const hDoorData = { ...hoodData, isHood: true, socketInfo: "10A Socket / Click to Open Glass Doors" };
+            hGlassLeft.userData = { ...hDoorData, isGlass: true };
+            hGlassRight.userData = { ...hDoorData, isGlass: true };
+            hHandleL.userData = hDoorData; hHandleR.userData = hDoorData;
+            hlTop.userData = hDoorData; hlBot.userData = hDoorData; hlSide1.userData = hDoorData; hlSide2.userData = hDoorData;
+            hrTop.userData = hDoorData; hrBot.userData = hDoorData; hrSide1.userData = hDoorData; hrSide2.userData = hDoorData;
 
             const hepa = new THREE.Mesh(new THREE.BoxGeometry(0.2, hoodH - 0.4, hoodD - 0.4), new THREE.MeshStandardMaterial({ color: '#ffffff', roughness: 0.9 }));
             hepa.position.set(hoodW/2 - 0.2, 0, 0);
@@ -607,7 +847,7 @@
             const sideR = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.3, 0.05), smallShelfMat);
             sideR.position.set(0, 0.65, 0.6); shelfGroup.add(sideR);
 
-            shelfGroup.userData = { name: "Glassware Shelf", socketInfo: "N/A" };
+            shelfGroup.userData = { name: "Glassware Shelf", socketInfo: "N/A", removable: true, rootGroup: shelfGroup };
             
             const glassMat = new THREE.MeshPhysicalMaterial({ color: '#ffffff', transmission: 0.9, opacity: 1, transparent: true, roughness: 0.1 });
             const beakerGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.25, 16);
@@ -655,51 +895,53 @@
             lampUVLight.position.set(-0.35, 0.5, 0);
             lampGroup.add(lampUVLight);
 
-            lampBase.userData = { name: "UV Table Lamp", socketInfo: "5A Socket / 220V" };
+            lampBase.userData = { name: "UV Table Lamp", socketInfo: "5A Socket / 220V", removable: true, rootGroup: lampGroup };
             equipments.push({ name: "UV Table Lamp", mesh: lampBase, color: '#8a2be2', pos: new THREE.Vector3(rWallX - 0.2, 3.5, -1.2), socketInfo: "5A Socket / 220V" });
 
 
-            // 5d. Custom Hollow Wash Sink
+            // 5d. Unified Wash Sink & Shelf with Wall Drain
             const sinkGroup = new THREE.Group();
             sinkGroup.position.set(rWallX, 0, 3.25); 
             scene.add(sinkGroup);
 
-            const sinkBaseMat = new THREE.MeshStandardMaterial({ color: cSink, roughness: 0.6 });
-            const sinkBase = new THREE.Mesh(new THREE.BoxGeometry(2.5, 2.5, 2.5), sinkBaseMat);
-            sinkBase.position.set(0, 1.25, 0);
-            sinkGroup.add(sinkBase);
-
             const basinMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 0.6, roughness: 0.3 });
-            const basinBottom = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.1, 2.3), basinMat);
-            basinBottom.position.set(0, 2.55, 0); 
-            sinkGroup.add(basinBottom);
+            const sinkDataObj = { name: "Wash Sink & Shelf", socketInfo: "N/A (Plumbing)", removable: true, rootGroup: sinkGroup };
 
-            const wL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.5, 2.5), basinMat);
-            wL.position.set(-1.2, 2.75, 0);
-            sinkGroup.add(wL);
+            const addSinkPart = (w, h, d, x, y, z) => {
+                const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), basinMat);
+                mesh.position.set(x, y, z);
+                mesh.castShadow = true; mesh.receiveShadow = true;
+                mesh.userData = sinkDataObj;
+                sinkGroup.add(mesh);
+            };
 
-            const wR = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.5, 2.5), basinMat);
-            wR.position.set(1.2, 2.75, 0);
-            sinkGroup.add(wR);
+            addSinkPart(0.2, 0.1, 2.0, -0.9, 3.0, 0); 
+            addSinkPart(1.6, 0.1, 0.2, 0, 3.0, -0.9); 
+            addSinkPart(1.6, 0.1, 0.2, 0, 3.0, 0.9);  
+            addSinkPart(0.2, 0.1, 2.0, 0.9, 3.0, 0);  
 
-            const wB = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.5, 0.1), basinMat);
-            wB.position.set(0, 2.75, -1.2);
-            sinkGroup.add(wB);
+            addSinkPart(1.6, 0.1, 1.6, 0, 2.05, 0); 
+            addSinkPart(0.1, 1.0, 1.6, 0.85, 2.5, 0); 
+            addSinkPart(0.1, 1.0, 1.6, -0.85, 2.5, 0); 
+            addSinkPart(1.8, 1.0, 0.1, 0, 2.5, -0.85); 
+            addSinkPart(1.8, 1.0, 0.1, 0, 2.5, 0.85); 
 
-            const wF = new THREE.Mesh(new THREE.BoxGeometry(2.3, 0.5, 0.1), basinMat);
-            wF.position.set(0, 2.75, 1.2);
-            sinkGroup.add(wF);
+            // Add drain hole mesh inside the sink basin
+            const sinkDrainGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.12, 16);
+            const sinkDrain = new THREE.Mesh(sinkDrainGeo, new THREE.MeshBasicMaterial({color: 0x111111}));
+            sinkDrain.position.set(0, 2.05, 0); 
+            sinkGroup.add(sinkDrain);
 
-            const tapMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 0.8 });
+            const tapMat = new THREE.MeshStandardMaterial({ color: '#cbd5e1', metalness: 0.8, roughness: 0.2 });
             const tapStand = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.3, 16), tapMat);
-            tapStand.position.set(1.1, 3.15, 0); 
+            tapStand.position.set(0.9, 3.2, 0); 
             
-            const tapSpout = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.5, 16), tapMat);
+            const tapSpout = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.6, 16), tapMat);
             tapSpout.rotation.z = Math.PI / 2; 
-            tapSpout.position.set(0.85, 3.25, 0); 
+            tapSpout.position.set(0.6, 3.3, 0); 
 
             const tapKnob = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.1, 16), new THREE.MeshStandardMaterial({ color: '#ef4444' }));
-            tapKnob.position.set(1.1, 3.35, 0); 
+            tapKnob.position.set(0.9, 3.4, 0); 
 
             const tapData = { isTap: true, name: "Sink Tap", socketInfo: "Click to Toggle Water Flow" };
             tapStand.userData = tapData; tapSpout.userData = tapData; tapKnob.userData = tapData;
@@ -707,22 +949,32 @@
             sinkGroup.add(tapStand); sinkGroup.add(tapSpout); sinkGroup.add(tapKnob);
 
             waterStreamMat = new THREE.MeshBasicMaterial({ color: '#60a5fa', transparent: true, opacity: 0.7 });
-            waterStream = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.65, 16), waterStreamMat);
-            waterStream.position.set(0.6, 2.9, 0); 
+            waterStream = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1.15, 16), waterStreamMat); 
+            waterStream.position.set(0.3, 2.7, 0); 
             waterStream.visible = false;
             sinkGroup.add(waterStream);
 
-            equipments.push({ name: "Wash Sink", mesh: sinkBase, color: cSink, pos: new THREE.Vector3(rWallX, 3, 3.25), socketInfo: "N/A (Plumbing Only)" });
-            sinkBase.userData = { name: "Wash Sink", socketInfo: "N/A (Plumbing Only)" };
+            equipments.push({ name: "Unified Wash Sink", mesh: sinkGroup, color: '#cbd5e1', pos: new THREE.Vector3(rWallX, 3, 3.25), socketInfo: "N/A (Plumbing Only)" });
 
+            const soap = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.25, 16), new THREE.MeshStandardMaterial({ color: '#a855f7' }));
+            soap.position.set(0.9, 3.175, -0.5);
+            sinkGroup.add(soap);
+            
+            const sponge = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.05, 0.2), new THREE.MeshStandardMaterial({ color: '#eab308' }));
+            sponge.position.set(0.9, 3.075, 0.4);
+            sinkGroup.add(sponge);
 
-            // 6. Large RO Water Purifier 
-            const purifier = createEquipment("RO Water Purifier", 0.8, 1.8, 1.0, cPurifier, 9.6, 4.0, 3.25, "10A Socket / 220V");
+            const scrub = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.08, 0.15), new THREE.MeshStandardMaterial({ color: '#22c55e' }));
+            scrub.position.set(0.9, 3.09, 0.7);
+            sinkGroup.add(scrub);
+
+            // 6. Large RO Water Purifier
+            const purifier = createEquipment("RO Water Purifier", 0.8, 1.8, 1.0, cPurifier, 9.6, 4.8, 3.25, "10A Socket / 220V");
 
             // 6b. CCTV Camera 
             const cctvGroup = new THREE.Group();
             cctvGroup.position.set(roomWidth/2 - 0.5, roomHeight - 0.5, roomDepth/2 - 0.5); 
-            cctvGroup.userData = { name: "CCTV Camera", socketInfo: "5A Socket / 5V DC Adapter" };
+            cctvGroup.userData = { name: "CCTV Camera", socketInfo: "5A Socket / 5V DC Adapter", removable: true, rootGroup: cctvGroup };
             scene.add(cctvGroup);
 
             const cctvBase = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.3), new THREE.MeshStandardMaterial({ color: 0x333333 }));
@@ -741,32 +993,40 @@
             
             equipments.push({ name: "CCTV Camera", mesh: cctvBase, color: '#dddddd', pos: new THREE.Vector3(roomWidth/2 - 0.5, roomHeight - 0.5, roomDepth/2 - 0.5), socketInfo: "5A Socket / 5V DC Adapter" });
 
-            // 7. Racks 
+            // 7. Racks (Proper racks with 6 support columns and side cross-beams)
             const rack1 = createEquipment("Fruiting Rack 1", 8, 6, 2, cRack1, -5.5, 0, -2.5, "10A Socket (For LEDs)");
             const rack2 = createEquipment("Incubation Rack 2 (Dark)", 8, 6, 2, '#111111', -5.5, 0, 2.5, "N/A (No Power)");
             
             rack1.mesh.material.visible = false; 
             rack2.mesh.material.visible = false; 
 
-            // Solid Aluminum Frame
+            // Solid Aluminum Frame Upgrades
             const metalMat = new THREE.MeshStandardMaterial({ color: '#e5e7eb', metalness: 0.8, roughness: 0.2 });
             const buildMetalRack = (rackGroup) => {
-                for (let x of [-3.9, 3.9]) {
+                // Thicker support corner poles & center poles
+                for (let x of [-3.9, 0, 3.9]) {
                     for (let z of [-0.9, 0.9]) {
-                        const pole = new THREE.Mesh(new THREE.BoxGeometry(0.1, 6, 0.1), metalMat);
+                        const pole = new THREE.Mesh(new THREE.BoxGeometry(0.15, 6, 0.15), metalMat);
                         rackGroup.add(pole);
                     }
                 }
-                for (let y of [-2, -1, 0, 1, 2]) { // 5-Tier Shelf Spacing
+                for (let y of [-2, -1, 0, 1, 2]) { 
                     const shelf = new THREE.Mesh(new THREE.BoxGeometry(8, 0.05, 2), metalMat);
                     shelf.position.set(0, y - 0.05, 0); 
                     rackGroup.add(shelf);
+                    
+                    // Side braces at each shelf height
+                    const braceL = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.15, 2), metalMat);
+                    braceL.position.set(-3.9, y - 0.05, 0);
+                    rackGroup.add(braceL);
+                    const braceR = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.15, 2), metalMat);
+                    braceR.position.set(3.9, y - 0.05, 0);
+                    rackGroup.add(braceR);
                 }
             };
             buildMetalRack(rack1.mesh);
             buildMetalRack(rack2.mesh);
 
-            // Black cloth cover for Rack 2 
             const coverGeo = new THREE.BoxGeometry(2.7, 6.2, 2.2, 16, 16, 8);
             const posAttribute = coverGeo.attributes.position;
             for (let i = 0; i < posAttribute.count; i++) {
@@ -788,12 +1048,12 @@
 
             // Mushroom Jars
             const jarGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.4, 16);
-            const jarMat = new THREE.MeshStandardMaterial({ color: '#facc15', roughness: 0.5 });
+            const jarMat = new THREE.MeshStandardMaterial({ color: '#f97316', roughness: 0.5 }); 
             const lidGeo = new THREE.CylinderGeometry(0.16, 0.16, 0.05, 16);
             const lidMat = new THREE.MeshStandardMaterial({ color: '#ffffff' });
 
             const addJarsToRack = (rackGroup) => {
-                for(let y of [-2, -1, 0, 1, 2]) { // 5-Tier Spacing
+                for(let y of [-2, -1, 0, 1, 2]) { 
                     for(let x = -3.5; x <= 3.5; x += 0.5) {
                         for(let z = -0.6; z <= 0.6; z += 0.6) {
                             const jar = new THREE.Mesh(jarGeo, jarMat);
@@ -811,7 +1071,7 @@
 
             // LEDs
             const ledMat = new THREE.MeshStandardMaterial({ color: 0x222222, emissive: 0x000000 });
-            for(let y of [-2, -1, 0, 1, 2]) { // 5 LEDs for 5 Tiers
+            for(let y of [-2, -1, 0, 1, 2]) { 
                 const ledGeo = new THREE.BoxGeometry(7.8, 0.05, 1.8);
                 const led = new THREE.Mesh(ledGeo, ledMat);
                 led.position.set(0, y, 0);
@@ -841,7 +1101,7 @@
             const humidifierMat = new THREE.MeshStandardMaterial({ color: cHumid, roughness: 0.6 });
             const humidifierMesh = new THREE.Mesh(humidifierGeo, humidifierMat);
             humidifierMesh.position.set(-1, 0.25, 0); 
-            humidifierMesh.userData = { name: "Humidifier (5L Tank)", socketInfo: "10A Socket / 220V" };
+            humidifierMesh.userData = { name: "Humidifier (5L Tank)", socketInfo: "10A Socket / 220V", removable: true, rootGroup: humidifierMesh };
             scene.add(humidifierMesh);
             const humConn = new THREE.Vector3(-1, 2, 0);
             equipments.push({ name: "Humidifier (5L Tank)", mesh: humidifierMesh, color: cHumid, pos: humConn, socketInfo: "10A Socket / 220V" });
@@ -859,22 +1119,46 @@
             mist.position.set(-1, 2.5, 0);
             scene.add(mist);
 
+            // Square Fan Housing Function
+            const addFanFrame = (x, y, z) => {
+                const fGroup = new THREE.Group();
+                const fSize = 2.0;
+                const fThick = 0.15;
+                const fDepth = 0.6;
+                const frameMat = new THREE.MeshStandardMaterial({ color: '#475569', metalness: 0.6, roughness: 0.5 });
+                
+                const t = new THREE.Mesh(new THREE.BoxGeometry(fSize, fThick, fDepth), frameMat);
+                t.position.set(0, fSize/2 - fThick/2, 0); fGroup.add(t);
+                const b = new THREE.Mesh(new THREE.BoxGeometry(fSize, fThick, fDepth), frameMat);
+                b.position.set(0, -fSize/2 + fThick/2, 0); fGroup.add(b);
+                const l = new THREE.Mesh(new THREE.BoxGeometry(fThick, fSize, fDepth), frameMat);
+                l.position.set(-fSize/2 + fThick/2, 0, 0); fGroup.add(l);
+                const r = new THREE.Mesh(new THREE.BoxGeometry(fThick, fSize, fDepth), frameMat);
+                r.position.set(fSize/2 - fThick/2, 0, 0); fGroup.add(r);
+                
+                fGroup.position.set(x, y, z);
+                scene.add(fGroup);
+                return fGroup;
+            };
+
             // 9. Fans
             const fanGeo = new THREE.CylinderGeometry(0.8, 0.8, 0.5, 16);
             
             const exhaustFan = new THREE.Mesh(fanGeo, new THREE.MeshStandardMaterial({ color: cExhaust }));
             exhaustFan.rotation.x = Math.PI/2;
             exhaustFan.position.set(doorOffset, 7.5, roomDepth/2); 
-            exhaustFan.userData = { name: "Exhaust Fan", socketInfo: "Hardwired / 10A Circuit" };
+            exhaustFan.userData = { name: "Exhaust Fan", socketInfo: "Hardwired / 10A Circuit", removable: true, rootGroup: exhaustFan };
             scene.add(exhaustFan);
+            addFanFrame(doorOffset, 7.5, roomDepth/2); // External square fan frame
             const exhaustConn = new THREE.Vector3(doorOffset, 8, roomDepth/2 - 0.5);
             equipments.push({ name: "Exhaust Fan", mesh: exhaustFan, color: cExhaust, pos: exhaustConn, socketInfo: "Hardwired / 10A Circuit" });
 
             const intakeFan = new THREE.Mesh(fanGeo, new THREE.MeshStandardMaterial({ color: cIntake }));
             intakeFan.rotation.x = Math.PI/2;
             intakeFan.position.set(-roomWidth/2 + 4, 7.5, roomDepth/2); 
-            intakeFan.userData = { name: "Intake Fan", socketInfo: "Hardwired / 10A Circuit" };
+            intakeFan.userData = { name: "Intake Fan", socketInfo: "Hardwired / 10A Circuit", removable: true, rootGroup: intakeFan };
             scene.add(intakeFan);
+            addFanFrame(-roomWidth/2 + 4, 7.5, roomDepth/2); // External square fan frame
             const intakeConn = new THREE.Vector3(-roomWidth/2 + 4, 8, roomDepth/2 - 0.5);
             equipments.push({ name: "Intake Fan", mesh: intakeFan, color: cIntake, pos: intakeConn, socketInfo: "Hardwired / 10A Circuit" });
 
@@ -883,7 +1167,7 @@
             const outdoorAcMat = new THREE.MeshStandardMaterial({ color: '#e2e8f0', roughness: 0.7 });
             const outdoorAc = new THREE.Mesh(outdoorAcGeo, outdoorAcMat);
             outdoorAc.position.set(-8, 4.75, 5.1);
-            outdoorAc.userData = { name: "Outdoor AC Compressor", socketInfo: "Powered via Indoor AC" };
+            outdoorAc.userData = { name: "Outdoor AC Compressor", socketInfo: "Powered via Indoor AC", removable: true, rootGroup: outdoorAc };
             scene.add(outdoorAc);
             
             const outdoorFanGeo = new THREE.CylinderGeometry(0.5, 0.5, 1.25, 16);
@@ -900,7 +1184,7 @@
             const roofTankMat = new THREE.MeshStandardMaterial({ color: '#1e3a8a', roughness: 0.3 }); 
             const roofTank = new THREE.Mesh(roofTankGeo, roofTankMat);
             roofTank.position.set(rWallX, 10.75, 3.25); 
-            roofTank.userData = { name: "300L Water Tank", socketInfo: "N/A (Gravity Fed)" };
+            roofTank.userData = { name: "300L Water Tank", socketInfo: "N/A (Gravity Fed)", removable: true, rootGroup: roofTank };
             scene.add(roofTank);
             equipments.push({ name: "300L Water Tank", mesh: roofTank, color: '#1e3a8a', pos: new THREE.Vector3(rWallX, 12, 3.25), socketInfo: "N/A (Gravity Fed)" });
 
@@ -914,6 +1198,7 @@
             const matPowerWire = new THREE.LineBasicMaterial({ color: 0xef4444, linewidth: 2 }); 
             const matAutoWire = new THREE.LineBasicMaterial({ color: 0x3b82f6, linewidth: 2 }); 
             const matWaterPipe = new THREE.LineBasicMaterial({ color: 0xf8fafc, linewidth: 3 }); 
+            const matDrainPipe = new THREE.LineBasicMaterial({ color: 0x64748b, linewidth: 4 }); 
 
             function drawConduit(start, end, group, material, offsetZ = 0) {
                 const points = [];
@@ -933,9 +1218,9 @@
             
             drawConduit(pStart, ac.connectionPoint, powerWires, matPowerWire, 0.1);
             drawConduit(pStart, autoclaveConn, powerWires, matPowerWire, 0.2);
-            drawConduit(pStart, fridge.connectionPoint, powerWires, matPowerWire, 0.3);
+            drawConduit(pStart, fridgeConn, powerWires, matPowerWire, 0.3);
             drawConduit(pStart, hoodConn, powerWires, matPowerWire, 0.4); 
-            drawConduit(pStart, dehydrator.connectionPoint, powerWires, matPowerWire, 0.5);
+            drawConduit(pStart, dehydConn, powerWires, matPowerWire, 0.5);
             drawConduit(pStart, new THREE.Vector3(rWallX - 0.2, 3.5, -1.2), powerWires, matPowerWire, 0.7); 
 
             drawConduit(pStart, ac.connectionPoint, autoWires, matAutoWire, 0.6); 
@@ -950,27 +1235,44 @@
             const tankPipePoints = [
                 new THREE.Vector3(rWallX, 9.5, 3.25), 
                 new THREE.Vector3(9.8, 9.5, 3.25),   
-                new THREE.Vector3(9.8, 4.5, 3.25)    
+                new THREE.Vector3(9.8, 5.5, 3.25)    
             ];
             const tankPipeLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(tankPipePoints), matWaterPipe);
             waterPipes.add(tankPipeLine);
 
             const branchPurifierPoints = [
-                new THREE.Vector3(9.8, 4.5, 3.25),
-                new THREE.Vector3(9.6, 4.5, 3.25)
+                new THREE.Vector3(9.8, 5.5, 3.25),
+                new THREE.Vector3(9.6, 5.5, 3.25)
             ];
             const branchPurifierLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(branchPurifierPoints), matWaterPipe);
             waterPipes.add(branchPurifierLine);
 
             const branchTapPoints = [
-                new THREE.Vector3(9.8, 4.5, 3.25),
-                new THREE.Vector3(9.8, 3.15, 3.25),
-                new THREE.Vector3(9.85, 3.15, 3.25) 
+                new THREE.Vector3(9.8, 5.5, 3.25),
+                new THREE.Vector3(9.8, 3.25, 3.25),
+                new THREE.Vector3(9.65, 3.25, 3.25) 
             ];
             const branchTapLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(branchTapPoints), matWaterPipe);
             waterPipes.add(branchTapLine);
 
             drawConduit(purifier.connectionPoint, humConn, waterPipes, matWaterPipe, 0.8);
+
+            // Sink drainage pipe (Grey) to wall hole
+            const wallHoleX = 9.8;
+            const wallHoleY = 0.5;
+            const wallHoleZ = 4.3; // Corner
+            const sinkDrainHole = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.2, 16), new THREE.MeshBasicMaterial({color: 0x111111}));
+            sinkDrainHole.rotation.z = Math.PI/2;
+            sinkDrainHole.position.set(wallHoleX, wallHoleY, wallHoleZ);
+            scene.add(sinkDrainHole);
+
+            const sinkDrainPoints = [
+                new THREE.Vector3(rWallX, 2.05, 3.25), // Sink drain start
+                new THREE.Vector3(rWallX, wallHoleY, 3.25), // Straight down
+                new THREE.Vector3(wallHoleX, wallHoleY, wallHoleZ) // To wall hole
+            ];
+            const sinkDrainPipeLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(sinkDrainPoints), matDrainPipe);
+            waterPipes.add(sinkDrainPipeLine);
 
             // AC Refrigerant Pipes
             const redPipeMat = new THREE.LineBasicMaterial({ color: 0xef4444, linewidth: 3 });
@@ -1005,14 +1307,8 @@
             scene.add(floorDrain);
             equipments.push({ name: "AC Floor Drain", mesh: floorDrain, color: '#333333', pos: new THREE.Vector3(-9.5, 0, -1.5), socketInfo: "N/A (Plumbing)" });
 
-            // Legend UI
-            const legendDiv = document.getElementById('legend');
-            equipments.forEach(eq => {
-                const row = document.createElement('div');
-                row.className = "flex items-center justify-between gap-2 border-b border-gray-800 pb-1 transition-colors";
-                row.innerHTML = `<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full shadow-sm border border-gray-600 transition-colors" style="background-color: ${eq.color};"></div> <span class="text-gray-300 font-medium transition-colors">${eq.name}</span></div> <span class="text-[10px] text-yellow-400 opacity-80">${eq.socketInfo}</span>`;
-                legendDiv.appendChild(row);
-            });
+            // Initial Legend Build
+            updateLegend();
 
             // View Toggles
             document.getElementById('toggle-power').addEventListener('change', (e) => powerWires.visible = e.target.checked);
@@ -1042,16 +1338,51 @@
                     if (!hitObj.visible) continue;
                     if (hitObj.material && hitObj.material.transparent && hitObj.material.opacity <= 0.2 && !hitObj.userData.isTap && !hitObj.userData.isGlass) continue;
                     
-                    let foundTap = false;
+                    let actionTaken = false;
                     while(hitObj) {
+                        // Equipment Removal feature (Shift + Click)
+                        if (event.shiftKey && hitObj.userData && hitObj.userData.removable) {
+                            const rootGroup = hitObj.userData.rootGroup;
+                            scene.remove(rootGroup);
+                            
+                            // Remove from equipments array and update legend
+                            const index = equipments.findIndex(eq => eq.name === hitObj.userData.name);
+                            if (index > -1) {
+                                equipments.splice(index, 1);
+                                updateLegend();
+                            }
+                            actionTaken = true;
+                            break;
+                        }
+
                         if (hitObj.userData && hitObj.userData.isTap) {
                             state.sinkWaterFlow = !state.sinkWaterFlow;
-                            foundTap = true;
+                            actionTaken = true;
+                            break;
+                        }
+                        if (hitObj.userData && hitObj.userData.isDoor) {
+                            state.doorOpen = !state.doorOpen;
+                            actionTaken = true;
+                            break;
+                        }
+                        if (hitObj.userData && hitObj.userData.isFridge) {
+                            state.fridgeOpen = !state.fridgeOpen;
+                            actionTaken = true;
+                            break;
+                        }
+                        if (hitObj.userData && hitObj.userData.isDehyd) {
+                            state.dehydOpen = !state.dehydOpen;
+                            actionTaken = true;
+                            break;
+                        }
+                        if (hitObj.userData && hitObj.userData.isHood) {
+                            state.hoodOpen = !state.hoodOpen;
+                            actionTaken = true;
                             break;
                         }
                         hitObj = hitObj.parent;
                     }
-                    if (foundTap) break;
+                    if (actionTaken) break;
                 }
             });
 
@@ -1068,14 +1399,63 @@
             const intakeParticles = Array.from({length: 3}, () => createParticle(0x10b981));
             const exhaustParticles = Array.from({length: 3}, () => createParticle(0xf43f5e));
             
-            const roWaterParticles = Array.from({length: 5}, () => {
-                const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.15, 8, 8), new THREE.MeshBasicMaterial({color: 0x60a5fa}));
+            // Re-engineered precise water flow following physical pipes
+            const createWaterParticle = () => {
+                const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.12, 8, 8), new THREE.MeshBasicMaterial({color: 0x60a5fa}));
                 scene.add(mesh);
                 return mesh;
-            });
+            };
+            const tapWaterParticles = Array.from({length: 6}, createWaterParticle);
+            const sinkDrainParticles = Array.from({length: 6}, createWaterParticle);
+            const roToPurifierParticles = Array.from({length: 6}, createWaterParticle);
+            const roToHumParticles = Array.from({length: 8}, createWaterParticle);
+            const acCondensationParticles = Array.from({length: 5}, createWaterParticle);
+
+            const tankToTapPath = [
+                new THREE.Vector3(rWallX, 9.5, 3.25), 
+                new THREE.Vector3(9.8, 9.5, 3.25),   
+                new THREE.Vector3(9.8, 3.25, 3.25),
+                new THREE.Vector3(9.65, 3.25, 3.25) 
+            ];
+            const tankToROPath = [
+                new THREE.Vector3(rWallX, 9.5, 3.25), 
+                new THREE.Vector3(9.8, 9.5, 3.25),   
+                new THREE.Vector3(9.8, 5.5, 3.25),
+                new THREE.Vector3(9.6, 5.5, 3.25)
+            ];
+            const roToHumPath = [
+                purifier.connectionPoint,
+                new THREE.Vector3(purifier.connectionPoint.x, roomHeight - 0.2, purifier.connectionPoint.z),
+                new THREE.Vector3(humConn.x, roomHeight - 0.2, humConn.z),
+                humConn
+            ];
+            const acDrainPath = [
+                new THREE.Vector3(-9.5, 7, -1.5),
+                new THREE.Vector3(-9.5, 0, -1.5)
+            ];
+
+            function getPosAlongPath(points, t) {
+                let totalLength = 0;
+                let lengths = [];
+                for(let i=0; i<points.length-1; i++) {
+                    let l = points[i].distanceTo(points[i+1]);
+                    lengths.push(l);
+                    totalLength += l;
+                }
+                let targetDist = t * totalLength;
+                let currentDist = 0;
+                for(let i=0; i<points.length-1; i++) {
+                    if (currentDist + lengths[i] >= targetDist) {
+                        let segmentT = (targetDist - currentDist) / lengths[i];
+                        return new THREE.Vector3().lerpVectors(points[i], points[i+1], segmentT);
+                    }
+                    currentDist += lengths[i];
+                }
+                return points[points.length-1].clone();
+            }
 
             // --- SIMULATION LOGIC ---
-            const state = { leds: false, uv: false, fans: false, ac: false, hum: false, waterVolume: 5.0, refilling: false, sinkWaterFlow: false };
+            const state = { leds: false, uv: false, fans: false, ac: false, hum: false, waterVolume: 5.0, refilling: false, sinkWaterFlow: false, doorOpen: false, fridgeOpen: false, dehydOpen: false, hoodOpen: false };
 
             function formatTime(val) {
                 const h = Math.floor(val);
@@ -1201,23 +1581,36 @@
                     tooltip.style.display = 'block';
                     tooltip.style.left = (mouseScreen.x + 15) + 'px';
                     tooltip.style.top = (mouseScreen.y + 15) + 'px';
-                    tooltip.innerHTML = `<strong class="text-blue-500 font-bold tracking-wide">${hitData.name}</strong><br><span class="text-yellow-500 mt-1 inline-block font-semibold">⚡ ${hitData.socketInfo}</span>`;
+                    let tipContent = `<strong class="text-blue-500 font-bold tracking-wide">${hitData.name}</strong><br><span class="text-yellow-500 mt-1 inline-block font-semibold">⚡ ${hitData.socketInfo}</span>`;
+                    if (hitData.removable) {
+                        tipContent += `<br><span class="text-gray-400 text-[10px] mt-1 inline-block">(Shift + Click to Remove)</span>`;
+                    }
+                    tooltip.innerHTML = tipContent;
                 } else {
                     tooltip.style.display = 'none';
                 }
+
+                // --- DOOR ANIMATIONS ---
+                const targetDoorRot = state.doorOpen ? Math.PI / 2 : 0; 
+                doorGroup.rotation.y += (targetDoorRot - doorGroup.rotation.y) * 0.1;
+
+                const targetFridgeRot = state.fridgeOpen ? Math.PI / 2 : 0; 
+                fridgeDoorGroup.rotation.y += (targetFridgeRot - fridgeDoorGroup.rotation.y) * 0.1;
+
+                const targetDehydRot = state.dehydOpen ? Math.PI / 2 : 0; 
+                dehydDoorGroup.rotation.z += (targetDehydRot - dehydDoorGroup.rotation.z) * 0.1;
+
+                const targetHoodLRot = state.hoodOpen ? Math.PI / 2 : 0;
+                const targetHoodRRot = state.hoodOpen ? -Math.PI / 2 : 0;
+                hoodDoorLeftGroup.rotation.y += (targetHoodLRot - hoodDoorLeftGroup.rotation.y) * 0.1;
+                hoodDoorRightGroup.rotation.y += (targetHoodRRot - hoodDoorRightGroup.rotation.y) * 0.1;
+
 
                 // --- EQUIPMENT ANIMATIONS ---
                 if (window.rotatingStools) {
                     window.rotatingStools.forEach((seat, idx) => {
                         seat.rotation.y += (idx === 0 ? 0.005 : -0.008); 
                     });
-                }
-
-                if (state.sinkWaterFlow) {
-                    waterStream.visible = true;
-                    waterStreamMat.opacity = 0.5 + Math.sin(timeStr * 40) * 0.3; 
-                } else {
-                    waterStream.visible = false;
                 }
 
                 if (state.hum && !state.refilling) {
@@ -1241,26 +1634,53 @@
                     applyState();
                 }
 
-                roWaterParticles.forEach((p, i) => {
+                // Physics-based water pipe flow animations
+                if (state.sinkWaterFlow) {
+                    waterStream.visible = true;
+                    waterStreamMat.opacity = 0.5 + Math.sin(timeStr * 40) * 0.3; 
+                } else {
+                    waterStream.visible = false;
+                }
+
+                tapWaterParticles.forEach((p, i) => {
+                    if (state.sinkWaterFlow) {
+                        p.visible = true;
+                        let progress = ((timeStr * 0.6) + (i * 0.166)) % 1;
+                        p.position.copy(getPosAlongPath(tankToTapPath, progress));
+                    } else { p.visible = false; }
+                });
+
+                // Sink Drain exit animation
+                sinkDrainParticles.forEach((p, i) => {
+                    if (state.sinkWaterFlow) {
+                        p.visible = true;
+                        let progress = ((timeStr * 0.6) + (i * 0.166)) % 1;
+                        p.position.copy(getPosAlongPath(sinkDrainPoints, progress));
+                    } else { p.visible = false; }
+                });
+
+                roToPurifierParticles.forEach((p, i) => {
                     if (state.refilling) {
                         p.visible = true;
-                        let progress = ((timeStr * 0.4) + (i * 0.2)) % 1;
-                        
-                        const pStart = purifier.connectionPoint;
-                        const pMid = new THREE.Vector3(pStart.x, roomHeight - 0.2, pStart.z);
-                        const pMid2 = new THREE.Vector3(humConn.x, roomHeight - 0.2, humConn.z);
-                        const pEnd = humConn;
+                        let progress = ((timeStr * 0.5) + (i * 0.166)) % 1;
+                        p.position.copy(getPosAlongPath(tankToROPath, progress));
+                    } else { p.visible = false; }
+                });
 
-                        if (progress < 0.33) {
-                            p.position.lerpVectors(pStart, pMid, progress / 0.33);
-                        } else if (progress < 0.66) {
-                            p.position.lerpVectors(pMid, pMid2, (progress - 0.33) / 0.33);
-                        } else {
-                            p.position.lerpVectors(pMid2, pEnd, (progress - 0.66) / 0.34);
-                        }
-                    } else {
-                        p.visible = false;
-                    }
+                roToHumParticles.forEach((p, i) => {
+                    if (state.refilling) {
+                        p.visible = true;
+                        let progress = ((timeStr * 0.4) + (i * 0.125)) % 1;
+                        p.position.copy(getPosAlongPath(roToHumPath, progress));
+                    } else { p.visible = false; }
+                });
+
+                acCondensationParticles.forEach((p, i) => {
+                    if (state.ac) {
+                        p.visible = true;
+                        let progress = ((timeStr * 0.3) + (i * 0.2)) % 1;
+                        p.position.copy(getPosAlongPath(acDrainPath, progress));
+                    } else { p.visible = false; }
                 });
 
                 if (state.fans) {
@@ -1303,8 +1723,8 @@
                     if (state.fans) {
                         p.visible = true;
                         let progress = ((timeStr * 0.8) + (i * 0.33)) % 1;
-                        p.position.set(0 + (progress * 5), 4.5 + (progress * 3), 0 + (progress * 4.25)); 
-                        p.lookAt(5, 7.5, 4.25);
+                        p.position.set(2.5, 4.5 + (progress * 3), 0.5 + (progress * 4)); 
+                        p.lookAt(2.5, 7.5, 4.5);
                     } else { p.visible = false; }
                 });
 
