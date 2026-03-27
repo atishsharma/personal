@@ -33,7 +33,7 @@ A dedicated environment for testing hardware-inspired UI and logic:
 * **[Time Calendar](https://atishaksharma.com/calendar/index.html):** Interactive month-view calendar widget module.
 * **[Personal Hub](https://atishaksharma.com/hub/index.html):** Minimalist PWA for bookmark and link management.
 * **[Memo Vault](https://atishaksharma.com/memo/index.html):** Quick note-taking and temporary logging application.
-
+* **[AT Music Player Pro](https://atishaksharma.com/atmusic/index.html):** Premium Music Player Without Compromise.
 #### 📐 Design Systems & Redesigns
 * **[Core1987 Remote](https://atishaksharma.com/core1987remote/index.html):** A nostalgic redesign of the 1987 CL-9 Core universal remote.
 * **[Core Redesign](https://atishaksharma.com/core-redesign/index.html):** Exploratory system UI redesign.
