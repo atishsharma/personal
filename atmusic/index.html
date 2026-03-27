@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AT Music Player Pro | Premium Audio Experience</title>
+    
+    <!-- SEO & Meta Tags -->
+    <meta name="description" content="AT Music Player Pro is a state-of-the-art cross-platform desktop music application for audiophiles. Features local library scanning, YouTube streaming, and synced lyrics.">
+    <meta name="keywords" content="music player, desktop music player, linux music player, windows music player, open source, youtube streaming, synced lyrics, electron, react">
+    <meta name="author" content="Atish Ak Sharma">
+    
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AT Music Player Pro | Premium Audio Experience">
+    <meta property="og:description" content="Premium cross-platform music player built for audiophiles. Features local library scanning, YouTube streaming, and perfectly synced lyrics.">
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <meta property="og:url" content="https://github.com/atishsharma/AT-Music-Player">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            pink: '#FF2E93',
+                            cyan: '#08F7FE',
+                            purple: '#8A2BE2'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base and Background Setup */
+        body {
+            background-color: #070B14;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Orbs */
+        .bg-orbs {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            animation: float 20s infinite ease-in-out alternate;
+            opacity: 0.6;
+        }
+        .orb-1 { width: 450px; height: 450px; background: rgba(255, 46, 147, 0.4); top: -10%; left: -10%; }
+        .orb-2 { width: 550px; height: 550px; background: rgba(8, 247, 254, 0.3); bottom: -10%; right: -10%; animation-delay: -5s; }
+        .orb-3 { width: 400px; height: 400px; background: rgba(138, 43, 226, 0.4); top: 30%; left: 40%; animation-delay: -10s; }
+        .orb-4 { width: 600px; height: 600px; background: rgba(9, 251, 211, 0.2); top: 10%; right: 30%; animation-delay: -15s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 80px) scale(1.1); }
+        }
+
+        /* Glassmorphism Utilities */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+        }
+        .glass-hover:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+            transition: all 0.3s ease;
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(to right, #08F7FE, #FF2E93);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #070B14; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-pink selection:text-white">
+
+    <!-- Background Animation -->
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300 glass" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center gap-4 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <img src="app_icon.png" alt="AT Music Player Logo" class="w-12 h-12 rounded-xl object-cover shadow-lg border border-white/20" onerror="this.src='https://via.placeholder.com/100/1e293b/FFFFFF?text=AT'">
+                    <span class="font-bold text-xl tracking-wide">AT Music Player<span class="text-brand-cyan"> Pro</span></span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-6 lg:space-x-8">
+                        <a href="#prerequisites" class="hover:text-brand-cyan transition-colors px-2 py-2 rounded-md text-sm font-medium">Prerequisites</a>
+                        <a href="#features" class="hover:text-brand-cyan transition-colors px-2 py-2 rounded-md text-sm font-medium">Features</a>
+                        <a href="#gallery" class="hover:text-brand-cyan transition-colors px-2 py-2 rounded-md text-sm font-medium">Gallery</a>
+                        <a href="#credits" class="hover:text-brand-cyan transition-colors px-2 py-2 rounded-md text-sm font-medium">Credits</a>
+                        <a href="#download" class="bg-gradient-to-r from-brand-cyan to-brand-pink px-6 py-2.5 rounded-full text-white font-semibold hover:shadow-[0_0_20px_rgba(8,247,254,0.4)] transition-all">
+                            Get App
+                        </a>
+                    </div>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="glass inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden glass-panel border-t border-white/10" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#prerequisites" class="block hover:bg-white/10 px-3 py-2 rounded-md text-base font-medium">Prerequisites</a>
+                <a href="#features" class="block hover:bg-white/10 px-3 py-2 rounded-md text-base font-medium">Features</a>
+                <a href="#gallery" class="block hover:bg-white/10 px-3 py-2 rounded-md text-base font-medium">Gallery</a>
+                <a href="#credits" class="block hover:bg-white/10 px-3 py-2 rounded-md text-base font-medium">Credits</a>
+                <a href="#download" class="block text-brand-cyan px-3 py-2 rounded-md text-base font-medium">Download Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden min-h-screen flex items-center">
+        <!-- Hero Unsplash Background -->
+        <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1614149162883-504ce4d13909?q=80&w=2560&auto=format&fit=crop')] bg-cover bg-center opacity-20 pointer-events-none"></div>
+        <div class="absolute inset-0 z-0 bg-gradient-to-b from-transparent to-[#070B14] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-block glass px-4 py-1.5 rounded-full text-sm font-medium mb-6 border-brand-cyan/30 text-brand-cyan shadow-[0_0_15px_rgba(8,247,254,0.2)]">
+                <i class="fab fa-github mr-2"></i> v1.2.1 Now Available
+            </div>
+            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8">
+                Premium Music Player <br/>
+                <span class="text-gradient">Without Compromise.</span>
+            </h1>
+            <p class="mt-4 max-w-2xl text-lg md:text-xl text-gray-300 mx-auto mb-10">
+                Built for audiophiles who demand both functionality and beauty. Local library scanning, YouTube streaming integration, synced lyrics, and more inside a fluid, responsive desktop environment.
+            </p>
+            <div class="flex flex-col sm:flex-row flex-wrap justify-center gap-4">
+                <a href="#download" class="bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                    <i class="fas fa-download"></i> Download Free
+                </a>
+                <a href="#prerequisites" class="glass px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+                    <i class="fas fa-terminal"></i> Prerequisites
+                </a>
+                <a href="https://github.com/atishsharma/AT-Music-Player" target="_blank" class="glass px-8 py-4 rounded-full font-bold text-lg hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
+                    <i class="fab fa-github"></i> View GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prerequisites Section -->
+    <section id="prerequisites" class="py-24 relative z-10 bg-black/40 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">System Prerequisites</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">To enable YouTube streaming and advanced media processing, AT Music Player Pro requires <span class="text-brand-cyan font-mono bg-brand-cyan/10 px-1 rounded">yt-dlp</span> and <span class="text-brand-pink font-mono bg-brand-pink/10 px-1 rounded">ffmpeg</span> to be installed globally on your system.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Windows -->
+                <div class="glass glass-panel rounded-2xl p-8 border-t-4 border-t-blue-500 hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full">
+                    <i class="fab fa-windows text-4xl text-blue-400 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Windows</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">Install easily using Windows Package Manager (winget) via Command Prompt or PowerShell as Administrator.</p>
+                    <div class="bg-black/60 rounded-xl p-3 flex justify-between items-center border border-white/10">
+                        <code class="text-brand-cyan text-sm font-mono block overflow-x-auto whitespace-nowrap">winget install yt-dlp ffmpeg</code>
+                        <button onclick="copyCommand('winget install yt-dlp ffmpeg', this)" class="text-gray-400 hover:text-white transition-colors ml-3 p-2 bg-white/5 rounded-lg hover:bg-white/20" title="Copy to clipboard">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- macOS -->
+                <div class="glass glass-panel rounded-2xl p-8 border-t-4 border-t-gray-300 hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full">
+                    <i class="fab fa-apple text-4xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">macOS</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">The fastest way to install on macOS is using the Homebrew package manager from your terminal app.</p>
+                    <div class="bg-black/60 rounded-xl p-3 flex justify-between items-center border border-white/10">
+                        <code class="text-brand-cyan text-sm font-mono block overflow-x-auto whitespace-nowrap">brew install yt-dlp ffmpeg</code>
+                        <button onclick="copyCommand('brew install yt-dlp ffmpeg', this)" class="text-gray-400 hover:text-white transition-colors ml-3 p-2 bg-white/5 rounded-lg hover:bg-white/20" title="Copy to clipboard">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Linux -->
+                <div class="glass glass-panel rounded-2xl p-8 border-t-4 border-t-brand-pink hover:-translate-y-2 transition-transform duration-300 flex flex-col h-full">
+                    <i class="fab fa-linux text-4xl text-brand-pink mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2">Linux</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow">Use your distribution's native package manager. This example uses APT for Debian/Ubuntu based systems:</p>
+                    <div class="bg-black/60 rounded-xl p-3 flex justify-between items-center border border-white/10">
+                        <code class="text-brand-cyan text-sm font-mono block overflow-x-auto whitespace-nowrap">sudo apt install yt-dlp ffmpeg</code>
+                        <button onclick="copyCommand('sudo apt install yt-dlp ffmpeg', this)" class="text-gray-400 hover:text-white transition-colors ml-3 p-2 bg-white/5 rounded-lg hover:bg-white/20" title="Copy to clipboard">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Everything You Need</h2>
+                <div class="w-24 h-1 bg-gradient-to-r from-brand-cyan to-brand-pink mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass glass-panel glass-hover rounded-2xl p-8">
+                    <div class="w-14 h-14 rounded-full bg-brand-cyan/20 flex items-center justify-center text-brand-cyan text-2xl mb-6">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Pure Playback</h3>
+                    <p class="text-gray-400">Instantly scan and organize thousands of files. Full support for MP3, FLAC, WAV, and OGG formats with lossless quality.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="glass glass-panel glass-hover rounded-2xl p-8">
+                    <div class="w-14 h-14 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 text-2xl mb-6">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">YouTube Engine</h3>
+                    <p class="text-gray-400">Stream audio directly from YouTube with intelligent webm/opus caching for royalty-free, lightning-fast media handling.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="glass glass-panel glass-hover rounded-2xl p-8">
+                    <div class="w-14 h-14 rounded-full bg-brand-pink/20 flex items-center justify-center text-brand-pink text-2xl mb-6">
+                        <i class="fas fa-microphone-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Synced Lyrics</h3>
+                    <p class="text-gray-400">Sing along with perfectly timed, real-time synced lyrics powered by the LRCLib API integration.</p>
+                </div>
+                <!-- Feature 4 -->
+                <div class="glass glass-panel glass-hover rounded-2xl p-8">
+                    <div class="w-14 h-14 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 text-2xl mb-6">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Rich Integrations</h3>
+                    <p class="text-gray-400">Seamlessly scrobble your listening history to Last.fm and fetch rich metadata through our Spotify API integration.</p>
+                </div>
+                <!-- Feature 5 -->
+                <div class="glass glass-panel glass-hover rounded-2xl p-8">
+                    <div class="w-14 h-14 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400 text-2xl mb-6">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Cross-Platform</h3>
+                    <p class="text-gray-400">A consistent, beautiful desktop environment built on Electron 30. Fully supports Linux and Windows natively.</p>
+                </div>
+                <!-- Feature 6 -->
+                <div class="glass glass-panel glass-hover rounded-2xl p-8">
+                    <div class="w-14 h-14 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 text-2xl mb-6">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Ultra Fast UI</h3>
+                    <p class="text-gray-400">Component-based UI built with React 18, Vite 5, and Tailwind CSS guarantees zero lag and a butter-smooth experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-24 relative z-10 bg-black/30 backdrop-blur-md border-y border-white/10 overflow-hidden">
+        <!-- Gallery Unsplash Background -->
+        <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-10 pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Application Showcase</h2>
+                <p class="text-gray-400">Take a peek inside the beautiful UI of AT Music Player Pro.</p>
+            </div>
+            
+            <!-- Gallery Grid -->
+            <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                
+                <!-- Image 01 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-01.png')">
+                    <img src="pics/Image-01.png" alt="App Screenshot 01" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 02 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-02.png')">
+                    <img src="pics/Image-02.png" alt="App Screenshot 02" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 03 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-03.png')">
+                    <img src="pics/Image-03.png" alt="App Screenshot 03" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 04 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-04.png')">
+                    <img src="pics/Image-04.png" alt="App Screenshot 04" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 05 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-05.png')">
+                    <img src="pics/Image-05.png" alt="App Screenshot 05" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 06 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-06.png')">
+                    <img src="pics/Image-06.png" alt="App Screenshot 06" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 07 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-07.png')">
+                    <img src="pics/Image-07.png" alt="App Screenshot 07" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 08 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-08.png')">
+                    <img src="pics/Image-08.png" alt="App Screenshot 08" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 09 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-09.png')">
+                    <img src="pics/Image-09.png" alt="App Screenshot 09" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 10 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-10.png')">
+                    <img src="pics/Image-10.png" alt="App Screenshot 10" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 11 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-11.png')">
+                    <img src="pics/Image-11.png" alt="App Screenshot 11" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 12 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-12.png')">
+                    <img src="pics/Image-12.png" alt="App Screenshot 12" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 13 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-13.png')">
+                    <img src="pics/Image-13.png" alt="App Screenshot 13" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 14 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-14.png')">
+                    <img src="pics/Image-14.png" alt="App Screenshot 14" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+                <!-- Image 15 -->
+                <div class="relative aspect-video rounded-xl overflow-hidden cursor-pointer group glass" onclick="openLightbox('pics/Image-15.png')">
+                    <img src="pics/Image-15.png" alt="App Screenshot 15" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-4">
+                        <span class="glass px-3 py-1 rounded-full text-xs font-bold"><i class="fas fa-expand-alt mr-1"></i> View</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Changelog Section -->
+    <section id="changelog" class="py-16 relative z-10 bg-black/40 border-y border-white/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="glass glass-panel rounded-3xl p-8 md:p-10 border-l-4 border-l-brand-cyan">
+                <div class="flex items-center justify-between mb-8 border-b border-white/10 pb-4">
+                    <h2 class="text-2xl md:text-3xl font-bold">What's New in v1.2.1</h2>
+                    <span class="bg-brand-cyan/20 text-brand-cyan px-3 py-1 rounded-full text-sm font-bold"><i class="fas fa-tag mr-1"></i> Latest Release</span>
+                </div>
+                <ul class="space-y-5">
+                    <li class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 shrink-0 mt-0.5">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">Full Linux Support</h4>
+                            <p class="text-gray-400 text-sm mt-1">Successfully compiled and tested major Linux builds including AppImage, .deb, snap, and .tar.gz.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 shrink-0 mt-0.5">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">Codebase Optimization</h4>
+                            <p class="text-gray-400 text-sm mt-1">Resolved lint errors, updated configurations, and cleaned up architecture for a smoother production release.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center text-green-400 shrink-0 mt-0.5">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg">Enhanced Documentation</h4>
+                            <p class="text-gray-400 text-sm mt-1">Redesigned the repository README and added comprehensive technology credits.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Downloads Section -->
+    <section id="download" class="py-24 relative z-10 overflow-hidden">
+        <!-- Download Unsplash Background -->
+        <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=2560&auto=format&fit=crop')] bg-cover bg-center opacity-10 pointer-events-none"></div>
+        <div class="absolute inset-0 z-0 bg-gradient-to-b from-[#070B14] via-transparent to-[#070B14] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 text-gradient">Choose Your Platform</h2>
+                <p class="text-gray-400">Available free for all major operating systems.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                
+                <!-- Windows Card -->
+                <div class="glass glass-panel rounded-3xl p-8 text-center flex flex-col items-center relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <i class="fab fa-windows text-5xl text-blue-400 mb-6 relative z-10"></i>
+                    <h3 class="text-2xl font-bold mb-2 relative z-10">Windows</h3>
+                    <p class="text-gray-400 mb-8 flex-grow relative z-10">Windows 10/11 (64-bit)</p>
+                    <a href="https://github.com/atishsharma/AT-Music-Player/releases/latest" target="_blank" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-xl transition-colors relative z-10 flex items-center justify-center gap-2">
+                        <i class="fas fa-file-zipper"></i> Download Zip
+                    </a>
+                </div>
+
+                <!-- macOS Card -->
+                <div class="glass glass-panel rounded-3xl p-8 text-center flex flex-col items-center relative overflow-hidden group">
+                    <div class="absolute inset-0 bg-gray-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <i class="fab fa-apple text-5xl text-gray-300 mb-6 relative z-10"></i>
+                    <h3 class="text-2xl font-bold mb-2 relative z-10">macOS</h3>
+                    <p class="text-gray-400 mb-8 flex-grow relative z-10">Available Now (Intel/Silicon)</p>
+                    <a href="https://github.com/atishsharma/AT-Music-Player/releases/latest" target="_blank" class="w-full glass hover:bg-white/20 text-white font-bold py-3 px-6 rounded-xl transition-colors relative z-10 flex items-center justify-center gap-2">
+                        <i class="fas fa-file-zipper"></i> Zip Installer
+                    </a>
+                </div>
+
+                <!-- Linux Card -->
+                <div class="glass glass-panel rounded-3xl p-8 text-center flex flex-col items-center relative overflow-hidden shadow-[0_0_30px_rgba(255,46,147,0.15)] group border-brand-pink/30">
+                    <div class="absolute top-0 right-0 bg-brand-pink text-white text-xs font-bold px-3 py-1 rounded-bl-xl z-20">Highly Optimized</div>
+                    <div class="absolute inset-0 bg-brand-pink/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <i class="fab fa-linux text-5xl text-brand-pink mb-4 relative z-10"></i>
+                    <h3 class="text-2xl font-bold mb-2 relative z-10">Linux</h3>
+                    <p class="text-gray-400 mb-6 text-sm relative z-10">Support Major Linux Distros</p>
+                    
+                    <!-- Modern Linux Links Grid -->
+                    <div class="grid grid-cols-2 gap-3 relative z-10 w-full mt-auto">
+                        <a href="https://github.com/atishsharma/AT-Music-Player/releases/latest" target="_blank" class="bg-gradient-to-r from-brand-pink to-brand-purple hover:opacity-90 text-white text-sm font-bold py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-brand-pink/20">
+                            <i class="fas fa-download text-xs"></i> AppImage
+                        </a>
+                        <a href="https://github.com/atishsharma/AT-Music-Player/releases/latest" target="_blank" class="glass bg-white/5 hover:bg-white/15 text-white text-sm font-bold py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-white/10">
+                            <i class="fas fa-download text-xs"></i> .deb
+                        </a>
+                        <a href="https://github.com/atishsharma/AT-Music-Player/releases/latest" target="_blank" class="glass bg-white/5 hover:bg-white/15 text-white text-sm font-bold py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-white/10">
+                            <i class="fas fa-download text-xs"></i> snap
+                        </a>
+                        <a href="https://github.com/atishsharma/AT-Music-Player/releases/latest" target="_blank" class="glass bg-white/5 hover:bg-white/15 text-white text-sm font-bold py-3 px-2 rounded-xl transition-all flex items-center justify-center gap-1.5 border border-white/10">
+                            <i class="fas fa-download text-xs"></i> .tar.gz
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- View All Releases Button -->
+            <div class="mt-12 flex justify-center relative z-10">
+                <a href="https://github.com/atishsharma/AT-Music-Player/releases" target="_blank" class="glass px-8 py-4 rounded-full font-bold text-gray-200 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+                    <i class="fas fa-code-branch"></i> View All Releases on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Credits Section -->
+    <section id="credits" class="py-20 relative z-10 bg-black/50 border-t border-white/5 overflow-hidden">
+        <!-- Credits Unsplash Background -->
+        <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=2560&auto=format&fit=crop')] bg-cover bg-center opacity-10 pointer-events-none"></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="glass glass-panel rounded-3xl p-8 md:p-12 text-center">
+                <img src="https://github.com/atishsharma.png" alt="Atish Ak Sharma" class="w-24 h-24 rounded-full mx-auto mb-6 border-4 border-brand-cyan shadow-[0_0_20px_rgba(8,247,254,0.3)]">
+                <h2 class="text-3xl font-bold mb-2">Designer - Atish Ak Sharma</h2>
+                <a href="https://atishaksharma.com" target="_blank" class="text-brand-cyan hover:underline mb-8 inline-block"><i class="fas fa-globe mr-2"></i>View Portfolio</a>
+                
+                <h3 class="text-xl font-bold mb-6 text-gray-300 border-b border-white/10 pb-4">Proudly Powered By Open Source</h3>
+                
+                <div class="flex flex-wrap justify-center gap-3">
+                    <span class="glass px-4 py-2 rounded-full text-sm flex items-center gap-2"><i class="fab fa-react text-blue-400"></i> React 18</span>
+                    <span class="glass px-4 py-2 rounded-full text-sm flex items-center gap-2"><i class="fas fa-bolt text-yellow-400"></i> Vite 5</span>
+                    <span class="glass px-4 py-2 rounded-full text-sm flex items-center gap-2"><i class="fas fa-atom text-blue-300"></i> Electron 30</span>
+                    <span class="glass px-4 py-2 rounded-full text-sm flex items-center gap-2"><i class="fab fa-js text-yellow-300"></i> Node.js & TypeScript</span>
+                    <span class="glass px-4 py-2 rounded-full text-sm flex items-center gap-2"><i class="fas fa-wind text-cyan-400"></i> Tailwind CSS</span>
+                    <span class="glass px-4 py-2 rounded-full text-sm">yt-dlp</span>
+                    <span class="glass px-4 py-2 rounded-full text-sm">LRCLib</span>
+                    <span class="glass px-4 py-2 rounded-full text-sm">Last.fm</span>
+                    <span class="glass px-4 py-2 rounded-full text-sm">MusicBrainz</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glass py-8 relative z-10 border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <img src="app_icon.png" alt="Logo" class="w-8 h-8 rounded-lg object-cover" onerror="this.src='https://via.placeholder.com/100/1e293b/FFFFFF?text=AT'">
+                <span class="font-bold text-gray-300">AT Music Player Pro</span>
+            </div>
+            <p class="text-gray-500 text-sm text-center md:text-left">
+                Distributed under the MIT License.<br> Copyright &copy; 2026 Atish Ak Sharma.
+            </p>
+            <div class="flex gap-4 text-gray-400">
+                <a href="https://github.com/atishsharma/AT-Music-Player" target="_blank" class="hover:text-white transition-colors text-xl"><i class="fab fa-github"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Fullscreen Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/90 backdrop-blur-xl opacity-0 transition-opacity duration-300">
+        
+        <!-- Close button top right -->
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 w-10 h-10 glass rounded-full flex items-center justify-center text-white hover:bg-red-500/80 hover:text-white transition-all shadow-lg text-lg z-50">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <!-- Main Image -->
+        <div class="relative w-full h-full max-w-6xl max-h-[85vh] p-4 flex items-center justify-center pointer-events-none">
+            <img id="lightbox-img" src="" alt="Gallery Image" class="max-w-full max-h-full object-contain rounded-xl shadow-2xl transition-transform duration-300 scale-95 pointer-events-auto" onclick="event.stopPropagation()">
+        </div>
+        
+        <!-- Click outside to close -->
+        <div class="absolute inset-0 z-0" onclick="closeLightbox()"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- Navigation Scroll Effect ---
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-lg', 'bg-slate-900/80');
+            } else {
+                nav.classList.remove('shadow-lg', 'bg-slate-900/80');
+            }
+        });
+
+        // --- Copy to Clipboard Command Logic ---
+        function copyCommand(text, btnElement) {
+            // Using a temporary textarea to securely copy using execCommand (due to iframe limitations)
+            const tempInput = document.createElement("textarea");
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            // Change icon briefly to indicate success
+            const originalIcon = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="fas fa-check text-green-400"></i>';
+            btnElement.classList.add('text-green-400');
+            
+            setTimeout(() => {
+                btnElement.innerHTML = originalIcon;
+                btnElement.classList.remove('text-green-400');
+            }, 2000);
+        }
+
+        // --- Lightbox Logic ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+
+        function openLightbox(src) {
+            lightboxImg.src = src;
+            lightbox.classList.remove('hidden');
+            // Small delay to allow display:block to apply before fading in
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+                lightboxImg.classList.remove('scale-95');
+                lightboxImg.classList.add('scale-100');
+            }, 10);
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+
+        function closeLightbox() {
+            lightbox.classList.add('opacity-0');
+            lightboxImg.classList.remove('scale-100');
+            lightboxImg.classList.add('scale-95');
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightboxImg.src = ''; // clear image source
+                document.body.style.overflow = 'auto'; // Restore scrolling
+            }, 300); // match transition duration
+        }
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('hidden') && e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+</html>
+
+
