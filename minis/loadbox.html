@@ -149,15 +149,25 @@
                 </div>
             </header>
 
-            <!-- Load Summary Stats -->
-            <div class="flex flex-col justify-center bg-gray-900 rounded-lg p-4 border border-gray-700 w-full max-w-sm shadow-inner shrink-0">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm text-gray-500 font-bold uppercase">System Load</span>
-                    <span id="stat-current" class="text-xl font-mono font-bold text-blue-400">0.0 A</span>
+            <!-- Toggle Button & Load Summary Stats container -->
+            <div class="flex flex-col w-full max-w-sm gap-3">
+                <!-- Mobile Toggle Button -->
+                <div class="w-full flex justify-end lg:hidden mb-[-0.5rem] z-10 relative">
+                    <button onclick="toggleViewMode()" class="bg-gray-800 border border-gray-600 text-blue-400 text-[11px] px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 active:scale-95 transition-all">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                        <span id="view-toggle-text">Realistic View</span>
+                    </button>
                 </div>
-                <div class="w-full bg-gray-800 rounded-full h-3 mb-1 mt-1 relative overflow-hidden border border-gray-700">
-                    <div id="load-bar" class="bg-blue-500 h-full transition-all duration-300" style="width: 0%"></div>
-                    <div class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white mix-blend-difference" id="load-percent">0% (Max 63A)</div>
+                
+                <div class="flex flex-col justify-center bg-gray-900 rounded-lg p-4 border border-gray-700 w-full shadow-inner shrink-0">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-sm text-gray-500 font-bold uppercase">System Load</span>
+                        <span id="stat-current" class="text-xl font-mono font-bold text-blue-400">0.0 A</span>
+                    </div>
+                    <div class="w-full bg-gray-800 rounded-full h-3 mb-1 mt-1 relative overflow-hidden border border-gray-700">
+                        <div id="load-bar" class="bg-blue-500 h-full transition-all duration-300" style="width: 0%"></div>
+                        <div class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white mix-blend-difference" id="load-percent">0% (Max 63A)</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -176,7 +186,9 @@
             <div class="mobile-card rounded-2xl p-5 border border-gray-700 relative overflow-hidden">
                 <div class="flex justify-between items-center z-10 relative">
                     <div class="flex items-center gap-3">
-                        <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-6 bg-white px-1 py-1 rounded object-contain">
+                        <div class="text-[12px] font-bold bg-white px-2 py-1 rounded shadow-sm flex items-center leading-none h-6">
+                            <span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span>
+                        </div>
                         <div>
                             <h2 class="text-lg font-bold text-white leading-tight">MAIN SUPPLY</h2>
                             <p class="text-xs text-gray-400">63A RCBO Protection</p>
@@ -218,7 +230,10 @@
                     <div class="text-sm font-bold text-white" id="mob-meter-v">0 V</div>
                     <div class="text-xs text-gray-500">Current</div>
                     <div class="text-sm font-bold text-blue-400" id="mob-meter-a">0.0 A</div>
-                    <div class="text-xs text-gray-500">Energy</div>
+                    <div class="text-xs text-gray-500 flex items-center justify-end gap-1">
+                        Energy 
+                        <button onclick="event.stopPropagation(); resetEnergy();" class="bg-red-500/20 text-red-400 hover:bg-red-500/40 px-1 rounded text-[8px] transition-colors" title="Reset Energy">RESET</button>
+                    </div>
                     <div class="text-sm font-bold text-green-400" id="mob-meter-kwh">0.00 <span class="text-[10px]">kWh</span></div>
                 </div>
             </div>
@@ -236,7 +251,7 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- DESKTOP DB VIEW (Hidden on Mobile)         -->
+        <!-- DESKTOP DB VIEW (Hidden on Mobile by default)-->
         <!-- ========================================== -->
         <!-- Interactive Wire Info Panel -->
         <div id="wire-info-panel" class="hidden w-full max-w-5xl mx-auto bg-gray-800 border-l-4 border-blue-500 text-white p-4 mb-4 rounded-lg shadow-xl z-50">
@@ -256,164 +271,161 @@
         </div>
 
         <!-- The DB Box Enclosure -->
-        <div class="db-enclosure rounded-xl p-4 lg:p-8 relative overflow-hidden mx-auto max-w-6xl w-full hidden lg:block">
+        <div id="desktop-view-container" class="db-enclosure rounded-xl p-4 lg:p-8 relative overflow-hidden mx-auto max-w-6xl w-full hidden lg:block">
             
             <!-- Metallic Box Labels -->
-            <div class="absolute top-2 right-4 text-gray-500 text-xs font-bold tracking-widest uppercase">Mains / Meter</div>
-            <div class="absolute top-2 left-4 text-gray-500 text-xs font-bold tracking-widest uppercase">Sub-Circuits</div>
+            <div class="absolute top-2 right-4 text-gray-500 text-xs font-bold tracking-widest uppercase z-10">Mains / Meter</div>
+            <div class="absolute top-2 left-4 text-gray-500 text-xs font-bold tracking-widest uppercase z-10">Sub-Circuits</div>
 
-            <!-- Scrollable DIN Rail Container -->
-            <div class="overflow-x-auto custom-scrollbar pb-6 pt-24 px-4 relative flex flex-col items-center min-w-[950px]">
-                
-                <!-- SVG Wiring Layer (Interactive) -->
-                <svg class="absolute top-0 left-0 w-full h-full z-0" style="pointer-events: auto;">
+            <!-- Touch Scrollable DB Container -->
+            <div class="w-full overflow-x-auto custom-scrollbar relative" style="touch-action: pan-x pan-y;">
+                <div class="relative min-w-[950px] w-max mx-auto pb-6 pt-24 px-4 flex flex-col items-center">
                     
-                    <!-- GRID to MAIN (Terminals precisely mapped to top of Main Breaker) -->
-                    <!-- Main L is at x=802, Main N is at x=882, Terminals top at y=108 -->
-                    <path id="path-grid-l" class="interactive-wire" d="M 802,0 L 802,108" fill="none" stroke="#ef4444" stroke-width="4" onclick="showWireInfo('grid-l')" />
-                    <path id="path-grid-n" class="interactive-wire" d="M 882,0 L 882,108" fill="none" stroke="#3b82f6" stroke-width="4" onclick="showWireInfo('grid-n')" />
-                    <text x="815" y="20" fill="#9ca3af" font-size="10" font-weight="bold" class="pointer-events-none tracking-widest">GRID IN</text>
-
-                    <!-- MAIN Load to METER Power -->
-                    <!-- Main Bottom N (882) -> Meter Top N (719) -->
-                    <path id="path-main-meter-n" class="interactive-wire" d="M 882,308 L 882,340 L 719,340 L 719,108" fill="none" stroke="#3b82f6" stroke-width="4" onclick="showWireInfo('main-meter-n')" />
-                    <!-- Main Bottom L (802) -> Meter Top L (757) -->
-                    <path id="path-main-meter-l" class="interactive-wire" d="M 802,308 L 802,330 L 757,330 L 757,108" fill="none" stroke="#4b5563" stroke-width="4" onclick="showWireInfo('main-meter-l')" />
-
-                    <!-- METER Load to NEUTRAL BAR & BUSBAR -->
-                    <!-- Meter Bottom N (719) -> Neutral Bar (Left side) -->
-                    <path id="path-meter-neutral" class="interactive-wire" d="M 719,308 L 719,350 L 150,350 L 150,50" fill="none" stroke="#3b82f6" stroke-width="4" stroke-dasharray="8,4" onclick="showWireInfo('meter-neutral')" />
-                    <!-- Meter Bottom L (757) -> Phase Busbar (Leftwards) -->
-                    <path id="path-meter-busbar" class="interactive-wire" d="M 757,308 L 757,316 L 700,316" fill="none" stroke="#4b5563" stroke-width="4" onclick="showWireInfo('meter-busbar')" />
-                </svg>
-
-                <!-- Neutral and Earth Bars (Top Left area) -->
-                <div class="absolute top-4 left-10 flex space-x-12 z-10 w-[650px]">
-                    <!-- Neutral Bar -->
-                    <div class="flex flex-col items-center">
-                        <div class="text-blue-700 font-bold text-[10px] mb-1 cursor-help hover:text-blue-500" onclick="showWireInfo('neutral-bar')">COMMON NEUTRAL LINK</div>
-                        <div class="w-64 h-3 bg-blue-300 rounded-sm border border-blue-500 shadow-sm flex justify-around items-center px-2 cursor-pointer hover:bg-blue-200 transition-colors" onclick="showWireInfo('neutral-bar')">
-                            <div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
-                        </div>
-                    </div>
-                    <!-- Earth Bar -->
-                    <div class="flex flex-col items-center">
-                        <div class="text-green-700 font-bold text-[10px] mb-1 cursor-help hover:text-green-500" onclick="showWireInfo('earth-bar')">COMMON EARTH LINK</div>
-                        <div class="w-64 h-3 bg-green-500 rounded-sm border border-green-700 shadow-sm flex justify-around items-center px-2 cursor-pointer hover:bg-green-400 transition-colors" onclick="showWireInfo('earth-bar')">
-                            <div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div>
-                        </div>
-                        <div class="w-2 h-4 bg-green-500 repeating-linear-gradient border-x border-green-700 mt-0"></div>
-                        <div class="text-[8px] text-gray-600 font-bold">TO PIT</div>
-                    </div>
-                    
-                    <!-- Earth Fault Test Button -->
-                    <div class="flex flex-col items-center justify-center ml-4 pl-8 border-l border-gray-600">
-                        <button onclick="simulateEarthFault()" class="bg-yellow-500 hover:bg-yellow-400 text-yellow-900 font-bold text-xs px-4 py-2 rounded shadow-[0_4px_0_#b45309] active:translate-y-1 active:shadow-[0_0px_0_#b45309] transition-all flex items-center gap-1 group">
-                            <svg class="w-4 h-4 group-hover:animate-ping absolute opacity-50 hidden group-hover:block" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd"></path></svg>
-                            <svg class="w-4 h-4 relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd"></path></svg>
-                            TEST EARTHING
-                        </button>
-                    </div>
-                </div>
-
-                <!-- The DIN Rail Background -->
-                <div class="din-rail absolute left-2 right-2 h-10 top-[170px] z-0 rounded-sm"></div>
-
-                <!-- Busbar Comb (Behind MCBs, connects from Meter) -->
-                <!-- Z-0 keeps it behind the MCBs. Top 285px places it right at the bottom terminals -->
-                <div class="absolute top-[285px] left-[32px] w-[670px] h-6 busbar-copper z-0 flex items-start overflow-hidden rounded-sm cursor-pointer hover:brightness-110 shadow-lg border-b border-orange-900" onclick="showWireInfo('busbar')">
-                    <!-- Green live indicator over the copper -->
-                    <div id="busbar-glow" class="w-full h-1 bg-gray-600 transition-colors duration-300"></div>
-                </div>
-
-                <!-- Components Row (Single Line, Z-10 so they overlay the Busbar) -->
-                <div class="flex gap-[2px] z-10 relative items-end w-full pl-4 mt-2">
-                    
-                    <!-- 3. Sub-Circuits (10 MCBs) - ON THE LEFT -->
-                    <div class="flex gap-[2px] relative z-10 mr-4" id="mcb-rack">
-                        <!-- MCBs injected via JS -->
-                    </div>
-
-                    <!-- 2. Wi-Fi Smart Meter (1P-JT-63) -->
-                    <div class="mcb-body w-16 h-52 rounded-md flex flex-col p-1 items-center relative mr-2 hover:border-blue-300 transition-colors" onclick="showWireInfo('smart-meter')">
-                        <!-- Top Terminals -->
-                        <div class="w-full flex justify-between px-2 mt-1 mb-1">
-                            <div class="w-2.5 h-2.5 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1 h-1 bg-gray-400 rounded-full"></div></div>
-                            <div class="w-2.5 h-2.5 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1 h-1 bg-gray-400 rounded-full"></div></div>
-                        </div>
-                        <div class="w-full flex justify-between px-2 text-[6px] font-bold text-gray-500"><span>N</span><span>L</span></div>
+                    <!-- SVG Wiring Layer (Interactive) -->
+                    <svg class="absolute top-0 left-0 w-full h-full z-0" style="pointer-events: auto;">
                         
-                        <div class="flex flex-col items-center justify-center mb-2 mt-1 w-full">
-                            <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-2.5 mb-0.5 object-contain max-w-[90%]" onerror="this.style.display='none'; document.getElementById('meter-logo-fallback').style.display='block';">
-                            <div id="meter-logo-fallback" style="display:none;" class="text-[7px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
-                            <div class="text-[7px] text-gray-800 font-bold text-center leading-tight">1P-JT-63</div>
-                        </div>
-                        
-                        <!-- Mini LCD Screen -->
-                        <div class="lcd-screen w-14 h-16 rounded mb-2 flex flex-col items-center justify-center p-0.5 pointer-events-none">
-                            <div class="text-[6px] opacity-60 absolute top-1 right-1">kW.h</div>
-                            <div id="meter-kwh" class="text-[10px] font-bold mt-1">00.00</div>
-                            <div class="w-full border-t border-black/20 my-[2px]"></div>
-                            <div class="flex w-full justify-between px-1">
-                                <div id="meter-v" class="text-[7px]">0V</div>
-                                <div id="meter-a" class="text-[7px]">0.0A</div>
+                        <!-- GRID to MAIN (Terminals precisely mapped to top of Main Breaker) -->
+                        <path id="path-grid-l" class="interactive-wire" d="M 802,0 L 802,108" fill="none" stroke="#ef4444" stroke-width="4" onclick="showWireInfo('grid-l')" />
+                        <path id="path-grid-n" class="interactive-wire" d="M 882,0 L 882,108" fill="none" stroke="#3b82f6" stroke-width="4" onclick="showWireInfo('grid-n')" />
+                        <text x="815" y="20" fill="#9ca3af" font-size="10" font-weight="bold" class="pointer-events-none tracking-widest">GRID IN</text>
+
+                        <!-- MAIN Load to METER Power -->
+                        <path id="path-main-meter-n" class="interactive-wire" d="M 882,308 L 882,340 L 719,340 L 719,108" fill="none" stroke="#3b82f6" stroke-width="4" onclick="showWireInfo('main-meter-n')" />
+                        <path id="path-main-meter-l" class="interactive-wire" d="M 802,308 L 802,330 L 757,330 L 757,108" fill="none" stroke="#4b5563" stroke-width="4" onclick="showWireInfo('main-meter-l')" />
+
+                        <!-- METER Load to NEUTRAL BAR & BUSBAR -->
+                        <path id="path-meter-neutral" class="interactive-wire" d="M 719,308 L 719,350 L 150,350 L 150,50" fill="none" stroke="#3b82f6" stroke-width="4" stroke-dasharray="8,4" onclick="showWireInfo('meter-neutral')" />
+                        <path id="path-meter-busbar" class="interactive-wire" d="M 757,308 L 757,316 L 700,316" fill="none" stroke="#4b5563" stroke-width="4" onclick="showWireInfo('meter-busbar')" />
+                    </svg>
+
+                    <!-- Neutral and Earth Bars (Top Left area) -->
+                    <div class="absolute top-4 left-10 flex space-x-12 z-10 w-[650px]">
+                        <!-- Neutral Bar -->
+                        <div class="flex flex-col items-center">
+                            <div class="text-blue-700 font-bold text-[10px] mb-1 cursor-help hover:text-blue-500" onclick="showWireInfo('neutral-bar')">COMMON NEUTRAL LINK</div>
+                            <div class="w-64 h-3 bg-blue-300 rounded-sm border border-blue-500 shadow-sm flex justify-around items-center px-2 cursor-pointer hover:bg-blue-200 transition-colors" onclick="showWireInfo('neutral-bar')">
+                                <div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
                             </div>
                         </div>
-
-                        <!-- Wi-Fi LED -->
-                        <div class="flex items-center space-x-1 mb-2">
-                            <svg class="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.906 14.142 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
-                            <div id="wifi-led" class="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
-                        </div>
-
-                        <!-- Power Button / App Launcher -->
-                        <div class="w-7 h-7 rounded-full border-2 border-gray-400 flex items-center justify-center text-gray-600 mt-auto mb-2 bg-gray-100 shadow-sm hover:bg-blue-100 hover:text-blue-600 hover:border-blue-400 transition-colors cursor-pointer z-20" onclick="event.stopPropagation(); openAppModal();" title="Open Mobile App View">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <!-- Earth Bar -->
+                        <div class="flex flex-col items-center">
+                            <div class="text-green-700 font-bold text-[10px] mb-1 cursor-help hover:text-green-500" onclick="showWireInfo('earth-bar')">COMMON EARTH LINK</div>
+                            <div class="w-64 h-3 bg-green-500 rounded-sm border border-green-700 shadow-sm flex justify-around items-center px-2 cursor-pointer hover:bg-green-400 transition-colors" onclick="showWireInfo('earth-bar')">
+                                <div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div>
+                            </div>
+                            <div class="w-2 h-4 bg-green-500 repeating-linear-gradient border-x border-green-700 mt-0"></div>
+                            <div class="text-[8px] text-gray-600 font-bold">TO PIT</div>
                         </div>
                         
-                        <div class="w-full flex justify-between px-2 text-[6px] font-bold text-gray-500 mb-0.5"><span>N</span><span>L</span></div>
+                        <!-- Earth Fault Test Button -->
+                        <div class="flex flex-col items-center justify-center ml-4 pl-8 border-l border-gray-600">
+                            <button onclick="simulateEarthFault()" class="bg-yellow-500 hover:bg-yellow-400 text-yellow-900 font-bold text-xs px-4 py-2 rounded shadow-[0_4px_0_#b45309] active:translate-y-1 active:shadow-[0_0px_0_#b45309] transition-all flex items-center gap-1 group">
+                                <svg class="w-4 h-4 group-hover:animate-ping absolute opacity-50 hidden group-hover:block" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd"></path></svg>
+                                <svg class="w-4 h-4 relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd"></path></svg>
+                                TEST EARTHING
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- 1. Main Breaker (AM63LE) - ON THE RIGHT -->
-                    <div class="mcb-body w-32 h-52 rounded-md flex flex-col p-2 relative cursor-pointer border-l-4 border-l-gray-400 hover:border-gray-500" onclick="toggleMain()">
-                        <div class="flex flex-col items-center justify-center mb-1 w-full">
-                            <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-3.5 mb-1 object-contain max-w-[80%]" onerror="this.style.display='none'; document.getElementById('main-logo-fallback').style.display='block';">
-                            <div id="main-logo-fallback" style="display:none;" class="text-[10px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
-                            <div class="text-[10px] text-gray-800 font-bold text-center leading-tight">AM63LE <span class="text-sm">63A</span></div>
-                        </div>
-                        <div class="text-[8px] text-gray-600 text-center mb-2">230V~ 50Hz</div>
+                    <!-- The DIN Rail Background -->
+                    <div class="din-rail absolute left-2 right-2 h-10 top-[170px] z-0 rounded-sm"></div>
+
+                    <!-- Busbar Comb (Behind MCBs, connects from Meter) -->
+                    <div class="absolute top-[285px] left-[32px] w-[670px] h-6 busbar-copper z-0 flex items-start overflow-hidden rounded-sm cursor-pointer hover:brightness-110 shadow-lg border-b border-orange-900" onclick="showWireInfo('busbar')">
+                        <div id="busbar-glow" class="w-full h-1 bg-gray-600 transition-colors duration-300"></div>
+                    </div>
+
+                    <!-- Components Row (Single Line, Z-10 so they overlay the Busbar) -->
+                    <div class="flex gap-[2px] z-10 relative items-end w-full pl-4 mt-2">
                         
-                        <!-- Test Button -->
-                        <div class="absolute top-12 right-2 flex flex-col items-center z-20">
-                            <div class="w-4 h-4 bg-yellow-400 rounded-sm border border-yellow-600 mt-1 shadow-inner active:scale-95 transition-transform hover:bg-yellow-300 cursor-pointer" onclick="event.stopPropagation(); triggerTrip();"></div>
-                            <span class="text-[7px] text-gray-700 mt-1 font-bold">Test Monthly</span>
+                        <!-- 3. Sub-Circuits (10 MCBs) - ON THE LEFT -->
+                        <div class="flex gap-[2px] relative z-10 mr-4" id="mcb-rack">
+                            <!-- MCBs injected via JS -->
                         </div>
 
-                        <div class="absolute top-12 left-4 w-4 h-2.5 bg-red-500 rounded-sm shadow-inner" id="main-indicator"></div>
-
-                        <!-- Top Terminals (L, N) -->
-                        <div class="absolute top-1 left-6 w-3 h-3 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full"></div></div>
-                        <div class="absolute top-1 right-6 w-3 h-3 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full"></div></div>
-                        <div class="absolute top-4 left-6 text-[8px] font-bold text-gray-500">L</div>
-                        <div class="absolute top-4 right-6 text-[8px] font-bold text-gray-500">N</div>
-
-                        <!-- Switches -->
-                        <div class="mt-auto mb-6 flex justify-center gap-[2px]">
-                            <div class="w-12 h-14 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective">
-                                <div id="main-lever-1" class="lever off absolute bottom-0 left-0 w-full h-11 bg-blue-600 rounded-t-md border border-blue-800 shadow-[0_-2px_4px_rgba(0,0,0,0.3)] pointer-events-none"></div>
+                        <!-- 2. Wi-Fi Smart Meter (1P-JT-63) -->
+                        <div class="mcb-body w-16 h-52 rounded-md flex flex-col p-1 items-center relative mr-2 hover:border-blue-300 transition-colors" onclick="showWireInfo('smart-meter')">
+                            <!-- Top Terminals -->
+                            <div class="w-full flex justify-between px-2 mt-1 mb-1">
+                                <div class="w-2.5 h-2.5 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1 h-1 bg-gray-400 rounded-full"></div></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1 h-1 bg-gray-400 rounded-full"></div></div>
                             </div>
-                            <div class="w-12 h-14 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective">
-                                <div id="main-lever-2" class="lever off absolute bottom-0 left-0 w-full h-11 bg-blue-600 rounded-t-md border border-blue-800 shadow-[0_-2px_4px_rgba(0,0,0,0.3)] pointer-events-none"></div>
+                            <div class="w-full flex justify-between px-2 text-[6px] font-bold text-gray-500"><span>N</span><span>L</span></div>
+                            
+                            <div class="flex flex-col items-center justify-center mb-2 mt-1 w-full">
+                                <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-2.5 mb-0.5 object-contain max-w-[90%]" onerror="this.style.display='none'; document.getElementById('meter-logo-fallback').style.display='block';">
+                                <div id="meter-logo-fallback" style="display:none;" class="text-[7px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
+                                <div class="text-[7px] text-gray-800 font-bold text-center leading-tight">1P-JT-63</div>
                             </div>
-                            <div id="main-gang" class="absolute bottom-[34px] left-1/2 transform -translate-x-1/2 w-[98px] h-3.5 bg-blue-700 rounded-sm transition-transform duration-200 z-10 translate-y-[14px] pointer-events-none"></div>
+                            
+                            <!-- Mini LCD Screen -->
+                            <div class="lcd-screen w-14 h-16 rounded mb-1 flex flex-col items-center justify-center p-0.5 pointer-events-none">
+                                <div class="text-[6px] opacity-60 absolute top-1 right-1">kW.h</div>
+                                <div id="meter-kwh" class="text-[10px] font-bold mt-1">00.00</div>
+                                <div class="w-full border-t border-black/20 my-[2px]"></div>
+                                <div class="flex w-full justify-between px-1">
+                                    <div id="meter-v" class="text-[7px]">0V</div>
+                                    <div id="meter-a" class="text-[7px]">0.0A</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Reset Button -->
+                            <button onclick="event.stopPropagation(); resetEnergy();" class="text-[6px] bg-red-100 border border-red-300 text-red-600 px-1 rounded shadow-sm hover:bg-red-200 active:scale-95 mb-1 z-20 transition-colors" title="Reset Energy">RESET</button>
+
+                            <!-- Wi-Fi LED -->
+                            <div class="flex items-center space-x-1 mb-2">
+                                <svg class="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.906 14.142 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
+                                <div id="wifi-led" class="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
+                            </div>
+
+                            <!-- Power Button / App Launcher (Wi-Fi Icon) -->
+                            <div class="w-7 h-7 rounded-full border-2 border-gray-400 flex items-center justify-center text-gray-600 mt-auto mb-2 bg-gray-100 shadow-sm hover:bg-blue-100 hover:text-blue-600 hover:border-blue-400 transition-colors cursor-pointer z-20" onclick="event.stopPropagation(); openAppModal();" title="Open Mobile App View">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.906 14.142 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
+                            </div>
+                            
+                            <div class="w-full flex justify-between px-2 text-[6px] font-bold text-gray-500 mb-0.5"><span>N</span><span>L</span></div>
                         </div>
-                        <div class="absolute bottom-1 left-4 text-[9px] font-bold text-gray-500">L</div>
-                        <div class="absolute bottom-1 right-4 text-[9px] font-bold text-gray-500">N</div>
+
+                        <!-- 1. Main Breaker (AM63LE) - ON THE RIGHT -->
+                        <div class="mcb-body w-32 h-52 rounded-md flex flex-col p-2 relative cursor-pointer border-l-4 border-l-gray-400 hover:border-gray-500" onclick="toggleMain()">
+                            <div class="flex flex-col items-center justify-center mb-1 w-full">
+                                <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-3.5 mb-1 object-contain max-w-[80%]" onerror="this.style.display='none'; document.getElementById('main-logo-fallback').style.display='block';">
+                                <div id="main-logo-fallback" style="display:none;" class="text-[10px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
+                                <div class="text-[10px] text-gray-800 font-bold text-center leading-tight">AM63LE <span class="text-sm">63A</span></div>
+                            </div>
+                            <div class="text-[8px] text-gray-600 text-center mb-2">230V~ 50Hz</div>
+                            
+                            <!-- Test Button -->
+                            <div class="absolute top-12 right-2 flex flex-col items-center z-20">
+                                <div class="w-4 h-4 bg-yellow-400 rounded-sm border border-yellow-600 mt-1 shadow-inner active:scale-95 transition-transform hover:bg-yellow-300 cursor-pointer" onclick="event.stopPropagation(); triggerTrip();"></div>
+                                <span class="text-[7px] text-gray-700 mt-1 font-bold">Test Monthly</span>
+                            </div>
+
+                            <div class="absolute top-12 left-4 w-4 h-2.5 bg-red-500 rounded-sm shadow-inner" id="main-indicator"></div>
+
+                            <!-- Top Terminals (L, N) -->
+                            <div class="absolute top-1 left-6 w-3 h-3 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full"></div></div>
+                            <div class="absolute top-1 right-6 w-3 h-3 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full"></div></div>
+                            <div class="absolute top-4 left-6 text-[8px] font-bold text-gray-500">L</div>
+                            <div class="absolute top-4 right-6 text-[8px] font-bold text-gray-500">N</div>
+
+                            <!-- Switches -->
+                            <div class="mt-auto mb-6 flex justify-center gap-[2px]">
+                                <div class="w-12 h-14 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective">
+                                    <div id="main-lever-1" class="lever off absolute bottom-0 left-0 w-full h-11 bg-blue-600 rounded-t-md border border-blue-800 shadow-[0_-2px_4px_rgba(0,0,0,0.3)] pointer-events-none"></div>
+                                </div>
+                                <div class="w-12 h-14 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective">
+                                    <div id="main-lever-2" class="lever off absolute bottom-0 left-0 w-full h-11 bg-blue-600 rounded-t-md border border-blue-800 shadow-[0_-2px_4px_rgba(0,0,0,0.3)] pointer-events-none"></div>
+                                </div>
+                                <div id="main-gang" class="absolute bottom-[34px] left-1/2 transform -translate-x-1/2 w-[98px] h-3.5 bg-blue-700 rounded-sm transition-transform duration-200 z-10 translate-y-[14px] pointer-events-none"></div>
+                            </div>
+                            <div class="absolute bottom-1 left-4 text-[9px] font-bold text-gray-500">L</div>
+                            <div class="absolute bottom-1 right-4 text-[9px] font-bold text-gray-500">N</div>
+                        </div>
+
                     </div>
-
                 </div>
             </div>
-            
         </div>
 
         <!-- ========================================== -->
@@ -522,8 +534,9 @@
                     <div class="flex justify-between items-center">
                         <div class="flex items-center gap-2">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-6 bg-white px-2 py-1 rounded object-contain" onerror="this.style.display='none'; document.getElementById('app-logo-fallback').style.display='block';">
-                            <h2 id="app-logo-fallback" style="display:none;" class="text-lg font-bold tracking-wider">amiciSmart</h2>
+                            <div class="text-[14px] font-bold bg-white px-2 py-0.5 rounded shadow-sm flex items-center leading-none">
+                                <span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span>
+                            </div>
                         </div>
                         <button onclick="closeAppModal()" class="text-white bg-white/20 hover:bg-white/30 rounded-full w-8 h-8 flex items-center justify-center font-bold transition-colors z-30 relative">✕</button>
                     </div>
@@ -579,9 +592,10 @@
                             <span class="text-xl font-bold text-gray-800" id="app-kwh">0.00</span>
                             <span class="text-xs text-gray-500">kW.h</span>
                         </div>
-                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        </div>
+                        <button onclick="resetEnergy()" class="flex flex-col items-center justify-center p-2 bg-red-50 text-red-500 hover:bg-red-100 hover:text-red-600 rounded-xl transition-colors active:scale-95 shadow-sm border border-red-100" title="Reset Energy Counter">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            <span class="text-[8px] font-bold mt-1 uppercase tracking-wide">Reset</span>
+                        </button>
                     </div>
 
                     <!-- Circuits Header -->
@@ -706,6 +720,11 @@
         function closeWireInfo() {
             document.getElementById('wire-info-panel').classList.add('hidden');
         }
+        
+        function resetEnergy() {
+            accumulatedKwh = 0;
+            updateDisplay();
+        }
 
         // Initialize App
         function init() {
@@ -714,6 +733,28 @@
             updateDisplay();
             setInterval(simulationLoop, 1000);
         }
+
+        // View Mode Toggle (Mobile vs Realistic Desktop)
+        let showDesktopOnMobile = false;
+
+        function toggleViewMode() {
+            showDesktopOnMobile = !showDesktopOnMobile;
+            const mobView = document.getElementById('mobile-view');
+            const deskView = document.getElementById('desktop-view-container');
+            const btnText = document.getElementById('view-toggle-text');
+
+            if (showDesktopOnMobile) {
+                mobView.className = 'w-full max-w-md mx-auto space-y-4 hidden';
+                deskView.className = 'db-enclosure rounded-xl p-4 lg:p-8 relative overflow-hidden mx-auto max-w-6xl w-full block';
+                btnText.innerText = "Mobile View";
+            } else {
+                mobView.className = 'w-full max-w-md mx-auto space-y-4 block lg:hidden';
+                deskView.className = 'db-enclosure rounded-xl p-4 lg:p-8 relative overflow-hidden mx-auto max-w-6xl w-full hidden lg:block';
+                btnText.innerText = "Realistic View";
+            }
+            updateDisplay();
+        }
+
 
         // Render Desktop Realistic MCBs
         function renderDesktopMCBs() {
