@@ -220,7 +220,7 @@
             <div class="mobile-card rounded-2xl p-4 border border-gray-700 flex justify-between items-center cursor-pointer hover:border-blue-500 transition-colors" onclick="openAppModal()">
                 <div>
                     <h3 class="text-xs text-blue-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <svg id="mob-meter-icon" class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
                         Live Telemetry
                     </h3>
                     <div class="flex items-baseline gap-1">
@@ -356,8 +356,7 @@
                             <div class="w-full flex justify-between px-2 text-[6px] font-bold text-gray-500"><span>N</span><span>L</span></div>
                             
                             <div class="flex flex-col items-center justify-center mb-2 mt-1 w-full">
-                                <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-2.5 mb-0.5 object-contain max-w-[90%]" onerror="this.style.display='none'; document.getElementById('meter-logo-fallback').style.display='block';">
-                                <div id="meter-logo-fallback" style="display:none;" class="text-[7px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
+                                <div class="text-[7px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
                                 <div class="text-[7px] text-gray-800 font-bold text-center leading-tight">1P-JT-63</div>
                             </div>
                             
@@ -381,9 +380,9 @@
                                 <div id="wifi-led" class="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
                             </div>
 
-                            <!-- Power Button / App Launcher (Wi-Fi Icon) -->
-                            <div class="w-7 h-7 rounded-full border-2 border-gray-400 flex items-center justify-center text-gray-600 mt-auto mb-2 bg-gray-100 shadow-sm hover:bg-blue-100 hover:text-blue-600 hover:border-blue-400 transition-colors cursor-pointer z-20" onclick="event.stopPropagation(); openAppModal();" title="Open Mobile App View">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.906 14.142 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
+                            <!-- Power Button (Wi-Fi App Launcher) -->
+                            <div id="meter-power-btn" class="w-7 h-7 rounded-full border-2 border-red-400 flex items-center justify-center text-red-500 mt-auto mb-2 bg-red-50 shadow-sm transition-all duration-300 cursor-pointer z-20 active:scale-90" onclick="event.stopPropagation(); openAppModal();" title="Open Mobile App View">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>
                             </div>
                             
                             <div class="w-full flex justify-between px-2 text-[6px] font-bold text-gray-500 mb-0.5"><span>N</span><span>L</span></div>
@@ -392,8 +391,7 @@
                         <!-- 1. Main Breaker (AM63LE) - ON THE RIGHT -->
                         <div class="mcb-body w-32 h-52 rounded-md flex flex-col p-2 relative cursor-pointer border-l-4 border-l-gray-400 hover:border-gray-500" onclick="toggleMain()">
                             <div class="flex flex-col items-center justify-center mb-1 w-full mt-6">
-                                <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-3.5 mb-1 object-contain max-w-[80%]" onerror="this.style.display='none'; document.getElementById('main-logo-fallback').style.display='block';">
-                                <div id="main-logo-fallback" style="display:none;" class="text-[10px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
+                                <div class="text-[10px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
                                 <div class="text-[10px] text-gray-800 font-bold text-center leading-tight">AM63LE <span class="text-sm">63A</span></div>
                             </div>
                             <div class="text-[8px] text-gray-600 text-center mb-2">230V~ 50Hz</div>
@@ -1206,21 +1204,44 @@
             const ampStr = mainPowerOn ? `${totalCurrent.toFixed(1)}A` : `0.0A`;
             const kwhStr = accumulatedKwh.toFixed(2);
             
-            // Desktop Smart Meter
+            // Desktop Smart Meter UI logic
             const dKwh = document.getElementById('meter-kwh');
+            const meterPwrBtn = document.getElementById('meter-power-btn');
             if(dKwh) {
                 dKwh.innerText = mainPowerOn ? kwhStr : "00.00";
                 document.getElementById('meter-v').innerText = volStr;
                 document.getElementById('meter-a').innerText = ampStr;
             }
+            
+            // Realistic view button color logic
+            if (meterPwrBtn) {
+                if (mainPowerOn) {
+                    meterPwrBtn.classList.replace('text-red-500', 'text-green-500');
+                    meterPwrBtn.classList.replace('border-red-400', 'border-green-400');
+                    meterPwrBtn.classList.replace('bg-red-50', 'bg-green-50');
+                } else {
+                    meterPwrBtn.classList.replace('text-green-500', 'text-red-500');
+                    meterPwrBtn.classList.replace('border-green-400', 'border-red-400');
+                    meterPwrBtn.classList.replace('bg-green-50', 'bg-red-50');
+                }
+            }
 
-            // Mobile Dashboard Meter
+            // Mobile Dashboard Meter UI logic
             const mWatt = document.getElementById('mob-meter-w');
+            const mMobIcon = document.getElementById('mob-meter-icon');
             if (mWatt) {
                 mWatt.innerText = Math.round(powerW).toLocaleString();
                 document.getElementById('mob-meter-v').innerText = volStr;
                 document.getElementById('mob-meter-a').innerText = ampStr;
                 document.getElementById('mob-meter-kwh').innerHTML = `${kwhStr} <span class="text-[10px]">kWh</span>`;
+            }
+            
+            if (mMobIcon) {
+                if (mainPowerOn) {
+                    mMobIcon.classList.replace('text-red-500', 'text-green-500');
+                } else {
+                    mMobIcon.classList.replace('text-green-500', 'text-red-500');
+                }
             }
 
             // Global Stats Box (Shared element)
