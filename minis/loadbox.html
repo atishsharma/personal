@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atish's Home Electrical Box</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Interactive web-based Single Phase Distribution Board (DB) Simulator. Monitor electrical loads, toggle MCBs, and visualize power flow in real-time.">
+    <meta name="keywords" content="Electrical, DB Board, MCB, Simulator, Smart Home, Distribution Board, RCBO, Wiring, Atish, amicismart">
+    <meta name="author" content="Atish Ak Sharma">
+    
+    <!-- Custom Favicon -->
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #1a1a2e;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .lcd-screen {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #8bb381;
+            color: #111;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.4);
+        }
+
+        /* Switch Lever Styles */
+        .lever {
+            transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform-origin: bottom center;
+        }
+        .lever.off { transform: rotateX(45deg); }
+        .lever.on { transform: rotateX(-45deg); }
+
+        .mcb-body {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.4), -1px -1px 2px rgba(255,255,255,0.8);
+            border: 1px solid #d1d5db;
+        }
+
+        /* Enclosure box style */
+        .db-enclosure {
+            background-color: #e5e7eb;
+            box-shadow: inset 5px 5px 15px rgba(0,0,0,0.1), inset -5px -5px 15px rgba(255,255,255,0.5), 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            border: 2px solid #9ca3af;
+        }
+
+        /* Wiring Styles */
+        .wire { transition: background-color 0.3s ease, box-shadow 0.3s ease; }
+        .wire-live-active { background-color: #ef4444; box-shadow: 0 0 8px #ef4444; }
+        .wire-live-dead { background-color: #4b5563; }
+        .wire-neutral { background-color: #3b82f6; }
+        .wire-earth { background-color: #22c55e; }
+        
+        .busbar-copper {
+            background: linear-gradient(to bottom, #b87333, #8a5a2b);
+            border-bottom: 2px solid #5a3a1b;
+        }
+
+        /* 3D DIN Rail */
+        .din-rail {
+            background: linear-gradient(to bottom, #9ca3af 0%, #d1d5db 20%, #9ca3af 80%, #6b7280 100%);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Interactive Wire Styles */
+        .interactive-wire {
+            cursor: pointer;
+            transition: stroke 0.3s ease, filter 0.3s ease, stroke-width 0.2s;
+        }
+        .interactive-wire:hover {
+            stroke-width: 6;
+            filter: brightness(1.2) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+        }
+        
+        /* Main SVG Wire Flow Animation */
+        @keyframes dash {
+            to { stroke-dashoffset: -20; }
+        }
+        .svg-flow {
+            stroke-dasharray: 8 8;
+            animation: dash 0.4s linear infinite;
+        }
+
+        /* Sub-circuit Load Wire Flow (Upwards) */
+        @keyframes flow-up {
+            from { background-position: 0 100%; }
+            to { background-position: 0 0; }
+        }
+        .wire-flow {
+            background-image: linear-gradient(to top, rgba(255,255,255,0.8) 50%, transparent 50%);
+            background-size: 100% 10px;
+            animation: flow-up 0.3s linear infinite;
+        }
+
+        /* Custom scrollbar for the DB box */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #374151; 
+            border-radius: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #6b7280; 
+            border-radius: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-8 px-4 relative">
+
+    <div class="max-w-full w-full px-2 lg:px-8 flex-grow">
+        
+        <!-- Header & Stats Row -->
+        <div class="flex flex-col lg:flex-row justify-between items-center mb-8 gap-6">
+            <header class="text-center lg:text-left flex items-center justify-center lg:justify-start">
+                <!-- Animated Circuit Logo covering both text lines -->
+                <svg class="w-16 h-16 mr-4 flex-shrink-0" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="80" height="80" rx="15" stroke="#374151" stroke-width="4" fill="#111827"/>
+                    <path d="M20 50h25M50 20v25M50 55v25M55 50h25" stroke="#3b82f6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="svg-flow"/>
+                    <circle cx="50" cy="50" r="10" fill="#1f2937" stroke="#ef4444" stroke-width="4"/>
+                    <circle cx="20" cy="50" r="4" fill="#22c55e" class="animate-pulse" style="animation-delay: 0.1s;"/>
+                    <circle cx="80" cy="50" r="4" fill="#eab308" class="animate-pulse" style="animation-delay: 0.5s;"/>
+                    <circle cx="50" cy="20" r="4" fill="#3b82f6" class="animate-pulse" style="animation-delay: 0.3s;"/>
+                    <circle cx="50" cy="80" r="4" fill="#a855f7" class="animate-pulse" style="animation-delay: 0.7s;"/>
+                </svg>
+                <div>
+                    <h1 class="text-3xl md:text-4xl font-bold text-white mb-1 tracking-wider">Atish's Home Electrical Box</h1>
+                    <p class="text-gray-400">Single Phase • 13-Module Enclosure</p>
+                </div>
+            </header>
+
+            <!-- Load Summary Stats -->
+            <div class="flex flex-col justify-center bg-gray-900 rounded-lg p-4 border border-gray-700 w-full max-w-sm shadow-inner shrink-0">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm text-gray-500 font-bold uppercase">System Load</span>
+                    <span id="stat-current" class="text-xl font-mono font-bold text-blue-400">0.0 A</span>
+                </div>
+                <div class="w-full bg-gray-800 rounded-full h-3 mb-1 mt-1 relative overflow-hidden border border-gray-700">
+                    <div id="load-bar" class="bg-blue-500 h-full transition-all duration-300" style="width: 0%"></div>
+                    <div class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white mix-blend-difference" id="load-percent">0% (Max 63A)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warning Banner -->
+        <div id="trip-warning" class="w-full max-w-5xl mx-auto bg-red-600 text-white text-center py-2 font-bold tracking-widest hidden rounded-t-lg shadow-lg mb-2 z-[60] relative">
+            ⚠️ OVERLOAD DETECTED - MAIN BREAKER TRIPPED ⚠️
+        </div>
+
+        <!-- Interactive Wire Info Panel -->
+        <div id="wire-info-panel" class="w-full max-w-5xl mx-auto bg-gray-800 border-l-4 border-blue-500 text-white p-4 mb-4 rounded-lg hidden shadow-xl z-50">
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <h3 id="wire-info-title" class="text-xl font-bold text-blue-400 mb-1 tracking-wide">Wire Connection</h3>
+                    <p id="wire-info-desc" class="text-sm text-gray-300">Description goes here.</p>
+                    <div class="mt-3 text-xs font-mono bg-gray-900 p-2 rounded inline-block border border-gray-700">
+                        Live Status: <span id="wire-info-status" class="font-bold">ACTIVE</span>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-400 border-t border-gray-700 pt-2">
+                        <strong>Gauge/Thickness:</strong> <span id="wire-info-thickness" class="text-blue-300 font-mono"></span>
+                    </div>
+                </div>
+                <button onclick="closeWireInfo()" class="text-gray-500 hover:text-white font-bold text-lg px-2 py-1 bg-gray-700 rounded transition-colors">✕</button>
+            </div>
+        </div>
+
+        <!-- The DB Box Enclosure -->
+        <div class="db-enclosure rounded-xl p-4 lg:p-8 relative overflow-hidden mx-auto max-w-6xl w-full">
+            
+            <!-- Metallic Box Labels -->
+            <div class="absolute top-2 right-4 text-gray-500 text-xs font-bold tracking-widest uppercase">Mains / Meter</div>
+            <div class="absolute top-2 left-4 text-gray-500 text-xs font-bold tracking-widest uppercase">Sub-Circuits</div>
+
+            <!-- Scrollable DIN Rail Container -->
+            <div class="overflow-x-auto custom-scrollbar pb-6 pt-24 px-4 relative flex flex-col items-center min-w-[950px]">
+                
+                <!-- SVG Wiring Layer (Interactive) -->
+                <svg class="absolute top-0 left-0 w-full h-full z-0" style="pointer-events: auto;">
+                    
+                    <!-- GRID to MAIN (Terminals precisely mapped to top of Main Breaker) -->
+                    <!-- Main L is at x=802, Main N is at x=882, Terminals top at y=108 -->
+                    <path id="path-grid-l" class="interactive-wire" d="M 802,0 L 802,108" fill="none" stroke="#ef4444" stroke-width="4" onclick="showWireInfo('grid-l')" />
+                    <path id="path-grid-n" class="interactive-wire" d="M 882,0 L 882,108" fill="none" stroke="#3b82f6" stroke-width="4" onclick="showWireInfo('grid-n')" />
+                    <text x="815" y="20" fill="#9ca3af" font-size="10" font-weight="bold" class="pointer-events-none tracking-widest">GRID IN</text>
+
+                    <!-- MAIN Load to METER Power -->
+                    <!-- Main Bottom N (882) -> Meter Top N (719) -->
+                    <path id="path-main-meter-n" class="interactive-wire" d="M 882,308 L 882,340 L 719,340 L 719,108" fill="none" stroke="#3b82f6" stroke-width="4" onclick="showWireInfo('main-meter-n')" />
+                    <!-- Main Bottom L (802) -> Meter Top L (757) -->
+                    <path id="path-main-meter-l" class="interactive-wire" d="M 802,308 L 802,330 L 757,330 L 757,108" fill="none" stroke="#4b5563" stroke-width="4" onclick="showWireInfo('main-meter-l')" />
+
+                    <!-- METER Load to NEUTRAL BAR & BUSBAR -->
+                    <!-- Meter Bottom N (719) -> Neutral Bar (Left side) -->
+                    <path id="path-meter-neutral" class="interactive-wire" d="M 719,308 L 719,350 L 150,350 L 150,50" fill="none" stroke="#3b82f6" stroke-width="4" stroke-dasharray="8,4" onclick="showWireInfo('meter-neutral')" />
+                    <!-- Meter Bottom L (757) -> Phase Busbar (Leftwards) -->
+                    <path id="path-meter-busbar" class="interactive-wire" d="M 757,308 L 757,316 L 700,316" fill="none" stroke="#4b5563" stroke-width="4" onclick="showWireInfo('meter-busbar')" />
+                </svg>
+
+                <!-- Neutral and Earth Bars (Top Left area) -->
+                <div class="absolute top-4 left-10 flex space-x-12 z-10 w-[650px]">
+                    <!-- Neutral Bar -->
+                    <div class="flex flex-col items-center">
+                        <div class="text-blue-700 font-bold text-[10px] mb-1 cursor-help hover:text-blue-500" onclick="showWireInfo('neutral-bar')">COMMON NEUTRAL LINK</div>
+                        <div class="w-64 h-3 bg-blue-300 rounded-sm border border-blue-500 shadow-sm flex justify-around items-center px-2 cursor-pointer hover:bg-blue-200 transition-colors" onclick="showWireInfo('neutral-bar')">
+                            <div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div><div class="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
+                        </div>
+                    </div>
+                    <!-- Earth Bar -->
+                    <div class="flex flex-col items-center">
+                        <div class="text-green-700 font-bold text-[10px] mb-1 cursor-help hover:text-green-500" onclick="showWireInfo('earth-bar')">COMMON EARTH LINK</div>
+                        <div class="w-64 h-3 bg-green-500 rounded-sm border border-green-700 shadow-sm flex justify-around items-center px-2 cursor-pointer hover:bg-green-400 transition-colors" onclick="showWireInfo('earth-bar')">
+                            <div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div><div class="w-1.5 h-1.5 rounded-full bg-yellow-500 border border-yellow-700"></div>
+                        </div>
+                        <div class="w-2 h-4 bg-green-500 repeating-linear-gradient border-x border-green-700 mt-0"></div>
+                        <div class="text-[8px] text-gray-600 font-bold">TO PIT</div>
+                    </div>
+                    
+                    <!-- Earth Fault Test Button -->
+                    <div class="flex flex-col items-center justify-center ml-4 pl-8 border-l border-gray-600">
+                        <button onclick="simulateEarthFault()" class="bg-yellow-500 hover:bg-yellow-400 text-yellow-900 font-bold text-xs px-4 py-2 rounded shadow-[0_4px_0_#b45309] active:translate-y-1 active:shadow-[0_0px_0_#b45309] transition-all flex items-center gap-1 group">
+                            <svg class="w-4 h-4 group-hover:animate-ping absolute opacity-50 hidden group-hover:block" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd"></path></svg>
+                            <svg class="w-4 h-4 relative z-10" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.381z" clip-rule="evenodd"></path></svg>
+                            TEST EARTHING
+                        </button>
+                    </div>
+                </div>
+
+                <!-- The DIN Rail Background -->
+                <div class="din-rail absolute left-2 right-2 h-10 top-[170px] z-0 rounded-sm"></div>
+
+                <!-- Busbar Comb (Behind MCBs, connects from Meter) -->
+                <!-- Z-0 keeps it behind the MCBs. Top 285px places it right at the bottom terminals -->
+                <div class="absolute top-[285px] left-[32px] w-[670px] h-6 busbar-copper z-0 flex items-start overflow-hidden rounded-sm cursor-pointer hover:brightness-110 shadow-lg border-b border-orange-900" onclick="showWireInfo('busbar')">
+                    <!-- Green live indicator over the copper -->
+                    <div id="busbar-glow" class="w-full h-1 bg-gray-600 transition-colors duration-300"></div>
+                </div>
+
+                <!-- Components Row (Single Line, Z-10 so they overlay the Busbar) -->
+                <div class="flex gap-[2px] z-10 relative items-end w-full pl-4 mt-2">
+                    
+                    <!-- 3. Sub-Circuits (10 MCBs) - ON THE LEFT -->
+                    <div class="flex gap-[2px] relative z-10 mr-4" id="mcb-rack">
+                        <!-- MCBs injected via JS -->
+                    </div>
+
+                    <!-- 2. Wi-Fi Smart Meter (1P-JT-63) -->
+                    <div class="mcb-body w-16 h-52 rounded-md flex flex-col p-1 items-center relative mr-2 hover:border-blue-300 transition-colors" onclick="showWireInfo('smart-meter')">
+                        <!-- Top Terminals -->
+                        <div class="w-full flex justify-between px-2 mt-1 mb-1">
+                            <div class="w-2.5 h-2.5 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1 h-1 bg-gray-400 rounded-full"></div></div>
+                            <div class="w-2.5 h-2.5 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1 h-1 bg-gray-400 rounded-full"></div></div>
+                        </div>
+                        <div class="w-full flex justify-between px-2 text-[6px] font-bold text-gray-500"><span>N</span><span>L</span></div>
+                        
+                        <div class="flex flex-col items-center justify-center mb-2 mt-1 w-full">
+                            <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-2.5 mb-0.5 object-contain max-w-[90%]" onerror="this.style.display='none'; document.getElementById('meter-logo-fallback').style.display='block';">
+                            <div id="meter-logo-fallback" style="display:none;" class="text-[7px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
+                            <div class="text-[7px] text-gray-800 font-bold text-center leading-tight">1P-JT-63</div>
+                        </div>
+                        
+                        <!-- Mini LCD Screen -->
+                        <div class="lcd-screen w-14 h-16 rounded mb-2 flex flex-col items-center justify-center p-0.5 pointer-events-none">
+                            <div class="text-[6px] opacity-60 absolute top-1 right-1">kW.h</div>
+                            <div id="meter-kwh" class="text-[10px] font-bold mt-1">00.00</div>
+                            <div class="w-full border-t border-black/20 my-[2px]"></div>
+                            <div class="flex w-full justify-between px-1">
+                                <div id="meter-v" class="text-[7px]">0V</div>
+                                <div id="meter-a" class="text-[7px]">0.0A</div>
+                            </div>
+                        </div>
+
+                        <!-- Wi-Fi LED -->
+                        <div class="flex items-center space-x-1 mb-2">
+                            <svg class="w-3 h-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.906 14.142 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"></path></svg>
+                            <div id="wifi-led" class="w-1.5 h-1.5 rounded-full bg-gray-500"></div>
+                        </div>
+
+                        <!-- Power Button / App Launcher -->
+                        <div class="w-7 h-7 rounded-full border-2 border-gray-400 flex items-center justify-center text-gray-600 mt-auto mb-2 bg-gray-100 shadow-sm hover:bg-blue-100 hover:text-blue-600 hover:border-blue-400 transition-colors cursor-pointer z-20" onclick="event.stopPropagation(); openAppModal();" title="Open Mobile App View">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        </div>
+                        
+                        <div class="w-full flex justify-between px-2 text-[6px] font-bold text-gray-500 mb-0.5"><span>N</span><span>L</span></div>
+                    </div>
+
+                    <!-- 1. Main Breaker (AM63LE) - ON THE RIGHT -->
+                    <div class="mcb-body w-32 h-52 rounded-md flex flex-col p-2 relative cursor-pointer border-l-4 border-l-gray-400 hover:border-gray-500" onclick="toggleMain()">
+                        <div class="flex flex-col items-center justify-center mb-1 w-full">
+                            <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-3.5 mb-1 object-contain max-w-[80%]" onerror="this.style.display='none'; document.getElementById('main-logo-fallback').style.display='block';">
+                            <div id="main-logo-fallback" style="display:none;" class="text-[10px] font-bold text-center leading-tight mb-0.5"><span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
+                            <div class="text-[10px] text-gray-800 font-bold text-center leading-tight">AM63LE <span class="text-sm">63A</span></div>
+                        </div>
+                        <div class="text-[8px] text-gray-600 text-center mb-2">230V~ 50Hz</div>
+                        
+                        <!-- Test Button -->
+                        <div class="absolute top-12 right-2 flex flex-col items-center z-20">
+                            <div class="w-4 h-4 bg-yellow-400 rounded-sm border border-yellow-600 mt-1 shadow-inner active:scale-95 transition-transform hover:bg-yellow-300 cursor-pointer" onclick="event.stopPropagation(); triggerTrip();"></div>
+                            <span class="text-[7px] text-gray-700 mt-1 font-bold">Test Monthly</span>
+                        </div>
+
+                        <div class="absolute top-12 left-4 w-4 h-2.5 bg-red-500 rounded-sm shadow-inner" id="main-indicator"></div>
+
+                        <!-- Top Terminals (L, N) -->
+                        <div class="absolute top-1 left-6 w-3 h-3 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full"></div></div>
+                        <div class="absolute top-1 right-6 w-3 h-3 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full"></div></div>
+                        <div class="absolute top-4 left-6 text-[8px] font-bold text-gray-500">L</div>
+                        <div class="absolute top-4 right-6 text-[8px] font-bold text-gray-500">N</div>
+
+                        <!-- Switches -->
+                        <div class="mt-auto mb-6 flex justify-center gap-[2px]">
+                            <div class="w-12 h-14 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective">
+                                <div id="main-lever-1" class="lever off absolute bottom-0 left-0 w-full h-11 bg-blue-600 rounded-t-md border border-blue-800 shadow-[0_-2px_4px_rgba(0,0,0,0.3)] pointer-events-none"></div>
+                            </div>
+                            <div class="w-12 h-14 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective">
+                                <div id="main-lever-2" class="lever off absolute bottom-0 left-0 w-full h-11 bg-blue-600 rounded-t-md border border-blue-800 shadow-[0_-2px_4px_rgba(0,0,0,0.3)] pointer-events-none"></div>
+                            </div>
+                            <div id="main-gang" class="absolute bottom-[34px] left-1/2 transform -translate-x-1/2 w-[98px] h-3.5 bg-blue-700 rounded-sm transition-transform duration-200 z-10 translate-y-[14px] pointer-events-none"></div>
+                        </div>
+                        <div class="absolute bottom-1 left-4 text-[9px] font-bold text-gray-500">L</div>
+                        <div class="absolute bottom-1 right-4 text-[9px] font-bold text-gray-500">N</div>
+                    </div>
+
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Load Selection Modal -->
+        <div id="load-modal" class="fixed inset-0 bg-black/80 hidden flex items-center justify-center z-[100] p-4">
+            <div class="bg-gray-800 border border-gray-600 rounded-lg shadow-2xl w-full max-w-5xl text-white flex flex-col max-h-[90vh]">
+                <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                    <div>
+                        <h2 class="text-xl font-bold text-blue-400" id="modal-mcb-name">Configure Load</h2>
+                        <p class="text-xs text-gray-400 mt-1">Select active appliances. Changes apply instantly.</p>
+                    </div>
+                    <button onclick="closeLoadModal()" class="text-gray-400 hover:text-white text-3xl font-bold leading-none">&times;</button>
+                </div>
+                
+                <!-- 70 / 30 Split Container -->
+                <div class="flex flex-col md:flex-row flex-1 overflow-hidden">
+                    
+                    <!-- Left Side: Appliance List (70%) -->
+                    <div class="w-full md:w-[70%] p-4 overflow-y-auto custom-scrollbar">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3" id="appliance-grid">
+                            <!-- Checkboxes injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Right Side: 3D MCB Wireframe (30%) -->
+                    <div class="w-full md:w-[30%] bg-gray-900 border-t md:border-t-0 md:border-l border-gray-700 p-4 flex flex-col items-center justify-center relative overflow-y-auto">
+                        <h3 class="text-blue-400 font-bold mb-4 text-xs tracking-widest uppercase border-b border-gray-700 pb-2 w-full text-center">Circuit Diagram</h3>
+                        
+                        <!-- SVG Wireframe -->
+                        <svg viewBox="0 0 200 400" class="w-full max-w-[200px] h-auto drop-shadow-lg">
+                           <!-- Background casing -->
+                           <rect x="30" y="20" width="140" height="360" rx="10" fill="#f3f4f6" stroke="#9ca3af" stroke-width="2"/>
+                           
+                           <!-- Terminals -->
+                           <rect x="80" y="10" width="40" height="20" fill="#d1d5db" stroke="#6b7280"/>
+                           <rect x="80" y="370" width="40" height="20" fill="#d1d5db" stroke="#6b7280"/>
+                           
+                           <!-- Phase Wire IN (from bottom Busbar) -->
+                           <path d="M100,380 L100,300" stroke="#ef4444" stroke-width="6" fill="none"/>
+                           <text x="135" y="380" fill="#ef4444" font-size="10" font-weight="bold">Phase IN</text>
+
+                           <!-- Solenoid (Magnetic Trip) -->
+                           <path d="M100,300 C60,300 60,260 100,260 C140,260 140,220 100,220" stroke="#b45309" stroke-width="6" fill="none"/>
+                           <text x="100" y="280" fill="#b45309" font-size="10" text-anchor="middle" font-weight="bold">Magnetic Coil</text>
+
+                           <!-- Bimetallic Strip (Thermal Trip) -->
+                           <path d="M100,220 L100,160" stroke="#f59e0b" stroke-width="8" fill="none" stroke-linecap="round"/>
+                           <text x="100" y="200" fill="#d97706" font-size="10" text-anchor="middle" font-weight="bold">Thermal Trip</text>
+                           
+                           <!-- Contact Mechanism -->
+                           <circle cx="100" cy="150" r="5" fill="#374151"/>
+                           <path d="M100,145 L100,120" stroke="#ef4444" stroke-width="6" fill="none"/>
+                           
+                           <!-- Arc Chute -->
+                           <g stroke="#9ca3af" stroke-width="2">
+                               <line x1="120" y1="130" x2="160" y2="130"/>
+                               <line x1="120" y1="135" x2="160" y2="135"/>
+                               <line x1="120" y1="140" x2="160" y2="140"/>
+                               <line x1="120" y1="145" x2="160" y2="145"/>
+                               <line x1="120" y1="150" x2="160" y2="150"/>
+                           </g>
+                           <text x="140" y="120" fill="#6b7280" font-size="8" text-anchor="middle">Arc Chute</text>
+
+                           <!-- Phase Wire OUT -->
+                           <path d="M100,120 L100,20" stroke="#ef4444" stroke-width="6" fill="none"/>
+                           <text x="140" y="30" fill="#ef4444" font-size="10" font-weight="bold">Phase OUT</text>
+
+                           <!-- External Routing representations (Neutral & Earth bypass DB directly to the room) -->
+                           <path d="M10,390 L10,10" stroke="#3b82f6" stroke-width="5" fill="none" stroke-dasharray="8,4"/>
+                           <text x="18" y="200" fill="#3b82f6" font-size="10" transform="rotate(-90 18,200)" font-weight="bold">Neutral (Direct)</text>
+                           
+                           <path d="M190,390 L190,10" stroke="#22c55e" stroke-width="5" fill="none" stroke-dasharray="10,4"/>
+                           <line x1="190" y1="390" x2="190" y2="10" stroke="#eab308" stroke-width="2" stroke-dasharray="10,4" stroke-dashoffset="5"/>
+                           <text x="182" y="200" fill="#22c55e" font-size="10" transform="rotate(-90 182,200)" font-weight="bold">Earth Ground</text>
+
+                        </svg>
+                        
+                        <p class="text-[10px] text-gray-500 mt-4 text-center">
+                            Only the <span class="text-red-400 font-bold">Phase</span> wire connects through the MCB. <br>
+                            <span class="text-blue-400 font-bold">Neutral</span> and <span class="text-green-500 font-bold">Earth</span> route directly to the load from their common links.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-4 flex justify-between items-center border-t border-gray-700 bg-gray-900 rounded-b-lg">
+                    <div class="text-sm">
+                        Total Selected: <span id="modal-total-watts" class="font-bold text-yellow-400 text-lg">0</span> W
+                    </div>
+                    <button onclick="closeLoadModal()" class="px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded font-bold transition-colors shadow-lg shadow-blue-900/50">Done</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smart Meter Mobile App View Modal -->
+        <div id="app-modal" class="fixed inset-0 bg-black/90 hidden flex items-center justify-center z-[200] p-4 backdrop-blur-sm">
+            <!-- Mobile Phone Frame -->
+            <div class="bg-gray-100 w-full max-w-[360px] h-[700px] max-h-[95vh] rounded-[3rem] border-[12px] border-gray-900 shadow-2xl relative overflow-hidden flex flex-col">
+                <!-- Top Notch -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-2xl z-20"></div>
+                
+                <!-- App Header -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white pt-10 pb-4 px-5 shadow-md z-10">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                            <img src="b9cc7f81-dc55-4952-ac3d-a06cd15b09ef.__CR0,0,970,300_PT0_SX970_V1___.jpg" alt="amiciSmart" class="h-6 bg-white px-2 py-1 rounded object-contain" onerror="this.style.display='none'; document.getElementById('app-logo-fallback').style.display='block';">
+                            <h2 id="app-logo-fallback" style="display:none;" class="text-lg font-bold tracking-wider">amiciSmart</h2>
+                        </div>
+                        <button onclick="closeAppModal()" class="text-white bg-white/20 hover:bg-white/30 rounded-full w-8 h-8 flex items-center justify-center font-bold transition-colors z-30 relative">✕</button>
+                    </div>
+                </div>
+
+                <!-- Offline Overlay -->
+                <div id="app-offline-overlay" class="absolute inset-0 bg-gray-100/90 z-20 flex flex-col items-center justify-center p-6 text-center backdrop-blur-sm hidden">
+                    <svg class="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636a9 9 0 010 12.728m0 0l-2.829-2.829m2.829 2.829L21 21M15.536 8.464a5 5 0 010 7.072m0 0l-2.829-2.829m-4.243 2.829a4.978 4.978 0 01-1.414-2.83m-1.414 5.658a9 9 0 01-2.167-9.238m7.824 2.167a1 1 0 111.414 1.414m-1.414-1.414L3 3m8.293 8.293l1.414 1.414"></path></svg>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">Device Offline</h3>
+                    <p class="text-sm text-gray-500 mb-8">The smart meter is not receiving power. Please check the main breaker in the DB panel.</p>
+                    
+                    <button onclick="closeAppModal()" class="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl transition-colors shadow-lg flex items-center gap-2 active:scale-95">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Close App View
+                    </button>
+                </div>
+
+                <!-- App Scrollable Body -->
+                <div class="flex-1 overflow-y-auto p-4 custom-scrollbar bg-gray-50 z-0">
+                    <!-- Summary Card -->
+                    <div class="bg-white rounded-2xl shadow-sm p-4 mb-5 border border-gray-100">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-gray-500 text-xs font-bold uppercase tracking-wide">Real-time Load</h3>
+                            <span class="flex h-3 w-3 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                            </span>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <div>
+                                <span class="text-4xl font-black text-gray-800" id="app-total-w">0</span>
+                                <span class="text-gray-500 font-bold ml-1">W</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xl font-bold text-blue-600" id="app-total-a">0.0 A</div>
+                                <div class="text-xs text-gray-400 font-mono mt-1" id="app-voltage">230 V</div>
+                            </div>
+                        </div>
+                        <!-- Live Graph / Bar -->
+                        <div class="w-full bg-gray-100 rounded-full h-2 mt-4 relative overflow-hidden">
+                            <div id="app-load-bar" class="bg-blue-500 h-full transition-all duration-300 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <div class="flex justify-between text-[10px] text-gray-400 mt-1 font-bold">
+                            <span>0W</span>
+                            <span>Max: 14,490W (63A)</span>
+                        </div>
+                    </div>
+
+                    <!-- Energy Card -->
+                    <div class="bg-white rounded-2xl shadow-sm p-4 mb-5 border border-gray-100 flex justify-between items-center">
+                        <div>
+                            <h3 class="text-gray-500 text-xs font-bold uppercase tracking-wide mb-1">Total Energy</h3>
+                            <span class="text-xl font-bold text-gray-800" id="app-kwh">0.00</span>
+                            <span class="text-xs text-gray-500">kW.h</span>
+                        </div>
+                        <div class="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                    </div>
+
+                    <!-- Circuits Header -->
+                    <h3 class="text-gray-800 font-bold mb-3 px-1 text-sm">Circuit Breakdown</h3>
+                    
+                    <!-- Circuit List -->
+                    <div class="space-y-3 pb-6" id="app-circuits-list">
+                        <!-- Populated by JS -->
+                    </div>
+
+                    <!-- Explicit Close Button -->
+                    <button onclick="closeAppModal()" class="w-full mt-2 mb-8 py-3 bg-red-50 text-red-600 font-bold rounded-xl border border-red-100 hover:bg-red-100 transition-colors shadow-sm active:scale-95 flex justify-center items-center gap-2 text-lg">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        CLOSE APP VIEW
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    <!-- Custom Footer -->
+    <footer class="w-full text-center py-6 mt-8 text-gray-500 text-sm border-t border-gray-800">
+        Created by <span class="font-bold text-gray-400">Atish Ak Sharma</span>
+    </footer>
+
+    <script>
+        // System State
+        let mainPowerOn = false;
+        let voltage = 230; 
+        let totalCurrent = 0;
+        let accumulatedKwh = 384.15; 
+        const MAX_AMPS = 63.0;
+
+        // Appliances Dictionary (15 items)
+        const appliances = [
+            { id: 'a1', name: 'LED Lights (All)', watts: 50 },
+            { id: 'a2', name: 'Ceiling Fan', watts: 100 },
+            { id: 'a3', name: 'Television', watts: 150 },
+            { id: 'a4', name: 'Refrigerator', watts: 250 },
+            { id: 'a5', name: 'Desktop PC', watts: 300 },
+            { id: 'a6', name: 'Air Conditioner 1.5T', watts: 1500 },
+            { id: 'a7', name: 'Water Heater/Geyser', watts: 2000 },
+            { id: 'a8', name: 'Microwave Oven', watts: 1200 },
+            { id: 'a9', name: 'Washing Machine', watts: 500 },
+            { id: 'a10', name: 'Electric Iron', watts: 1000 },
+            { id: 'a11', name: 'Chargers (All)', watts: 240 },
+            { id: 'a12', name: 'Vacuum Cleaner', watts: 1000 },
+            { id: 'a13', name: 'Toaster / Kettle', watts: 800 },
+            { id: 'a14', name: 'Room Heater', watts: 2000 },
+            { id: 'a15', name: 'Water Pump', watts: 750 }
+        ];
+
+        // MCB Configuration: Initialized to perfectly hit ~25.3A default load (5825 Watts total)
+        const mcbConfig = [
+            { id: 1, rating: 16, name: 'Maa Rooms', selectedApplianceIds: ['a1', 'a2'], currentLoad: 0, isOn: false }, 
+            { id: 2, rating: 16, name: 'Neeraj Rooms', selectedApplianceIds: ['a1'], currentLoad: 0, isOn: false }, 
+            { id: 3, rating: 16, name: "Atish's Room", selectedApplianceIds: ['a3', 'a5'], currentLoad: 0, isOn: false }, 
+            { id: 4, rating: 16, name: 'Kamal Rooms', selectedApplianceIds: ['a3'], currentLoad: 0, isOn: false }, 
+            { id: 5, rating: 16, name: 'Kitchen & RFF', selectedApplianceIds: ['a4'], currentLoad: 0, isOn: false }, 
+            { id: 6, rating: 16, name: 'Ext/Misc', selectedApplianceIds: ['a15'], currentLoad: 0, isOn: false }, 
+            { id: 7, rating: 20, name: 'Mushroom Lab', selectedApplianceIds: ['a6'], currentLoad: 0, isOn: false }, 
+            { id: 8, rating: 20, name: 'Ground Floor', selectedApplianceIds: ['a6'], currentLoad: 0, isOn: false }, 
+            { id: 9, rating: 25, name: 'Bathrooms', selectedApplianceIds: ['a7'], currentLoad: 0, isOn: false }, 
+            { id: 10, rating: 25, name: 'Animal', selectedApplianceIds: ['a8'], currentLoad: 0, isOn: false } 
+        ];
+
+        // Wire Info Dictionary for Interactions
+        const wireDescriptions = {
+            'grid-l': { title: 'Grid Phase (Live) IN', desc: 'Main incoming high-voltage phase wire directly from the utility grid meter outside. Always live and extremely dangerous.', thickness: '16.0 sq.mm (Heavy Copper)', isFixedLive: true },
+            'grid-n': { title: 'Grid Neutral IN', desc: 'Main incoming neutral return wire from the utility grid. Provides the return path for alternating current.', thickness: '16.0 sq.mm (Heavy Copper)', isFixedLive: false },
+            'main-meter-l': { title: 'Main to Meter Phase', desc: 'Protected phase wire carrying current out of the Main RCBO and into the Smart Meter. Only live when Main Breaker is switched ON.', thickness: '10.0 sq.mm (Copper)', dependentOnMain: true },
+            'main-meter-n': { title: 'Main to Meter Neutral', desc: 'Protected neutral return wire passing out of the Main RCBO and into the Smart Meter for accurate load calculation.', thickness: '10.0 sq.mm (Copper)', dependentOnMain: true },
+            'meter-neutral': { title: 'Meter to Neutral Link', desc: 'Connects the Smart Meter load terminal directly to the Common Neutral Link. This allows all house sub-circuits to return current back to the grid.', thickness: '10.0 sq.mm (Copper)', dependentOnMain: true },
+            'meter-busbar': { title: 'Meter to Phase Busbar', desc: 'The main heavy-duty phase output from the Smart Meter. Feeds power directly into the Copper Busbar to distribute it to all 10 MCBs simultaneously.', thickness: '10.0 sq.mm (Copper)', dependentOnMain: true },
+            'busbar': { title: 'Copper Phase Busbar', desc: 'A solid copper fork-bar running horizontally behind the bottom of all 10 MCBs. It efficiently distributes the live phase current from the meter across the entire board.', thickness: 'Thick Copper Strip (100A Rated)', dependentOnMain: true },
+            'neutral-bar': { title: 'Common Neutral Link Block', desc: 'A solid brass terminal block where all the blue neutral wires from every room connect together to safely return current to the grid.', statusText: 'NEUTRAL HUB', thickness: 'Solid Brass Block', statusColor: 'text-blue-400' },
+            'earth-bar': { title: 'Common Earth Link Block', desc: 'A solid brass block connecting the green grounding wires from all sockets and metal appliances safely to the physical Earth Pit outside.', statusText: '0V SECURE GROUND', thickness: 'Solid Brass Block', statusColor: 'text-green-500' },
+            'smart-meter': { title: 'Wi-Fi Energy Meter (1P-JT-63)', desc: 'Digitally measures total Amperes, Voltage, and calculates total Watts (Load) and kW.h (Energy Consumption). Broadcasts data to home network.', statusText: 'SYSTEM MONITOR', thickness: 'N/A (Device Terminal)', statusColor: 'text-gray-300' }
+        };
+
+        function showWireInfo(wireId, mcbName = null) {
+            const panel = document.getElementById('wire-info-panel');
+            const title = document.getElementById('wire-info-title');
+            const desc = document.getElementById('wire-info-desc');
+            const status = document.getElementById('wire-info-status');
+            const thickness = document.getElementById('wire-info-thickness');
+            
+            panel.classList.remove('hidden');
+            
+            if (wireDescriptions[wireId]) {
+                const info = wireDescriptions[wireId];
+                title.innerText = info.title;
+                desc.innerText = info.desc;
+                thickness.innerText = info.thickness;
+                
+                // Determine Status dynamically
+                if (info.isFixedLive) {
+                    status.innerText = 'LIVE (Dangerous Voltage present)';
+                    status.className = 'font-bold text-red-500';
+                } else if (info.isFixedLive === false) {
+                    status.innerText = 'NEUTRAL (Return Path Active)';
+                    status.className = 'font-bold text-blue-400';
+                } else if (info.dependentOnMain) {
+                    status.innerText = mainPowerOn ? 'LIVE (Voltage flowing to sub-system)' : 'DEAD (Isolated by Main Breaker)';
+                    status.className = mainPowerOn ? 'font-bold text-red-400' : 'font-bold text-gray-500';
+                } else {
+                    status.innerText = info.statusText;
+                    status.className = `font-bold ${info.statusColor}`;
+                }
+            } else if (wireId.startsWith('mcb-out-')) {
+                const mcb = mcbConfig.find(m => m.name === mcbName);
+                const isLive = mainPowerOn && mcb.isOn;
+                
+                title.innerText = `Sub-Circuit Wire: ${mcbName}`;
+                desc.innerText = `Dedicated live phase wire carrying protected power from the MCB directly to the appliances/sockets in the [${mcbName}] zone.`;
+                status.innerText = isLive ? 'LIVE (Current actively flowing to room)' : 'DEAD (Isolated by MCB or Main)';
+                status.className = isLive ? 'font-bold text-red-400' : 'font-bold text-gray-500';
+                thickness.innerText = mcb.rating >= 20 ? '4.0 sq.mm (Heavy Duty Copper)' : '2.5 sq.mm (Standard Copper)';
+            }
+        }
+
+        function closeWireInfo() {
+            document.getElementById('wire-info-panel').classList.add('hidden');
+        }
+
+        // Initialize App
+        function init() {
+            renderMCBs();
+            updateDisplay();
+            setInterval(simulationLoop, 1000);
+        }
+
+        // Render MCBs - Specifically sized 1 module wide (w-16)
+        function renderMCBs() {
+            const container = document.getElementById('mcb-rack');
+            container.innerHTML = '';
+
+            mcbConfig.forEach(mcb => {
+                const colorMarker = mcb.rating === 16 ? 'bg-gray-400' : (mcb.rating === 20 ? 'bg-blue-400' : 'bg-red-400');
+                
+                const mcbHTML = `
+                    <div class="flex flex-col items-center">
+                        <!-- Top Load Wires (Phase, Neutral, Earth bundled out to room) -->
+                        <div class="flex items-end gap-[1px] mb-1 cursor-pointer transition-transform hover:scale-110" onclick="showWireInfo('mcb-out-${mcb.id}', '${mcb.name}')" title="3-Core Cable to Room">
+                            <div class="w-1.5 h-10 bg-green-500 rounded-t shadow-[0_0_2px_rgba(0,0,0,0.5)]" style="background: repeating-linear-gradient(45deg, #22c55e, #22c55e 3px, #eab308 3px, #eab308 6px)"></div>
+                            <div class="w-1.5 h-10 bg-blue-500 rounded-t shadow-[0_0_2px_rgba(0,0,0,0.5)]"></div>
+                            <div class="w-[7px] h-10 bg-gray-500 rounded-t transition-all duration-300 shadow-[0_0_2px_rgba(0,0,0,0.5)]" id="mcb-wire-${mcb.id}"></div>
+                        </div>
+                        <div class="text-[7.5px] text-gray-500 font-bold mb-0.5 truncate w-16 text-center mt-1 px-0.5" title="${mcb.name}">${mcb.name}</div>
+                        
+                        <!-- MCB Body -->
+                        <div class="mcb-body w-16 h-52 rounded-md flex flex-col p-1 relative cursor-pointer group" onclick="openLoadModal(${mcb.id})">
+                            <!-- Top Terminal -->
+                            <div class="w-3 h-3 rounded-full bg-gray-300 border border-gray-500 flex items-center justify-center mx-auto mt-1"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div></div>
+                            
+                            <div class="text-[8px] text-gray-800 font-bold text-center mt-2">SturliteX</div>
+                            <div class="text-[10px] text-gray-800 font-mono text-center border border-gray-300 mx-1 rounded bg-white mt-1">C${mcb.rating}</div>
+                            
+                            <!-- Status Indicator (Red = OFF, Green = ON) -->
+                            <div class="absolute top-16 left-1/2 transform -translate-x-1/2 w-3.5 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors" id="mcb-indicator-${mcb.id}"></div>
+                            
+                            <!-- Rating Color Bar on left -->
+                            <div class="absolute top-[30%] left-0 w-1 h-[40%] ${colorMarker} opacity-60 rounded-r-sm"></div>
+
+                            <!-- Lever Container -->
+                            <div class="mt-auto mb-6 mx-auto w-10 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95" onclick="event.stopPropagation(); toggleMCB(${mcb.id})">
+                                <div id="mcb-lever-${mcb.id}" class="lever off absolute bottom-0 w-8 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none"></div>
+                            </div>
+                            
+                            <!-- Live Load Text (Hover/Active) -->
+                            <div id="mcb-load-${mcb.id}" class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold opacity-30 transition-opacity">0.0A</div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += mcbHTML;
+            });
+        }
+
+        // Modal Functions
+        let currentEditingMcbId = null;
+
+        function openLoadModal(id) {
+            currentEditingMcbId = id;
+            const mcb = mcbConfig.find(m => m.id === id);
+            document.getElementById('modal-mcb-name').innerText = `Configure Load: ${mcb.name} (${mcb.rating}A)`;
+            
+            const grid = document.getElementById('appliance-grid');
+            grid.innerHTML = '';
+            
+            appliances.forEach(app => {
+                const isChecked = mcb.selectedApplianceIds.includes(app.id);
+                grid.innerHTML += `
+                    <label class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border ${isChecked ? 'border-blue-500 bg-gray-600' : 'border-gray-600'}">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" 
+                               value="${app.id}" 
+                               ${isChecked ? 'checked' : ''} 
+                               onchange="toggleAppliance('${app.id}')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">${app.name}</span>
+                            <span class="text-xs text-yellow-400">${app.watts} W</span>
+                        </div>
+                    </label>
+                `;
+            });
+            updateModalTotal();
+            document.getElementById('load-modal').classList.remove('hidden');
+        }
+
+        function toggleAppliance(appId) {
+            const mcb = mcbConfig.find(m => m.id === currentEditingMcbId);
+            if (mcb.selectedApplianceIds.includes(appId)) {
+                mcb.selectedApplianceIds = mcb.selectedApplianceIds.filter(id => id !== appId);
+            } else {
+                mcb.selectedApplianceIds.push(appId);
+            }
+            openLoadModal(currentEditingMcbId); // re-render to update borders
+            calculateLoad();
+        }
+
+        function updateModalTotal() {
+            const mcb = mcbConfig.find(m => m.id === currentEditingMcbId);
+            let totalW = 0;
+            mcb.selectedApplianceIds.forEach(appId => {
+                const app = appliances.find(a => a.id === appId);
+                if (app) totalW += app.watts;
+            });
+            document.getElementById('modal-total-watts').innerText = totalW;
+        }
+
+        function closeLoadModal() {
+            document.getElementById('load-modal').classList.add('hidden');
+        }
+
+        // Mobile App View Functions
+        let appModalOpen = false;
+
+        function openAppModal() {
+            appModalOpen = true;
+            document.getElementById('app-modal').classList.remove('hidden');
+            updateAppDisplay(); // Force immediate update
+        }
+
+        function closeAppModal() {
+            appModalOpen = false;
+            document.getElementById('app-modal').classList.add('hidden');
+        }
+
+        function updateAppDisplay() {
+            if (!appModalOpen) return;
+
+            const offlineOverlay = document.getElementById('app-offline-overlay');
+            
+            if (!mainPowerOn) {
+                offlineOverlay.classList.remove('hidden');
+                return;
+            } else {
+                offlineOverlay.classList.add('hidden');
+            }
+
+            // Update main stats
+            const totalWatts = voltage * totalCurrent;
+            document.getElementById('app-total-w').innerText = totalWatts.toLocaleString(undefined, {maximumFractionDigits: 0});
+            document.getElementById('app-total-a').innerText = `${totalCurrent.toFixed(1)} A`;
+            document.getElementById('app-voltage').innerText = `${voltage.toFixed(1)} V`;
+            document.getElementById('app-kwh').innerText = accumulatedKwh.toFixed(2);
+            
+            // Update capacity bar
+            const loadPercent = Math.min((totalCurrent / MAX_AMPS) * 100, 100);
+            const loadBar = document.getElementById('app-load-bar');
+            loadBar.style.width = `${loadPercent}%`;
+            if (loadPercent < 50) loadBar.className = 'bg-green-500 h-full transition-all duration-300 rounded-full';
+            else if (loadPercent < 80) loadBar.className = 'bg-yellow-500 h-full transition-all duration-300 rounded-full';
+            else loadBar.className = 'bg-red-500 h-full transition-all duration-300 rounded-full shadow-[0_0_8px_#ef4444]';
+
+            // Update circuits list
+            const listContainer = document.getElementById('app-circuits-list');
+            listContainer.innerHTML = ''; // Rebuild list
+
+            mcbConfig.forEach(mcb => {
+                const isLive = mcb.isOn && mainPowerOn;
+                const mcbWatts = isLive ? (mcb.currentLoad * voltage) : 0;
+                const mcbAmps = isLive ? mcb.currentLoad : 0;
+                // Calculate percentage relative to MCB's individual rating
+                const mcbPercent = Math.min((mcbAmps / mcb.rating) * 100, 100);
+                
+                // Styling based on state
+                const statusDotColor = isLive ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-gray-300';
+                const textColor = isLive ? 'text-gray-800' : 'text-gray-400';
+                const wattColor = isLive ? 'text-blue-600' : 'text-gray-400';
+                const barColor = mcbPercent > 80 ? 'bg-red-400' : (mcbPercent > 50 ? 'bg-yellow-400' : 'bg-blue-400');
+
+                listContainer.innerHTML += `
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between transition-colors ${isLive ? 'border-l-4 border-l-blue-500' : 'border-l-4 border-l-gray-300'}">
+                        <div class="flex items-center gap-3 w-3/5 overflow-hidden">
+                            <div class="w-2 h-2 rounded-full ${statusDotColor} flex-shrink-0"></div>
+                            <div class="truncate">
+                                <div class="font-bold ${textColor} text-sm truncate" title="${mcb.name}">${mcb.name}</div>
+                                <div class="text-[10px] text-gray-500">${mcb.rating}A MCB • ${isLive ? 'Active' : 'Offline'}</div>
+                            </div>
+                        </div>
+                        <div class="text-right w-2/5 flex flex-col items-end">
+                            <div class="font-bold ${wattColor} text-sm">${mcbWatts.toLocaleString(undefined, {maximumFractionDigits: 0})} W</div>
+                            <div class="text-[10px] text-gray-500 font-mono">${mcbAmps.toFixed(1)} A</div>
+                            <!-- Mini bar -->
+                            <div class="w-full max-w-[60px] bg-gray-100 rounded-full h-1 mt-1 overflow-hidden">
+                                 <div class="${isLive ? barColor : 'bg-transparent'} h-1 rounded-full transition-all duration-300" style="width: ${mcbPercent}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function toggleMain() {
+            mainPowerOn = !mainPowerOn;
+            
+            const l1 = document.getElementById('main-lever-1');
+            const l2 = document.getElementById('main-lever-2');
+            const gang = document.getElementById('main-gang');
+            const ind = document.getElementById('main-indicator');
+            const busbarGlow = document.getElementById('busbar-glow');
+            const wifiLed = document.getElementById('wifi-led');
+            
+            // SVG Wires
+            const pathMainL = document.getElementById('path-main-meter-l');
+            const pathMeterBus = document.getElementById('path-meter-busbar');
+
+            if (mainPowerOn) {
+                l1.classList.replace('off', 'on');
+                l2.classList.replace('off', 'on');
+                gang.classList.replace('translate-y-[14px]', 'translate-y-0');
+                ind.classList.replace('bg-red-500', 'bg-green-500'); 
+                busbarGlow.classList.replace('bg-gray-600', 'bg-green-500');
+                busbarGlow.classList.add('shadow-[0_0_8px_#22c55e]');
+                
+                // Add animated dashed flow
+                pathMainL.setAttribute('stroke', '#ef4444');
+                pathMainL.classList.add('svg-flow');
+                pathMeterBus.setAttribute('stroke', '#ef4444');
+                pathMeterBus.classList.add('svg-flow');
+                
+                wifiLed.classList.replace('bg-gray-500', 'bg-green-500');
+                wifiLed.classList.add('shadow-[0_0_4px_#22c55e]');
+                document.getElementById('trip-warning').classList.add('hidden');
+            } else {
+                l1.classList.replace('on', 'off');
+                l2.classList.replace('on', 'off');
+                gang.classList.replace('translate-y-0', 'translate-y-[14px]');
+                ind.classList.replace('bg-green-500', 'bg-red-500'); 
+                busbarGlow.classList.replace('bg-green-500', 'bg-gray-600');
+                busbarGlow.classList.remove('shadow-[0_0_8px_#22c55e]');
+                
+                // Remove animation
+                pathMainL.setAttribute('stroke', '#4b5563');
+                pathMainL.classList.remove('svg-flow');
+                pathMeterBus.setAttribute('stroke', '#4b5563');
+                pathMeterBus.classList.remove('svg-flow');
+                
+                wifiLed.classList.replace('bg-green-500', 'bg-gray-500');
+                wifiLed.classList.remove('shadow-[0_0_4px_#22c55e]');
+            }
+            
+            // If info panel is open and viewing a dependent wire, simulate a click to refresh status text
+            const panel = document.getElementById('wire-info-panel');
+            if(!panel.classList.contains('hidden')) {
+               closeWireInfo();
+            }
+            
+            calculateLoad();
+        }
+
+        function triggerTrip() {
+            if(mainPowerOn) {
+                toggleMain(); 
+                const warning = document.getElementById('trip-warning');
+                warning.innerText = "MANUAL TEST TRIP SUCCESSFUL";
+                warning.classList.remove('hidden');
+                setTimeout(() => { warning.classList.add('hidden'); }, 3000);
+            }
+        }
+
+        function toggleMCB(id) {
+            const mcb = mcbConfig.find(m => m.id === id);
+            mcb.isOn = !mcb.isOn;
+
+            const lever = document.getElementById(`mcb-lever-${id}`);
+            const ind = document.getElementById(`mcb-indicator-${id}`);
+            const loadText = document.getElementById(`mcb-load-${id}`);
+
+            if (mcb.isOn) {
+                lever.classList.replace('off', 'on');
+                ind.classList.replace('bg-red-500', 'bg-green-500');
+                loadText.classList.replace('opacity-30', 'opacity-100');
+            } else {
+                lever.classList.replace('on', 'off');
+                ind.classList.replace('bg-green-500', 'bg-red-500');
+                loadText.classList.replace('opacity-100', 'opacity-30');
+                mcb.currentLoad = 0;
+            }
+            calculateLoad();
+        }
+
+        function calculateLoad() {
+            if (!mainPowerOn) {
+                totalCurrent = 0;
+                mcbConfig.forEach(mcb => mcb.currentLoad = 0);
+            } else {
+                let tempTotal = 0;
+                mcbConfig.forEach(mcb => {
+                    if (mcb.isOn) {
+                        let baseWatts = 0;
+                        mcb.selectedApplianceIds.forEach(appId => {
+                            const app = appliances.find(a => a.id === appId);
+                            if (app) baseWatts += app.watts;
+                        });
+
+                        if (baseWatts > 0) {
+                            let fluctuation = 1 + (Math.random() * 0.04 - 0.02); // +/- 2% 
+                            let actualWatts = baseWatts * fluctuation;
+                            
+                            // Prevent division by zero when toggling main back on before simulation loop runs
+                            let safeVoltage = voltage > 0 ? voltage : 230; 
+                            
+                            mcb.currentLoad = actualWatts / safeVoltage;
+                        } else {
+                            mcb.currentLoad = 0;
+                        }
+                        tempTotal += mcb.currentLoad;
+                    } else {
+                        mcb.currentLoad = 0;
+                    }
+                });
+                totalCurrent = tempTotal;
+
+                if (totalCurrent > MAX_AMPS) {
+                    overloadTrip();
+                }
+            }
+            updateDisplay();
+            updateWires();
+        }
+
+        function overloadTrip() {
+            const warning = document.getElementById('trip-warning');
+            warning.innerText = `⚠️ OVERLOAD DETECTED (${totalCurrent.toFixed(1)}A > 63A) - MAIN TRIPPED ⚠️`;
+            warning.classList.replace('bg-yellow-600', 'bg-red-600'); // Ensure it's red for overload
+            warning.classList.remove('hidden');
+            if(mainPowerOn) toggleMain();
+        }
+
+        function simulateEarthFault() {
+            if(!mainPowerOn) return;
+            
+            // Turn off main
+            toggleMain();
+            
+            // Show Ground Fault Warning
+            const warning = document.getElementById('trip-warning');
+            warning.innerText = "⚡ EARTH LEAKAGE DETECTED (>30mA) - RCBO TRIPPED ⚡";
+            warning.classList.replace('bg-red-600', 'bg-yellow-600');
+            warning.classList.remove('hidden');
+            
+            // Reset color back to default red after 4 seconds for future overload trips
+            setTimeout(() => {
+                warning.classList.add('hidden');
+                warning.classList.replace('bg-yellow-600', 'bg-red-600');
+            }, 4000);
+        }
+
+        function simulationLoop() {
+            if (mainPowerOn) {
+                voltage = 230 + (Math.random() * 6 - 3); // 227 - 233V
+                calculateLoad();
+                const powerKw = (voltage * totalCurrent) / 1000;
+                accumulatedKwh += (powerKw / 3600);
+            } else {
+                voltage = 0;
+            }
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            // MCB Texts
+            mcbConfig.forEach(mcb => {
+                document.getElementById(`mcb-load-${mcb.id}`).innerText = 
+                    (mcb.isOn && mainPowerOn) ? `${mcb.currentLoad.toFixed(1)}A` : `0.0A`;
+            });
+
+            // Smart Meter
+            const powerW = mainPowerOn ? (voltage * totalCurrent) : 0;
+            if (mainPowerOn) {
+                document.getElementById('meter-kwh').innerText = accumulatedKwh.toFixed(2);
+                document.getElementById('meter-v').innerText = `${Math.round(voltage)}V`;
+                document.getElementById('meter-a').innerText = `${totalCurrent.toFixed(1)}A`;
+            } else {
+                document.getElementById('meter-v').innerText = `0V`;
+                document.getElementById('meter-a').innerText = `0.0A`;
+            }
+
+            // Global Stats
+            document.getElementById('stat-current').innerText = `${totalCurrent.toFixed(1)} A`;
+            
+            const loadPercent = Math.min((totalCurrent / MAX_AMPS) * 100, 100);
+            const loadBar = document.getElementById('load-bar');
+            loadBar.style.width = `${loadPercent}%`;
+            
+            // Bug Fix: Actually update the text displaying the percentage
+            document.getElementById('load-percent').innerText = `${Math.round(loadPercent)}% (Max 63A)`;
+
+            if (loadPercent < 50) loadBar.className = 'bg-green-500 h-full transition-all duration-300';
+            else if (loadPercent < 80) loadBar.className = 'bg-yellow-500 h-full transition-all duration-300';
+            else loadBar.className = 'bg-red-500 h-full transition-all duration-300 shadow-[0_0_10px_#ef4444]';
+
+            // Also update the mobile app view if it's currently open
+            if (appModalOpen) {
+                updateAppDisplay();
+            }
+        }
+
+        function updateWires() {
+            // Update individual output wires at the top of MCBs
+            mcbConfig.forEach(mcb => {
+                const wire = document.getElementById(`mcb-wire-${mcb.id}`);
+                if (mcb.isOn && mainPowerOn) {
+                    wire.classList.replace('bg-gray-500', 'bg-red-500');
+                    wire.classList.add('shadow-[0_0_5px_#ef4444]');
+                    wire.classList.add('wire-flow'); // Add moving animated effect upwards
+                } else {
+                    wire.classList.replace('bg-red-500', 'bg-gray-500');
+                    wire.classList.remove('shadow-[0_0_5px_#ef4444]');
+                    wire.classList.remove('wire-flow');
+                }
+            });
+        }
+
+        init();
+
+        // Initial setup visual states
+        document.getElementById('main-indicator').classList.add('bg-red-500');
+        
+        // Setup initial default ON MCBs to hit the 25-30 Amp target immediately upon flipping Main
+        mcbConfig.forEach(mcb => {
+             document.getElementById(`mcb-indicator-${mcb.id}`).classList.add('bg-red-500');
+             // Default ON MCBs: Z1(1), Bed(3), Kitchen(5), AC Mast(7), AC Guest(8), Heater(9)
+             if([1, 3, 5, 7, 8, 9].includes(mcb.id)) {
+                 toggleMCB(mcb.id); 
+             }
+        });
+        calculateLoad();
+
+    </script>
+</body>
+</html>
