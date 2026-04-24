@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India's National Highways Map 2026 - By Atish Ak Sharma</title>
+    <meta name="description" content="Interactive map of India's Major Highway Network. Explore primary corridors, international highways, and expressways linking Metros and State Capitals.">
+    <meta name="keywords" content="India Highways, Expressways, State Capitals, Asian Highway, NH 44, Delhi-Mumbai Expressway, NHAI">
+    <meta name="author" content="Atish AK Sharma">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+        
+        body {
+            transition: background 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism System */
+        .glass-card {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .dark .glass-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(2, 6, 23, 0.7) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        html:not(.dark) .glass-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Map Styling */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 50vh;
+            border-radius: 24px;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
+
+        /* Dropdown Styling */
+        select option, select optgroup {
+            background-color: #1e293b;
+            color: white;
+        }
+        html:not(.dark) select option, html:not(.dark) select optgroup {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        
+        select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Expand/Collapse Animation */
+        .expand-transition {
+            transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out, padding 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+        }
+        .expand-transition.active {
+            max-height: 1000px;
+            opacity: 1;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-[radial-gradient(circle_at_50%_0%,#1e293b_0%,#020617_100%)] dark:text-slate-50 p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-10">
+            <div class="flex items-start justify-between gap-4 mb-3">
+                <div class="flex items-start gap-3 md:gap-5">
+                    <!-- Fancy Logo -->
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-emerald-500 p-[2px] shadow-[0_0_20px_rgba(16,185,129,0.3)] shrink-0">
+                        <div class="w-full h-full bg-slate-50 dark:bg-[#020617] rounded-2xl flex items-center justify-center transition-colors">
+                            <svg class="w-7 h-7 md:w-10 md:h-10 text-slate-900 dark:text-white" viewBox="0 0 24 24" fill="none" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <defs>
+                                    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#60a5fa" />
+                                        <stop offset="100%" stop-color="#34d399" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                                <circle cx="12" cy="12" r="3" fill="#10b981" stroke="none" />
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Title & Details -->
+                    <div class="flex flex-col mt-[-4px]">
+                        <h1 class="text-2xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center flex-wrap">
+                            India's Highways Network&nbsp;<span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-emerald-500 to-teal-400 dark:from-blue-400 dark:via-emerald-400 dark:to-teal-300">2026</span>
+                            <sup class="hidden md:inline-block text-[10px] md:text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400 ml-1 mt-[-10px] md:mt-[-20px]">Designed By Atish</sup>
+                        </h1>
+                        
+                        <span class="block md:hidden text-xs font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400 mt-1 mb-2 tracking-wide">Designed By Atish</span>
+                        
+                        <div class="mb-3 mt-1 md:mt-3">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:border dark:border-blue-500/20 dark:text-blue-400 text-xs font-bold tracking-widest uppercase">
+                                <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                Metros & Capitals Network
+                            </div>
+                        </div>
+
+                        <p class="text-slate-600 dark:text-slate-400 text-sm md:text-lg max-w-xl leading-relaxed">
+                            Mapping the critical arteries. Explore all major Access-Controlled Expressways, International Highways, and primary NH corridors seamlessly linking Metros and State Capitals.
+                        </p>
+                    </div>
+                </div>
+                
+                <button id="themeToggle" class="shrink-0 p-2 md:p-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">
+                    <svg id="icon-sun" class="w-5 h-5 md:w-6 md:h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg id="icon-moon" class="w-5 h-5 md:w-6 md:h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            
+            <!-- Main Map Area -->
+            <main class="lg:col-span-8 order-1 lg:order-1 flex flex-col">
+                <div class="map-container glass-card flex-grow w-full relative border border-slate-200 dark:border-slate-800">
+                    <div id="map" class="rounded-[24px]"></div>
+                </div>
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="lg:col-span-4 space-y-6 flex flex-col order-2 lg:order-2">
+                <!-- Explorer Block -->
+                <div class="glass-card p-6 flex flex-col transition-all duration-500 relative z-20 shadow-sm border border-slate-200 dark:border-white/10" id="explorerBlock">
+                    <h3 class="text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        Advanced Network Explorer
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        <!-- Dropdown 1: Category Select -->
+                        <div class="relative w-full">
+                            <select id="networkTypeSelect" class="w-full bg-white dark:bg-[#0f172a]/80 border border-slate-300 dark:border-white/10 text-slate-800 dark:text-white text-sm md:text-base rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block p-4 appearance-none outline-none backdrop-blur-md cursor-pointer transition-all shadow-sm hover:bg-slate-50 dark:hover:bg-[#1e293b]/90 font-bold">
+                                <option value="Metros" selected>Major Metro Cities</option>
+                                <option value="Capitals">State Capitals</option>
+                                <option value="Expressways">Expressways</option>
+                                <option value="International">International Highways</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown 2: Place/Zone Select -->
+                        <div class="relative w-full">
+                            <select id="subFilterSelect" class="w-full bg-white dark:bg-[#0f172a]/80 border border-slate-300 dark:border-white/10 text-slate-800 dark:text-white text-sm md:text-base rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block p-4 appearance-none outline-none backdrop-blur-md cursor-pointer transition-all shadow-sm hover:bg-slate-50 dark:hover:bg-[#1e293b]/90 font-bold">
+                                <!-- Populated dynamically based on Dropdown 1 -->
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown 3: Route Select -->
+                        <div class="relative w-full">
+                            <select id="routeSelect" class="w-full bg-white dark:bg-[#0f172a]/80 border border-slate-300 dark:border-white/10 text-slate-800 dark:text-white text-sm md:text-base rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block p-4 appearance-none outline-none backdrop-blur-md cursor-pointer transition-all shadow-sm hover:bg-slate-50 dark:hover:bg-[#1e293b]/90 font-bold">
+                                <option value="" disabled selected>Select Specific Route...</option>
+                                <!-- Options injected by JS -->
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic Details Block (Expands here) -->
+                    <div id="detailsBlock" class="expand-transition border-t border-slate-200 dark:border-white/10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="pr-2">
+                                <span id="detailTag" class="text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full mb-2 inline-flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-white" id="detailStatusDot"></span>
+                                    <span id="detailTagText">Category</span>
+                                </span>
+                                <h2 id="detailTitle" class="text-2xl font-extrabold text-slate-900 dark:text-white leading-tight">Route Name</h2>
+                            </div>
+                            <button onclick="clearRouteSelection(true)" class="text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full min-w-[36px] h-9 flex items-center justify-center transition-colors">
+                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 1L1 13M1 1L13 13"/></svg>
+                            </button>
+                        </div>
+
+                        <!-- Expanded Project Info Grid -->
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div class="flex flex-col items-start gap-1 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold">📏 Length</p>
+                                <p class="text-sm font-black text-slate-800 dark:text-white" id="detailLength">0 km</p>
+                            </div>
+                            <div class="flex flex-col items-start gap-1 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold">🏛️ Authority</p>
+                                <p class="text-sm font-bold text-slate-800 dark:text-white line-clamp-1" id="detailAgency">NHAI</p>
+                            </div>
+                            <div class="flex flex-col items-start gap-1 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold">🛣️ Config</p>
+                                <p class="text-sm font-bold text-slate-800 dark:text-white" id="detailLanes">4-6 Lanes</p>
+                            </div>
+                            <div class="flex flex-col items-start gap-1 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold">🌍 Zone</p>
+                                <p class="text-sm font-bold text-slate-800 dark:text-white line-clamp-1" id="detailZone">North</p>
+                            </div>
+                            <div class="flex flex-col items-start gap-1 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold">🎫 Tolls</p>
+                                <p class="text-sm font-bold text-slate-800 dark:text-white" id="detailTolls">0 Plazas</p>
+                            </div>
+                            <div class="flex flex-col items-start gap-1 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold">📈 State</p>
+                                <p class="text-sm font-bold text-slate-800 dark:text-white" id="detailProgress">100%</p>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-100 dark:bg-[#020617]/50 border border-slate-200 dark:border-white/5 mb-4 shadow-inner">
+                            <p class="text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider font-bold mb-2 flex items-center gap-2">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                Major Routing
+                            </p>
+                            <p class="text-xs text-slate-700 dark:text-slate-200 font-semibold leading-relaxed" id="detailCities">City A ➔ City B</p>
+                        </div>
+
+                        <div class="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm">
+                            <p class="text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider font-bold mb-2">Highway Details</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4" id="detailDesc">Details will appear here.</p>
+                            
+                            <a id="detailLink" href="#" target="_blank" class="inline-flex items-center gap-2 w-full justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-all shadow-md">
+                                Wikipedia Info
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Snapshot Widget -->
+                <div class="glass-card p-6 flex-grow flex flex-col justify-center border border-slate-200 dark:border-white/10 shadow-sm" id="statsBlock">
+                    <h3 class="text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold mb-6">Corridor Snapshot</h3>
+                    
+                    <div class="space-y-5">
+                        <!-- Primary NH Stat -->
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Primary NH Corridors</span>
+                                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">~85,000 km</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-400 dark:from-blue-600 dark:to-blue-400 h-full rounded-full relative" style="width: 58%"></div>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1">Linking Metros & Capitals cross-country</p>
+                        </div>
+
+                        <!-- Expressways Stat -->
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Access-Controlled Expressways</span>
+                                <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400">~6,000 km</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
+                                <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 dark:from-emerald-600 dark:to-emerald-400 h-full rounded-full relative" style="width: 45%">
+                                     <div class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.2)_10px,rgba(255,255,255,0.2)_20px)] dark:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.1)_10px,rgba(255,255,255,0.1)_20px)] w-[200%] animate-[dashMove_5s_linear_infinite]"></div>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1">Modern High-Speed Direct Links</p>
+                        </div>
+
+                        <!-- International / AH Stat -->
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">International / Asian Hwys</span>
+                                <span class="text-lg font-bold text-purple-600 dark:text-purple-400">~3,100 km</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
+                                <div class="bg-gradient-to-r from-purple-500 to-purple-400 dark:from-purple-600 dark:to-purple-400 h-full rounded-full relative" style="width: 15%"></div>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1">Trans-national borders & AH Network</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Footer Section -->
+        <footer class="mt-12 text-center pt-8 border-t border-slate-200 dark:border-white/10 pb-4">
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
+                &copy; 2026 India's Highways Project. Curated database representing major highways, capitals, and expressways.
+            </p>
+            <p class="text-slate-600 dark:text-slate-500 text-sm mt-2 font-medium tracking-wide">
+                Designed By <a href="https://atishaksharma.com" target="_blank" class="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 hover:underline transition-all font-bold">Atish AK Sharma</a>
+            </p>
+        </footer>
+    </div>
+
+<script>
+    // --- Global State ---
+    let currentHighlightedLayer = null;
+    let tileLayer = null;
+    let isInitialLoad = true;
+    const mapLayers = {};
+
+    // --- Data: Massive Hub & Capitals Dataset ---
+    const routeData = {
+        // --- PRIMARY NH CORRIDORS ---
+        'nh-1': {
+            name: 'NH 1 (Uri to Leh)', len: '534 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'North',
+            hubs: ['Srinagar'], agency: 'BRO / NHAI', cities: 'Uri ➔ Baramulla ➔ Srinagar ➔ Kargil ➔ Leh', lanes: '2-4 Lanes', tolls: '4 Plazas', progress: '100% Completed',
+            desc: 'A critical mountainous highway providing strategic and civilian connectivity deep into Jammu & Kashmir and Ladakh.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_1_(India)', coords: [[34.08, 74.05], [34.08, 74.79], [34.55, 76.13], [34.15, 77.57]]
+        },
+        'nh-2': {
+            name: 'NH 2 (Dibrugarh to Tuipang)', len: '1,325 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'East',
+            hubs: ['Kohima', 'Imphal'], agency: 'NHIDCL / NHAI', cities: 'Dibrugarh ➔ Kohima ➔ Imphal ➔ Aizawl ➔ Tuipang', lanes: '2-4 Lanes', tolls: '8 Plazas', progress: '90% Multi-lane',
+            desc: 'A critical mountainous spine spanning across four northeast states—Assam, Nagaland, Manipur, and Mizoram.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_2_(India)', coords: [[27.47, 94.91], [25.67, 94.10], [24.81, 93.93], [23.72, 92.71], [22.31, 93.00]]
+        },
+        'nh-7': {
+            name: 'NH 7 (Fazilka to Mana)', len: '845 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'North',
+            hubs: ['Chandigarh', 'Dehradun'], agency: 'NHAI', cities: 'Fazilka ➔ Patiala ➔ Chandigarh ➔ Dehradun ➔ Mana', lanes: '2-4 Lanes', tolls: '7 Plazas', progress: '100% Completed',
+            desc: 'Runs horizontally across northern India connecting Punjab, Haryana, and concluding in the high altitudes of Uttarakhand.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_7_(India)', coords: [[30.40, 74.02], [30.33, 76.39], [30.73, 76.77], [30.31, 78.03], [30.77, 79.51]]
+        },
+        'nh-16': {
+            name: 'NH 16 (East Coast Highway)', len: '1,711 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'East',
+            hubs: ['Kolkata', 'Bhubaneswar', 'Chennai'], agency: 'NHAI', cities: 'Kolkata ➔ Bhubaneswar ➔ Visakhapatnam ➔ Vijayawada ➔ Chennai', lanes: '4-6 Lanes', tolls: '22 Plazas', progress: '100% Completed',
+            desc: 'Forms the eastern part of the Golden Quadrilateral, running extensively along the Bay of Bengal coastline linking Kolkata to Chennai.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_16_(India)', coords: [[22.57, 88.36], [20.29, 85.82], [17.68, 83.21], [16.50, 80.64], [14.44, 79.98], [13.08, 80.27]]
+        },
+        'nh-19': {
+            name: 'NH 19 (Delhi to Kolkata)', len: '1,323 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'East',
+            hubs: ['Delhi', 'Kolkata'], agency: 'NHAI', cities: 'Delhi ➔ Agra ➔ Kanpur ➔ Varanasi ➔ Dhanbad ➔ Kolkata', lanes: '6 Lanes', tolls: '16 Plazas', progress: '100% Completed',
+            desc: 'Forms the northern arm of the Golden Quadrilateral. A massively trafficked route forming the primary link between the National Capital and Eastern India.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_19_(India)', coords: [[28.61, 77.20], [27.17, 78.00], [26.44, 80.33], [25.31, 83.00], [23.79, 86.43], [22.57, 88.36]]
+        },
+        'nh-27': {
+            name: 'NH 27 (East-West Corridor)', len: '3,507 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'West',
+            hubs: ['Gandhinagar', 'Lucknow', 'Patna', 'Dispur'], agency: 'NHAI', cities: 'Porbandar ➔ Kota ➔ Lucknow ➔ Guwahati ➔ Silchar', lanes: '4 Lanes', tolls: '35 Plazas', progress: '100% Completed',
+            desc: 'The second longest NH linking the extreme western coast of Gujarat straight through central India to Assam in the East.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_27_(India)', coords: [[21.64, 69.60], [24.58, 73.71], [25.18, 75.83], [26.84, 80.94], [26.14, 91.73], [24.83, 92.77]]
+        },
+        'nh-30': {
+            name: 'NH 30 (Sitarganj to Ibrahimpatnam)', len: '1,984 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'West',
+            hubs: ['Lucknow', 'Patna', 'Raipur'], agency: 'NHAI', cities: 'Sitarganj ➔ Lucknow ➔ Rewa ➔ Raipur ➔ Jagdalpur', lanes: '4-6 Lanes', tolls: '20 Plazas', progress: '95% Multi-lane',
+            desc: 'A massive vertical corridor piercing straight down through the center of India from the Himalayan foothills to Andhra.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_30_(India)', coords: [[28.92, 79.62], [26.84, 80.94], [24.53, 81.30], [21.25, 81.62], [19.07, 82.02]]
+        },
+        'nh-44': {
+            name: 'NH 44 (North-South Corridor)', len: '4,112 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'South',
+            hubs: ['Srinagar', 'Delhi', 'Hyderabad', 'Bengaluru'], agency: 'NHAI / MoRTH', cities: 'Srinagar ➔ Delhi ➔ Nagpur ➔ Hyderabad ➔ Bengaluru ➔ Kanyakumari', lanes: '4-6 Lanes', tolls: '45+ Plazas', progress: '100% Completed',
+            desc: 'India\'s longest highway running from Kashmir to Kanyakumari. It acts as the vertical spine of India, linking Delhi directly through Hyderabad and Bengaluru.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_44_(India)', coords: [[34.08, 74.79], [31.63, 74.87], [28.61, 77.20], [27.17, 78.00], [21.14, 79.08], [17.38, 78.48], [15.82, 78.03], [12.97, 77.59], [9.92, 78.11], [8.08, 77.53]]
+        },
+        'nh-48': {
+            name: 'NH 48 (Golden Quad West/South)', len: '2,807 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'West',
+            hubs: ['Delhi', 'Jaipur', 'Gandhinagar', 'Mumbai', 'Bengaluru', 'Chennai'], agency: 'NHAI', cities: 'Delhi ➔ Jaipur ➔ Ahmedabad ➔ Mumbai ➔ Pune ➔ Bengaluru ➔ Chennai', lanes: '6-8 Lanes', tolls: '40+ Plazas', progress: '100% Completed',
+            desc: 'The most important industrial artery in India. It forms the western and southern arms of the Golden Quadrilateral.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_48_(India)', coords: [[28.61, 77.20], [26.91, 75.78], [23.02, 72.57], [19.07, 72.87], [18.52, 73.85], [15.84, 74.49], [12.97, 77.59], [12.92, 79.13], [13.08, 80.27]]
+        },
+        'nh-52': {
+            name: 'NH 52 (Sangrur to Ankola)', len: '2,317 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'West',
+            hubs: ['Jaipur', 'Bhopal'], agency: 'NHAI', cities: 'Sangrur ➔ Hisar ➔ Kota ➔ Indore ➔ Hubli ➔ Ankola', lanes: '4-6 Lanes', tolls: '21 Plazas', progress: '100% Completed',
+            desc: 'An expansive inland western corridor linking Punjab, Haryana, Rajasthan, MP, Maharashtra, and terminating in Karnataka.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_52_(India)', coords: [[30.24, 75.84], [29.14, 75.72], [26.91, 75.78], [25.18, 75.83], [22.71, 75.86], [20.90, 74.77], [15.36, 75.12], [14.66, 74.30]]
+        },
+        'nh-53': {
+            name: 'NH 53 (Hajira to Paradip)', len: '1,781 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'West',
+            hubs: ['Raipur', 'Bhubaneswar'], agency: 'NHAI', cities: 'Hajira (Gujarat) ➔ Surat ➔ Nagpur ➔ Raipur ➔ Paradip (Odisha)', lanes: '4-6 Lanes', tolls: '18 Plazas', progress: '100% Completed',
+            desc: 'An essential central cross-country corridor linking the western industrial hubs of Gujarat to the eastern seaports.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_53_(India)', coords: [[21.17, 72.83], [21.14, 79.08], [21.25, 81.62], [21.46, 83.98], [20.26, 86.67]]
+        },
+        'nh-65': {
+            name: 'NH 65 (Pune to Machilipatnam)', len: '926 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'South',
+            hubs: ['Hyderabad'], agency: 'NHAI', cities: 'Pune ➔ Solapur ➔ Hyderabad ➔ Suryapet ➔ Machilipatnam', lanes: '4-6 Lanes', tolls: '11 Plazas', progress: '100% Completed',
+            desc: 'The primary arterial route connecting the western ghats to the eastern coast, passing directly through the heart of Hyderabad.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_65_(India)', coords: [[18.52, 73.85], [17.65, 75.90], [17.38, 78.48], [17.13, 79.62], [16.17, 81.13]]
+        },
+        'nh-66': {
+            name: 'NH 66 (West Coast Highway)', len: '1,608 km', category: 'Primary NH', color: 'blue', hex: '#3b82f6', zone: 'South',
+            hubs: ['Mumbai', 'Panaji', 'Trivandrum'], agency: 'NHAI / State PWD', cities: 'Panvel ➔ Goa ➔ Mangaluru ➔ Kochi ➔ Kanyakumari', lanes: '4-6 Lanes', tolls: '19 Plazas', progress: '95% Multi-lane',
+            desc: 'A breathtaking coastal highway traversing through the Western Ghats and the Arabian sea coast across 5 states.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_66_(India)', coords: [[18.98, 73.11], [15.29, 74.12], [12.91, 74.85], [9.93, 76.26], [8.08, 77.53]]
+        },
+
+        // --- INTERNATIONAL & ASIAN HIGHWAYS ---
+        'ah-1': {
+            name: 'Asian Highway 1 (AH1)', len: '~2,600 km (India)', category: 'International / AH', color: 'purple', hex: '#a855f7', zone: 'East',
+            hubs: ['Delhi', 'Lucknow', 'Patna', 'Kolkata', 'Dispur', 'Kohima'], agency: 'Multiple', cities: 'New Delhi ➔ Kolkata ➔ Dawki ➔ Moreh (Myanmar Border)', lanes: 'Variable', tolls: 'Multiple', progress: '100% Active',
+            desc: 'The longest route of the Asian Highway Network, designed to connect Tokyo to Istanbul. Exits India to Myanmar via Manipur.',
+            link: 'https://en.wikipedia.org/wiki/AH1', coords: [[28.61, 77.20], [26.84, 80.94], [22.57, 88.36], [25.57, 91.89], [25.80, 93.73], [24.23, 94.30]]
+        },
+        'nh-5': {
+            name: 'NH 5 (Indo-Tibet Border)', len: '660 km', category: 'International / AH', color: 'purple', hex: '#a855f7', zone: 'North',
+            hubs: ['Chandigarh', 'Shimla'], agency: 'BRO / NHAI', cities: 'Firozpur ➔ Ludhiana ➔ Shimla ➔ Shipki La (Tibet Border)', lanes: '2-4 Lanes', tolls: '3 Plazas', progress: '100% Completed',
+            desc: 'Connects Punjab to the mountainous terrain of Himachal Pradesh, acting as a crucial international link concluding at the Chinese/Tibet border.',
+            link: 'https://en.wikipedia.org/wiki/National_Highway_5_(India)', coords: [[30.92, 74.61], [30.90, 75.85], [31.10, 77.17], [31.82, 78.71]]
+        },
+
+        // --- EXPRESSWAYS ---
+        'ne-4': {
+            name: 'Delhi-Mumbai Exp. (NE 4)', len: '1,386 km', category: 'Expressway', color: 'blue', hex: '#3b82f6', zone: 'West',
+            hubs: ['Delhi', 'Jaipur', 'Gandhinagar', 'Mumbai'], agency: 'NHAI', cities: 'Delhi ➔ Gurugram ➔ Kota ➔ Vadodara ➔ Surat ➔ Mumbai', lanes: '8 Lanes (Exp to 12)', tolls: 'GPS / Closed', progress: 'Under Construction (75%)',
+            desc: 'National Expressway 4. India’s longest access-controlled highway aiming to cut Delhi-Mumbai transit time to 12 hours.',
+            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Mumbai_Expressway', coords: [[28.40, 77.05], [25.21, 75.86], [23.33, 75.05], [22.30, 73.18], [21.17, 72.83], [19.07, 72.87]]
+        },
+        'delhi-katra': {
+            name: 'Delhi - Amritsar - Katra Exp.', len: '669 km', category: 'Expressway', color: 'blue', hex: '#3b82f6', zone: 'North',
+            hubs: ['Delhi', 'Chandigarh'], agency: 'NHAI', cities: 'Delhi ➔ Ludhiana ➔ Jalandhar ➔ Amritsar ➔ Katra', lanes: '4 Lanes (Exp to 8)', tolls: 'Closed Loop', progress: 'Under Construction (60%)',
+            desc: 'Greenfield expressway connecting Delhi to the holy city of Katra via Amritsar.',
+            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Amritsar%E2%80%93Katra_Expressway', coords: [[28.70, 76.90], [30.90, 75.85], [31.63, 74.87], [32.99, 74.93]]
+        },
+        'surat-chennai': {
+            name: 'Surat - Chennai Exp.', len: '1,271 km', category: 'Expressway', color: 'blue', hex: '#3b82f6', zone: 'South',
+            hubs: ['Chennai', 'Mumbai', 'Hyderabad'], agency: 'NHAI', cities: 'Surat ➔ Nashik ➔ Solapur ➔ Kurnool ➔ Chennai', lanes: '4-6 Lanes', tolls: 'Closed Loop', progress: 'Under Construction (30%)',
+            desc: 'A massive north-to-south greenfield expressway connecting Gujarat directly to Tamil Nadu.',
+            link: 'https://en.wikipedia.org/wiki/Surat%E2%80%93Chennai_Expressway', coords: [[21.17, 72.83], [19.99, 73.78], [17.65, 75.90], [15.82, 78.03], [13.08, 80.27]]
+        },
+        'raipur-vizag': {
+            name: 'Raipur - Visakhapatnam Exp.', len: '464 km', category: 'Expressway', color: 'blue', hex: '#3b82f6', zone: 'East',
+            hubs: ['Raipur', 'Bhubaneswar'], agency: 'NHAI', cities: 'Raipur ➔ Kurud ➔ Koraput ➔ Visakhapatnam', lanes: '6 Lanes', tolls: 'TBA', progress: 'Under Construction (45%)',
+            desc: 'Economic corridor boosting connectivity from central India to the eastern ports.',
+            link: 'https://en.wikipedia.org/wiki/Raipur%E2%80%93Visakhapatnam_Expressway', coords: [[21.25, 81.62], [20.10, 81.90], [18.80, 82.60], [17.68, 83.21]]
+        },
+        'ahmedabad-dholera': {
+            name: 'Ahmedabad - Dholera Exp.', len: '109 km', category: 'Expressway', color: 'blue', hex: '#3b82f6', zone: 'West',
+            hubs: ['Gandhinagar'], agency: 'NHAI', cities: 'Sarkhej (Ahmedabad) ➔ Dholera SIR ➔ Bhavnagar', lanes: '4 Lanes', tolls: '2 Plazas', progress: 'Under Construction (85%)',
+            desc: 'High-speed corridor connecting Ahmedabad to the upcoming Dholera Special Investment Region (SIR).',
+            link: 'https://en.wikipedia.org/wiki/Ahmedabad%E2%80%93Dholera_Expressway', coords: [[22.98, 72.50], [22.65, 72.30], [22.25, 72.15]]
+        },
+        'amritsar-jamnagar': {
+            name: 'Amritsar - Jamnagar Exp.', len: '1,257 km', category: 'Expressway', color: 'blue', hex: '#3b82f6', zone: 'West',
+            hubs: ['Chandigarh', 'Jaipur', 'Gandhinagar'], agency: 'NHAI', cities: 'Amritsar ➔ Bathinda ➔ Bikaner ➔ Jodhpur ➔ Jamnagar', lanes: '4-6 Lanes', tolls: 'Closed Loop', progress: 'Under Construction (70%)',
+            desc: 'Strategic economic corridor connecting three major oil refineries and linking northern states to Gujarat ports.',
+            link: 'https://en.wikipedia.org/wiki/Amritsar%E2%80%93Jamnagar_Expressway', coords: [[31.63, 74.87], [30.20, 74.95], [28.00, 73.30], [26.25, 73.00], [22.45, 70.05]]
+        },
+        'varanasi-kolkata': {
+            name: 'Varanasi - Kolkata Exp.', len: '610 km', category: 'Expressway', color: 'purple', hex: '#a855f7', zone: 'East',
+            hubs: ['Kolkata', 'Ranchi', 'Patna'], agency: 'NHAI', cities: 'Varanasi ➔ Aurangabad ➔ Bokaro ➔ Howrah', lanes: '4-6 Lanes', tolls: 'TBA', progress: 'Under Construction (Initial)',
+            desc: 'A proposed greenfield expressway to seamlessly connect Uttar Pradesh, Bihar, Jharkhand, and West Bengal.',
+            link: 'https://en.wikipedia.org/wiki/Varanasi%E2%80%93Kolkata_Expressway', coords: [[25.31, 82.97], [24.75, 84.35], [24.00, 85.35], [23.80, 86.15], [22.60, 88.30]]
+        },
+        'nagpur-goa': {
+            name: 'Nagpur - Goa Exp. (Shaktipeeth)', len: '760 km', category: 'Expressway', color: 'orange', hex: '#f97316', zone: 'West',
+            hubs: ['Mumbai', 'Panaji'], agency: 'MSRDC', cities: 'Nagpur ➔ Nanded ➔ Solapur ➔ Kolhapur ➔ Goa', lanes: '6 Lanes', tolls: 'TBA', progress: 'Approved / Initial Phase',
+            desc: 'A massive greenfield corridor connecting Nagpur to Goa, boosting connectivity across Maharashtra.',
+            link: 'https://en.wikipedia.org/wiki/Nagpur%E2%80%93Goa_Expressway', coords: [[21.14, 79.08], [19.15, 77.30], [18.40, 76.55], [17.65, 75.90], [16.70, 74.24], [15.40, 73.90]]
+        },
+        'pune-bengaluru': {
+            name: 'Pune - Bengaluru Exp.', len: '745 km', category: 'Expressway', color: 'orange', hex: '#f97316', zone: 'South',
+            hubs: ['Bengaluru', 'Mumbai'], agency: 'NHAI', cities: 'Pune ➔ Satara ➔ Belagavi ➔ Tumakuru ➔ Bengaluru', lanes: '6 Lanes', tolls: 'TBA', progress: 'Approved / Initial Phase',
+            desc: 'Proposed greenfield access-controlled expressway to relieve traffic on NH-48 and speed up IT hub connectivity.',
+            link: 'https://en.wikipedia.org/wiki/Pune%E2%80%93Bengaluru_Expressway', coords: [[18.60, 73.75], [17.68, 74.00], [15.85, 74.50], [14.45, 75.90], [13.35, 77.10], [13.05, 77.50]]
+        },
+        'chambal': {
+            name: 'Chambal Expressway', len: '404 km', category: 'Expressway', color: 'orange', hex: '#f97316', zone: 'West',
+            hubs: ['Bhopal', 'Jaipur', 'Lucknow'], agency: 'NHAI', cities: 'Kota ➔ Sheopur ➔ Morena ➔ Etawah', lanes: '4 Lanes', tolls: 'TBA', progress: 'Approved',
+            desc: 'Proposed to run along the Chambal river, connecting Rajasthan, Madhya Pradesh, and Uttar Pradesh.',
+            link: 'https://en.wikipedia.org/wiki/Chambal_Expressway', coords: [[25.15, 75.85], [25.65, 76.70], [26.50, 78.00], [26.77, 79.02]]
+        },
+        'ne-3': {
+            name: 'Delhi-Meerut Exp. (NE 3)', len: '96 km', category: 'Expressway', color: 'emerald', hex: '#10b981', zone: 'North',
+            hubs: ['Delhi'], agency: 'NHAI', cities: 'New Delhi ➔ Dasna ➔ Meerut', lanes: '14 Lanes (Max)', tolls: '2 Main Plazas', progress: '100% Operational',
+            desc: 'National Expressway 3. India\'s widest expressway, drastically cutting down the commute time in the densely populated NCR.',
+            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Meerut_Expressway', coords: [[28.61, 77.25], [28.68, 77.50], [28.95, 77.68]]
+        },
+        'yamuna-exp': {
+            name: 'Yamuna Expressway', len: '165 km', category: 'Expressway', color: 'emerald', hex: '#10b981', zone: 'North',
+            hubs: ['Delhi'], agency: 'YEIDA', cities: 'Greater Noida ➔ Aligarh ➔ Mathura ➔ Agra', lanes: '6 Lanes (Exp to 8)', tolls: '3 Main Plazas', progress: '100% Operational',
+            desc: 'India\'s first major 6-lane access-controlled expressway connecting the National Capital Region to Agra.',
+            link: 'https://en.wikipedia.org/wiki/Yamuna_Expressway', coords: [[28.47, 77.50], [27.85, 77.80], [27.17, 78.00]]
+        },
+        'agra-lucknow': {
+            name: 'Agra-Lucknow Expressway', len: '302 km', category: 'Expressway', color: 'emerald', hex: '#10b981', zone: 'North',
+            hubs: ['Lucknow'], agency: 'UPEIDA', cities: 'Agra ➔ Etawah ➔ Kanpur ➔ Lucknow', lanes: '6 Lanes', tolls: '2 Main Plazas', progress: '100% Operational',
+            desc: 'A 6-lane greenfield expressway that acts as an extension of the Yamuna Expressway, providing seamless transit to Lucknow.',
+            link: 'https://en.wikipedia.org/wiki/Agra%E2%80%93Lucknow_Expressway', coords: [[27.17, 78.00], [27.05, 78.58], [26.46, 80.33], [26.84, 80.94]]
+        },
+        'purvanchal': {
+            name: 'Purvanchal Expressway', len: '341 km', category: 'Expressway', color: 'emerald', hex: '#10b981', zone: 'East',
+            hubs: ['Lucknow'], agency: 'UPEIDA', cities: 'Lucknow ➔ Azamgarh ➔ Ghazipur', lanes: '6 Lanes', tolls: '2 Main Plazas', progress: '100% Operational',
+            desc: 'Connects the capital Lucknow with the eastern districts of UP. Features a 3.2 km airstrip for emergency landings.',
+            link: 'https://en.wikipedia.org/wiki/Purvanchal_Expressway', coords: [[26.84, 80.94], [26.50, 81.60], [26.06, 83.18], [25.58, 83.57]]
+        },
+        'ganga-exp': { 
+            name: 'Ganga Expressway', len: '594 km', category: 'Expressway', color: 'emerald', hex: '#10b981', zone: 'North',
+            hubs: ['Delhi', 'Lucknow'], agency: 'UPEIDA', cities: 'Meerut ➔ Bulandshahr ➔ Prayagraj', lanes: '6 Lanes', tolls: '12 Toll Plazas', progress: '100% Operational',
+            desc: 'Uttar Pradesh’s mega corridor connecting West to East. Inaugurated April 2026.',
+            link: 'https://en.wikipedia.org/wiki/Ganga_Expressway', coords: [[28.98, 77.70], [28.05, 78.40], [27.38, 79.98], [25.43, 81.84]]
+        },
+        'bce': {
+            name: 'Bengaluru - Chennai Exp.', len: '258 km', category: 'Expressway', color: 'emerald', hex: '#10b981', zone: 'South',
+            hubs: ['Bengaluru', 'Chennai'], agency: 'NHAI', cities: 'Hoskote (Bengaluru) ➔ Malur ➔ Chittoor ➔ Sriperumbudur', lanes: '4 Lanes (Exp to 8)', tolls: '5 Toll Plazas', progress: 'Under Construction (~40%)',
+            desc: 'Upcoming 4-lane high-speed link designed to slash travel time between the southern IT hubs from 7 hours down to 3-4 hours.',
+            link: 'https://en.wikipedia.org/wiki/Bengaluru%E2%80%93Chennai_Expressway', coords: [[13.00, 77.80], [13.10, 78.30], [13.20, 79.10], [13.00, 80.00]]
+        },
+        'samruddhi': {
+            name: 'Samruddhi Mahamarg', len: '701 km', category: 'Expressway', color: 'emerald', hex: '#10b981', zone: 'West',
+            hubs: ['Mumbai'], agency: 'MSRDC', cities: 'Nagpur ➔ Sambhajinagar ➔ Nashik ➔ Mumbai', lanes: '6 Lanes', tolls: '26 Plazas', progress: '100% Operational',
+            desc: 'A flagship greenfield expressway across Maharashtra connecting the central capital Nagpur to the commercial capital Mumbai.',
+            link: 'https://en.wikipedia.org/wiki/Hindu_Hrudaysamrat_Balasaheb_Thackeray_Maharashtra_Samruddhi_Mahamarg', coords: [[21.14, 79.08], [20.90, 77.75], [19.87, 75.34], [19.99, 73.78], [19.07, 72.87]]
+        },
+        'mpe': {
+            name: 'Mumbai - Pune Expressway', len: '94 km', category: 'Expressway', color: 'emerald', hex: '#10b981', zone: 'West',
+            hubs: ['Mumbai'], agency: 'MSRDC', cities: 'Navi Mumbai ➔ Lonavala ➔ Pune', lanes: '6 Lanes', tolls: '2 Main Plazas', progress: '100% Operational',
+            desc: 'India\'s first 6-lane concrete, high-speed, access-controlled tolled expressway.',
+            link: 'https://en.wikipedia.org/wiki/Mumbai%E2%80%93Pune_Expressway', coords: [[19.00, 73.05], [18.75, 73.40], [18.60, 73.75]]
+        },
+        'delhi-dehradun': {
+            name: 'Delhi-Dehradun Expressway', len: '210 km', category: 'Expressway', color: 'emerald', hex: '#10b981', zone: 'North',
+            hubs: ['Delhi', 'Dehradun'], agency: 'NHAI', cities: 'Delhi ➔ Baghpat ➔ Shamli ➔ Saharanpur ➔ Dehradun', lanes: '6 Lanes', tolls: 'Closed Loop', progress: '100% Operational',
+            desc: 'Features Asia’s largest 12km elevated wildlife corridor to protect Rajaji National Park. Reduces commute to 2.5 hours.',
+            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Dehradun_Expressway', coords: [[28.70, 77.25], [29.15, 77.30], [29.96, 77.55], [30.31, 78.03]]
+        }
+    };
+
+    // --- City / Zone Definitions ---
+    const metrosList = ['Delhi', 'Mumbai', 'Bengaluru', 'Hyderabad', 'Chennai', 'Kolkata'];
+    const capitalsList = ['Srinagar', 'Chandigarh', 'Shimla', 'Dehradun', 'Lucknow', 'Jaipur', 'Gandhinagar', 'Bhopal', 'Raipur', 'Panaji', 'Patna', 'Ranchi', 'Bhubaneswar', 'Dispur', 'Kohima', 'Trivandrum'];
+
+    const zoneBounds = {
+        'All':   [[6.46, 68.10], [35.51, 97.39]],
+        'North': [[26.0, 72.0], [37.5, 81.0]],
+        'South': [[8.0, 74.0], [19.5, 80.5]],
+        'East':  [[20.0, 82.0], [28.0, 97.5]],
+        'West':  [[18.0, 68.0], [25.0, 80.0]]
+    };
+
+    const hubBounds = {
+        // Metros
+        'Delhi':       [[28.00, 76.50], [29.20, 77.90]],
+        'Mumbai':      [[18.50, 72.30], [19.60, 73.50]],
+        'Bengaluru':   [[12.40, 77.00], [13.60, 78.20]],
+        'Hyderabad':   [[16.80, 77.90], [18.00, 79.10]],
+        'Chennai':     [[12.50, 79.70], [13.70, 80.90]],
+        'Kolkata':     [[22.00, 87.80], [23.20, 89.00]],
+        // Capitals
+        'Srinagar':    [[33.50, 74.00], [34.50, 75.50]],
+        'Chandigarh':  [[30.50, 76.50], [31.00, 77.00]],
+        'Shimla':      [[30.80, 76.90], [31.30, 77.40]],
+        'Dehradun':    [[30.10, 77.80], [30.50, 78.20]],
+        'Lucknow':     [[26.60, 80.70], [27.00, 81.10]],
+        'Jaipur':      [[26.70, 75.60], [27.10, 76.00]],
+        'Gandhinagar': [[22.90, 72.40], [23.40, 72.80]],
+        'Bhopal':      [[23.00, 77.20], [23.40, 77.60]],
+        'Raipur':      [[21.00, 81.40], [21.40, 81.80]],
+        'Panaji':      [[15.20, 73.60], [15.60, 74.10]],
+        'Patna':       [[25.40, 84.90], [25.80, 85.30]],
+        'Ranchi':      [[23.10, 85.10], [23.50, 85.50]],
+        'Bhubaneswar': [[20.00, 85.60], [20.40, 86.00]],
+        'Dispur':      [[25.90, 91.50], [26.30, 91.90]],
+        'Kohima':      [[24.50, 93.70], [25.80, 94.30]],
+        'Trivandrum':  [[8.30, 76.70], [8.70, 77.10]]
+    };
+
+    // --- DOM Elements ---
+    const networkTypeSelect = document.getElementById('networkTypeSelect');
+    const subFilterSelect = document.getElementById('subFilterSelect');
+    const dropdown = document.getElementById('routeSelect');
+    const detailsBlock = document.getElementById('detailsBlock');
+    
+    // Details Elements
+    const dTitle = document.getElementById('detailTitle');
+    const dLength = document.getElementById('detailLength');
+    const dTagText = document.getElementById('detailTagText');
+    const dTagContainer = document.getElementById('detailTag');
+    const dStatusDot = document.getElementById('detailStatusDot');
+    const dDesc = document.getElementById('detailDesc');
+    const dAgency = document.getElementById('detailAgency');
+    const dLanes = document.getElementById('detailLanes');
+    const dZone = document.getElementById('detailZone'); 
+    const dTolls = document.getElementById('detailTolls');
+    const dProgress = document.getElementById('detailProgress');
+    const dCities = document.getElementById('detailCities');
+    const dLink = document.getElementById('detailLink');
+    const themeToggleBtn = document.getElementById('themeToggle');
+
+    // --- Map Initialization ---
+    const mapMaxBounds = L.latLngBounds(L.latLng(6.4626999, 68.1097), L.latLng(35.513327, 97.3953586));
+
+    const map = L.map('map', {
+        zoomControl: false,
+        attributionControl: false,
+        maxBounds: mapMaxBounds,
+        maxBoundsViscosity: 1.0,
+        minZoom: 4.5
+    }).setView([22.5, 79.0], 5); 
+
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.control.attribution({position: 'bottomleft'}).addTo(map);
+
+    fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries/IND.geo.json')
+        .then(response => response.json())
+        .then(data => {
+            L.geoJSON(data, {
+                style: { color: '#000000', weight: 3, opacity: 0.9, fillOpacity: 0 },
+                interactive: false 
+            }).addTo(map);
+        })
+        .catch(err => console.error("Error loading India border:", err));
+
+    function smoothMapResize() {
+        let startTime = Date.now();
+        let resizeInterval = setInterval(() => {
+            map.invalidateSize();
+            if (Date.now() - startTime > 550) clearInterval(resizeInterval);
+        }, 20);
+    }
+
+    function getTileUrl() {
+        const isDark = document.documentElement.classList.contains('dark');
+        return isDark 
+            ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+            : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    }
+
+    function initTileLayer() {
+        if(tileLayer) map.removeLayer(tileLayer);
+        tileLayer = L.tileLayer(getTileUrl(), {
+            attribution: '&copy; OpenStreetMap &copy; CARTO',
+            subdomains: 'abcd',
+            maxZoom: 18,
+            minZoom: 4.5,
+            bounds: mapMaxBounds
+        }).addTo(map);
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        initTileLayer();
+    });
+
+    initTileLayer();
+
+    // --- Draw Initial Map Layers ---
+    Object.keys(routeData).forEach(id => {
+        const info = routeData[id];
+        let dashPattern = null;
+        if (info.category.includes('International')) dashPattern = '8, 8';
+        else if (info.progress.includes('Construction')) dashPattern = '10, 8';
+        else if (info.progress.includes('Approved') || info.progress.includes('Future')) dashPattern = '5, 5';
+        
+        const layer = L.polyline(info.coords, {
+            color: info.hex,
+            weight: 5, 
+            opacity: 0.8,
+            dashArray: dashPattern,
+            lineCap: 'round',
+            lineJoin: 'round'
+        }).addTo(map);
+
+        mapLayers[id] = layer;
+        layer.defaultWeight = 5;
+        layer.defaultOpacity = 0.8;
+        layer.infoId = id;
+
+        layer.on('mouseover', function() {
+            if(currentHighlightedLayer !== this) this.setStyle({ weight: 8, opacity: 1 });
+        });
+        layer.on('mouseout', function() {
+            if(currentHighlightedLayer !== this) this.setStyle({ weight: this.defaultWeight, opacity: this.defaultOpacity });
+        });
+        layer.on('click', () => {
+            showDetails(id);
+            highlightMapLayer(id);
+            
+            const d3Option = Array.from(dropdown.options).find(opt => opt.value === id);
+            if (d3Option) {
+                dropdown.value = id;
+            }
+            
+            if (window.innerWidth < 1024) {
+                setTimeout(() => {
+                    document.getElementById('explorerBlock').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 150);
+            }
+        });
+    });
+
+    // --- Multi-Tier Dropdown Logic ---
+    function populateSubFilter() {
+        const type = networkTypeSelect.value;
+        subFilterSelect.innerHTML = '';
+
+        if (type === 'Metros') {
+            subFilterSelect.innerHTML = `
+                <option value="All" selected>All Metro Cities</option>
+                <option value="Delhi">Delhi (NCR)</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Bengaluru">Bengaluru</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="Chennai">Chennai</option>
+                <option value="Kolkata">Kolkata</option>
+            `;
+        } else if (type === 'Capitals') {
+            subFilterSelect.innerHTML = `
+                <option value="All" selected>All State Capitals</option>
+                <optgroup label="North Capitals">
+                    <option value="Srinagar">Srinagar / Jammu</option>
+                    <option value="Chandigarh">Chandigarh</option>
+                    <option value="Shimla">Shimla</option>
+                    <option value="Dehradun">Dehradun</option>
+                    <option value="Lucknow">Lucknow</option>
+                    <option value="Jaipur">Jaipur</option>
+                </optgroup>
+                <optgroup label="West & Central Capitals">
+                    <option value="Gandhinagar">Gandhinagar</option>
+                    <option value="Bhopal">Bhopal</option>
+                    <option value="Raipur">Raipur</option>
+                    <option value="Panaji">Panaji (Goa)</option>
+                </optgroup>
+                <optgroup label="East & NE Capitals">
+                    <option value="Patna">Patna</option>
+                    <option value="Ranchi">Ranchi</option>
+                    <option value="Bhubaneswar">Bhubaneswar</option>
+                    <option value="Dispur">Dispur (Guwahati)</option>
+                    <option value="Kohima">Kohima / Imphal</option>
+                </optgroup>
+                <optgroup label="South Capitals">
+                    <option value="Trivandrum">Thiruvananthapuram</option>
+                </optgroup>
+            `;
+        } else if (type === 'Expressways' || type === 'International') {
+            subFilterSelect.innerHTML = `
+                <option value="All" selected>Pan India (All Zones)</option>
+                <option value="North">North Zone</option>
+                <option value="South">South Zone</option>
+                <option value="East">East Zone</option>
+                <option value="West">West Zone</option>
+            `;
+        }
+        
+        applyFilters();
+    }
+
+    function applyFilters() {
+        const type = networkTypeSelect.value;
+        const subFilter = subFilterSelect.value;
+        const visibleIds = [];
+
+        Object.keys(routeData).forEach(id => {
+            const info = routeData[id];
+            let isVisible = false;
+
+            if (type === 'Metros') {
+                const hasMetro = info.hubs.some(hub => metrosList.includes(hub));
+                if (hasMetro && (subFilter === 'All' || info.hubs.includes(subFilter))) {
+                    isVisible = true;
+                }
+            } else if (type === 'Capitals') {
+                const hasCapital = info.hubs.some(hub => capitalsList.includes(hub));
+                if (hasCapital && (subFilter === 'All' || info.hubs.includes(subFilter))) {
+                    isVisible = true;
+                }
+            } else if (type === 'Expressways') {
+                if (info.category.includes('Expressway') && (subFilter === 'All' || info.zone === subFilter)) {
+                    isVisible = true;
+                }
+            } else if (type === 'International') {
+                if (info.category.includes('International') && (subFilter === 'All' || info.zone === subFilter)) {
+                    isVisible = true;
+                }
+            }
+
+            if (isVisible) visibleIds.push(id);
+        });
+
+        Object.keys(mapLayers).forEach(id => {
+            const layer = mapLayers[id];
+            if (visibleIds.includes(id)) {
+                if (!map.hasLayer(layer)) map.addLayer(layer);
+                layer.setStyle({ opacity: layer.defaultOpacity });
+            } else {
+                if (map.hasLayer(layer)) map.removeLayer(layer);
+            }
+        });
+
+        populateRouteDropdown(visibleIds);
+        clearRouteSelection(false); 
+        
+        if (!isInitialLoad) {
+            if (subFilter === 'All') {
+                map.flyToBounds(mapMaxBounds, { padding: [20, 20], duration: 1.2 });
+            } else {
+                if ((type === 'Metros' || type === 'Capitals') && hubBounds[subFilter]) {
+                    map.flyToBounds(hubBounds[subFilter], { padding: [40, 40], duration: 1.2 });
+                } else if ((type === 'Expressways' || type === 'International') && zoneBounds[subFilter]) {
+                    map.flyToBounds(zoneBounds[subFilter], { padding: [40, 40], duration: 1.2 });
+                }
+            }
+        }
+    }
+
+    function populateRouteDropdown(visibleIds) {
+        dropdown.innerHTML = '<option value="" disabled selected>Select Specific Route...</option>';
+        if (visibleIds.length === 0) {
+            dropdown.disabled = true;
+            return;
+        }
+        dropdown.disabled = false;
+
+        const optGroups = {
+            'Expressway': document.createElement('optgroup'),
+            'Primary NH': document.createElement('optgroup'),
+            'International / AH': document.createElement('optgroup'),
+        };
+        
+        Object.keys(optGroups).forEach(cat => {
+            optGroups[cat].label = `--- ${cat} ---`;
+            dropdown.appendChild(optGroups[cat]);
+        });
+
+        visibleIds.forEach(id => {
+            const info = routeData[id];
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = `${info.name}`;
+            if(optGroups[info.category]) optGroups[info.category].appendChild(option);
+        });
+
+        Object.keys(optGroups).forEach(cat => {
+            if(optGroups[cat].children.length === 0) dropdown.removeChild(optGroups[cat]);
+        });
+    }
+
+    networkTypeSelect.addEventListener('change', populateSubFilter);
+    subFilterSelect.addEventListener('change', applyFilters);
+    
+    dropdown.addEventListener('change', (e) => {
+        const id = e.target.value;
+        if(id) {
+            showDetails(id);
+            highlightMapLayer(id);
+        }
+    });
+
+    populateSubFilter();
+    isInitialLoad = false;
+
+    function highlightMapLayer(id) {
+        if(currentHighlightedLayer) {
+            currentHighlightedLayer.setStyle({ 
+                weight: currentHighlightedLayer.defaultWeight, 
+                opacity: currentHighlightedLayer.defaultOpacity 
+            });
+        }
+        
+        const layer = mapLayers[id];
+        if(layer) {
+            if(!map.hasLayer(layer)) map.addLayer(layer);
+            
+            layer.setStyle({ weight: 10, opacity: 1 });
+            currentHighlightedLayer = layer;
+            
+            // Map forces size update before flying to ensure target bounds fill the container correctly
+            map.invalidateSize();
+            setTimeout(() => {
+                map.flyToBounds(layer.getBounds(), { padding: [30, 30], duration: 1.2 });
+            }, 50);
+            
+            const visibleOptions = Array.from(dropdown.options).map(opt => opt.value);
+            Object.keys(mapLayers).forEach(otherId => {
+                if (otherId !== id && map.hasLayer(mapLayers[otherId]) && visibleOptions.includes(otherId)) {
+                    mapLayers[otherId].setStyle({ opacity: 0.2 }); 
+                }
+            });
+        }
+    }
+
+    function showDetails(id) {
+        const info = routeData[id];
+        if(!info) return;
+
+        dTitle.innerText = info.name;
+        dLength.innerText = info.len;
+        dDesc.innerText = info.desc;
+        dTagText.innerText = info.category;
+        dAgency.innerText = info.agency;
+        dLanes.innerText = info.lanes;
+        
+        const type = networkTypeSelect.value;
+        if (type === 'Expressways' || type === 'International') {
+            dZone.innerText = info.zone + " Zone";
+        } else {
+            dZone.innerText = info.hubs.join(", ");
+        }
+        
+        dTolls.innerText = info.tolls;
+        dProgress.innerText = info.progress;
+        dCities.innerText = info.cities;
+        dLink.href = info.link;
+        
+        dTagContainer.className = `text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full mb-2 inline-flex items-center gap-2 bg-${info.color}-100 text-${info.color}-700 dark:bg-${info.color}-500/20 dark:text-${info.color}-400 border border-${info.color}-200 dark:border-${info.color}-500/30`;
+        dStatusDot.className = `w-2 h-2 rounded-full bg-${info.color}-500 shadow-[0_0_8px_currentColor]`;
+        
+        if(info.category === 'Expressway') dStatusDot.classList.add('animate-pulse');
+        else dStatusDot.classList.remove('animate-pulse');
+        
+        detailsBlock.classList.add('active');
+        smoothMapResize();
+    }
+
+    function clearRouteSelection(flyBack = true) {
+        dropdown.value = "";
+        detailsBlock.classList.remove('active');
+        smoothMapResize();
+        
+        if(currentHighlightedLayer) {
+            currentHighlightedLayer.setStyle({ 
+                weight: currentHighlightedLayer.defaultWeight, 
+                opacity: currentHighlightedLayer.defaultOpacity 
+            });
+            currentHighlightedLayer = null;
+        }
+        
+        const visibleOptions = Array.from(dropdown.options).map(opt => opt.value);
+        Object.keys(mapLayers).forEach(id => {
+            if (map.hasLayer(mapLayers[id]) && visibleOptions.includes(id)) {
+                mapLayers[id].setStyle({ opacity: mapLayers[id].defaultOpacity });
+            }
+        });
+        
+        if (flyBack) {
+            const subFilter = subFilterSelect.value;
+            const type = networkTypeSelect.value;
+            
+            if(subFilter === 'All') {
+                map.flyToBounds(mapMaxBounds, { padding: [20, 20], duration: 1.0 });
+            } else {
+                if ((type === 'Metros' || type === 'Capitals') && hubBounds[subFilter]) {
+                    map.flyToBounds(hubBounds[subFilter], { padding: [40, 40], duration: 1.0 });
+                } else if ((type === 'Expressways' || type === 'International') && zoneBounds[subFilter]) {
+                    map.flyToBounds(zoneBounds[subFilter], { padding: [40, 40], duration: 1.0 });
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>
