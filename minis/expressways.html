@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India Expressway Map 2026 - By Atish Ak Sharma</title>
+    <meta name="description" content="Interactive map of India's Expressway Network in 2026. Explore operational, under-construction, approved, and future high-speed road corridors with detailed project information.">
+    <meta name="keywords" content="India Expressways, NHAI, UPEIDA, MSRDC, Indian Roads, Infrastructure Map, Delhi-Mumbai Expressway, Ganga Expressway">
+    <meta name="author" content="Atish AK Sharma">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+        
+        body {
+            transition: background 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism System */
+        .glass-card {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .dark .glass-card {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(2, 6, 23, 0.7) 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        html:not(.dark) .glass-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Map Styling */
+        .map-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 50vh;
+            border-radius: 24px;
+            overflow: hidden;
+            padding: 0;
+        }
+
+        #map {
+            position: absolute;
+            inset: 0;
+            z-index: 10;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
+
+        /* Dropdown Styling */
+        select option {
+            background-color: #1e293b;
+            color: white;
+        }
+        html:not(.dark) select option {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        
+        /* Expand/Collapse Animation */
+        .expand-transition {
+            transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out, padding 0.3s ease;
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+        }
+        .expand-transition.active {
+            max-height: 1000px;
+            opacity: 1;
+            padding-top: 1.5rem;
+            padding-bottom: 1.5rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-[radial-gradient(circle_at_50%_0%,#1e293b_0%,#020617_100%)] dark:text-slate-50 p-4 md:p-8 min-h-screen">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="mb-10">
+            <div class="flex items-start justify-between gap-4 mb-3">
+                <div class="flex items-start gap-3 md:gap-5">
+                    <!-- Fancy Logo -->
+                    <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-emerald-500 p-[2px] shadow-[0_0_20px_rgba(16,185,129,0.3)] shrink-0">
+                        <div class="w-full h-full bg-slate-50 dark:bg-[#020617] rounded-2xl flex items-center justify-center transition-colors">
+                            <svg class="w-7 h-7 md:w-10 md:h-10 text-slate-900 dark:text-white" viewBox="0 0 24 24" fill="none" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <defs>
+                                    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="#60a5fa" />
+                                        <stop offset="100%" stop-color="#34d399" />
+                                    </linearGradient>
+                                </defs>
+                                <path d="M4 19l16-14M4 5l16 14M12 3v18" />
+                                <circle cx="12" cy="12" r="3" fill="#10b981" stroke="none" />
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Title & Details -->
+                    <div class="flex flex-col mt-[-4px]">
+                        <!-- Line 1: Title & Desktop Superscript -->
+                        <h1 class="text-2xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center flex-wrap">
+                            India Expressways&nbsp;<span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-emerald-500 to-teal-400 dark:from-blue-400 dark:via-emerald-400 dark:to-teal-300">2026</span>
+                            <sup class="hidden md:inline-block text-[10px] md:text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400 ml-1 mt-[-10px] md:mt-[-20px]">Designed By Atish</sup>
+                        </h1>
+                        
+                        <!-- Line 2 Mobile: Designed By Atish -->
+                        <span class="block md:hidden text-xs font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400 mt-1 mb-2 tracking-wide">Designed By Atish</span>
+                        
+                        <!-- Line 3 Mobile / Line 2 Desktop: Status Badge -->
+                        <div class="mb-3 mt-1 md:mt-3">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:border dark:border-blue-500/20 dark:text-blue-400 text-xs font-bold tracking-widest uppercase">
+                                <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                                April 2026 Live Status
+                            </div>
+                        </div>
+
+                        <!-- Paragraph (Visible on both) -->
+                        <p class="text-slate-600 dark:text-slate-400 text-sm md:text-lg max-w-xl leading-relaxed">
+                            Mapping the exponential infrastructure growth. From ~3,600 km in 2024 to over 6,000+ km of high-speed operational corridors today.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Theme Toggle Button -->
+                <button id="themeToggle" class="shrink-0 p-2 md:p-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">
+                    <!-- Sun icon for light mode (visible in dark mode) -->
+                    <svg id="icon-sun" class="w-5 h-5 md:w-6 md:h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <!-- Moon icon for dark mode (visible in light mode) -->
+                    <svg id="icon-moon" class="w-5 h-5 md:w-6 md:h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            
+            <!-- Main Map Area -->
+            <main class="lg:col-span-8 order-1 lg:order-1 flex flex-col">
+                <div class="map-container glass-card flex-grow w-full relative border border-slate-200 dark:border-slate-800">
+                    <!-- Leaflet OSM Map Container -->
+                    <div id="map" class="rounded-[24px]"></div>
+                </div>
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="lg:col-span-4 space-y-6 flex flex-col order-2 lg:order-2">
+                <!-- Explorer Block -->
+                <div class="glass-card p-6 flex flex-col transition-all duration-500 relative z-20 shadow-sm border border-slate-200 dark:border-white/10" id="explorerBlock">
+                    <h3 class="text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                        Explore Network
+                    </h3>
+                    
+                    <div class="relative w-full">
+                        <select id="routeSelect" class="w-full bg-white dark:bg-[#0f172a]/80 border border-slate-300 dark:border-white/10 text-slate-800 dark:text-white text-base rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block p-4 appearance-none outline-none backdrop-blur-md cursor-pointer transition-all shadow-sm hover:bg-slate-50 dark:hover:bg-[#1e293b]/90 font-medium">
+                            <option value="" disabled selected>Select an Expressway to view...</option>
+                            <!-- Options injected by JS -->
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic Details Block (Expands here) -->
+                    <div id="detailsBlock" class="expand-transition border-t border-slate-200 dark:border-white/10">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="pr-2">
+                                <span id="detailTag" class="text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full mb-2 inline-flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-white" id="detailStatusDot"></span>
+                                    <span id="detailTagText">Category</span>
+                                </span>
+                                <h2 id="detailTitle" class="text-2xl font-extrabold text-slate-900 dark:text-white leading-tight">Route Name</h2>
+                            </div>
+                            <button onclick="clearSelection()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full min-w-[36px] h-9 flex items-center justify-center transition-colors">
+                                <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 1L1 13M1 1L13 13"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 flex items-center justify-center text-lg">📏</div>
+                                <div>
+                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Length</p>
+                                    <p class="text-lg font-black text-slate-800 dark:text-white" id="detailLength">0 km</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400 flex items-center justify-center text-lg">🏗️</div>
+                                <div>
+                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Agency</p>
+                                    <p class="text-xs font-bold text-slate-800 dark:text-white line-clamp-2" id="detailAgency">NHAI</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-100 dark:bg-[#020617]/50 border border-slate-200 dark:border-white/5 mb-4 shadow-inner">
+                            <p class="text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider font-bold mb-2 flex items-center gap-2">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                Major Cities Covered
+                            </p>
+                            <p class="text-xs text-slate-700 dark:text-slate-200 font-semibold leading-relaxed" id="detailCities">City A ➔ City B</p>
+                        </div>
+
+                        <div class="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm">
+                            <p class="text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider font-bold mb-2">Project Details</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4" id="detailDesc">Details will appear here.</p>
+                            
+                            <a id="detailLink" href="#" target="_blank" class="inline-flex items-center gap-2 w-full justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-all shadow-md">
+                                Project Info / Wiki
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2026 Stats Widget -->
+                <div class="glass-card p-6 flex-grow flex flex-col justify-center border border-slate-200 dark:border-white/10 shadow-sm" id="statsBlock">
+                    <h3 class="text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold mb-6">Network Snapshot (2026)</h3>
+                    
+                    <div class="space-y-5">
+                        <!-- Restored Operational Stat -->
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Operational</span>
+                                <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400">~6,059 km</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
+                                <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 dark:from-emerald-600 dark:to-emerald-400 h-full rounded-full relative" style="width: 24%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Under-Construction</span>
+                                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">~11,200 km</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-400 dark:from-blue-600 dark:to-blue-400 h-full rounded-full relative" style="width: 45%">
+                                    <div class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.2)_10px,rgba(255,255,255,0.2)_20px)] dark:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.1)_10px,rgba(255,255,255,0.1)_20px)] w-[200%] animate-[dashMove_5s_linear_infinite]"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Approved</span>
+                                <span class="text-lg font-bold text-orange-600 dark:text-orange-400">~4,500 km</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
+                                <div class="bg-gradient-to-r from-orange-500 to-orange-400 dark:from-orange-600 dark:to-orange-400 h-full rounded-full relative" style="width: 18%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-end mb-1">
+                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Future Projects</span>
+                                <span class="text-lg font-bold text-purple-600 dark:text-purple-400">~3,000 km</span>
+                            </div>
+                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
+                                <div class="bg-gradient-to-r from-purple-500 to-purple-400 dark:from-purple-600 dark:to-purple-400 h-full rounded-full relative" style="width: 13%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Footer Section -->
+        <footer class="mt-12 text-center pt-8 border-t border-slate-200 dark:border-white/10 pb-4">
+            <p class="text-slate-500 dark:text-slate-400 text-sm">
+                &copy; 2026 India Expressways Project. All data mapped according to NHAI and respective state agencies.
+            </p>
+            <p class="text-slate-600 dark:text-slate-500 text-sm mt-2 font-medium tracking-wide">
+                Designed By <a href="https://atishaksharma.com" target="_blank" class="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 hover:underline transition-all font-bold">Atish AK Sharma</a>
+            </p>
+        </footer>
+    </div>
+
+<script>
+    // --- Data ---
+    const routeData = {
+        // --- OPERATIONAL ---
+        'route-yamuna': {
+            name: 'Yamuna Expressway', len: '165 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'Jaypee Infratech / YEIDA', cities: 'Greater Noida ➔ Aligarh ➔ Mathura ➔ Agra',
+            desc: 'India\'s first major 6-lane access-controlled expressway connecting the National Capital Region to Agra.',
+            link: 'https://en.wikipedia.org/wiki/Yamuna_Expressway',
+            coords: [[28.47, 77.50], [27.85, 77.80], [27.17, 78.00]]
+        },
+        'route-agra-lucknow': {
+            name: 'Agra - Lucknow Expressway', len: '302 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'UPEIDA', cities: 'Agra ➔ Firozabad ➔ Mainpuri ➔ Etawah ➔ Kanpur ➔ Lucknow',
+            desc: 'A 6-lane greenfield expressway that acts as an extension of the Yamuna Expressway, providing seamless transit to Lucknow.',
+            link: 'https://en.wikipedia.org/wiki/Agra%E2%80%93Lucknow_Expressway',
+            coords: [[27.17, 78.00], [27.05, 78.58], [26.77, 79.02], [26.46, 80.33], [26.84, 80.94]]
+        },
+        'route-purvanchal': {
+            name: 'Purvanchal Expressway', len: '341 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'UPEIDA', cities: 'Lucknow ➔ Barabanki ➔ Amethi ➔ Sultanpur ➔ Azamgarh ➔ Ghazipur',
+            desc: 'Connects the capital Lucknow with the eastern districts of UP. Features a 3.2 km airstrip for emergency landings.',
+            link: 'https://en.wikipedia.org/wiki/Purvanchal_Expressway',
+            coords: [[26.84, 80.94], [26.50, 81.60], [26.06, 83.18], [25.58, 83.57]]
+        },
+        'route-bundelkhand': {
+            name: 'Bundelkhand Expressway', len: '296 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'UPEIDA', cities: 'Chitrakoot ➔ Banda ➔ Mahoba ➔ Hamirpur ➔ Jalaun ➔ Etawah',
+            desc: 'A 4-lane access-controlled expressway boosting connectivity and tourism in the backward Bundelkhand region.',
+            link: 'https://en.wikipedia.org/wiki/Bundelkhand_Expressway',
+            coords: [[26.46, 79.52], [25.90, 79.90], [25.48, 80.33], [25.20, 80.90]]
+        },
+        'route-samruddhi': {
+            name: 'Samruddhi Mahamarg', len: '701 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'MSRDC', cities: 'Nagpur ➔ Amravati ➔ Sambhajinagar (Aurangabad) ➔ Nashik ➔ Mumbai',
+            desc: 'Hindu Hrudaysamrat Balasaheb Thackeray Maharashtra Samruddhi Mahamarg. Drastically cuts travel time between Nagpur and Mumbai.',
+            link: 'https://en.wikipedia.org/wiki/Hindu_Hrudaysamrat_Balasaheb_Thackeray_Maharashtra_Samruddhi_Mahamarg',
+            coords: [[19.07, 72.87], [19.60, 73.30], [19.99, 73.78], [19.87, 75.34], [20.90, 77.75], [21.14, 79.08]]
+        },
+        'route-mumbai-pune': {
+            name: 'Mumbai - Pune Expressway', len: '94 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'MSRDC', cities: 'Navi Mumbai ➔ Lonavala ➔ Pune',
+            desc: 'India\'s first 6-lane concrete, high-speed, access-controlled tolled expressway.',
+            link: 'https://en.wikipedia.org/wiki/Mumbai%E2%80%93Pune_Expressway',
+            coords: [[19.00, 73.05], [18.75, 73.40], [18.60, 73.75]]
+        },
+        'route-eastern-peripheral': {
+            name: 'Eastern Peripheral Exp. (KGP)', len: '135 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'NHAI', cities: 'Kundli ➔ Ghaziabad ➔ Palwal',
+            desc: 'Bypasses Delhi on the eastern side, reducing traffic congestion and pollution in the National Capital.',
+            link: 'https://en.wikipedia.org/wiki/Eastern_Peripheral_Expressway',
+            coords: [[28.85, 77.10], [28.75, 77.45], [28.45, 77.50], [28.15, 77.30]]
+        },
+        'route-ahmedabad-vadodara': {
+            name: 'Ahmedabad - Vadodara Exp.', len: '93 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'NHAI', cities: 'Ahmedabad ➔ Nadiad ➔ Anand ➔ Vadodara',
+            desc: 'National Expressway 1. Reduces travel time between the two major cities of Gujarat to under an hour.',
+            link: 'https://en.wikipedia.org/wiki/National_Expressway_1',
+            coords: [[22.95, 72.58], [22.70, 72.85], [22.55, 72.95], [22.35, 73.15]]
+        },
+        'route-delhi-meerut': {
+            name: 'Delhi - Meerut Expressway', len: '96 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'NHAI', cities: 'New Delhi ➔ Dasna ➔ Meerut',
+            desc: 'India\'s widest expressway (14 lanes at sections). Slashes Delhi to Meerut commute to just 45 minutes.',
+            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Meerut_Expressway',
+            coords: [[28.61, 77.25], [28.68, 77.50], [28.95, 77.68]]
+        },
+        'route-bengaluru-mysuru': {
+            name: 'Bengaluru - Mysuru Expressway', len: '119 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'NHAI', cities: 'Bengaluru ➔ Ramanagara ➔ Mandya ➔ Mysuru',
+            desc: 'A 6-lane access-controlled highway that reduces travel time between Bengaluru and Mysuru from 3 hours to 75 minutes.',
+            link: 'https://en.wikipedia.org/wiki/Bengaluru%E2%80%93Mysuru_Expressway',
+            coords: [[12.97, 77.59], [12.72, 77.28], [12.52, 76.89], [12.29, 76.64]]
+        },
+        'route-dwarka': {
+            name: 'Dwarka Expressway', len: '29 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'NHAI', cities: 'Mahipalpur (Delhi) ➔ Dwarka ➔ Gurugram',
+            desc: 'India\'s first 8-lane elevated urban expressway, significantly decongesting NH-48 between Delhi and Gurugram.',
+            link: 'https://en.wikipedia.org/wiki/Dwarka_Expressway',
+            coords: [[28.54, 77.13], [28.52, 77.03], [28.43, 76.98]]
+        },
+        'route-trans-haryana': {
+            name: 'Trans-Haryana Expressway', len: '227 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'NHAI', cities: 'Ambala ➔ Kaithal ➔ Rohtak ➔ Narnaul',
+            desc: 'A greenfield corridor forming a bypass around Delhi for traffic moving between North and West/South India.',
+            link: 'https://en.wikipedia.org/wiki/Trans%E2%80%93Haryana_Expressway',
+            coords: [[30.37, 76.77], [29.80, 76.40], [28.89, 76.58], [28.04, 76.10]]
+        },
+
+        // --- UNDER CONSTRUCTION ---
+        'route-delhi-mumbai': { 
+            name: 'Delhi - Mumbai Expressway', len: '1,386 km', status: 'Under-Construction (Est: 2027)', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
+            agency: 'NHAI', cities: 'Delhi ➔ Gurugram ➔ Jaipur ➔ Kota ➔ Ratlam ➔ Vadodara ➔ Surat ➔ Mumbai',
+            desc: 'India’s longest access-controlled highway. The Delhi-Vadodara stretch is open. Final full completion targeted for 2027.',
+            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Mumbai_Expressway',
+            coords: [[28.40, 77.05], [27.55, 76.63], [25.21, 75.86], [23.33, 75.05], [22.30, 73.18], [21.17, 72.83], [19.80, 72.90], [19.07, 72.87]]
+        },
+        'route-ganga': { 
+            name: 'Ganga Expressway', len: '594 km', status: 'Opening April 29, 2026', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
+            agency: 'UPEIDA', cities: 'Meerut ➔ Bulandshahr ➔ Budaun ➔ Shahjahanpur ➔ Hardoi ➔ Unnao ➔ Prayagraj',
+            desc: 'Uttar Pradesh’s mega corridor connecting West to East. Set to be formally inaugurated by the PM in April 2026.',
+            link: 'https://en.wikipedia.org/wiki/Ganga_Expressway',
+            coords: [[28.98, 77.70], [28.05, 78.40], [27.88, 79.08], [27.38, 79.98], [26.50, 80.80], [25.43, 81.84]]
+        },
+        'route-bengaluru-chennai': {
+            name: 'Bengaluru - Chennai Expressway', len: '258 km', status: 'Under-Construction', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
+            agency: 'NHAI', cities: 'Hoskote ➔ Malur ➔ KGF ➔ Chittoor ➔ Ranipet ➔ Sriperumbudur',
+            desc: 'Upcoming 4-lane high-speed link designed to slash travel time between the IT hubs from 7 hours down to 3-4 hours.',
+            link: 'https://en.wikipedia.org/wiki/Bengaluru%E2%80%93Chennai_Expressway',
+            coords: [[13.00, 77.80], [13.10, 78.30], [13.20, 79.10], [12.95, 79.50], [13.00, 80.00]]
+        },
+        'route-delhi-amritsar-katra': {
+            name: 'Delhi - Amritsar - Katra Exp.', len: '669 km', status: 'Under-Construction', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
+            agency: 'NHAI', cities: 'Delhi ➔ Kaithal ➔ Ludhiana ➔ Jalandhar ➔ Amritsar ➔ Pathankot ➔ Katra',
+            desc: 'Greenfield expressway connecting Delhi to the holy city of Katra via Amritsar. Expected late 2026.',
+            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Amritsar%E2%80%93Katra_Expressway',
+            coords: [[28.70, 76.90], [29.80, 76.40], [30.90, 75.85], [31.63, 74.87], [32.25, 75.65], [32.99, 74.93]]
+        },
+        'route-delhi-dehradun': {
+            name: 'Delhi - Saharanpur - Dehradun', len: '210 km', status: 'Nearing Completion', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
+            agency: 'NHAI', cities: 'Delhi ➔ Baghpat ➔ Shamli ➔ Saharanpur ➔ Dehradun',
+            desc: 'Features Asia’s largest 12km elevated wildlife corridor to protect Rajaji National Park. Reduces commute to 2.5 hours.',
+            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Dehradun_Expressway',
+            coords: [[28.70, 77.25], [29.15, 77.30], [29.96, 77.55], [30.31, 78.03]]
+        },
+        'route-raipur-vizag': {
+            name: 'Raipur - Visakhapatnam Exp.', len: '464 km', status: 'Under-Construction', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
+            agency: 'NHAI', cities: 'Raipur ➔ Kurud ➔ Umerkote ➔ Koraput ➔ Vizianagaram ➔ Visakhapatnam',
+            desc: 'Economic corridor boosting connectivity from central India to the eastern ports.',
+            link: 'https://en.wikipedia.org/wiki/Raipur%E2%80%93Visakhapatnam_Expressway',
+            coords: [[21.25, 81.62], [20.10, 81.90], [18.80, 82.60], [17.68, 83.21]]
+        },
+        'route-ahmedabad-dholera': {
+            name: 'Ahmedabad - Dholera Exp.', len: '109 km', status: 'Under-Construction', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
+            agency: 'NHAI', cities: 'Sarkhej (Ahmedabad) ➔ Dholera SIR ➔ Bhavnagar',
+            desc: 'High-speed corridor connecting Ahmedabad to the upcoming Dholera Special Investment Region (SIR).',
+            link: 'https://en.wikipedia.org/wiki/Ahmedabad%E2%80%93Dholera_Expressway',
+            coords: [[22.98, 72.50], [22.65, 72.30], [22.25, 72.15]]
+        },
+
+        // --- APPROVED / PLANNED ---
+        'route-nagpur-goa': {
+            name: 'Nagpur - Goa (Shaktipeeth)', len: '760 km', status: 'Approved', color: 'orange', hex: '#f97316', category: 'Approved',
+            agency: 'MSRDC', cities: 'Nagpur ➔ Wardha ➔ Nanded ➔ Solapur ➔ Kolhapur ➔ Sindhudurg ➔ Goa',
+            desc: 'A massive approved greenfield corridor connecting Nagpur to Goa, boosting connectivity across Maharashtra and driving tourism.',
+            link: 'https://en.wikipedia.org/wiki/Nagpur%E2%80%93Goa_Expressway',
+            coords: [[21.14, 79.08], [19.15, 77.30], [18.40, 76.55], [17.65, 75.90], [16.70, 74.24], [15.40, 73.90]]
+        },
+        'route-pune-bengaluru': {
+            name: 'Pune - Bengaluru Exp.', len: '745 km', status: 'Approved', color: 'orange', hex: '#f97316', category: 'Approved',
+            agency: 'NHAI', cities: 'Pune ➔ Satara ➔ Belagavi ➔ Dharwad ➔ Tumakuru ➔ Bengaluru',
+            desc: 'Proposed greenfield access-controlled expressway to relieve traffic on NH-48 and speed up IT hub connectivity.',
+            link: 'https://en.wikipedia.org/wiki/Pune%E2%80%93Bengaluru_Expressway',
+            coords: [[18.60, 73.75], [17.68, 74.00], [15.85, 74.50], [14.45, 75.90], [13.35, 77.10], [13.05, 77.50]]
+        },
+        
+        // --- FUTURE ---
+        'route-varanasi-kolkata': {
+            name: 'Varanasi - Ranchi - Kolkata', len: '610 km', status: 'Future', color: 'purple', hex: '#a855f7', category: 'Future',
+            agency: 'NHAI', cities: 'Varanasi ➔ Aurangabad ➔ Gaya ➔ Bokaro ➔ Purulia ➔ Howrah',
+            desc: 'A proposed greenfield expressway to seamlessly connect Uttar Pradesh, Bihar, Jharkhand, and West Bengal.',
+            link: 'https://en.wikipedia.org/wiki/Varanasi%E2%80%93Kolkata_Expressway',
+            coords: [[25.31, 82.97], [24.75, 84.35], [24.00, 85.35], [23.80, 86.15], [23.35, 86.35], [22.60, 88.30]]
+        },
+        'route-chambal': {
+            name: 'Chambal Expressway', len: '404 km', status: 'Future', color: 'purple', hex: '#a855f7', category: 'Future',
+            agency: 'NHAI', cities: 'Kota ➔ Sheopur ➔ Morena ➔ Bhind ➔ Etawah',
+            desc: 'Proposed to run along the Chambal river, connecting Rajasthan, Madhya Pradesh, and Uttar Pradesh.',
+            link: 'https://en.wikipedia.org/wiki/Chambal_Expressway',
+            coords: [[25.15, 75.85], [25.65, 76.70], [26.50, 78.00], [26.60, 78.80], [26.77, 79.02]]
+        }
+    };
+
+    // --- DOM Elements ---
+    const dropdown = document.getElementById('routeSelect');
+    const detailsBlock = document.getElementById('detailsBlock');
+    const dTitle = document.getElementById('detailTitle');
+    const dLength = document.getElementById('detailLength');
+    const dTagText = document.getElementById('detailTagText');
+    const dTagContainer = document.getElementById('detailTag');
+    const dStatusDot = document.getElementById('detailStatusDot');
+    const dDesc = document.getElementById('detailDesc');
+    const dAgency = document.getElementById('detailAgency');
+    const dCities = document.getElementById('detailCities');
+    const dLink = document.getElementById('detailLink');
+    const themeToggleBtn = document.getElementById('themeToggle');
+
+    let currentHighlightedLayer = null;
+    let tileLayer = null;
+
+    // --- Map Initialization ---
+    // Strict Bounds to keep user inside India Map
+    const mapBounds = L.latLngBounds(
+        L.latLng(6.4626999, 68.1097), // Southwest coordinate
+        L.latLng(35.513327, 97.3953586) // Northeast coordinate
+    );
+
+    const map = L.map('map', {
+        zoomControl: false,
+        attributionControl: false,
+        maxBounds: mapBounds,
+        maxBoundsViscosity: 1.0,
+        minZoom: 4.5
+    }).setView([22.5, 79.0], 5); 
+
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+    L.control.attribution({position: 'bottomleft'}).addTo(map);
+
+    // Fetch and Highlight India's International Border
+    fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries/IND.geo.json')
+        .then(response => response.json())
+        .then(data => {
+            L.geoJSON(data, {
+                style: {
+                    color: '#000000', // Black line as requested
+                    weight: 3,
+                    opacity: 0.9,
+                    fillOpacity: 0
+                },
+                interactive: false // This prevents the border layer from blocking clicks on the roads
+            }).addTo(map);
+        })
+        .catch(err => console.error("Error loading India border:", err));
+
+    // Fix map resize white-space glitch
+    function smoothMapResize() {
+        let startTime = Date.now();
+        let resizeInterval = setInterval(() => {
+            map.invalidateSize();
+            if (Date.now() - startTime > 550) clearInterval(resizeInterval);
+        }, 20);
+    }
+
+    // --- Theming Logic ---
+    function getTileUrl() {
+        const isDark = document.documentElement.classList.contains('dark');
+        return isDark 
+            ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+            : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+    }
+
+    function initTileLayer() {
+        if(tileLayer) map.removeLayer(tileLayer);
+        tileLayer = L.tileLayer(getTileUrl(), {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 18,
+            minZoom: 4.5,
+            bounds: mapBounds
+        }).addTo(map);
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        initTileLayer();
+    });
+
+    initTileLayer(); // First load
+
+    // --- Setup Map Layers and Dropdown ---
+    const mapLayers = {};
+    const optGroups = {
+        'Operational': document.createElement('optgroup'),
+        'Under-Construction': document.createElement('optgroup'),
+        'Approved': document.createElement('optgroup'),
+        'Future': document.createElement('optgroup')
+    };
+    
+    Object.keys(optGroups).forEach(cat => {
+        optGroups[cat].label = `--- ${cat} ---`;
+        dropdown.appendChild(optGroups[cat]);
+    });
+    
+    Object.keys(routeData).forEach(id => {
+        const info = routeData[id];
+        
+        // Populate Dropdown
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = `${info.name} (${info.len})`;
+        if(optGroups[info.category]) {
+            optGroups[info.category].appendChild(option);
+        }
+        
+        let dashPattern = null;
+        if (info.category === 'Under-Construction') dashPattern = '10, 8';
+        else if (info.category === 'Approved') dashPattern = '5, 5';
+        else if (info.category === 'Future') dashPattern = '2, 6';
+        
+        // Draw Polyline on Leaflet Map
+        const layer = L.polyline(info.coords, {
+            color: info.hex,
+            weight: 5, // Increased from 4 for better clickability on mobile devices
+            opacity: 0.8,
+            dashArray: dashPattern,
+            lineCap: 'round',
+            lineJoin: 'round'
+        }).addTo(map);
+
+        mapLayers[id] = layer;
+        layer.defaultWeight = 5;
+        layer.defaultOpacity = 0.8;
+
+        // Map Interactions
+        layer.on('mouseover', function() {
+            if(currentHighlightedLayer !== this) {
+                this.setStyle({ weight: 8, opacity: 1 });
+            }
+        });
+        layer.on('mouseout', function() {
+            if(currentHighlightedLayer !== this) {
+                this.setStyle({ weight: this.defaultWeight, opacity: this.defaultOpacity });
+            }
+        });
+        layer.on('click', () => {
+            highlightMapLayer(id);
+            showDetails(id);
+            dropdown.value = id;
+            
+            // On mobile, scroll down to the explorer block so the user immediately sees the information
+            if (window.innerWidth < 1024) {
+                setTimeout(() => {
+                    document.getElementById('explorerBlock').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 150);
+            }
+        });
+    });
+
+    // --- Interaction Logic ---
+    dropdown.addEventListener('change', (e) => {
+        const id = e.target.value;
+        if(id) {
+            highlightMapLayer(id);
+            showDetails(id);
+        }
+    });
+
+    function highlightMapLayer(id) {
+        if(currentHighlightedLayer) {
+            currentHighlightedLayer.setStyle({ 
+                weight: currentHighlightedLayer.defaultWeight, 
+                opacity: currentHighlightedLayer.defaultOpacity 
+            });
+        }
+        
+        const layer = mapLayers[id];
+        if(layer) {
+            layer.setStyle({ weight: 9, opacity: 1 });
+            currentHighlightedLayer = layer;
+            map.flyToBounds(layer.getBounds(), { padding: [60, 60], maxZoom: 7, duration: 1.2 });
+        }
+    }
+
+    function showDetails(id) {
+        const info = routeData[id];
+        if(!info) return;
+
+        dTitle.innerText = info.name;
+        dLength.innerText = info.len;
+        dDesc.innerText = info.desc;
+        dTagText.innerText = info.status;
+        dAgency.innerText = info.agency;
+        dCities.innerText = info.cities;
+        dLink.href = info.link;
+        
+        // Set colors dynamically handling tailwind classes
+        dTagContainer.className = `text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full mb-2 inline-flex items-center gap-2 bg-${info.color}-100 text-${info.color}-700 dark:bg-${info.color}-500/20 dark:text-${info.color}-400 border border-${info.color}-200 dark:border-${info.color}-500/30`;
+        dStatusDot.className = `w-2 h-2 rounded-full bg-${info.color}-500 shadow-[0_0_8px_currentColor]`;
+        if(info.color === 'emerald') dStatusDot.classList.add('animate-pulse');
+        
+        // Expand the details block instead of showing a modal
+        detailsBlock.classList.add('active');
+        smoothMapResize();
+    }
+
+    function clearSelection() {
+        dropdown.value = "";
+        detailsBlock.classList.remove('active');
+        smoothMapResize();
+        
+        if(currentHighlightedLayer) {
+            currentHighlightedLayer.setStyle({ 
+                weight: currentHighlightedLayer.defaultWeight, 
+                opacity: currentHighlightedLayer.defaultOpacity 
+            });
+            currentHighlightedLayer = null;
+        }
+        map.flyToBounds(mapBounds, { padding: [20, 20], duration: 1 });
+    }
+</script>
+</body>
+</html>
