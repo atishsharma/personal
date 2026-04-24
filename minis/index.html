@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Tags -->
+    <title>Atish's Mini Projects Portfolio</title>
+    <meta name="description" content="Welcome to Atish's Mini Projects Portfolio. Explore various web applications, map tools, and projects developed by Atish Ak Sharma.">
+    <meta name="keywords" content="Atish Ak Sharma, Portfolio, Mini Projects, Web Development, Expressways, Indian Highways, GeoMap, Packager, LoadBox">
+    <meta name="author" content="Atish Ak Sharma">
+    <meta property="og:title" content="Atish's Mini Projects Portfolio">
+    <meta property="og:description" content="Explore various web applications, map tools, and projects developed by Atish Ak Sharma.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://atishaksharma.com/">
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles for Glassmorphism & Background Blobs -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Animated Background Blobs for Glass Effect */
+        .blob-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background-color: #f3f4f6; /* Light mode default bg */
+            transition: background-color 0.5s ease;
+        }
+        
+        .dark .blob-bg {
+            background-color: #0f172a; /* Dark mode default bg */
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: move 10s infinite alternate;
+        }
+
+        .dark .blob {
+            opacity: 0.3;
+        }
+
+        .blob-1 {
+            top: -10%; left: -10%;
+            width: 500px; height: 500px;
+            background: #93c5fd; /* Light blue */
+            border-radius: 50%;
+        }
+
+        .blob-2 {
+            bottom: -10%; right: -10%;
+            width: 600px; height: 600px;
+            background: #e879f9; /* Fuchsia */
+            border-radius: 50%;
+            animation-delay: 2s;
+        }
+
+        .blob-3 {
+            top: 40%; left: 40%;
+            width: 400px; height: 400px;
+            background: #c084fc; /* Purple */
+            border-radius: 50%;
+            animation-delay: 4s;
+        }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(20px, -20px) scale(1.1); }
+        }
+
+        /* Glassmorphism Classes */
+        .glass {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        .dark .glass {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Smooth transitions for links and buttons */
+        .glass-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.2);
+        }
+        .dark .glass-card:hover {
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="text-gray-800 dark:text-gray-100 min-h-screen flex flex-col relative">
+
+    <!-- Background Elements -->
+    <div class="blob-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="glass sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo (Left) -->
+            <a href="https://atishaksharma.com" target="_blank" rel="noopener noreferrer" class="flex-shrink-0 flex items-center transition-transform hover:scale-105">
+                <img class="h-12 w-12 rounded-full shadow-lg border-2 border-white/50 dark:border-gray-600/50" 
+                     src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" 
+                     alt="Atish's Logo">
+            </a>
+            
+            <!-- Title (Center) -->
+            <div class="flex-1 flex justify-center text-center px-4">
+                <h1 class="font-poppins text-xl sm:text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 drop-shadow-sm">
+                    Atish's Mini Projects Portfolio
+                </h1>
+            </div>
+            
+            <!-- Theme Toggle (Right) -->
+            <div class="flex-shrink-0 flex items-center">
+                <button id="theme-toggle" type="button" 
+                        class="text-gray-500 dark:text-gray-400 hover:bg-gray-100/50 dark:hover:bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-purple-400 rounded-full text-sm p-2.5 transition-colors">
+                    <!-- Dark icon -->
+                    <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                    </svg>
+                    <!-- Light icon -->
+                    <svg id="theme-toggle-light-icon" class="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+            
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full z-10">
+        
+        <div class="text-center mb-12">
+            <h2 class="text-lg md:text-xl text-gray-700 dark:text-gray-300 font-medium">A collection of my recent creative works and interactive tools.</h2>
+        </div>
+
+        <!-- 2 Block Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- Project 1: Expressways -->
+            <a href="https://atishaksharma.com/minis/expressways.html" class="project-card glass glass-card rounded-2xl p-6 flex flex-col items-center sm:items-start sm:flex-row gap-6 group cursor-pointer block text-current no-underline">
+                <div class="p-4 bg-blue-100 dark:bg-blue-900/50 rounded-xl text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Expressways</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Interactive mapping and visualization of expressways. Discover routes, spans, and detailed highway data.</p>
+                </div>
+            </a>
+
+            <!-- Project 2: Indian Highways -->
+            <a href="https://atishaksharma.com/minis/indianhighways.html" class="project-card glass glass-card rounded-2xl p-6 flex flex-col items-center sm:items-start sm:flex-row gap-6 group cursor-pointer block text-current no-underline">
+                <div class="p-4 bg-purple-100 dark:bg-purple-900/50 rounded-xl text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.243-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">Indian Highways</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">A comprehensive guide and map overview of the extensive Indian National Highway network system.</p>
+                </div>
+            </a>
+
+            <!-- Project 3: GeoMap -->
+            <a href="https://atishaksharma.com/minis/geomap.html" class="project-card glass glass-card rounded-2xl p-6 flex flex-col items-center sm:items-start sm:flex-row gap-6 group cursor-pointer block text-current no-underline">
+                <div class="p-4 bg-emerald-100 dark:bg-emerald-900/50 rounded-xl text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">GeoMap</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Geographical mapping utility tool. Analyze geographical coordinates, regions, and spatial visual data effectively.</p>
+                </div>
+            </a>
+
+            <!-- Project 4: Packager -->
+            <a href="https://atishaksharma.com/minis/packager.html" class="project-card glass glass-card rounded-2xl p-6 flex flex-col items-center sm:items-start sm:flex-row gap-6 group cursor-pointer block text-current no-underline">
+                <div class="p-4 bg-orange-100 dark:bg-orange-900/50 rounded-xl text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-2 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">Packager</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">A utility tool for packaging, organizing, and assembling digital assets seamlessly for quick deployments.</p>
+                </div>
+            </a>
+
+            <!-- Project 5: LoadBox -->
+            <a href="https://atishaksharma.com/minis/loadbox.html" class="project-card glass glass-card rounded-2xl p-6 flex flex-col items-center sm:items-start sm:flex-row gap-6 group cursor-pointer block text-current no-underline md:col-span-2 lg:col-span-1 lg:col-start-1 lg:col-end-3 md:w-1/2 md:mx-auto lg:w-full">
+                <!-- Using grid span logic above to center the 5th odd item nicely -->
+                <div class="p-4 bg-rose-100 dark:bg-rose-900/50 rounded-xl text-rose-600 dark:text-rose-400 group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-2 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">LoadBox</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">Efficient load management and file dropping interface. Upload, preview, and process file batches quickly.</p>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass mt-auto py-6 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-sm">
+            <p class="text-gray-600 dark:text-gray-300 font-medium">
+                &copy; <span id="year"></span> Atish's Mini Projects. All rights reserved.
+            </p>
+            <p class="text-gray-500 dark:text-gray-400 mt-2 italic tracking-wide">
+                Designed by <a href="https://atishaksharma.com" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline font-semibold transition-colors">Atish Ak Sharma</a>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Project Viewer Overlay -->
+    <div id="project-viewer" class="hidden fixed inset-0 z-[100] bg-white dark:bg-slate-900 flex-col transition-opacity duration-300">
+        <div class="h-16 glass flex items-center justify-between px-4 sm:px-6 shadow-md z-10 border-b border-gray-200 dark:border-gray-700">
+            <button id="close-viewer" class="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 font-medium flex items-center gap-2 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Back to Main Page
+            </button>
+            <h2 id="viewer-title" class="hidden sm:block text-lg font-poppins font-bold text-gray-800 dark:text-gray-100 truncate max-w-sm text-center">Project</h2>
+            <a id="viewer-new-tab" href="#" target="_blank" rel="noopener noreferrer" class="text-sm bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-sm font-medium">
+                <span class="hidden sm:inline">Open in New Tab</span>
+                <span class="sm:hidden">New Tab</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </a>
+        </div>
+        <iframe id="viewer-iframe" class="w-full flex-1 border-none bg-gray-50 dark:bg-gray-900" src=""></iframe>
+    </div>
+
+    <!-- Theme Toggle Logic & Year auto-update -->
+    <script>
+        // Set dynamic year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Theme Variables
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Check Local Storage or System Preferences
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        // Toggle Functionality
+        themeToggleBtn.addEventListener('click', function() {
+            // Toggle Icons
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            // Toggle Theme
+            if (localStorage.getItem('color-theme')) {
+                if (localStorage.getItem('color-theme') === 'light') {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                }
+            } else {
+                if (document.documentElement.classList.contains('dark')) {
+                    document.documentElement.classList.remove('dark');
+                    localStorage.setItem('color-theme', 'light');
+                } else {
+                    document.documentElement.classList.add('dark');
+                    localStorage.setItem('color-theme', 'dark');
+                }
+            }
+        });
+
+        // Project Viewer Overlay Logic
+        const projectViewer = document.getElementById('project-viewer');
+        const viewerIframe = document.getElementById('viewer-iframe');
+        const viewerTitle = document.getElementById('viewer-title');
+        const viewerNewTab = document.getElementById('viewer-new-tab');
+        const closeViewerBtn = document.getElementById('close-viewer');
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault(); // Stop normal navigation
+                
+                const url = this.getAttribute('href');
+                const title = this.querySelector('h3').textContent;
+                
+                viewerIframe.src = url;
+                viewerTitle.textContent = title;
+                viewerNewTab.href = url;
+                
+                projectViewer.classList.remove('hidden');
+                projectViewer.classList.add('flex');
+                document.body.style.overflow = 'hidden'; // Stop background scrolling
+            });
+        });
+
+        closeViewerBtn.addEventListener('click', () => {
+            projectViewer.classList.add('hidden');
+            projectViewer.classList.remove('flex');
+            viewerIframe.src = ''; // Clear iframe to stop media playback/loading
+            document.body.style.overflow = ''; // Restore scrolling
+        });
+    </script>
+</body>
+</html>
