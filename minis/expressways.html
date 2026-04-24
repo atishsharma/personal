@@ -204,19 +204,54 @@
                             </button>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3 mb-4">
-                            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
-                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 flex items-center justify-center text-lg">📏</div>
+                        <!-- Expanded Project Info Grid -->
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <!-- Length -->
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 flex items-center justify-center text-lg shrink-0">📏</div>
                                 <div>
                                     <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Length</p>
-                                    <p class="text-lg font-black text-slate-800 dark:text-white" id="detailLength">0 km</p>
+                                    <p class="text-sm md:text-base font-black text-slate-800 dark:text-white" id="detailLength">0 km</p>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
-                                <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400 flex items-center justify-center text-lg">🏗️</div>
+                            <!-- Agency -->
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400 flex items-center justify-center text-lg shrink-0">🏗️</div>
                                 <div>
                                     <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Agency</p>
-                                    <p class="text-xs font-bold text-slate-800 dark:text-white line-clamp-2" id="detailAgency">NHAI</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white line-clamp-2" id="detailAgency">NHAI</p>
+                                </div>
+                            </div>
+                            <!-- Lanes -->
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 flex items-center justify-center text-lg shrink-0">🛣️</div>
+                                <div>
+                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Lanes</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white" id="detailLanes">6 Lanes</p>
+                                </div>
+                            </div>
+                            <!-- Road Width -->
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <div class="w-8 h-8 rounded-full bg-cyan-100 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400 flex items-center justify-center text-lg shrink-0">↔️</div>
+                                <div>
+                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Row Width</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white" id="detailWidth">120m</p>
+                                </div>
+                            </div>
+                            <!-- Tolls -->
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center text-lg shrink-0">🎫</div>
+                                <div>
+                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Toll Plazas</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white" id="detailTolls">Closed Loop</p>
+                                </div>
+                            </div>
+                            <!-- Completion Progress -->
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 flex items-center justify-center text-lg shrink-0">📈</div>
+                                <div>
+                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Completed</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white" id="detailProgress">100% (0km)</p>
                                 </div>
                             </div>
                         </div>
@@ -250,20 +285,20 @@
                         <div>
                             <div class="flex justify-between items-end mb-1">
                                 <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Operational</span>
-                                <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400">~6,059 km</span>
+                                <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400">~6,269 km</span>
                             </div>
                             <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
-                                <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 dark:from-emerald-600 dark:to-emerald-400 h-full rounded-full relative" style="width: 24%"></div>
+                                <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 dark:from-emerald-600 dark:to-emerald-400 h-full rounded-full relative" style="width: 25%"></div>
                             </div>
                         </div>
 
                         <div>
                             <div class="flex justify-between items-end mb-1">
                                 <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Under-Construction</span>
-                                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">~11,200 km</span>
+                                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">~10,990 km</span>
                             </div>
                             <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
-                                <div class="bg-gradient-to-r from-blue-500 to-blue-400 dark:from-blue-600 dark:to-blue-400 h-full rounded-full relative" style="width: 45%">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-400 dark:from-blue-600 dark:to-blue-400 h-full rounded-full relative" style="width: 44%">
                                     <div class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.2)_10px,rgba(255,255,255,0.2)_20px)] dark:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.1)_10px,rgba(255,255,255,0.1)_20px)] w-[200%] animate-[dashMove_5s_linear_infinite]"></div>
                                 </div>
                             </div>
@@ -311,6 +346,7 @@
         'route-yamuna': {
             name: 'Yamuna Expressway', len: '165 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'Jaypee Infratech / YEIDA', cities: 'Greater Noida ➔ Aligarh ➔ Mathura ➔ Agra',
+            lanes: '6 Lanes (Exp to 8)', width: '100m ROW', tolls: '3 Main Plazas', progress: '100% (165 km)',
             desc: 'India\'s first major 6-lane access-controlled expressway connecting the National Capital Region to Agra.',
             link: 'https://en.wikipedia.org/wiki/Yamuna_Expressway',
             coords: [[28.47, 77.50], [27.85, 77.80], [27.17, 78.00]]
@@ -318,6 +354,7 @@
         'route-agra-lucknow': {
             name: 'Agra - Lucknow Expressway', len: '302 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'UPEIDA', cities: 'Agra ➔ Firozabad ➔ Mainpuri ➔ Etawah ➔ Kanpur ➔ Lucknow',
+            lanes: '6 Lanes (Exp to 8)', width: '110m ROW', tolls: '2 Main Plazas', progress: '100% (302 km)',
             desc: 'A 6-lane greenfield expressway that acts as an extension of the Yamuna Expressway, providing seamless transit to Lucknow.',
             link: 'https://en.wikipedia.org/wiki/Agra%E2%80%93Lucknow_Expressway',
             coords: [[27.17, 78.00], [27.05, 78.58], [26.77, 79.02], [26.46, 80.33], [26.84, 80.94]]
@@ -325,6 +362,7 @@
         'route-purvanchal': {
             name: 'Purvanchal Expressway', len: '341 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'UPEIDA', cities: 'Lucknow ➔ Barabanki ➔ Amethi ➔ Sultanpur ➔ Azamgarh ➔ Ghazipur',
+            lanes: '6 Lanes (Exp to 8)', width: '120m ROW', tolls: '2 Main Plazas', progress: '100% (341 km)',
             desc: 'Connects the capital Lucknow with the eastern districts of UP. Features a 3.2 km airstrip for emergency landings.',
             link: 'https://en.wikipedia.org/wiki/Purvanchal_Expressway',
             coords: [[26.84, 80.94], [26.50, 81.60], [26.06, 83.18], [25.58, 83.57]]
@@ -332,6 +370,7 @@
         'route-bundelkhand': {
             name: 'Bundelkhand Expressway', len: '296 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'UPEIDA', cities: 'Chitrakoot ➔ Banda ➔ Mahoba ➔ Hamirpur ➔ Jalaun ➔ Etawah',
+            lanes: '4 Lanes (Exp to 6)', width: '110m ROW', tolls: '4 Main Plazas', progress: '100% (296 km)',
             desc: 'A 4-lane access-controlled expressway boosting connectivity and tourism in the backward Bundelkhand region.',
             link: 'https://en.wikipedia.org/wiki/Bundelkhand_Expressway',
             coords: [[26.46, 79.52], [25.90, 79.90], [25.48, 80.33], [25.20, 80.90]]
@@ -339,6 +378,7 @@
         'route-samruddhi': {
             name: 'Samruddhi Mahamarg', len: '701 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'MSRDC', cities: 'Nagpur ➔ Amravati ➔ Sambhajinagar (Aurangabad) ➔ Nashik ➔ Mumbai',
+            lanes: '6 Lanes', width: '120m ROW', tolls: '26 Toll Plazas', progress: '100% (701 km)',
             desc: 'Hindu Hrudaysamrat Balasaheb Thackeray Maharashtra Samruddhi Mahamarg. Drastically cuts travel time between Nagpur and Mumbai.',
             link: 'https://en.wikipedia.org/wiki/Hindu_Hrudaysamrat_Balasaheb_Thackeray_Maharashtra_Samruddhi_Mahamarg',
             coords: [[19.07, 72.87], [19.60, 73.30], [19.99, 73.78], [19.87, 75.34], [20.90, 77.75], [21.14, 79.08]]
@@ -346,6 +386,7 @@
         'route-mumbai-pune': {
             name: 'Mumbai - Pune Expressway', len: '94 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'MSRDC', cities: 'Navi Mumbai ➔ Lonavala ➔ Pune',
+            lanes: '6 Lanes', width: '100m ROW', tolls: '2 Main Plazas', progress: '100% (94 km)',
             desc: 'India\'s first 6-lane concrete, high-speed, access-controlled tolled expressway.',
             link: 'https://en.wikipedia.org/wiki/Mumbai%E2%80%93Pune_Expressway',
             coords: [[19.00, 73.05], [18.75, 73.40], [18.60, 73.75]]
@@ -353,6 +394,7 @@
         'route-eastern-peripheral': {
             name: 'Eastern Peripheral Exp. (KGP)', len: '135 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'NHAI', cities: 'Kundli ➔ Ghaziabad ➔ Palwal',
+            lanes: '6 Lanes', width: '120m ROW', tolls: '4 Main Plazas', progress: '100% (135 km)',
             desc: 'Bypasses Delhi on the eastern side, reducing traffic congestion and pollution in the National Capital.',
             link: 'https://en.wikipedia.org/wiki/Eastern_Peripheral_Expressway',
             coords: [[28.85, 77.10], [28.75, 77.45], [28.45, 77.50], [28.15, 77.30]]
@@ -360,6 +402,7 @@
         'route-ahmedabad-vadodara': {
             name: 'Ahmedabad - Vadodara Exp.', len: '93 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'NHAI', cities: 'Ahmedabad ➔ Nadiad ➔ Anand ➔ Vadodara',
+            lanes: '4 Lanes', width: '100m ROW', tolls: '2 Main Plazas', progress: '100% (93 km)',
             desc: 'National Expressway 1. Reduces travel time between the two major cities of Gujarat to under an hour.',
             link: 'https://en.wikipedia.org/wiki/National_Expressway_1',
             coords: [[22.95, 72.58], [22.70, 72.85], [22.55, 72.95], [22.35, 73.15]]
@@ -367,6 +410,7 @@
         'route-delhi-meerut': {
             name: 'Delhi - Meerut Expressway', len: '96 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'NHAI', cities: 'New Delhi ➔ Dasna ➔ Meerut',
+            lanes: '14 Lanes (Max)', width: '120m ROW', tolls: '2 Main Plazas', progress: '100% (96 km)',
             desc: 'India\'s widest expressway (14 lanes at sections). Slashes Delhi to Meerut commute to just 45 minutes.',
             link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Meerut_Expressway',
             coords: [[28.61, 77.25], [28.68, 77.50], [28.95, 77.68]]
@@ -374,6 +418,7 @@
         'route-bengaluru-mysuru': {
             name: 'Bengaluru - Mysuru Expressway', len: '119 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'NHAI', cities: 'Bengaluru ➔ Ramanagara ➔ Mandya ➔ Mysuru',
+            lanes: '6 to 10 Lanes', width: '60m ROW', tolls: '2 Main Plazas', progress: '100% (119 km)',
             desc: 'A 6-lane access-controlled highway that reduces travel time between Bengaluru and Mysuru from 3 hours to 75 minutes.',
             link: 'https://en.wikipedia.org/wiki/Bengaluru%E2%80%93Mysuru_Expressway',
             coords: [[12.97, 77.59], [12.72, 77.28], [12.52, 76.89], [12.29, 76.64]]
@@ -381,6 +426,7 @@
         'route-dwarka': {
             name: 'Dwarka Expressway', len: '29 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'NHAI', cities: 'Mahipalpur (Delhi) ➔ Dwarka ➔ Gurugram',
+            lanes: '8 Lanes (Elevated)', width: '80m ROW', tolls: '1 Plaza', progress: '100% (29 km)',
             desc: 'India\'s first 8-lane elevated urban expressway, significantly decongesting NH-48 between Delhi and Gurugram.',
             link: 'https://en.wikipedia.org/wiki/Dwarka_Expressway',
             coords: [[28.54, 77.13], [28.52, 77.03], [28.43, 76.98]]
@@ -388,15 +434,25 @@
         'route-trans-haryana': {
             name: 'Trans-Haryana Expressway', len: '227 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'NHAI', cities: 'Ambala ➔ Kaithal ➔ Rohtak ➔ Narnaul',
+            lanes: '6 Lanes', width: '100m ROW', tolls: '6 Toll Plazas', progress: '100% (227 km)',
             desc: 'A greenfield corridor forming a bypass around Delhi for traffic moving between North and West/South India.',
             link: 'https://en.wikipedia.org/wiki/Trans%E2%80%93Haryana_Expressway',
             coords: [[30.37, 76.77], [29.80, 76.40], [28.89, 76.58], [28.04, 76.10]]
+        },
+        'route-delhi-dehradun': {
+            name: 'Delhi - Saharanpur - Dehradun', len: '210 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
+            agency: 'NHAI', cities: 'Delhi ➔ Baghpat ➔ Shamli ➔ Saharanpur ➔ Dehradun',
+            lanes: '6 Lanes', width: '100m ROW', tolls: 'Closed Loop System', progress: '100% (210 km)',
+            desc: 'Features Asia’s largest 12km elevated wildlife corridor to protect Rajaji National Park. Reduces commute to 2.5 hours.',
+            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Dehradun_Expressway',
+            coords: [[28.70, 77.25], [29.15, 77.30], [29.96, 77.55], [30.31, 78.03]]
         },
 
         // --- UNDER CONSTRUCTION ---
         'route-delhi-mumbai': { 
             name: 'Delhi - Mumbai Expressway', len: '1,386 km', status: 'Under-Construction (Est: 2027)', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
             agency: 'NHAI', cities: 'Delhi ➔ Gurugram ➔ Jaipur ➔ Kota ➔ Ratlam ➔ Vadodara ➔ Surat ➔ Mumbai',
+            lanes: '8 Lanes (Exp to 12)', width: '120m ROW', tolls: 'GPS / Closed Loop', progress: '~60% (800 km)',
             desc: 'India’s longest access-controlled highway. The Delhi-Vadodara stretch is open. Final full completion targeted for 2027.',
             link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Mumbai_Expressway',
             coords: [[28.40, 77.05], [27.55, 76.63], [25.21, 75.86], [23.33, 75.05], [22.30, 73.18], [21.17, 72.83], [19.80, 72.90], [19.07, 72.87]]
@@ -404,6 +460,7 @@
         'route-ganga': { 
             name: 'Ganga Expressway', len: '594 km', status: 'Opening April 29, 2026', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
             agency: 'UPEIDA', cities: 'Meerut ➔ Bulandshahr ➔ Budaun ➔ Shahjahanpur ➔ Hardoi ➔ Unnao ➔ Prayagraj',
+            lanes: '6 Lanes (Exp to 8)', width: '120m ROW', tolls: '12 Toll Plazas', progress: '~95% (560 km)',
             desc: 'Uttar Pradesh’s mega corridor connecting West to East. Set to be formally inaugurated by the PM in April 2026.',
             link: 'https://en.wikipedia.org/wiki/Ganga_Expressway',
             coords: [[28.98, 77.70], [28.05, 78.40], [27.88, 79.08], [27.38, 79.98], [26.50, 80.80], [25.43, 81.84]]
@@ -411,6 +468,7 @@
         'route-bengaluru-chennai': {
             name: 'Bengaluru - Chennai Expressway', len: '258 km', status: 'Under-Construction', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
             agency: 'NHAI', cities: 'Hoskote ➔ Malur ➔ KGF ➔ Chittoor ➔ Ranipet ➔ Sriperumbudur',
+            lanes: '4 Lanes (Exp to 8)', width: '90m ROW', tolls: '5 Toll Plazas', progress: '~40% (100 km)',
             desc: 'Upcoming 4-lane high-speed link designed to slash travel time between the IT hubs from 7 hours down to 3-4 hours.',
             link: 'https://en.wikipedia.org/wiki/Bengaluru%E2%80%93Chennai_Expressway',
             coords: [[13.00, 77.80], [13.10, 78.30], [13.20, 79.10], [12.95, 79.50], [13.00, 80.00]]
@@ -418,20 +476,15 @@
         'route-delhi-amritsar-katra': {
             name: 'Delhi - Amritsar - Katra Exp.', len: '669 km', status: 'Under-Construction', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
             agency: 'NHAI', cities: 'Delhi ➔ Kaithal ➔ Ludhiana ➔ Jalandhar ➔ Amritsar ➔ Pathankot ➔ Katra',
+            lanes: '4 Lanes (Exp to 8)', width: '100m ROW', tolls: 'Closed Loop System', progress: '~20% (130 km)',
             desc: 'Greenfield expressway connecting Delhi to the holy city of Katra via Amritsar. Expected late 2026.',
             link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Amritsar%E2%80%93Katra_Expressway',
             coords: [[28.70, 76.90], [29.80, 76.40], [30.90, 75.85], [31.63, 74.87], [32.25, 75.65], [32.99, 74.93]]
         },
-        'route-delhi-dehradun': {
-            name: 'Delhi - Saharanpur - Dehradun', len: '210 km', status: 'Nearing Completion', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
-            agency: 'NHAI', cities: 'Delhi ➔ Baghpat ➔ Shamli ➔ Saharanpur ➔ Dehradun',
-            desc: 'Features Asia’s largest 12km elevated wildlife corridor to protect Rajaji National Park. Reduces commute to 2.5 hours.',
-            link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Dehradun_Expressway',
-            coords: [[28.70, 77.25], [29.15, 77.30], [29.96, 77.55], [30.31, 78.03]]
-        },
         'route-raipur-vizag': {
             name: 'Raipur - Visakhapatnam Exp.', len: '464 km', status: 'Under-Construction', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
             agency: 'NHAI', cities: 'Raipur ➔ Kurud ➔ Umerkote ➔ Koraput ➔ Vizianagaram ➔ Visakhapatnam',
+            lanes: '6 Lanes', width: '100m ROW', tolls: 'TBA', progress: '~10% (45 km)',
             desc: 'Economic corridor boosting connectivity from central India to the eastern ports.',
             link: 'https://en.wikipedia.org/wiki/Raipur%E2%80%93Visakhapatnam_Expressway',
             coords: [[21.25, 81.62], [20.10, 81.90], [18.80, 82.60], [17.68, 83.21]]
@@ -439,6 +492,7 @@
         'route-ahmedabad-dholera': {
             name: 'Ahmedabad - Dholera Exp.', len: '109 km', status: 'Under-Construction', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
             agency: 'NHAI', cities: 'Sarkhej (Ahmedabad) ➔ Dholera SIR ➔ Bhavnagar',
+            lanes: '4 Lanes', width: '120m ROW', tolls: '2 Toll Plazas', progress: '~60% (65 km)',
             desc: 'High-speed corridor connecting Ahmedabad to the upcoming Dholera Special Investment Region (SIR).',
             link: 'https://en.wikipedia.org/wiki/Ahmedabad%E2%80%93Dholera_Expressway',
             coords: [[22.98, 72.50], [22.65, 72.30], [22.25, 72.15]]
@@ -448,6 +502,7 @@
         'route-nagpur-goa': {
             name: 'Nagpur - Goa (Shaktipeeth)', len: '760 km', status: 'Approved', color: 'orange', hex: '#f97316', category: 'Approved',
             agency: 'MSRDC', cities: 'Nagpur ➔ Wardha ➔ Nanded ➔ Solapur ➔ Kolhapur ➔ Sindhudurg ➔ Goa',
+            lanes: '6 Lanes', width: '120m ROW', tolls: 'TBA', progress: '0% (0 km)',
             desc: 'A massive approved greenfield corridor connecting Nagpur to Goa, boosting connectivity across Maharashtra and driving tourism.',
             link: 'https://en.wikipedia.org/wiki/Nagpur%E2%80%93Goa_Expressway',
             coords: [[21.14, 79.08], [19.15, 77.30], [18.40, 76.55], [17.65, 75.90], [16.70, 74.24], [15.40, 73.90]]
@@ -455,6 +510,7 @@
         'route-pune-bengaluru': {
             name: 'Pune - Bengaluru Exp.', len: '745 km', status: 'Approved', color: 'orange', hex: '#f97316', category: 'Approved',
             agency: 'NHAI', cities: 'Pune ➔ Satara ➔ Belagavi ➔ Dharwad ➔ Tumakuru ➔ Bengaluru',
+            lanes: '6 Lanes', width: '120m ROW', tolls: 'TBA', progress: '0% (0 km)',
             desc: 'Proposed greenfield access-controlled expressway to relieve traffic on NH-48 and speed up IT hub connectivity.',
             link: 'https://en.wikipedia.org/wiki/Pune%E2%80%93Bengaluru_Expressway',
             coords: [[18.60, 73.75], [17.68, 74.00], [15.85, 74.50], [14.45, 75.90], [13.35, 77.10], [13.05, 77.50]]
@@ -464,6 +520,7 @@
         'route-varanasi-kolkata': {
             name: 'Varanasi - Ranchi - Kolkata', len: '610 km', status: 'Future', color: 'purple', hex: '#a855f7', category: 'Future',
             agency: 'NHAI', cities: 'Varanasi ➔ Aurangabad ➔ Gaya ➔ Bokaro ➔ Purulia ➔ Howrah',
+            lanes: '4 to 6 Lanes', width: '100m ROW', tolls: 'TBA', progress: '0% (0 km)',
             desc: 'A proposed greenfield expressway to seamlessly connect Uttar Pradesh, Bihar, Jharkhand, and West Bengal.',
             link: 'https://en.wikipedia.org/wiki/Varanasi%E2%80%93Kolkata_Expressway',
             coords: [[25.31, 82.97], [24.75, 84.35], [24.00, 85.35], [23.80, 86.15], [23.35, 86.35], [22.60, 88.30]]
@@ -471,6 +528,7 @@
         'route-chambal': {
             name: 'Chambal Expressway', len: '404 km', status: 'Future', color: 'purple', hex: '#a855f7', category: 'Future',
             agency: 'NHAI', cities: 'Kota ➔ Sheopur ➔ Morena ➔ Bhind ➔ Etawah',
+            lanes: '4 Lanes', width: '100m ROW', tolls: 'TBA', progress: '0% (0 km)',
             desc: 'Proposed to run along the Chambal river, connecting Rajasthan, Madhya Pradesh, and Uttar Pradesh.',
             link: 'https://en.wikipedia.org/wiki/Chambal_Expressway',
             coords: [[25.15, 75.85], [25.65, 76.70], [26.50, 78.00], [26.60, 78.80], [26.77, 79.02]]
@@ -487,6 +545,13 @@
     const dStatusDot = document.getElementById('detailStatusDot');
     const dDesc = document.getElementById('detailDesc');
     const dAgency = document.getElementById('detailAgency');
+    
+    // New DOM Elements
+    const dLanes = document.getElementById('detailLanes');
+    const dWidth = document.getElementById('detailWidth');
+    const dTolls = document.getElementById('detailTolls');
+    const dProgress = document.getElementById('detailProgress');
+    
     const dCities = document.getElementById('detailCities');
     const dLink = document.getElementById('detailLink');
     const themeToggleBtn = document.getElementById('themeToggle');
@@ -507,7 +572,7 @@
         maxBounds: mapBounds,
         maxBoundsViscosity: 1.0,
         minZoom: 4.5
-    }).setView([22.5, 79.0], 5); 
+    }).setView([28.6139, 77.2090], 6); // Centered above Delhi with higher zoom to fill the block
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.control.attribution({position: 'bottomleft'}).addTo(map);
@@ -666,6 +731,13 @@
         dDesc.innerText = info.desc;
         dTagText.innerText = info.status;
         dAgency.innerText = info.agency;
+        
+        // Map new fields
+        dLanes.innerText = info.lanes;
+        dWidth.innerText = info.width;
+        dTolls.innerText = info.tolls;
+        dProgress.innerText = info.progress;
+        
         dCities.innerText = info.cities;
         dLink.href = info.link;
         
@@ -691,7 +763,8 @@
             });
             currentHighlightedLayer = null;
         }
-        map.flyToBounds(mapBounds, { padding: [20, 20], duration: 1 });
+        // Return to the new default Delhi-centered view instead of zooming all the way out
+        map.flyTo([28.6139, 77.2090], 6, { duration: 1 });
     }
 </script>
 </body>
