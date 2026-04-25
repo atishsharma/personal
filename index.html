@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atish Ak Sharma - Official Portfolio</title>
+    <meta name="description" content="Official portfolio of Atish Ak Sharma. A developer's garden of experiments, tools, and research.">
+    <meta name="keywords" content="Atish Ak Sharma, ATS Design Studio, Portfolio, Web Developer, Full Stack">
+    <meta name="author" content="Atish Ak Sharma">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://atishaksharma.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://atishaksharma.com/">
+    <meta property="og:title" content="Atish Ak Sharma - Official Portfolio">
+    <meta property="og:description" content="A developer's garden of experiments, tools, and research.">
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://atishaksharma.com/">
+    <meta property="twitter:title" content="Atish Ak Sharma - Official Portfolio">
+    <meta property="twitter:description" content="A developer's garden of experiments, tools, and research.">
+    <meta property="twitter:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+        if (localStorage.theme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Bebas+Neue&family=Anton&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-nav { background: rgba(255,255,255,0.4); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid rgba(255,255,255,0.5); box-shadow: 0 4px 30px rgba(0,0,0,0.05); }
+        .dark .glass-nav { background: rgba(15,23,42,0.5); border-bottom: 1px solid rgba(255,255,255,0.08); box-shadow: 0 4px 30px rgba(0,0,0,0.3); }
+        .glass-panel { background: rgba(255,255,255,0.35); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 24px 40px -8px rgba(0,0,0,0.1), inset 0 0 0 1px rgba(255,255,255,0.2); }
+        .dark .glass-panel { background: rgba(17,24,39,0.5); border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 24px 40px -8px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.05); }
+        .glass-card { background: rgba(255,255,255,0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .dark .glass-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .gradient-text { background: linear-gradient(to right, #10b981, #3b82f6, #6366f1); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+        .gradient-text-alt { background: linear-gradient(to right, #f43f5e, #8b5cf6, #3b82f6); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+        .bg-grid-pattern { background-image: linear-gradient(to right, rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(0,0,0,0.04) 1px, transparent 1px); background-size: 32px 32px; }
+        .dark .bg-grid-pattern { background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px); }
+        summary::-webkit-details-marker { display: none; }
+        summary { list-style: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeIn { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes outlineBlink { 0%,100% { border-color: rgba(239,68,68,0.8); box-shadow: 0 0 12px rgba(239,68,68,0.5); } 50% { border-color: rgba(239,68,68,0.1); box-shadow: 0 0 0px rgba(239,68,68,0); } }
+        .blink-outline { animation: outlineBlink 2.5s ease-in-out infinite; border: 1px solid transparent; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* === HERO SECTION === */
+        .hero-section { position: relative; min-height: 100vh; min-height: 100svh; background: linear-gradient(135deg, #f8f9fc 0%, #e8eaf0 100%); display: flex; align-items: flex-end; justify-content: center; overflow: hidden; z-index: 1; }
+        .dark .hero-section { background: #050508; }
+        .hero-glow { position: absolute; top: 45%; left: 50%; transform: translate(-50%,-50%); width: min(800px,100vw); height: min(800px,100vw); background: radial-gradient(circle, rgba(139,92,246,0.15) 0%, rgba(139,92,246,0.08) 40%, transparent 65%); border-radius: 50%; z-index: 1; pointer-events: none; }
+        .dark .hero-glow { background: radial-gradient(circle, rgba(139,92,246,0.30) 0%, rgba(139,92,246,0.15) 40%, transparent 65%); }
+        .hero-glow-2 { position: absolute; top: 40%; left: 50%; transform: translate(-50%,-50%); width: min(500px,65vw); height: min(500px,65vw); background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 55%); border-radius: 50%; z-index: 1; pointer-events: none; animation: glowPulse 4s ease-in-out infinite; }
+        .dark .hero-glow-2 { background: radial-gradient(circle, rgba(139,92,246,0.25) 0%, transparent 55%); }
+        @keyframes glowPulse { 0%,100%{ opacity:.8; transform:translate(-50%,-50%) scale(1); } 50%{ opacity:1; transform:translate(-50%,-50%) scale(1.06); } }
+        .hero-name-bg { position: absolute; top: 15%; left: 0; right: 0; z-index: 2; font-family: 'Anton', 'Inter', sans-serif; font-weight: 900; font-size: clamp(86px,12.5vw,237px); color: rgba(44,90,142,0.12); text-transform: uppercase; line-height: 1; text-align: center; white-space: nowrap; letter-spacing: 0.03em; pointer-events: none; user-select: none; width: 100%; }
+        .dark .hero-name-bg { color: rgba(255,255,255,0.88); }
+        .hero-name-mobile { display: none; }
+        .hero-photo { position: relative; z-index: 3; margin-bottom: -4px; }
+        .hero-photo img { width: clamp(380px,48vw,700px); height: auto; max-height: 85vh; object-fit: contain; filter: drop-shadow(0 10px 30px rgba(0,0,0,0.10)); }
+        .dark .hero-photo img { filter: drop-shadow(0 10px 50px rgba(139,92,246,0.25)); }
+        .hero-left { position: absolute; bottom: 10%; left: 4%; z-index: 4; max-width: 340px; }
+        .hero-left p { color: #475569; font-size: 14px; line-height: 1.7; font-weight: 500; margin-bottom: 20px; }
+        .dark .hero-left p { color: rgba(255,255,255,0.7); }
+        .hero-socials { display: flex; gap: 10px; }
+        .hero-socials a { width: 40px; height: 40px; border-radius: 50%; background: rgba(139,92,246,0.15); color: #8b5cf6; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .dark .hero-socials a { background: rgba(139,92,246,0.8); color: white; }
+        .hero-socials a:hover { background: #8b5cf6; color: white; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(139,92,246,0.4); }
+        .hero-right { position: absolute; bottom: 10%; right: 4%; z-index: 4; max-width: 300px; text-align: right; }
+        .hero-right p { color: #64748b; font-size: 14px; line-height: 1.7; font-weight: 500; margin-bottom: 20px; }
+        .dark .hero-right p { color: rgba(255,255,255,0.6); }
+        .hero-cta { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border: 2px solid #8b5cf6; border-radius: 50px; color: #8b5cf6; font-weight: 700; font-size: 15px; transition: all 0.3s; text-decoration: none; }
+        .dark .hero-cta { color: white; }
+        .hero-cta:hover { background: #8b5cf6; color: white; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(139,92,246,0.4); }
+        .hero-cta-arrow { width: 32px; height: 32px; background: #8b5cf6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+        .hero-scroll-btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 28px; border-radius: 50px; background: rgba(255,255,255,0.5); backdrop-filter: blur(12px); border: 1px solid rgba(139,92,246,0.3); color: #0f172a; font-weight: 700; font-size: 15px; cursor: pointer; transition: all 0.3s; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .dark .hero-scroll-btn { background: rgba(15,23,42,0.6); border-color: rgba(139,92,246,0.4); color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .hero-scroll-btn:hover { background: #8b5cf6; color: white; border-color: #8b5cf6; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(139,92,246,0.4); }
+        .hero-scroll-icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(139,92,246,0.2); display: flex; align-items: center; justify-content: center; animation: scrollBounce 2s ease-in-out infinite; color: #8b5cf6; }
+        .dark .hero-scroll-icon { background: rgba(255,255,255,0.2); color: white; }
+        .hero-scroll-btn:hover .hero-scroll-icon { background: white; color: #8b5cf6; }
+        @keyframes scrollBounce { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(4px); } }
+        @media (max-width: 768px) {
+            .hero-section { align-items: center; flex-direction: column; padding: 20px 0px 90px; gap: 0; margin-top: 80px; min-height: calc(100vh - 80px); min-height: calc(100svh - 80px); overflow-x: hidden; }
+            .hero-left, .hero-right { position: relative; bottom: auto; left: auto; right: auto; max-width: 100%; text-align: center; padding: 0 20px; }
+            .hero-socials { justify-content: center; margin-bottom: 20px; }
+            .hero-name-bg { display: none; }
+            .hero-name-mobile { display: flex; flex-direction: column; align-items: center; font-family: 'Anton', 'Inter', sans-serif; font-weight: 900; font-size: 28vw; text-transform: uppercase; line-height: 0.85; letter-spacing: 0.02em; color: rgba(44,90,142,0.15); text-align: center; z-index: 2; position: absolute; top: 21%; left: 0; right: 0; transform: translateY(-50%); pointer-events: none; user-select: none; width: 100%; }
+            .dark .hero-name-mobile { color: rgba(255,255,255,0.85); }
+            .hero-photo { margin-bottom: 30px; margin-top: 3vh; position: relative; z-index: 3; width: 100%; }
+            .hero-photo img { width: 100%; max-width: none; height: auto; max-height: 60vh; object-fit: cover; object-position: top; }
+            .hero-right { text-align: center; margin-top: 20px; }
+            .mobile-nav-title { display: none !important; }
+        }
+    </style>
+</head>
+
+<body class="text-slate-900 dark:text-slate-200 selection:bg-emerald-500/30 antialiased overflow-x-hidden transition-colors duration-300 bg-transparent">
+
+    <!-- Global Fixed Wallpaper & Grid Background -->
+    <div class="fixed inset-0 z-[-100]">
+        <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?q=80&w=2564&auto=format&fit=crop" class="w-full h-full object-cover dark:hidden transition-opacity duration-700" alt="Background Light">
+        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" class="w-full h-full object-cover hidden dark:block transition-opacity duration-700" alt="Background Dark">
+        <div class="absolute inset-0 bg-white/30 dark:bg-slate-950/60 backdrop-blur-[4px]"></div>
+        <div class="absolute inset-0 bg-grid-pattern [mask-image:linear-gradient(to_bottom,white,transparent)] opacity-60"></div>
+    </div>
+
+    <!-- Resume Modal -->
+    <div id="resume-modal" class="fixed inset-0 z-[110] flex items-center justify-center hidden transition-opacity duration-300 opacity-0 px-4 py-6 sm:p-6 md:p-12">
+        <div id="resume-backdrop" class="absolute inset-0 bg-slate-900/40 dark:bg-slate-950/80 backdrop-blur-md cursor-pointer transition-opacity"></div>
+        <div class="relative w-full max-w-4xl max-h-full overflow-y-auto glass-panel rounded-[2rem] shadow-2xl border border-white/60 dark:border-white/10 animate-fadeIn z-10 flex flex-col hide-scrollbar">
+            <button id="close-resume" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 bg-white/50 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-white/10 rounded-full transition-colors z-20 text-slate-700 dark:text-slate-300 border border-white/40 dark:border-white/5 backdrop-blur-md">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="resume-body" class="p-6 sm:p-12"><!-- Populated by JS --></div>
+        </div>
+    </div>
+
+    <!-- App Viewer Overlay -->
+    <div id="app-viewer" class="fixed inset-0 z-[100] bg-white/40 dark:bg-slate-950/60 backdrop-blur-2xl flex flex-col hidden transition-opacity duration-300 opacity-0">
+        <div class="h-16 glass-nav flex items-center px-4 justify-between shrink-0">
+            <button id="close-viewer" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 transition-colors font-medium text-sm border border-white/40 dark:border-white/10 shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg> Back to Portfolio
+            </button>
+            <div class="flex items-center gap-4">
+                <div id="viewer-title" class="hidden sm:block text-sm font-bold text-slate-800 dark:text-slate-300 uppercase tracking-widest truncate max-w-[200px] drop-shadow-sm">Preview</div>
+                <a id="viewer-external-link" href="#" target="_blank" class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors" title="Open in new tab">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
+            </div>
+        </div>
+        <div class="relative flex-grow w-full h-full p-2 sm:p-4">
+            <div class="absolute inset-0 flex items-center justify-center -z-10">
+                <svg class="w-8 h-8 text-emerald-500 animate-spin drop-shadow-lg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            </div>
+            <div class="w-full h-full glass-card rounded-2xl overflow-hidden shadow-2xl">
+                <iframe id="viewer-frame" class="w-full h-full border-none bg-slate-50 dark:bg-slate-950 relative z-10" src=""></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav id="main-nav" class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center w-1/4 md:w-auto shrink-0">
+                <a href="https://atishaksharma.com" class="group flex items-center gap-3">
+                    <div class="w-10 h-10 border border-white/40 dark:border-white/20 rounded-xl overflow-hidden shadow-lg group-hover:rotate-12 transition-transform shrink-0">
+                        <img id="nav-logo" src="" alt="Logo" class="w-full h-full object-cover">
+                    </div>
+                    <span class="font-bold text-xl tracking-tight hidden md:block gradient-text-alt whitespace-nowrap drop-shadow-sm" id="nav-name-desktop"></span>
+                    <span class="font-bold text-[17px] tracking-tight md:hidden text-slate-700 dark:text-slate-300 whitespace-nowrap drop-shadow-sm ml-2">Official Portfolio</span>
+                </a>
+            </div>
+            <div class="flex items-center justify-center w-2/4 md:hidden text-center shrink-0 mobile-nav-title">
+                <span class="font-bold text-[1.1rem] tracking-tight gradient-text-alt whitespace-nowrap drop-shadow-sm" id="nav-name-mobile"></span>
+            </div>
+            <div class="flex items-center justify-end w-1/4 md:w-auto gap-1 sm:gap-3 shrink-0">
+                <div id="nav-links" class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300 mr-2"></div>
+                <button id="theme-toggle" type="button" aria-label="Toggle Dark Mode" class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors drop-shadow-sm">
+                    <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="hidden w-6 h-6 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
+                </button>
+                <button id="open-resume" aria-label="View Resume" class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors shrink-0 drop-shadow-sm" title="View Resume">
+                    <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path></svg>
+                </button>
+                <a id="nav-github" href="#" target="_blank" aria-label="GitHub Profile" class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors shrink-0 drop-shadow-sm">
+                    <svg class="w-6 h-6 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-glow"></div>
+        <div class="hero-glow-2"></div>
+        <div id="hero-name-bg" class="hero-name-bg"></div>
+        <div id="hero-name-mobile-container" class="hero-name-mobile"></div>
+        <div id="hero-photo-container" class="hero-photo"></div>
+        <div id="hero-left" class="hero-left"></div>
+        <div id="hero-right" class="hero-right"></div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-24 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <div id="portfolio-grid" class="grid lg:grid-cols-2 gap-8 items-start"><!-- Populated by JS --></div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="pt-0 pb-24 px-6 relative overflow-hidden z-10">
+        <div id="contact-content" class="max-w-5xl mx-auto text-center space-y-12 relative z-10"><!-- Populated by JS --></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 text-center text-slate-700 dark:text-slate-400 glass-nav border-t-0 relative z-20">
+        <div class="max-w-7xl mx-auto flex flex-col items-center justify-center gap-2">
+            <p id="footer-text" class="text-sm font-bold drop-shadow-sm"></p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
