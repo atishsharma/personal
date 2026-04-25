@@ -1,19 +1,19 @@
 {
-    "name": "Atishs Concepts Editor",
-    "short_name": "Atish Concepts",
+    "name": "Atish Ak Sharma",
+    "short_name": "Atish Official",
     "start_url": "index.html",
     "display": "standalone",
     "background_color": "#fff9fa",
     "theme_color": "#ff4d6d",
     "icons": [
         {
-            "src": "https://api.dicebear.com/7.x/initials/svg?seed=Atish",
+            "src": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any maskable"
         },
         {
-            "src": "https://api.dicebear.com/7.x/initials/svg?seed=Atish",
+            "src": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any maskable"
