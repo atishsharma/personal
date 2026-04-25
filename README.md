@@ -36,7 +36,10 @@ A dedicated environment for testing hardware-inspired UI and logic:
 * **[AT Music Player Pro](https://atishaksharma.com/atmusic/index.html):** Premium Music Player Without Compromise.
 #### 📐 Design Systems & Redesigns
 * **[Core1987 Remote](https://atishaksharma.com/core1987remote/index.html):** A nostalgic redesign of the 1987 CL-9 Core universal remote.
-* **[Core Redesign](https://atishaksharma.com/core-redesign/index.html):** Exploratory system UI redesign.
+* **[Concept Hub](https://atishaksharma.com/concept/index.html):** High-level design concepts and visual research.
+
+#### 📐 Mini Projects 
+* **[India's Expressways](https://atishaksharma.com/minis/expressways.html):** Interactive mapping and visualization of expressways. Discover routes, spans, and detailed highway data.
 * **[Concept Hub](https://atishaksharma.com/concept/index.html):** High-level design concepts and visual research.
 
 ---
