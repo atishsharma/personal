@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atish's Home Electrical Box</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Interactive web-based Single Phase Distribution Board (DB) Simulator. Monitor electrical loads, toggle MCBs, and visualize power flow in real-time.">
+    <meta name="keywords"
+        content="Electrical, DB Board, MCB, Simulator, Smart Home, Distribution Board, RCBO, Wiring, Atish, amicismart, ATS, Generator">
+    <meta name="author" content="Atish Ak Sharma">
+
+    <!-- Custom Favicon -->
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        .lcd-screen {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #8bb381;
+            color: #111;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.4);
+        }
+
+        /* DB & Hardware Box Styles */
+        .hardware-box {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4), -1px -1px 3px rgba(255, 255, 255, 0.8);
+            border: 1px solid #d1d5db;
+            color: #1f2937;
+        }
+
+        .mcb-body {
+            background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4), -1px -1px 2px rgba(255, 255, 255, 0.8);
+            border: 1px solid #d1d5db;
+        }
+
+        .db-enclosure {
+            background-color: #f3f4f6;
+            box-shadow: inset 5px 5px 15px rgba(0, 0, 0, 0.1), 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            border: 2px solid #9ca3af;
+        }
+
+        .din-rail {
+            background: linear-gradient(to bottom, #9ca3af 0%, #e5e7eb 20%, #9ca3af 80%, #6b7280 100%);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* NUMBERED TERMINAL POLES SYSTEM */
+        .pole {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 900;
+            position: absolute;
+            z-index: 20;
+            border: 2px solid #1f2937;
+            background-color: #111827;
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 2px 4px rgba(0, 0, 0, 0.3);
+            cursor: help;
+        }
+
+        /* ACTIVE Power Glowing Outlines based on Wire Color Codes */
+        .pole.active.node-blue {
+            background-color: #1e3a8a;
+            border-color: #93c5fd;
+            box-shadow: 0 0 12px 3px #3b82f6, inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            color: #fff;
+        }
+
+        .pole.active.node-black {
+            background-color: #374151;
+            border-color: #d1d5db;
+            box-shadow: 0 0 12px 3px #6b7280, inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            color: #fff;
+        }
+
+        .pole.active.node-red {
+            background-color: #7f1d1d;
+            border-color: #fca5a5;
+            box-shadow: 0 0 12px 3px #ef4444, inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            color: #fff;
+        }
+
+        .pole.active.node-yellow {
+            background-color: #713f12;
+            border-color: #fde047;
+            box-shadow: 0 0 12px 3px #eab308, inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            color: #fff;
+        }
+
+        .pole.active.node-green {
+            background-color: #14532d;
+            border-color: #86efac;
+            box-shadow: 0 0 12px 3px #22c55e, inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            color: #fff;
+        }
+
+        /* Busbars */
+        .busbar-phase {
+            background: linear-gradient(to bottom, #ef4444, #b91c1c);
+            border-bottom: 2px solid #7f1d1d;
+        }
+
+        .busbar-neutral {
+            background: linear-gradient(to bottom, #374151, #111827);
+            border-bottom: 2px solid #000;
+        }
+
+        .busbar-earth {
+            background: linear-gradient(to bottom, #22c55e, #15803d);
+            border-bottom: 2px solid #14532d;
+        }
+
+        /* Levers and Switches */
+        .lever {
+            transition: transform 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform-origin: bottom center;
+        }
+
+        .lever.off {
+            transform: rotateX(45deg);
+        }
+
+        .lever.on {
+            transform: rotateX(-45deg);
+        }
+
+        .ats-knob {
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 12px;
+            width: 12px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col font-sans">
+
+    <!-- Top Navigation -->
+    <nav class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Logo"
+                    class="w-12 h-12 rounded-full border-2 border-blue-400 shadow-[0_0_8px_#3b82f6]">
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-wide uppercase">Atish's Home Electrical Box</h1>
+                    <p class="text-xs text-blue-400 font-mono">MATCH TERMINAL NUMBERS FOR CONNECTIONS</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSettingsPanel()"
+                    class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-1.5 rounded flex items-center gap-2 shadow font-bold text-xs border border-slate-500 transition-colors">
+                    ⚙️ SETTINGS &amp; MAP
+                </button>
+                <button onclick="openAppModal()"
+                    class="bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded flex items-center gap-2 shadow-lg font-bold text-xs border border-blue-400 transition-colors">
+                    📱 APP VIEW
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Settings Panel Dropdown -->
+    <div id="settings-panel"
+        class="absolute top-[72px] right-4 bg-slate-800 border border-slate-600 shadow-2xl rounded-xl p-4 w-80 z-[100] flex-col gap-4 text-sm hidden">
+        <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+            <h3 class="font-bold text-white tracking-wide text-xs">SYSTEM CONTROLS</h3>
+            <button onclick="toggleSettingsPanel()"
+                class="text-slate-400 hover:text-white font-bold text-lg leading-none">×</button>
+        </div>
+
+        <div class="bg-slate-700 p-3 rounded border border-slate-600">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-gray-300 font-bold text-xs">SOLAR CAPACITY</span>
+                <span id="txt-solar" class="text-blue-400 font-mono text-xs font-bold">3.0kW</span>
+            </div>
+            <input type="range" id="ctrl-solar" min="0" max="3000" step="100" value="1500" oninput="updateSolarVal()"
+                class="w-full accent-blue-500">
+        </div>
+
+        <div class="border-t border-slate-700 pt-3">
+            <div class="font-bold text-[10px] text-blue-400 mb-2 uppercase tracking-wide">Terminal Connection Map</div>
+            <div
+                class="space-y-1.5 text-[10px] text-gray-300 font-mono bg-slate-900 p-2 rounded border border-slate-700">
+                <div><span class="inline-block w-6 text-center bg-blue-600 text-white font-bold rounded">1</span> <span
+                        class="inline-block w-6 text-center bg-gray-600 text-white font-bold rounded">2</span> :
+                    Grid/Solar ➔ Meter IN</div>
+                <div><span class="inline-block w-6 text-center bg-red-600 text-white font-bold rounded">3</span> : Meter
+                    OUT ➔ Fuse IN</div>
+                <div><span class="inline-block w-6 text-center bg-gray-600 text-white font-bold rounded">4</span> :
+                    Meter OUT ➔ ATS IN1 Neutral</div>
+                <div><span class="inline-block w-6 text-center bg-red-600 text-white font-bold rounded">5</span> : Fuse
+                    OUT ➔ ATS IN1 Phase</div>
+                <div><span class="inline-block w-6 text-center bg-yellow-500 text-black font-bold rounded">6</span>
+                    <span class="inline-block w-6 text-center bg-gray-600 text-white font-bold rounded">7</span> : Gen ➔
+                    ATS IN2
+                </div>
+                <div><span class="inline-block w-6 text-center bg-red-600 text-white font-bold rounded">8</span> <span
+                        class="inline-block w-6 text-center bg-gray-600 text-white font-bold rounded">9</span> : ATS OUT
+                    ➔ RCBO IN</div>
+                <div><span class="inline-block w-6 text-center bg-red-600 text-white font-bold rounded">10</span> <span
+                        class="inline-block w-6 text-center bg-gray-600 text-white font-bold rounded">11</span> : RCBO
+                    OUT ➔ Wi-Fi IN</div>
+                <div><span class="inline-block w-6 text-center bg-red-600 text-white font-bold rounded">12</span> <span
+                        class="inline-block w-6 text-center bg-gray-600 text-white font-bold rounded">13</span> : Wi-Fi
+                    OUT ➔ DB Busbars</div>
+                <div><span class="inline-block w-6 text-center bg-green-500 text-white font-bold rounded">E</span> :
+                    Unified Earthing System</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Simulator Canvas -->
+    <div class="flex-grow overflow-auto custom-scrollbar relative bg-slate-800 p-4" style="touch-action: pan-x pan-y;">
+
+        <div class="relative w-[1300px] h-[1050px] mx-auto bg-white rounded-xl shadow-2xl border-4 border-slate-300">
+
+            <!-- Blueprint Background Grid -->
+            <div class="absolute inset-0 z-0 opacity-[0.04] pointer-events-none rounded-lg"
+                style="background-image: linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px); background-size: 20px 20px;">
+            </div>
+
+            <!-- ========================================== -->
+            <!-- TIER 1: POWER SUPPLIES AND ATS             -->
+            <!-- ========================================== -->
+
+            <!-- 1. Grid Supply -->
+            <div
+                class="absolute w-[112px] h-[144px] left-[40px] top-[40px] text-center bg-blue-50 border border-blue-200 rounded p-2 z-10 shadow-sm">
+                <div class="text-[10px] font-bold text-blue-800 mb-1">1. GRID</div>
+                <div class="text-[8px] text-gray-500 mb-1">UTILITY POLE</div>
+                <svg viewBox="0 0 100 100" class="w-10 h-10 mx-auto stroke-slate-800" fill="none" stroke-width="3">
+                    <path d="M50 10 L30 90 M50 10 L70 90 M35 50 L65 50 M40 30 L60 30 M20 90 L80 90"></path>
+                    <path d="M10 30 L50 10 L90 30" stroke="#3b82f6"></path>
+                </svg>
+                <button id="btn-grid-tgl" onclick="toggleGrid()"
+                    class="w-full py-0.5 mt-1 text-[9px] font-bold text-white bg-green-500 rounded border border-green-600 shadow-sm active:scale-95 transition-all">ON</button>
+                <div
+                    class="absolute bottom-2 w-full flex justify-between px-4 text-[8px] font-bold text-gray-600 left-0">
+                    <span class="text-blue-600">L OUT</span><span>N OUT</span>
+                </div>
+                <!-- Numbered Terminals Fully Outside -->
+                <div class="pole node-blue n-1 active" style="bottom: -40px; left: 10px;"
+                    title="To Node 1 (Meter IN L)">1</div>
+                <div class="pole node-black n-2 active" style="bottom: -40px; right: 10px;"
+                    title="To Node 2 (Meter IN N)">2</div>
+            </div>
+
+            <!-- 2. Solar On-Grid -->
+            <div
+                class="absolute w-[128px] h-[130px] left-[180px] top-[40px] text-center bg-yellow-50 border border-yellow-200 rounded p-2 z-10 shadow-sm">
+                <div class="text-[10px] font-bold text-yellow-800 mb-1">2. SOLAR PANEL</div>
+                <div class="text-[8px] text-gray-500 mb-1">ON GRID</div>
+                <div class="flex items-center justify-center gap-1 mb-1 mt-1">
+                    <div class="grid grid-cols-3 gap-0.5 bg-blue-900 p-0.5 rounded border border-gray-400 w-8 h-8">
+                        <div class="bg-blue-600"></div>
+                        <div class="bg-blue-600"></div>
+                        <div class="bg-blue-600"></div>
+                        <div class="bg-blue-600"></div>
+                        <div class="bg-blue-600"></div>
+                        <div class="bg-blue-600"></div>
+                    </div>
+                    <div
+                        class="w-6 h-6 bg-white border border-gray-300 rounded flex items-center justify-center text-[5px] font-bold shadow-sm writing-mode-vertical">
+                        INV</div>
+                </div>
+                <button id="btn-solar-tgl" onclick="toggleSolar()"
+                    class="w-full py-0.5 mt-1 text-[9px] font-bold text-white bg-green-500 rounded border border-green-600 shadow-sm active:scale-95 transition-all">ON</button>
+                <div
+                    class="absolute bottom-1 w-full flex justify-between px-4 text-[8px] font-bold text-gray-600 left-0">
+                    <span class="text-blue-600">L TIE</span><span>N TIE</span>
+                </div>
+                <!-- Numbered Terminals Fully Outside -->
+                <div class="pole node-blue n-1 active" style="bottom: -40px; left: 10px;"
+                    title="To Node 1 (Meter IN L)">1</div>
+                <div class="pole node-black n-2 active" style="bottom: -40px; right: 10px;"
+                    title="To Node 2 (Meter IN N)">2</div>
+            </div>
+
+            <!-- 3. Bi-Directional Meter -->
+            <div
+                class="absolute w-[160px] h-[128px] left-[350px] top-[40px] bg-white border-2 border-gray-300 rounded-lg p-2 z-20 shadow-md">
+                <div class="text-[10px] font-bold text-center text-gray-800 mb-1">3. ENERGY METER</div>
+                <div class="text-[8px] text-center text-gray-500 mb-2">BI-DIRECTIONAL</div>
+                <div class="w-full bg-gray-100 border border-gray-300 h-24 rounded p-1 flex flex-col relative mt-2">
+                    <div class="lcd-screen w-full h-8 mt-0.5 rounded flex items-center justify-center text-sm font-bold text-red-700"
+                        id="ui-net-meter">920W</div>
+                    <div class="flex justify-between mt-2 text-[8px] px-0">
+                        <div class="flex items-center gap-1 text-blue-600">
+                            <div id="led-imp" class="w-3 h-3 rounded-full bg-red-800 animate-pulse"></div> IMPORT
+                        </div>
+                        <div class="flex items-center gap-1 text-blue-600">
+                            <div id="led-exp" class="w-3 h-3 rounded-full bg-gray-400"></div> EXPORT
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="absolute bottom-0 w-full flex justify-between px-1 text-[8px] font-bold text-gray-600 left-0">
+                    <span class="text-blue-600 w-1/4 text-center">L IN</span>
+                    <span class="w-1/4 text-center">N IN</span>
+                    <span class="w-1/4 text-center">N OUT</span>
+                    <span class="text-red-600 w-1/4 text-center">L OUT</span>
+                </div>
+                <!-- Numbered Terminals Fully Outside -->
+                <div class="pole node-blue n-1 active" style="bottom: -49px; left: 4px;" title="From Node 1">1</div>
+                <div class="pole node-black n-2 active" style="bottom: -49px; left: 45px;" title="From Node 2">2</div>
+                <div class="pole node-black n-4 active" style="bottom: -49px; left: 87px;"
+                    title="To Node 4 (ATS N IN1)">4</div>
+                <div class="pole node-red n-3 active" style="bottom: -49px; left: 128px;"
+                    title="To Node 3 (Kitkat IN L)">3</div>
+            </div>
+
+            <!-- 4. Kitkat Fuse (Pullable) -->
+            <div
+                class="absolute w-[96px] h-[130px] left-[550px] top-[70px] bg-white border-2 border-gray-200 rounded p-2 z-10 flex flex-col items-center shadow-md">
+                <!-- Top Pole Fully Outside -->
+                <div class="pole node-red n-3 active" style="top: -37px; left: 34px;" title="From Node 3">3</div>
+                <div class="text-[7px] font-bold text-gray-500 mt-0">L IN</div>
+
+                <div class="text-[9px] font-bold text-gray-800 mb-1 mt-1">4. KITKAT</div>
+
+                <div class="relative w-8 h-[36px] bg-[#e1d5c9] border-2 border-[#b09e8d] rounded flex justify-center cursor-pointer shadow-sm group mt-1"
+                    onclick="toggleFuse()">
+                    <div class="absolute top-1 w-4 h-1 bg-gray-400 border border-gray-600 rounded-sm shadow-inner">
+                    </div>
+                    <div class="absolute bottom-1 w-4 h-1 bg-gray-400 border border-gray-600 rounded-sm shadow-inner">
+                    </div>
+
+                    <div id="fuse-carrier"
+                        class="absolute inset-0 w-full h-full bg-[#c9b9a8] border border-[#a6927d] rounded flex justify-center items-center transition-all duration-300 shadow-md group-hover:brightness-105 z-10 origin-top"
+                        style="transform: translateY(0px) scale(1) rotate(0deg); opacity: 1;">
+                        <div class="w-1 h-6 bg-gray-200 border border-gray-400 rounded-sm"></div>
+                        <div
+                            class="absolute w-5 h-4 bg-[#8c7a6b] rounded-sm shadow-lg border border-[#706155] flex items-center justify-center">
+                            <div class="text-[4px] text-[#e1d5c9] font-bold">PULL</div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="absolute bottom-1 w-full text-[7px] font-bold text-red-600 tracking-widest text-center left-0">
+                    L OUT</div>
+
+                <!-- Bottom Pole Fully Outside -->
+                <div class="pole node-red n-5 active" style="bottom: -37px; left: 34px;" title="To Node 5 (ATS L IN1)">5
+                </div>
+            </div>
+
+            <!-- 5. ATS -->
+            <div
+                class="absolute w-[240px] h-[270px] left-[700px] top-[70px] bg-white border-2 border-gray-300 rounded-lg p-3 z-8 shadow-lg flex flex-col items-center">
+
+                <!-- 4 Top Input Poles Fully Outside -->
+                <div class="pole node-red n-5 active" style="top: -37px; left: 24px;" title="From Node 5">5</div>
+                <div class="pole node-black n-4 active" style="top: -37px; left: 74px;" title="From Node 4">4</div>
+                <div class="pole node-yellow n-6 active" style="top: -37px; left: 144px;" title="From Node 6">6</div>
+                <div class="pole node-black n-7 active" style="top: -37px; left: 194px;" title="From Node 7">7</div>
+
+                <div class="text-[12px] font-bold text-blue-700 text-center mt-1 mb-0 uppercase tracking-widest">5. Auto
+                    Transfer Switch</div>
+                <div class="text-[8px] text-gray-500 text-center mb-2">amiciSmart (63A)</div>
+
+                <div
+                    class="flex justify-between text-[8px] font-bold mb-3 bg-slate-50 border border-slate-200 rounded p-1.5 w-full">
+                    <div class="text-center w-1/2 relative">
+                        <div
+                            class="absolute -top-14 left-1/2 transform -translate-x-1/2 w-full flex justify-around px-0 text-[6px] text-gray-400">
+                            <span>L IN</span><span>N IN</span>
+                        </div>
+                        <div class="text-blue-600 mb-1 flex items-center justify-center gap-1">
+                            <div id="led-in1" class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_4px_#3b82f6]"></div>
+                            INPUT 1<br><span class="text-[6px] text-gray-500">(GRID)</span>
+                        </div>
+                    </div>
+                    <div class="text-center w-1/2 border-l border-gray-200 relative">
+                        <div
+                            class="absolute -top-14 left-1/2 transform -translate-x-1/2 w-full flex justify-around px-2 text-[6px] text-gray-400">
+                            <span>L IN</span><span>N IN</span>
+                        </div>
+                        <div class="text-yellow-600 mb-1 flex items-center justify-center gap-1">
+                            <div id="led-in2" class="w-2 h-2 rounded-full bg-yellow-500 shadow-[0_0_4px_#eab308]"></div>
+                            INPUT 2<br><span class="text-[6px] text-gray-500">(GENERATOR)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hardware-box w-full rounded p-3 flex flex-col items-center relative shadow-inner">
+                    <button id="ats-mode-btn" onclick="toggleAtsMode()"
+                        class="text-[9px] font-bold bg-green-500 text-white px-3 py-1 rounded shadow-inner cursor-pointer mb-3 w-16 text-center transition-colors hover:brightness-110 active:scale-95">AUTO</button>
+
+                    <div class="w-16 h-16 bg-gray-200 rounded-full border-2 border-gray-400 flex justify-center items-center cursor-pointer relative transition-transform"
+                        onclick="toggleAtsPos()">
+                        <div id="ats-knob-visual"
+                            class="ats-knob w-3 h-14 bg-gray-800 rounded shadow-md pointer-events-none"
+                            style="transform: rotate(-45deg);"></div>
+                        <div class="absolute -left-6 text-[8px] font-bold text-blue-700">IN 1</div>
+                        <div class="absolute -right-6 text-[8px] font-bold text-yellow-700">IN 2</div>
+                    </div>
+                    <div id="ats-status-txt"
+                        class="text-[9px] font-bold mt-3 bg-blue-100 text-blue-800 px-3 py-0.5 rounded shadow-sm border border-blue-200">
+                        IN 1 ACTIVE</div>
+                </div>
+
+                <div class="absolute bottom-1 w-full flex px-2 text-[9px] font-bold left-0">
+                    <span class="text-red-600 w-1/2 text-center" style="padding-left: 20px;">L OUT</span>
+                    <span class="text-gray-800 w-1/2 text-center" style="padding-left: 8px;">N OUT</span>
+                </div>
+
+                <!-- 2 Bottom Output Poles Fully Outside -->
+                <div class="pole node-red n-8 active" style="bottom: -34px; left: 59px;" title="To Node 8 (RCBO L IN)">8
+                </div>
+                <div class="pole node-black n-9 active" style="bottom: -33px; left: 159px;"
+                    title="To Node 9 (RCBO N IN)">9</div>
+            </div>
+
+            <!-- 6. Generator -->
+            <div
+                class="absolute w-[240px] h-[240px] left-[1000px] top-[70px] bg-gray-50 border border-gray-200 rounded p-2 z-10 shadow-md flex flex-col justify-between">
+                <div class="flex justify-between items-center mb-1">
+                    <div class="text-[14px] font-bold text-red-600 text-left">6. GENERATOR<br><span
+                            class="text-[12px] text-gray-500">(7kW Manual)</span></div>
+
+                    <div class="flex items-center gap-1 cursor-pointer bg-white p-4 rounded shadow-sm border border-gray-200"
+                        onclick="toggleGen()">
+                        <span class="text-[10px] font-bold text-gray-500">OFF</span>
+                        <div id="gen-local-switch"
+                            class="w-8 h-4 bg-yellow-500 rounded-full relative shadow-inner transition-colors">
+                            <div id="gen-local-knob"
+                                class="w-4 h-4 bg-white rounded-full absolute left-0 shadow transition-transform translate-x-4">
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold text-gray-500">ON</span>
+                    </div>
+                </div>
+
+                <div class="flex justify-center items-end gap-4 mt-3">
+                    <div
+                        class="w-24 h-24 bg-gray-800 rounded-md relative flex items-center justify-center shadow-lg border-b-4 border-red-600">
+                        <div
+                            class="w-20 h-10 bg-gray-700 rounded border border-gray-600 flex items-center justify-center">
+                            <div class="w-16 h-6 bg-gray-900 rounded-sm"></div>
+                        </div>
+                    </div>
+                    <div
+                        class="w-12 h-12 bg-blue-600 rounded-full border-4 border-blue-800 flex items-center justify-center relative shadow-md">
+                        <div class="w-2.5 h-2.5 bg-black rounded-full absolute top-2"></div>
+                        <div class="w-2.5 h-2.5 bg-black rounded-full absolute bottom-2 left-2"></div>
+                        <div class="w-2.5 h-2.5 bg-black rounded-full absolute bottom-2 right-2"></div>
+                        <span class="absolute -bottom-4 text-[8px] font-bold text-blue-700 whitespace-nowrap">32A
+                            PORT</span>
+                    </div>
+                </div>
+
+                <div id="gen-stats"
+                    class="w-full bg-yellow-100 border border-yellow-300 rounded mt-3 p-4 text-[9px] flex justify-between px-3">
+                    <span class="font-bold text-gray-600">DRAW: <span id="ui-gen-draw"
+                            class="text-red-600 font-mono">0.0A</span></span>
+                    <span class="font-bold text-gray-500">MAX: 30.4A</span>
+                </div>
+
+                <div class="absolute bottom-3 w-full flex px-2 text-[8px] font-bold text-gray-600 left-0">
+                    <span class="text-yellow-600 w-1/2 text-center" style="padding-right: 30px;">L OUT</span>
+                    <span class="text-gray-800 w-4/7 text-center" style="padding-left: 24px;">N OUT</span>
+                </div>
+
+                <!-- Poles Fully Outside -->
+                <div class="pole node-yellow n-6 active" style="bottom: -40px; left: 39px;"
+                    title="To Node 6 (ATS L IN2)">6</div>
+                <div class="pole node-black n-7 active" style="bottom: -40px; left: 140px;"
+                    title="To Node 7 (ATS N IN2)">7</div>
+                <!-- Gen Earth -->
+                <div class="pole node-green n-e active" style="bottom: -40px; right: 10px;" title="To Earth Grid (E)">E
+                </div>
+            </div>
+
+
+            <!-- ========================================== -->
+            <!-- TIER 2: RCBO, WI-FI METER & EARTHING       -->
+            <!-- (Top: 340px -> ATS ends at 280, ATS poles at 304) -->
+            <!-- (RCBO poles at 316. Gives EXACT 12px visual pole gap, meaning RCBO box is 60px down from ATS) -->
+            <!-- ========================================== -->
+
+            <div class="absolute top-[449px] left-[610px] flex z-20 gap-8">
+
+                <!-- 7. Main Breaker (AM63LE) - RCBO -->
+                <div class="mcb-body w-[128px] h-[208px] rounded-md flex flex-col p-2 relative cursor-pointer border-l-4 border-l-gray-400 hover:border-gray-500 shadow-xl"
+                    onclick="toggleMain()">
+                    <!-- 4 Poles for RCBO Fully Outside -->
+                    <div class="pole node-red n-8 active" style="top: -27px; left: 9px;" title="From Node 8">8</div>
+                    <div class="pole node-black n-9 active" style="top: -27px; right: 9px;" title="From Node 9">9</div>
+                    <div class="pole node-red n-10 active" style="bottom: -34px; left: 9px;" title="To Node 10">10</div>
+                    <div class="pole node-black n-11 active" style="bottom: -34px; right: 9px;" title="To Node 11">11
+                    </div>
+
+                    <div
+                        class="absolute top- w-full flex justify-between px-3 text-[7px] font-bold text-gray-500 left-0">
+                        <span>L IN</span><span>N IN</span>
+                    </div>
+
+                    <div class="absolute -top-14 left-0 text-[10px] font-bold text-blue-700 whitespace-nowrap">7. RCBO
+                        (MAIN)</div>
+                    <div class="flex flex-col items-center justify-center mb-1 w-full mt-4">
+                        <div class="text-[10px] font-bold text-center leading-tight mb-0.5"><span
+                                class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
+                        <div class="text-[10px] text-gray-800 font-bold text-center leading-tight">AM63LE <span
+                                class="text-sm">63A</span></div>
+                    </div>
+                    <div class="text-[8px] text-gray-600 text-center mb-2">230V~ 30mA Trip</div>
+
+                    <div class="absolute top-[77px] right-2 flex flex-col items-center z-20">
+                        <div class="w-4 h-4 bg-yellow-400 rounded-sm border border-yellow-600 mt-1 shadow-inner active:scale-95 transition-transform hover:bg-yellow-300 cursor-pointer"
+                            onclick="event.stopPropagation(); triggerTrip();"></div>
+                        <span class="text-[7px] text-gray-700 mt-1 font-bold">Test</span>
+                    </div>
+
+                    <div class="absolute top-[84px] left-4 w-4 h-2.5 bg-green-500 rounded-sm shadow-inner"
+                        id="main-indicator"></div>
+
+                    <div class="mt-auto mb-6 flex justify-center gap-[2px]">
+                        <div class="w-12 h-14 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective">
+                            <div id="main-lever-1"
+                                class="lever on absolute bottom-0 left-0 w-full h-11 bg-blue-600 rounded-t-md border border-blue-800 shadow-[0_-2px_4px_rgba(0,0,0,0.3)] pointer-events-none">
+                            </div>
+                        </div>
+                        <div class="w-12 h-14 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective">
+                            <div id="main-lever-2"
+                                class="lever on absolute bottom-0 left-0 w-full h-11 bg-blue-600 rounded-t-md border border-blue-800 shadow-[0_-2px_4px_rgba(0,0,0,0.3)] pointer-events-none">
+                            </div>
+                        </div>
+                        <div id="main-gang"
+                            class="absolute bottom-[34px] left-1/2 transform -translate-x-1/2 w-[98px] h-3.5 bg-blue-700 rounded-sm transition-transform duration-200 z-10 translate-y-0 pointer-events-none">
+                        </div>
+                    </div>
+                    <div
+                        class="absolute bottom-1 w-full flex justify-between px-3 text-[7px] font-bold text-gray-500 left-0">
+                        <span>L OUT</span><span>N OUT</span>
+                    </div>
+                </div>
+
+                <!-- 8. Wi-Fi Smart Meter (1P-JT-63) -->
+                <div
+                    class="mcb-body w-[80px] h-[208px] rounded-md flex flex-col p-1 items-center relative hover:border-blue-300 transition-colors shadow-xl">
+                    <!-- 4 Poles for Wi-Fi Fully Outside -->
+                    <div class="pole node-red n-10 active" style="top: -27px; left: 4px;" title="From Node 10">10</div>
+                    <div class="pole node-black n-11 active" style="top: -27px; right: 4px;" title="From Node 11">11
+                    </div>
+                    <div class="pole node-red n-12 active" style="bottom: -34px; left: 4px;"
+                        title="To Node 12 (DB L IN)">12</div>
+                    <div class="pole node-black n-13 active" style="bottom: -34px; right: 4px;"
+                        title="To Node 13 (DB N IN)">13</div>
+
+                    <div
+                        class="absolute top-3 w-full flex justify-between px-2 text-[6px] font-bold text-gray-500 left-0">
+                        <span>L IN</span><span>N IN</span>
+                    </div>
+
+                    <div class="absolute -top-14 left-0 text-[10px] font-bold text-blue-700 whitespace-nowrap">8. WI-FI
+                        METER</div>
+
+                    <!-- Reset Button Restored -->
+                    <div class="absolute top-[68px] right-3 flex flex-col items-center cursor-pointer z-10"
+                        onclick="event.stopPropagation(); alert('Wi-Fi Meter Reset Successfully.');">
+                        <div
+                            class="w-2.5 h-2.5 bg-gray-400 rounded-full shadow-[inset_0_1px_3px_rgba(0,0,0,0.5)] hover:bg-gray-300 border border-gray-500 active:scale-95">
+                        </div>
+                        <span class="text-[5px] font-bold text-gray-500 mt-0.5">RST</span>
+                    </div>
+
+                    <div class="flex flex-col items-center justify-center mb-3 mt-5 w-full">
+                        <div class="text-[8px] font-bold text-center leading-tight mb-0.5"><span
+                                class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span></div>
+                        <div class="text-[8px] text-gray-800 font-bold text-center leading-tight">1P-JT-63</div>
+                    </div>
+
+                    <div
+                        class="lcd-screen w-16 h-18 rounded mb-2 flex flex-col items-center justify-center p-1 pointer-events-none border border-gray-400">
+                        <div class="text-[7px] opacity-60 absolute top-1 right-1">W</div>
+                        <div id="meter-w" class="text-[12px] font-bold mt-1 text-blue-800">3920</div>
+                        <div class="w-full border-t border-black/20 my-[3px]"></div>
+                        <div class="flex w-full justify-between px-1">
+                            <div id="meter-v" class="text-[8px]">230V</div>
+                            <div id="meter-a" class="text-[8px] text-red-700">17.1A</div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-1 mt-3 mb-3">
+                        <svg class="w-8 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.906 14.142 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0">
+                            </path>
+                        </svg>
+                        <div id="wifi-led"
+                            class="w-3 h-3 rounded-full bg-green-500 transition-colors shadow-[0_0_4px_#22c55e]"></div>
+                    </div>
+
+                    <div class="w-8 h-8 rounded-full border-2 border-blue-400 flex items-center justify-center text-blue-500 mt-auto mb-5 bg-blue-50 shadow-sm cursor-pointer z-20 hover:scale-105"
+                        onclick="openAppModal()" title="Open App">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                            <line x1="12" y1="2" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+
+                    <div
+                        class="absolute bottom-1 w-full flex justify-between px-2 text-[6px] font-bold text-gray-500 left-0">
+                        <span>L OUT</span><span>N OUT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earthing System Graphic -->
+            <div class="absolute w-[140px] left-[930px] top-[410px] text-center z-10">
+                <div class="pole node-green n-e active" style="top: -24px; left: 50%; transform: translateX(-50%);"
+                    title="Unified Earth Ground">E</div>
+                <div
+                    class="text-[10px] font-bold text-green-700 bg-white border border-green-300 rounded p-1 mb-1 shadow-sm mt-3">
+                    UNIFIED EARTHING</div>
+                <div
+                    class="w-full h-16 bg-[#8B4513] border-t-4 border-green-600 rounded-t-lg relative overflow-hidden flex justify-center shadow-inner">
+                    <div class="w-3 h-14 bg-gray-300 border-x border-gray-400 mt-2 z-10"></div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- TIER 3: DISTRIBUTION BOARD                 -->
+            <!-- ========================================== -->
+
+            <!-- 9. Distribution Board Enclosure -->
+            <div
+                class="absolute w-[1200px] h-[340px] left-[50px] top-[700px] db-enclosure rounded-xl p-6 z-10 flex flex-col justify-between">
+                <div class="text-sm font-bold text-blue-800 mb-2 absolute top-4 left-6 tracking-widest uppercase">9.
+                    Distribution Board - Sub Circuits</div>
+
+                <!-- Busbars inside DB -->
+                <div class="flex justify-between w-full mt-6 px-16 relative z-0">
+                    <div class="flex flex-col items-center relative">
+                        <div class="pole node-red n-12 active" style="top: -4px; left: -30px;"
+                            title="Phase Power IN (Node 12)">12</div>
+                        <div class="text-[9px] text-white font-bold bg-red-600 px-2 rounded mb-1">PHASE BUSBAR</div>
+                        <div
+                            class="w-[450px] h-4 busbar-phase rounded-sm flex justify-around items-center shadow-inner border border-red-900">
+                            <div class="w-2 h-2 rounded-full bg-yellow-600"></div>
+                            <div class="w-2 h-2 rounded-full bg-yellow-600"></div>
+                            <div class="w-2 h-2 rounded-full bg-yellow-600"></div>
+                            <div class="w-2 h-2 rounded-full bg-yellow-600"></div>
+                            <div class="w-2 h-2 rounded-full bg-yellow-600"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center relative">
+                        <div class="pole node-black n-13 active" style="top: -4px; left: -30px;"
+                            title="Neutral Return (Node 13)">13</div>
+                        <div class="text-[9px] text-white font-bold bg-gray-800 px-2 rounded mb-1">NEUTRAL BUSBAR</div>
+                        <div
+                            class="w-[300px] h-4 busbar-neutral rounded-sm flex justify-around items-center shadow-inner border border-black">
+                            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                            <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DB Earth pole Fully Outside -->
+                <div class="pole node-green n-e active" style="top: -28px; right: 50px;" title="To Earth Grid (E)">E
+                </div>
+
+                <!-- DIN Rail -->
+                <div class="din-rail absolute left-10 right-10 h-12 top-[160px] z-0 rounded-sm"></div>
+
+                <!-- MCB Rack -->
+                <div class="flex justify-between px-16 relative z-10 w-full pb-4" id="mcb-rack">
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white"
+                            onclick="openLoadModal(1)">
+                            <div
+                                class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">
+                                1. LIGHTS</div>
+
+                            <div
+                                class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div>
+                            </div>
+                            <div
+                                class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">
+                                C16</div>
+
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors"
+                                id="mcb-indicator-1"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] bg-gray-400 opacity-80 rounded-r-sm">
+                            </div>
+
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95"
+                                onclick="event.stopPropagation(); toggleMCB(1)">
+                                <div id="mcb-lever-1"
+                                    class="lever on absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                                </div>
+                            </div>
+                            <div id="mcb-load-1"
+                                class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity opacity-100">
+                                0.7A</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white"
+                            onclick="openLoadModal(2)">
+                            <div
+                                class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">
+                                2. FANS</div>
+
+                            <div
+                                class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div>
+                            </div>
+                            <div
+                                class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">
+                                C16</div>
+
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors"
+                                id="mcb-indicator-2"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] bg-gray-400 opacity-80 rounded-r-sm">
+                            </div>
+
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95"
+                                onclick="event.stopPropagation(); toggleMCB(2)">
+                                <div id="mcb-lever-2"
+                                    class="lever on absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                                </div>
+                            </div>
+                            <div id="mcb-load-2"
+                                class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity opacity-100">
+                                1.2A</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white"
+                            onclick="openLoadModal(3)">
+                            <div
+                                class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">
+                                3. WIFI/ROUTER</div>
+
+                            <div
+                                class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div>
+                            </div>
+                            <div
+                                class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">
+                                C16</div>
+
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors"
+                                id="mcb-indicator-3"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] bg-gray-400 opacity-80 rounded-r-sm">
+                            </div>
+
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95"
+                                onclick="event.stopPropagation(); toggleMCB(3)">
+                                <div id="mcb-lever-3"
+                                    class="lever on absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                                </div>
+                            </div>
+                            <div id="mcb-load-3"
+                                class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity opacity-100">
+                                0.2A</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white"
+                            onclick="openLoadModal(4)">
+                            <div
+                                class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">
+                                4. SOCKETS</div>
+
+                            <div
+                                class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div>
+                            </div>
+                            <div
+                                class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">
+                                C16</div>
+
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors"
+                                id="mcb-indicator-4"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] bg-gray-400 opacity-80 rounded-r-sm">
+                            </div>
+
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95"
+                                onclick="event.stopPropagation(); toggleMCB(4)">
+                                <div id="mcb-lever-4"
+                                    class="lever on absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                                </div>
+                            </div>
+                            <div id="mcb-load-4"
+                                class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity opacity-100">
+                                1.5A</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white"
+                            onclick="openLoadModal(5)">
+                            <div
+                                class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">
+                                5. SPARE</div>
+
+                            <div
+                                class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div>
+                            </div>
+                            <div
+                                class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">
+                                C16</div>
+
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors"
+                                id="mcb-indicator-5"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] bg-gray-400 opacity-80 rounded-r-sm">
+                            </div>
+
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95"
+                                onclick="event.stopPropagation(); toggleMCB(5)">
+                                <div id="mcb-lever-5"
+                                    class="lever off absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                                </div>
+                            </div>
+                            <div id="mcb-load-5"
+                                class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity opacity-30">
+                                0.0A</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white"
+                            onclick="openLoadModal(6)">
+                            <div
+                                class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">
+                                6. KITCHEN</div>
+
+                            <div
+                                class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div>
+                            </div>
+                            <div
+                                class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">
+                                C20</div>
+
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors"
+                                id="mcb-indicator-6"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] bg-blue-400 opacity-80 rounded-r-sm">
+                            </div>
+
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95"
+                                onclick="event.stopPropagation(); toggleMCB(6)">
+                                <div id="mcb-lever-6"
+                                    class="lever on absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                                </div>
+                            </div>
+                            <div id="mcb-load-6"
+                                class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity opacity-100">
+                                6.5A</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white"
+                            onclick="openLoadModal(7)">
+                            <div
+                                class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">
+                                7. LAB</div>
+
+                            <div
+                                class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div>
+                            </div>
+                            <div
+                                class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">
+                                C20</div>
+
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors"
+                                id="mcb-indicator-7"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] bg-blue-400 opacity-80 rounded-r-sm">
+                            </div>
+
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95"
+                                onclick="event.stopPropagation(); toggleMCB(7)">
+                                <div id="mcb-lever-7"
+                                    class="lever off absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                                </div>
+                            </div>
+                            <div id="mcb-load-7"
+                                class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity opacity-30">
+                                0.0A</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white"
+                            onclick="openLoadModal(8)">
+                            <div
+                                class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">
+                                8. AC / HVY 1</div>
+
+                            <div
+                                class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div>
+                            </div>
+                            <div
+                                class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">
+                                C25</div>
+
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-green-500 rounded-sm shadow-inner transition-colors"
+                                id="mcb-indicator-8"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] bg-red-400 opacity-80 rounded-r-sm"></div>
+
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95"
+                                onclick="event.stopPropagation(); toggleMCB(8)">
+                                <div id="mcb-lever-8"
+                                    class="lever on absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                                </div>
+                            </div>
+                            <div id="mcb-load-8"
+                                class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity opacity-100">
+                                7.0A</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white"
+                            onclick="openLoadModal(9)">
+                            <div
+                                class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">
+                                9. GEYSER</div>
+
+                            <div
+                                class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2">
+                                <div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div>
+                            </div>
+                            <div
+                                class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">
+                                C25</div>
+
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors"
+                                id="mcb-indicator-9"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] bg-red-400 opacity-80 rounded-r-sm"></div>
+
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95"
+                                onclick="event.stopPropagation(); toggleMCB(9)">
+                                <div id="mcb-lever-9"
+                                    class="lever off absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none">
+                                </div>
+                            </div>
+                            <div id="mcb-load-9"
+                                class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity opacity-30">
+                                0.0A</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overload Warning -->
+            <div id="trip-warning"
+                class="absolute top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white text-center py-2 px-8 font-bold tracking-widest rounded-lg shadow-2xl z-[60] hidden">
+                ⚠️ OVERLOAD DETECTED - MAIN BREAKER TRIPPED ⚠️
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Load Configuration Modal -->
+    <div id="load-modal"
+        class="fixed inset-0 bg-slate-900/80 flex items-center justify-center z-[100] p-4 backdrop-blur-sm hidden">
+        <div
+            class="bg-gray-800 border border-gray-600 rounded-lg shadow-2xl w-full max-w-3xl text-white flex flex-col max-h-[90vh]">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <div>
+                    <h2 class="text-xl font-bold text-blue-400" id="modal-mcb-name">Configure Load: 8. AC / HVY 1 (25A)
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-1">Select active appliances.</p>
+                </div>
+                <button onclick="closeLoadModal()"
+                    class="text-gray-400 hover:text-white text-3xl font-bold leading-none">×</button>
+            </div>
+
+            <div id="modal-warning"
+                class="bg-red-500/20 border-b border-red-500/50 text-red-400 text-sm p-2 text-center font-bold hidden transition-all">
+            </div>
+
+            <div class="p-4 overflow-y-auto custom-scrollbar flex-grow bg-gray-900">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="appliance-grid">
+                    <label
+                        class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border border-gray-600">
+                        <input type="checkbox"
+                            class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="a1"
+                            onchange="toggleAppliance('a1')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">House LED Lights</span>
+                            <span class="text-xs text-yellow-400">150 W</span>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border border-gray-600">
+                        <input type="checkbox"
+                            class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="a2"
+                            onchange="toggleAppliance('a2')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">Ceiling Fans (4x)</span>
+                            <span class="text-xs text-yellow-400">280 W</span>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border border-gray-600">
+                        <input type="checkbox"
+                            class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="a3"
+                            onchange="toggleAppliance('a3')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">Router &amp; Smart Hubs</span>
+                            <span class="text-xs text-yellow-400">40 W</span>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border border-gray-600">
+                        <input type="checkbox"
+                            class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="a4"
+                            onchange="toggleAppliance('a4')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">TV &amp; PC Sockets</span>
+                            <span class="text-xs text-yellow-400">350 W</span>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border border-gray-600">
+                        <input type="checkbox"
+                            class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="a6"
+                            onchange="toggleAppliance('a6')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">Microwave Oven</span>
+                            <span class="text-xs text-yellow-400">1200 W</span>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border border-gray-600">
+                        <input type="checkbox"
+                            class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="a7"
+                            onchange="toggleAppliance('a7')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">Refrigerator</span>
+                            <span class="text-xs text-yellow-400">300 W</span>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border border-gray-600">
+                        <input type="checkbox"
+                            class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="a8"
+                            onchange="toggleAppliance('a8')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">Lab Equipment</span>
+                            <span class="text-xs text-yellow-400">1500 W</span>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border border-blue-500 bg-gray-600">
+                        <input type="checkbox"
+                            class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="a9"
+                            checked="" onchange="toggleAppliance('a9')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">Air Conditioner (1.5T)</span>
+                            <span class="text-xs text-yellow-400">1600 W</span>
+                        </div>
+                    </label>
+
+                    <label
+                        class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border border-gray-600">
+                        <input type="checkbox"
+                            class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="a10"
+                            onchange="toggleAppliance('a10')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">Water Geyser</span>
+                            <span class="text-xs text-yellow-400">2000 W</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="p-4 flex justify-between items-center border-t border-gray-700 bg-gray-800 rounded-b-lg">
+                <div class="text-sm">Total Selected: <span id="modal-total-watts"
+                        class="font-bold text-yellow-400 text-lg">1600</span> W</div>
+                <button onclick="closeLoadModal()"
+                    class="px-6 py-2 bg-blue-600 hover:bg-blue-500 rounded font-bold transition-colors">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smart App Modal -->
+    <div id="app-modal"
+        class="fixed inset-0 bg-black/90 hidden flex items-center justify-center z-[200] p-4 backdrop-blur-sm">
+        <div
+            class="bg-gray-100 w-full max-w-[360px] h-[700px] max-h-[95vh] rounded-[3rem] border-[12px] border-gray-900 shadow-2xl relative overflow-hidden flex flex-col">
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-2xl z-20"></div>
+
+            <div
+                class="bg-gradient-to-r from-blue-600 to-blue-800 text-white pt-10 pb-4 px-5 shadow-md z-10 flex justify-between items-center">
+                <div
+                    class="text-[14px] font-bold bg-white px-2 py-0.5 rounded shadow-sm flex items-center leading-none">
+                    <span class="text-[#2ba4e1]">amici</span><span class="text-[#e6177b]">Smart</span>
+                </div>
+                <button onclick="closeAppModal()"
+                    class="text-white bg-white/20 hover:bg-white/30 rounded-full w-8 h-8 flex items-center justify-center font-bold">✕</button>
+            </div>
+
+            <div id="app-offline-overlay"
+                class="absolute inset-0 bg-gray-100/90 z-20 flex flex-col items-center justify-center p-6 text-center backdrop-blur-sm hidden">
+                <span class="text-4xl mb-2">🔌</span>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Device Offline</h3>
+                <p class="text-sm text-gray-500 mb-8">Meter is not receiving power. Check Main RCBO.</p>
+                <button onclick="closeAppModal()"
+                    class="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white font-bold rounded-xl active:scale-95">Close
+                    App View</button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 custom-scrollbar bg-gray-50 z-0">
+                <div class="bg-white rounded-2xl shadow-sm p-4 mb-4 border border-gray-100">
+                    <h3 class="text-gray-500 text-xs font-bold uppercase mb-2">Real-time Load</h3>
+                    <div class="flex items-end justify-between">
+                        <div>
+                            <span class="text-4xl font-black text-gray-800" id="app-w">0</span>
+                            <span class="text-gray-500 font-bold ml-1">W</span>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-bold text-blue-600" id="app-a">0.0 A</div>
+                            <div class="text-xs text-gray-400 font-mono mt-1" id="app-v">230 V</div>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-2 mt-4 overflow-hidden">
+                        <div id="app-load-bar" class="bg-blue-500 h-full transition-all"></div>
+                    </div>
+                </div>
+
+                <h3 class="text-gray-800 font-bold mb-3 px-1 text-sm">Circuit Breakdown</h3>
+                <div class="space-y-3 pb-6" id="app-circuits-list"></div>
+
+                <button onclick="closeAppModal()"
+                    class="w-full mb-8 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl active:scale-95 border border-gray-300">
+                    CLOSE
+                </button>
+            </div>
+        </div>
+    </div>
+    <footer class="w-full text-center py-6 mt-8 text-gray-500 text-sm border-t border-gray-800 relative z-50">
+        Created by <span class="font-bold text-gray-400">Atish Ak Sharma</span>
+    </footer>
+    <script>
+        // --- System State ---
+        let state = {
+            gridOn: true,
+            solarOn: true,
+            solarGenW: 1500,
+            genOn: false,
+            atsAuto: true,
+            atsManualPos: 'IN1',
+            fusePlugged: true,
+            rcboOn: true,
+            voltage: 230,
+            totalLoadW: 0,
+            totalAmps: 0
+        };
+
+        const MAX_AMPS = 63.0;
+
+        // Appliances Dictionary
+        const appliances = [
+            { id: 'a1', name: 'House LED Lights', watts: 150 },
+            { id: 'a2', name: 'Ceiling Fans (4x)', watts: 280 },
+            { id: 'a3', name: 'Router & Smart Hubs', watts: 40 },
+            { id: 'a4', name: 'TV & PC Sockets', watts: 350 },
+            { id: 'a6', name: 'Microwave Oven', watts: 1200 },
+            { id: 'a7', name: 'Refrigerator', watts: 300 },
+            { id: 'a8', name: 'Lab Equipment', watts: 1500 },
+            { id: 'a9', name: 'Air Conditioner (1.5T)', watts: 1600 },
+            { id: 'a10', name: 'Water Geyser', watts: 2000 }
+        ];
+
+        // 9 MCB Configuration
+        const mcbConfig = [
+            { id: 1, rating: 16, name: '1. LIGHTS', selectedApplianceIds: ['a1'], isOn: true, currentLoad: 0 },
+            { id: 2, rating: 16, name: '2. FANS', selectedApplianceIds: ['a2'], isOn: true, currentLoad: 0 },
+            { id: 3, rating: 16, name: '3. WIFI/ROUTER', selectedApplianceIds: ['a3'], isOn: true, currentLoad: 0 },
+            { id: 4, rating: 16, name: '4. SOCKETS', selectedApplianceIds: ['a4'], isOn: true, currentLoad: 0 },
+            { id: 5, rating: 16, name: '5. SPARE', selectedApplianceIds: [], isOn: false, currentLoad: 0 },
+            { id: 6, rating: 20, name: '6. KITCHEN', selectedApplianceIds: ['a6', 'a7'], isOn: true, currentLoad: 0 },
+            { id: 7, rating: 20, name: '7. LAB', selectedApplianceIds: ['a8'], isOn: false, currentLoad: 0 },
+            { id: 8, rating: 25, name: '8. AC / HVY 1', selectedApplianceIds: ['a9'], isOn: true, currentLoad: 0 },
+            { id: 9, rating: 25, name: '9. GEYSER', selectedApplianceIds: ['a10'], isOn: false, currentLoad: 0 }
+        ];
+
+        // --- Init & UI Generation ---
+        function init() {
+            renderDesktopMCBs();
+            resolveATS();
+            setInterval(simulationLoop, 1000);
+        }
+
+        // Render Realistic DB MCBs inside Enclosure
+        function renderDesktopMCBs() {
+            const container = document.getElementById('mcb-rack');
+            container.innerHTML = '';
+
+            mcbConfig.forEach(mcb => {
+                const colorMarker = mcb.rating === 16 ? 'bg-gray-400' : (mcb.rating === 20 ? 'bg-blue-400' : 'bg-red-400');
+
+                const mcbHTML = `
+                    <div class="flex flex-col items-center">
+                        <div class="mcb-body w-20 h-44 rounded-md flex flex-col p-1 relative cursor-pointer group hover:border-gray-400 shadow-md transition-colors bg-white" onclick="openLoadModal(${mcb.id})">
+                            <div class="text-[7.5px] text-gray-700 font-bold text-center mt-1 border-b border-gray-200 pb-1 mx-1 leading-tight h-5 flex items-center justify-center">${mcb.name}</div>
+                            
+                            <div class="w-3 h-3 rounded-full bg-gray-200 border border-gray-400 flex items-center justify-center mx-auto mt-2"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full group-active:bg-gray-600"></div></div>
+                            <div class="text-[9px] text-gray-800 font-mono text-center border border-gray-300 mx-2 rounded bg-gray-50 mt-2">C${mcb.rating}</div>
+                            
+                            <div class="absolute top-[45%] left-1/2 transform -translate-x-1/2 w-4 h-1.5 bg-red-500 rounded-sm shadow-inner transition-colors" id="mcb-indicator-${mcb.id}"></div>
+                            <div class="absolute top-[20%] left-0 w-1 h-[60%] ${colorMarker} opacity-80 rounded-r-sm"></div>
+                            
+                            <div class="mt-auto mb-4 mx-auto w-12 h-12 bg-gray-200 rounded-sm border-t-2 border-gray-400 relative perspective flex justify-center shadow-inner hover:brightness-95" onclick="event.stopPropagation(); toggleMCB(${mcb.id})">
+                                <div id="mcb-lever-${mcb.id}" class="lever ${mcb.isOn ? 'on' : 'off'} absolute bottom-0 w-10 h-10 bg-gray-800 rounded-t-md border border-black shadow-[0_-2px_4px_rgba(0,0,0,0.6)] pointer-events-none"></div>
+                            </div>
+                            <div id="mcb-load-${mcb.id}" class="absolute bottom-1 left-0 right-0 text-center text-[9px] text-blue-600 font-mono font-bold transition-opacity ${mcb.isOn ? 'opacity-100' : 'opacity-30'}">0.0A</div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += mcbHTML;
+            });
+        }
+
+        // --- Hardware Controls ---
+        function toggleSettingsPanel() {
+            document.getElementById('settings-panel').classList.toggle('hidden');
+        }
+
+        function toggleGrid() {
+            state.gridOn = !state.gridOn;
+            const btn = document.getElementById('btn-grid-tgl');
+            if (state.gridOn) {
+                btn.innerText = "ON"; btn.className = "w-full py-0.5 mt-1 text-[9px] font-bold text-white bg-green-500 rounded border border-green-600 shadow-sm active:scale-95 transition-all";
+            } else {
+                btn.innerText = "OFF"; btn.className = "w-full py-0.5 mt-1 text-[9px] font-bold text-white bg-red-500 rounded border border-red-600 shadow-sm active:scale-95 transition-all";
+            }
+            resolveATS();
+        }
+
+        function toggleSolar() {
+            state.solarOn = !state.solarOn;
+            const btn = document.getElementById('btn-solar-tgl');
+            if (state.solarOn) {
+                btn.innerText = "ON"; btn.className = "w-full py-0.5 mt-1 text-[9px] font-bold text-white bg-green-500 rounded border border-green-600 shadow-sm active:scale-95 transition-all";
+            } else {
+                btn.innerText = "OFF"; btn.className = "w-full py-0.5 mt-1 text-[9px] font-bold text-white bg-red-500 rounded border border-red-600 shadow-sm active:scale-95 transition-all";
+            }
+            resolveATS();
+        }
+
+        function updateSolarVal() {
+            state.solarGenW = parseInt(document.getElementById('ctrl-solar').value);
+            document.getElementById('txt-solar').innerText = (state.solarGenW / 1000).toFixed(1) + "kW";
+            resolveATS();
+        }
+
+        function toggleFuse() {
+            state.fusePlugged = !state.fusePlugged;
+            const carrier = document.getElementById('fuse-carrier');
+            if (state.fusePlugged) {
+                carrier.style.transform = "translateY(0) scale(1) rotate(0deg)";
+                carrier.style.opacity = "1";
+            } else {
+                carrier.style.transform = "translateY(40px) scale(0.95) rotate(-5deg)";
+                carrier.style.opacity = "0.7";
+            }
+            resolveATS();
+        }
+
+        function toggleGen() {
+            state.genOn = !state.genOn;
+            const locKnob = document.getElementById('gen-local-knob');
+            const locBg = document.getElementById('gen-local-switch');
+            if (state.genOn) {
+                locKnob.classList.add('translate-x-4'); locBg.classList.replace('bg-gray-400', 'bg-yellow-500');
+            } else {
+                locKnob.classList.remove('translate-x-4'); locBg.classList.replace('bg-yellow-500', 'bg-gray-400');
+            }
+            resolveATS();
+        }
+
+        function toggleAtsMode() {
+            state.atsAuto = !state.atsAuto;
+            resolveATS();
+        }
+
+        function toggleAtsPos() {
+            if (!state.atsAuto) {
+                state.atsManualPos = state.atsManualPos === 'IN1' ? 'IN2' : 'IN1';
+                resolveATS();
+            }
+        }
+
+        function resolveATS() {
+            // Anti-islanding logic
+            if (!state.gridOn && state.solarOn && state.solarGenW > 0) {
+                state.solarGenW = 0;
+            } else if (state.gridOn && state.solarOn) {
+                state.solarGenW = parseInt(document.getElementById('ctrl-solar').value);
+            }
+
+            let in1Live = (state.gridOn || (state.solarOn && state.solarGenW > 0));
+            let in1PassedFuse = in1Live && state.fusePlugged;
+            let in2Live = state.genOn;
+
+            let activePos = 'IN1';
+
+            if (state.atsAuto) {
+                if (in1PassedFuse) activePos = 'IN1';
+                else if (in2Live) activePos = 'IN2';
+                else activePos = 'IN1';
+            } else {
+                activePos = state.atsManualPos;
+            }
+
+            const knob = document.getElementById('ats-knob-visual');
+            if (activePos === 'IN1') {
+                knob.style.transform = 'rotate(-45deg)';
+            } else {
+                knob.style.transform = 'rotate(45deg)';
+            }
+
+            const modeBtn = document.getElementById('ats-mode-btn');
+            if (state.atsAuto) {
+                modeBtn.innerText = "AUTO";
+                modeBtn.className = "text-[9px] font-bold bg-green-500 text-white px-3 py-1 rounded shadow-inner cursor-pointer mb-3 w-16 text-center transition-colors hover:brightness-110 active:scale-95";
+            } else {
+                modeBtn.innerText = "MANUAL";
+                modeBtn.className = "text-[9px] font-bold bg-yellow-500 text-white px-3 py-1 rounded shadow-inner cursor-pointer mb-3 w-16 text-center transition-colors hover:brightness-110 active:scale-95";
+            }
+
+            let atsHasPower = (activePos === 'IN1' && in1PassedFuse) || (activePos === 'IN2' && in2Live);
+
+            const txt = document.getElementById('ats-status-txt');
+            if (atsHasPower) {
+                if (activePos === 'IN1') {
+                    txt.innerText = "IN 1 ACTIVE"; txt.className = "text-[9px] font-bold mt-3 bg-blue-100 text-blue-800 px-3 py-0.5 rounded shadow-sm border border-blue-200";
+                } else {
+                    txt.innerText = "IN 2 ACTIVE"; txt.className = "text-[9px] font-bold mt-3 bg-yellow-100 text-yellow-800 px-3 py-0.5 rounded shadow-sm border border-yellow-200";
+                }
+                state.voltage = 230;
+            } else {
+                txt.innerText = "NO POWER"; txt.className = "text-[9px] font-bold mt-3 bg-red-100 text-red-800 px-3 py-0.5 rounded shadow-sm border border-red-200";
+                state.voltage = 0;
+            }
+
+            calculateLoad();
+        }
+
+        function toggleMain() {
+            state.rcboOn = !state.rcboOn;
+
+            const l1 = document.getElementById('main-lever-1');
+            const l2 = document.getElementById('main-lever-2');
+            const gang = document.getElementById('main-gang');
+            const ind = document.getElementById('main-indicator');
+
+            if (state.rcboOn) {
+                l1.classList.replace('off', 'on');
+                l2.classList.replace('off', 'on');
+                gang.classList.replace('translate-y-[14px]', 'translate-y-0');
+                ind.classList.replace('bg-red-500', 'bg-green-500');
+            } else {
+                l1.classList.replace('on', 'off');
+                l2.classList.replace('on', 'off');
+                gang.classList.replace('translate-y-0', 'translate-y-[14px]');
+                ind.classList.replace('bg-green-500', 'bg-red-500');
+            }
+            document.getElementById('trip-warning').classList.add('hidden');
+            calculateLoad();
+        }
+
+        function triggerTrip() {
+            if (state.rcboOn && state.voltage > 0) {
+                toggleMain();
+                const warning = document.getElementById('trip-warning');
+                warning.innerText = "MANUAL TEST TRIP SUCCESSFUL";
+                warning.classList.remove('hidden');
+                setTimeout(() => { warning.classList.add('hidden'); }, 3000);
+            }
+        }
+
+        function toggleMCB(id) {
+            const mcb = mcbConfig.find(m => m.id === id);
+            mcb.isOn = !mcb.isOn;
+
+            const lever = document.getElementById(`mcb-lever-${id}`);
+            const ind = document.getElementById(`mcb-indicator-${id}`);
+            const loadText = document.getElementById(`mcb-load-${id}`);
+
+            if (lever) {
+                if (mcb.isOn) {
+                    lever.classList.replace('off', 'on');
+                    ind.classList.replace('bg-red-500', 'bg-green-500');
+                    loadText.classList.replace('opacity-30', 'opacity-100');
+                } else {
+                    lever.classList.replace('on', 'off');
+                    ind.classList.replace('bg-green-500', 'bg-red-500');
+                    loadText.classList.replace('opacity-100', 'opacity-30');
+                }
+            }
+            calculateLoad();
+        }
+
+        // --- Core Simulation Engine ---
+        function simulationLoop() {
+            if (state.voltage > 0 && state.rcboOn) {
+                state.voltage = 230 + (Math.random() * 4 - 2);
+            }
+            calculateLoad();
+        }
+
+        function calculateLoad() {
+            let housePwrActive = (state.voltage > 0 && state.rcboOn && document.getElementById('ats-status-txt').innerText !== "NO POWER");
+            let totalW = 0;
+
+            mcbConfig.forEach(mcb => {
+                let mcbW = 0;
+                if (mcb.isOn && housePwrActive) {
+                    mcb.selectedApplianceIds.forEach(dId => {
+                        let app = appliances.find(a => a.id === dId);
+                        if (app) mcbW += app.watts;
+                    });
+                }
+                mcb.currentLoad = housePwrActive ? (mcbW / state.voltage) : 0;
+                totalW += mcbW;
+
+                const dLoad = document.getElementById(`mcb-load-${mcb.id}`);
+                if (dLoad) dLoad.innerText = mcb.currentLoad.toFixed(1) + 'A';
+            });
+
+            state.totalLoadW = housePwrActive ? totalW : 0;
+            state.totalAmps = housePwrActive ? (totalW / state.voltage) : 0;
+
+            if (state.totalAmps > MAX_AMPS) {
+                const warning = document.getElementById('trip-warning');
+                warning.innerText = `⚠️ OVERLOAD DETECTED (${state.totalAmps.toFixed(1)}A > 63A) - MAIN TRIPPED ⚠️`;
+                warning.classList.remove('hidden');
+                if (state.rcboOn) toggleMain();
+                return;
+            }
+
+            updatePoles(housePwrActive);
+            updateMeters(housePwrActive);
+            if (!document.getElementById('app-modal').classList.contains('hidden')) updateAppUI(housePwrActive);
+        }
+
+        function updatePoles(housePwrActive) {
+            let in1Live = state.gridOn || (state.solarOn && state.solarGenW > 0);
+            let in1PassedFuse = in1Live && state.fusePlugged;
+            let in2Live = state.genOn;
+
+            let atsStatus = document.getElementById('ats-status-txt').innerText;
+            let atsOutLive = (atsStatus === 'IN 1 ACTIVE' || atsStatus === 'IN 2 ACTIVE');
+
+            // Define which Nodes are powered based on simulation state
+            const powered = {
+                1: in1Live,
+                2: in1Live,
+                3: in1Live,
+                4: in1Live,
+                5: in1PassedFuse,
+                6: in2Live,
+                7: in2Live,
+                8: atsOutLive,
+                9: atsOutLive,
+                10: atsOutLive && state.rcboOn,
+                11: atsOutLive && state.rcboOn,
+                12: atsOutLive && state.rcboOn,
+                13: atsOutLive && state.rcboOn,
+                'e': true // Unified Earth is always grounded
+            };
+
+            // Apply active glow class to matching numbered poles
+            const nodes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 'e'];
+            nodes.forEach(id => {
+                document.querySelectorAll(`.n-${id}`).forEach(el => {
+                    if (powered[id]) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                });
+            });
+
+            // Update physical LED status indicators on ATS
+            let led1 = document.getElementById('led-in1');
+            led1.className = in1PassedFuse ? "w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_4px_#3b82f6]" : "w-2 h-2 rounded-full bg-gray-400";
+
+            let led2 = document.getElementById('led-in2');
+            led2.className = in2Live ? "w-2 h-2 rounded-full bg-yellow-500 shadow-[0_0_4px_#eab308]" : "w-2 h-2 rounded-full bg-gray-400";
+
+            let wifiLed = document.getElementById('wifi-led');
+            if (housePwrActive) {
+                wifiLed.classList.replace('bg-gray-500', 'bg-green-500');
+                wifiLed.classList.add('shadow-[0_0_4px_#22c55e]');
+            } else {
+                wifiLed.classList.replace('bg-green-500', 'bg-gray-500');
+                wifiLed.classList.remove('shadow-[0_0_4px_#22c55e]');
+            }
+        }
+
+        function updateMeters(housePwrActive) {
+            // Bi-Dir Meter (Grid/Solar Net)
+            const bMeter = document.getElementById('ui-net-meter');
+            const impLed = document.getElementById('led-imp');
+            const expLed = document.getElementById('led-exp');
+
+            if (state.gridOn) {
+                let loadOnGrid = (document.getElementById('ats-status-txt').innerText === 'IN 1 ACTIVE' && housePwrActive) ? state.totalLoadW : 0;
+                let netW = loadOnGrid - (state.solarOn ? state.solarGenW : 0);
+
+                bMeter.innerText = Math.abs(netW).toLocaleString() + "W";
+
+                if (netW > 0) {
+                    bMeter.className = "lcd-screen w-full h-8 mt-0.5 rounded flex items-center justify-center text-sm font-bold text-red-700";
+                    impLed.classList.replace('bg-gray-400', 'bg-red-500'); impLed.classList.add('animate-pulse');
+                    expLed.classList.replace('bg-green-500', 'bg-gray-400'); expLed.classList.remove('animate-pulse');
+                } else if (netW < 0) {
+                    bMeter.className = "lcd-screen w-full h-8 mt-0.5 rounded flex items-center justify-center text-sm font-bold text-green-700";
+                    expLed.classList.replace('bg-gray-400', 'bg-green-500'); expLed.classList.add('animate-pulse');
+                    impLed.classList.replace('bg-red-500', 'bg-gray-400'); impLed.classList.remove('animate-pulse');
+                } else {
+                    bMeter.className = "lcd-screen w-full h-8 mt-0.5 rounded flex items-center justify-center text-sm font-bold text-gray-800";
+                    impLed.className = "w-1.5 h-1.5 rounded-full bg-gray-400"; expLed.className = "w-1.5 h-1.5 rounded-full bg-gray-400";
+                }
+            } else {
+                bMeter.innerText = "OFFLINE";
+                bMeter.className = "lcd-screen w-full h-8 mt-0.5 rounded flex items-center justify-center text-[10px] font-bold text-gray-500";
+                impLed.className = "w-1.5 h-1.5 rounded-full bg-gray-400"; expLed.className = "w-1.5 h-1.5 rounded-full bg-gray-400";
+            }
+
+            // Realistic Wi-Fi Meter
+            const wMeterV = document.getElementById('meter-v');
+            const wMeterA = document.getElementById('meter-a');
+            const wMeterW = document.getElementById('meter-w');
+
+            if (housePwrActive) {
+                wMeterV.innerText = Math.round(state.voltage) + "V";
+                wMeterA.innerText = state.totalAmps.toFixed(1) + "A";
+                wMeterW.innerText = state.totalLoadW;
+            } else {
+                wMeterV.innerText = "0V";
+                wMeterA.innerText = "0.0A";
+                wMeterW.innerText = "0";
+            }
+
+            // Generator Draw Display
+            const genStats = document.getElementById('gen-stats');
+            if (state.genOn) {
+                genStats.classList.remove('hidden');
+                if (document.getElementById('ats-status-txt').innerText === 'IN 2 ACTIVE' && housePwrActive) {
+                    document.getElementById('ui-gen-draw').innerText = state.totalAmps.toFixed(1) + "A";
+                } else {
+                    document.getElementById('ui-gen-draw').innerText = "0.0A";
+                }
+            } else {
+                genStats.classList.add('hidden');
+            }
+        }
+
+        // --- Modals ---
+        let currentEditingMcbId = null;
+
+        function openLoadModal(id) {
+            currentEditingMcbId = id;
+            document.getElementById('modal-warning').classList.add('hidden');
+
+            const mcb = mcbConfig.find(m => m.id === id);
+            document.getElementById('modal-mcb-name').innerText = `Configure Load: ${mcb.name} (${mcb.rating}A)`;
+
+            const grid = document.getElementById('appliance-grid');
+            grid.innerHTML = '';
+
+            appliances.forEach(app => {
+                const isChecked = mcb.selectedApplianceIds.includes(app.id);
+                grid.innerHTML += `
+                    <label class="flex items-center p-3 bg-gray-700 hover:bg-gray-600 rounded cursor-pointer transition-colors border ${isChecked ? 'border-blue-500 bg-gray-600' : 'border-gray-600'}">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-500 rounded bg-gray-900 border-gray-500" value="${app.id}" ${isChecked ? 'checked' : ''} onchange="toggleAppliance('${app.id}')">
+                        <div class="ml-3 flex flex-col">
+                            <span class="text-sm font-medium text-white">${app.name}</span>
+                            <span class="text-xs text-yellow-400">${app.watts} W</span>
+                        </div>
+                    </label>
+                `;
+            });
+            updateModalTotal();
+            document.getElementById('load-modal').classList.remove('hidden');
+        }
+
+        function toggleAppliance(appId) {
+            const mcb = mcbConfig.find(m => m.id === currentEditingMcbId);
+            const isCurrentlySelected = mcb.selectedApplianceIds.includes(appId);
+
+            if (isCurrentlySelected) {
+                mcb.selectedApplianceIds = mcb.selectedApplianceIds.filter(id => id !== appId);
+            } else {
+                mcb.selectedApplianceIds.push(appId);
+            }
+            openLoadModal(currentEditingMcbId);
+            calculateLoad();
+        }
+
+        function updateModalTotal() {
+            const mcb = mcbConfig.find(m => m.id === currentEditingMcbId);
+            let totalW = 0;
+            mcb.selectedApplianceIds.forEach(appId => {
+                const app = appliances.find(a => a.id === appId);
+                if (app) totalW += app.watts;
+            });
+            document.getElementById('modal-total-watts').innerText = totalW;
+        }
+
+        function closeLoadModal() { document.getElementById('load-modal').classList.add('hidden'); }
+
+        function openAppModal() {
+            document.getElementById('app-modal').classList.remove('hidden');
+            updateAppUI(state.voltage > 0 && state.rcboOn && document.getElementById('ats-status-txt').innerText !== "NO POWER");
+        }
+        function closeAppModal() { document.getElementById('app-modal').classList.add('hidden'); }
+
+        function updateAppUI(housePwrActive) {
+            if (!housePwrActive) {
+                document.getElementById('app-offline-overlay').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('app-offline-overlay').classList.add('hidden');
+
+            document.getElementById('app-w').innerText = state.totalLoadW;
+            document.getElementById('app-a').innerText = state.totalAmps.toFixed(1) + " A";
+            document.getElementById('app-v').innerText = Math.round(state.voltage) + " V";
+
+            let pct = Math.min((state.totalAmps / MAX_AMPS) * 100, 100);
+            let bar = document.getElementById('app-load-bar');
+            bar.style.width = pct + "%";
+            bar.className = `h-full transition-all ${pct > 80 ? 'bg-red-500' : (pct > 50 ? 'bg-yellow-500' : 'bg-blue-500')}`;
+
+            const cList = document.getElementById('app-circuits-list');
+            cList.innerHTML = '';
+            mcbConfig.forEach(mcb => {
+                let mAmps = mcb.isOn && housePwrActive ? mcb.currentLoad : 0;
+                let mWatts = mAmps * state.voltage;
+                let active = mcb.isOn && mWatts > 0;
+
+                cList.innerHTML += `
+                    <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between transition-colors ${active ? 'border-l-4 border-l-blue-500' : 'border-l-4 border-l-gray-300'}">
+                        <div class="flex items-center gap-3 w-3/5 overflow-hidden">
+                            <div class="w-2 h-2 rounded-full ${active ? 'bg-green-500 shadow-[0_0_5px_#22c55e]' : 'bg-gray-300'} flex-shrink-0"></div>
+                            <div class="truncate">
+                                <div class="font-bold ${active ? 'text-gray-800' : 'text-gray-400'} text-sm truncate">${mcb.name}</div>
+                                <div class="text-[10px] text-gray-500">${mcb.rating}A MCB</div>
+                            </div>
+                        </div>
+                        <div class="text-right w-2/5">
+                            <div class="font-bold ${active ? 'text-blue-600' : 'text-gray-400'} text-sm">${Math.round(mWatts)} W</div>
+                            <div class="text-[10px] text-gray-500 font-mono">${mAmps.toFixed(1)} A</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.onclick = function (event) {
+            let loadModal = document.getElementById('load-modal');
+            let appModal = document.getElementById('app-modal');
+            if (event.target === loadModal) closeLoadModal();
+            if (event.target === appModal) closeAppModal();
+        }
+        document.addEventListener('keydown', function (event) {
+            if (event.key === "Escape") {
+                closeLoadModal();
+                closeAppModal();
+                document.getElementById('settings-panel').classList.add('hidden');
+            }
+        });
+
+        window.onload = init;
+    </script>
+
+</body>
+
+</html>
