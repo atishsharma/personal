@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Swabhimaan Bio - Mushroom Lab Project Cycle</title>
+    <meta name="title" content="Swabhimaan Bio - Mushroom Lab Project Cycle">
+    <meta name="description" content="A comprehensive 90-day management system for commercial-scale Cordyceps Militaris cultivation. Tracking 1,000 jars, culture expansion, and lab environment protocols.">
+    <meta name="keywords" content="Mushroom Lab, Cordyceps Militaris, Cultivation Cycle, Commercial Mushroom Growing, Lab Management, Agar Protocol, Liquid Culture">
+    <meta name="author" content="Atish">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="Swabhimaan Bio - Mushroom Lab Project Cycle">
+    <meta property="og:description" content="A comprehensive 90-day management system for commercial-scale Cordyceps Militaris cultivation. Tracking 1,000 jars, culture expansion, and lab environment protocols.">
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="Swabhimaan Bio - Mushroom Lab Project Cycle">
+    <meta property="twitter:description" content="A comprehensive 90-day management system for commercial-scale Cordyceps Militaris cultivation. Tracking 1,000 jars, culture expansion, and lab environment protocols.">
+    <meta property="twitter:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- HTML2PDF Library for PDF Downloads -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        lab: {
+                            50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8',
+                            500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a',
+                        },
+                        amber: {
+                            400: '#fbbf24', 500: '#f59e0b', 600: '#d97706', 700: '#b45309',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+        
+        body { background-color: #f1f5f9; color: #334155; }
+
+        .timeline-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .timeline-scroll::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
+        .timeline-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .timeline-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+
+        .accordion-content {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease-in-out;
+            max-height: 0; opacity: 0; overflow: hidden;
+        }
+        .accordion-content.open { max-height: 800px; opacity: 1; }
+        
+        /* PDF specific styles */
+        .pdf-page-break { page-break-after: always; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden antialiased selection:bg-amber-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="glass-panel z-10 px-4 sm:px-6 py-4 flex items-center justify-between shadow-sm relative border-b border-lab-200">
+        
+        <!-- Left Side: Logo & Title -->
+        <div class="flex items-center gap-2 sm:gap-3">
+            <div class="bg-amber-100 p-1 rounded-lg shadow-inner overflow-hidden border border-amber-200 flex-shrink-0">
+                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Lab Logo" class="w-8 h-8 rounded-md object-cover shadow-sm">
+            </div>
+            <div>
+                <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-lab-900 leading-none">Atish's <span class="text-amber-600">Mushroom Lab</span></h1>
+                <p class="text-[9px] sm:text-[10px] text-lab-500 font-bold tracking-widest uppercase mt-0.5">Swabhimaan Bio • 1000 Jar / Cycle</p>
+            </div>
+        </div>
+        
+        <!-- Right Side: Recipes, Badges & Progress -->
+        <div class="flex items-center gap-2 sm:gap-5">
+            
+            <!-- Dynamic Note Button -->
+            <button id="header-note-btn" onclick="toggleNoteModal()" class="hidden items-center justify-center p-2 sm:px-3 sm:py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg border border-red-200 transition-all shadow-sm active:scale-95 animate-pulse" title="Read Cultivator's Note">
+                <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <span class="hidden sm:block ml-2 text-xs font-bold uppercase tracking-wider">Note</span>
+            </button>
+
+            <!-- Recipe Modal Button -->
+            <button onclick="toggleRecipeModal()" class="flex items-center justify-center p-2 sm:px-3 sm:py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg border border-amber-300 transition-all shadow-sm active:scale-95" title="View Recipes">
+                <svg class="w-6 h-6 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                <span class="hidden sm:block ml-2 text-xs font-bold uppercase tracking-wider">Recipes</span>
+            </button>
+
+            <!-- Equipment Status Badges -->
+            <div class="hidden lg:flex gap-2 mr-2">
+                <span class="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-bold rounded border border-blue-200 uppercase">AC: 1.5T</span>
+                <span class="px-2 py-1 bg-green-50 text-green-600 text-[10px] font-bold rounded border border-green-200 uppercase">HEPA Flow</span>
+                <span class="px-2 py-1 bg-purple-50 text-purple-600 text-[10px] font-bold rounded border border-purple-200 uppercase">Auto: 14 Jars</span>
+            </div>
+
+            <!-- Progress Ring (NOW CLICKABLE) -->
+            <div class="hidden sm:block text-right">
+                <p class="text-[10px] uppercase font-bold text-lab-500 tracking-wider">Total Progress</p>
+            </div>
+            <button onclick="toggleProgressModal()" class="relative w-12 h-12 sm:w-14 sm:h-14 drop-shadow-sm flex-shrink-0 flex items-center justify-center hover:scale-105 transition-all duration-200 cursor-pointer group rounded-full outline-none focus:ring-2 focus:ring-amber-400" title="Click for Progress Report & Calendar">
+                <svg class="absolute inset-0 w-full h-full transform -rotate-90">
+                    <circle cx="50%" cy="50%" r="40%" stroke="currentColor" stroke-width="4" fill="transparent" class="text-lab-200" />
+                    <circle id="progress-ring" cx="50%" cy="50%" r="40%" stroke="currentColor" stroke-width="4" fill="transparent" class="text-amber-500 transition-all duration-700 ease-out" stroke-dasharray="125.6" stroke-dashoffset="125.6" style="transform-origin: center;" />
+                </svg>
+                <span id="ring-progress-text" class="text-[10px] sm:text-xs font-black text-lab-900 relative z-10 group-hover:text-amber-600 transition-colors">00 %</span>
+                
+                <!-- Hover Tooltip -->
+                <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-lab-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap hidden md:block">
+                    View Report
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col md:flex-row overflow-hidden relative bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMTQ4LCAxNjMsIDE4NCwgMC4xKSIvPjwvc3ZnPg==')]">
+        
+        <!-- Mobile Day Selector -->
+        <div class="md:hidden glass-panel border-b border-lab-200 z-10 shadow-sm">
+            <div class="flex overflow-x-auto timeline-scroll py-3 px-2" id="mobile-timeline">
+                <!-- Mobile timeline items injected here -->
+            </div>
+        </div>
+
+        <!-- Desktop Sidebar -->
+        <aside class="hidden md:flex w-80 glass-panel border-r border-lab-200 flex-col z-10 shadow-xl bg-white">
+            <div class="p-4 border-b border-lab-100 bg-lab-50/80 flex justify-between items-center">
+                <h2 class="text-xs font-bold text-lab-500 uppercase tracking-widest">Master Timeline</h2>
+            </div>
+            <div class="flex-1 overflow-y-auto timeline-scroll p-3 space-y-1.5" id="desktop-timeline">
+                <!-- Desktop timeline items injected here -->
+            </div>
+        </aside>
+
+        <!-- Day Details Area -->
+        <section class="flex-1 overflow-y-auto p-4 md:p-8 relative flex flex-col">
+            <div class="max-w-4xl mx-auto w-full relative z-10 mt-2 flex-1" id="day-details">
+                <!-- Day details injected here -->
+            </div>
+
+            <!-- Copyright Footer -->
+            <footer class="mt-8 pt-8 pb-4 text-center flex flex-col items-center justify-center w-full relative z-10">
+                <div class="w-full max-w-md border-t border-lab-200 mb-4"></div>
+                <p class="text-xs text-lab-500 font-medium tracking-wide">
+                    &copy; 2026 Produced By <a href="https://atishaksharma.com" target="_blank" rel="noopener noreferrer" class="text-amber-600 hover:text-amber-700 font-bold transition-colors hover:underline">Atish Ak Sharma</a>
+                </p>
+            </footer>
+        </section>
+    </main>
+
+    <!-- PROGRESS & CALENDAR MODAL -->
+    <div id="progress-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-lab-900/60 backdrop-blur-sm" onclick="toggleProgressModal()"></div>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col relative z-10 transform scale-95 transition-transform duration-300" id="progress-modal-content">
+            
+            <div class="px-6 py-4 border-b border-lab-100 bg-lab-50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <svg class="w-6 h-6 text-lab-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <h2 class="text-lg font-black text-lab-900 uppercase tracking-wide">Progress Report</h2>
+                </div>
+                <button onclick="toggleProgressModal()" class="text-lab-400 hover:text-red-500 transition-colors p-1 bg-white rounded-md border border-lab-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- PDF Content Area -->
+            <div class="flex-1 overflow-y-auto bg-slate-50 relative p-6">
+                <!-- Wrapper for PDF Generation -->
+                <div id="pdf-report-content" class="bg-white p-8 rounded-xl shadow-sm border border-lab-200 min-h-full">
+                    <!-- PDF content injected here via JS -->
+                </div>
+            </div>
+
+            <!-- Controls (Not printed in PDF) -->
+            <div class="px-6 py-4 bg-white border-t border-lab-100 flex justify-center">
+                <button onclick="downloadPDF()" class="flex items-center gap-2 bg-lab-900 hover:bg-black text-white px-8 py-3 rounded-lg font-bold shadow-md transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Download PDF Report
+                </button>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- NOTE MODAL -->
+    <div id="note-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-lab-900/60 backdrop-blur-sm" onclick="toggleNoteModal()"></div>
+        <div class="bg-gradient-to-b from-amber-50 to-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col relative z-10 transform scale-95 transition-transform duration-300 border border-amber-200" id="note-modal-content">
+            <div class="px-6 py-4 border-b border-amber-100 flex justify-between items-center bg-white/50">
+                <div class="flex items-center gap-3">
+                    <div class="bg-red-100 p-2 rounded-full">
+                        <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    </div>
+                    <h2 class="text-lg font-black text-amber-900 uppercase tracking-wide">Chief Cultivator's Note</h2>
+                </div>
+                <button onclick="toggleNoteModal()" class="text-lab-400 hover:text-red-500 transition-colors p-1 bg-white rounded-md border border-lab-200 shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-6 text-lab-800 font-medium leading-relaxed text-sm" id="note-modal-content-text">
+                <!-- Dynamic text injected here -->
+            </div>
+            <div class="p-4 bg-white border-t border-amber-100">
+                <button onclick="toggleNoteModal()" class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg font-bold transition-colors shadow-sm">Acknowledge</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECIPE MODAL -->
+    <div id="recipe-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-300">
+        <div class="absolute inset-0 bg-lab-900/60 backdrop-blur-sm" onclick="toggleRecipeModal()"></div>
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative z-10 transform scale-95 transition-transform duration-300" id="recipe-modal-content">
+            
+            <div class="px-6 py-4 border-b border-lab-100 bg-amber-50 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    <h2 class="text-lg font-black text-lab-900 uppercase tracking-wide">Master Recipes Reference</h2>
+                </div>
+                <button onclick="toggleRecipeModal()" class="text-lab-400 hover:text-red-500 transition-colors p-1 bg-white rounded-md border border-lab-200">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div class="p-6 overflow-y-auto space-y-6 bg-slate-50">
+                <!-- Daily Broth Recipe -->
+                <div class="bg-white p-5 rounded-xl border-2 border-emerald-200 shadow-sm">
+                    <h3 class="font-bold text-emerald-800 flex items-center gap-2 mb-3 text-lg">
+                        <span class="bg-emerald-100 p-1.5 rounded-md"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg></span>
+                        Daily 70-Jar Broth (5 Liters)
+                    </h3>
+                    <p class="text-xs text-lab-500 font-medium mb-3">Yields enough for 5 Autoclave runs (70 Jars). 70 x 70ml = 4.9L. 5L prevents wastage while allowing a 100ml buffer.</p>
+                    <ul class="grid grid-cols-2 gap-2 text-sm text-lab-700 font-medium bg-emerald-50/50 p-4 rounded-lg border border-emerald-100">
+                        <li class="flex justify-between border-b border-emerald-100 pb-1"><span>RO Water</span> <span class="font-bold">5 Liters</span></li>
+                        <li class="flex justify-between border-b border-emerald-100 pb-1"><span>Dextrose / Sugar</span> <span class="font-bold">100g</span></li>
+                        <li class="flex justify-between border-b border-emerald-100 pb-1"><span>Peptone</span> <span class="font-bold">50g</span></li>
+                        <li class="flex justify-between border-b border-emerald-100 pb-1"><span>Yeast Extract</span> <span class="font-bold">50g</span></li>
+                        <li class="flex justify-between border-b border-emerald-100 pb-1"><span>MgSO4</span> <span class="font-bold">7.5g</span></li>
+                        <li class="flex justify-between border-b border-emerald-100 pb-1"><span>KH2PO4</span> <span class="font-bold">5g</span></li>
+                    </ul>
+                </div>
+
+                <!-- Per Jar Setup -->
+                <div class="bg-white p-5 rounded-xl border border-lab-200 shadow-sm">
+                    <h3 class="font-bold text-lab-800 mb-2">Jar Loading Metrics</h3>
+                    <div class="flex gap-4">
+                        <div class="bg-amber-50 border border-amber-200 p-3 rounded-lg flex-1 text-center">
+                            <span class="block text-xl sm:text-2xl font-black text-amber-700">50g</span>
+                            <span class="text-[10px] sm:text-xs font-bold text-amber-600 uppercase">Brown Rice</span>
+                        </div>
+                        <div class="bg-blue-50 border border-blue-200 p-3 rounded-lg flex-1 text-center">
+                            <span class="block text-xl sm:text-2xl font-black text-blue-700">70ml</span>
+                            <span class="text-[10px] sm:text-xs font-bold text-blue-600 uppercase">Daily Broth</span>
+                        </div>
+                        <div class="bg-purple-50 border border-purple-200 p-3 rounded-lg flex-1 text-center">
+                            <span class="block text-xl sm:text-2xl font-black text-purple-700">6-8ml</span>
+                            <span class="text-[10px] sm:text-xs font-bold text-purple-600 uppercase">Liq. Culture</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Agar & LC Instructions -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Master Agar -->
+                    <div class="bg-white p-4 rounded-xl border border-lab-200 shadow-sm flex flex-col">
+                        <h4 class="font-bold text-lab-800 text-sm mb-2 border-b pb-1">Master Agar (500ml)</h4>
+                        <ul class="text-xs text-lab-600 space-y-1 font-medium mb-3 border-b border-lab-100 pb-3">
+                            <li class="flex justify-between"><span>RO Water</span> <span class="font-bold">500ml</span></li>
+                            <li class="flex justify-between"><span>Malt/Dextrose</span> <span class="font-bold">10g</span></li>
+                            <li class="flex justify-between"><span>Agar Powder</span> <span class="font-bold">10g</span></li>
+                        </ul>
+                        <div class="text-[11px] text-lab-600 leading-relaxed space-y-1.5 flex-1">
+                            <p><b>1. Mix:</b> Combine ingredients in a 1L Erlenmeyer flask. Drop in magnetic stir bar.</p>
+                            <p><b>2. Heat:</b> Place on hot plate stirrer. Heat and stir until clear (no clumps).</p>
+                            <p><b>3. Sterilize:</b> Cap with foil. Autoclave at 121°C (15 PSI) for 45 mins.</p>
+                            <p><b>4. Pour:</b> Let cool to ~45°C. In front of HEPA Hood, pour into sterile petri dishes.</p>
+                        </div>
+                    </div>
+
+                    <!-- Production LC -->
+                    <div class="bg-white p-4 rounded-xl border border-lab-200 shadow-sm flex flex-col">
+                        <h4 class="font-bold text-lab-800 text-sm mb-2 border-b pb-1">Production LC (1 Liter)</h4>
+                        <ul class="text-xs text-lab-600 space-y-1 font-medium mb-3 border-b border-lab-100 pb-3">
+                            <li class="flex justify-between"><span>RO Water</span> <span class="font-bold">1,000ml</span></li>
+                            <li class="flex justify-between"><span>Dextrose</span> <span class="font-bold">20g</span></li>
+                            <li class="flex justify-between"><span>Peptone</span> <span class="font-bold">10g</span></li>
+                            <li class="flex justify-between"><span>Yeast Extract</span> <span class="font-bold">10g</span></li>
+                        </ul>
+                        <div class="text-[11px] text-lab-600 leading-relaxed space-y-1.5 flex-1">
+                            <p><b>1. Mix:</b> Combine ingredients in a 2L flask. Drop in magnetic stir bar.</p>
+                            <p><b>2. Dissolve:</b> Stir on hot plate (low/no heat) until perfectly dissolved.</p>
+                            <p><b>3. Sterilize:</b> Foil cover. Autoclave at 121°C (15 PSI) for 45 mins.</p>
+                            <p><b>4. Inoculate:</b> Room temp, move to Flow Hood. Inject 10ml purchased LC OR drop 2 Master Agar wedges. Incubate on stirrer.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 bg-white border-t border-lab-100">
+                <button onclick="toggleRecipeModal()" class="w-full py-3 bg-lab-900 text-white rounded-lg font-bold hover:bg-black transition-colors">Close Reference</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- App State ---
+        let appData = {
+            schedule: generateSchedule(),
+            currentDay: 1,
+            openAccordions: {},
+            startDate: null // Stored as YYYY-MM-DD
+        };
+
+        // --- Local Storage Management ---
+        function saveData() {
+            const dataToSave = {
+                startDate: appData.startDate,
+                completedTasks: {}
+            };
+            appData.schedule.forEach(day => {
+                day.tasks.forEach(t => {
+                    if (t.completed) dataToSave.completedTasks[t.id] = true;
+                });
+            });
+            localStorage.setItem('swabhimaan_bio_data', JSON.stringify(dataToSave));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('swabhimaan_bio_data');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed.startDate) appData.startDate = parsed.startDate;
+                    if (parsed.completedTasks) {
+                        appData.schedule.forEach(day => {
+                            day.tasks.forEach(t => {
+                                if (parsed.completedTasks[t.id]) t.completed = true;
+                            });
+                        });
+                    }
+                } catch (e) {
+                    console.error("Error loading saved data", e);
+                }
+            }
+        }
+
+        // --- Modals & UI Elements ---
+        const recipeModal = document.getElementById('recipe-modal');
+        const recipeModalContent = document.getElementById('recipe-modal-content');
+        const noteModal = document.getElementById('note-modal');
+        const noteModalContent = document.getElementById('note-modal-content');
+        const progressModal = document.getElementById('progress-modal');
+        const progressModalContent = document.getElementById('progress-modal-content');
+
+        // --- Modal Toggles ---
+        function toggleModal(modal, content) {
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    content.classList.remove('scale-95');
+                }, 10);
+            } else {
+                modal.classList.add('opacity-0');
+                content.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 300);
+            }
+        }
+
+        function toggleRecipeModal() { toggleModal(recipeModal, recipeModalContent); }
+        function toggleNoteModal() { toggleModal(noteModal, noteModalContent); }
+        function toggleProgressModal() { 
+            toggleModal(progressModal, progressModalContent); 
+            if(progressModal.classList.contains('hidden') === false) {
+                renderProgressReport(); // Generate PDF view on open
+            }
+        }
+
+        // --- Date Utilities ---
+        function updateStartDate(dateString) {
+            if(!dateString) return;
+            appData.startDate = dateString;
+            saveData(); // Save to local storage
+            renderTimelines();
+            renderDayDetails();
+            updateOverallProgress();
+        }
+
+        function getFormattedDate(dayNumber) {
+            if (!appData.startDate) return null;
+            const d = new Date(appData.startDate);
+            d.setDate(d.getDate() + (dayNumber - 1));
+            return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        // --- PDF Generation ---
+        function downloadPDF() {
+            const element = document.getElementById('pdf-report-content');
+            const opt = {
+                margin:       0.5,
+                filename:     'Swabhimaan_Bio_Progress_Report.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Add downloading state to button if desired, but execution is fast
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function renderProgressReport() {
+            const container = document.getElementById('pdf-report-content');
+            
+            // Calculate overall stats
+            let totalTasks = 0; let completedTasks = 0;
+            appData.schedule.forEach(day => {
+                totalTasks += day.tasks.length;
+                completedTasks += day.tasks.filter(t => t.completed).length;
+            });
+            const percent = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+
+            // Start PDF HTML Build
+            let html = `
+                <div class="mb-6 border-b-2 border-lab-900 pb-4 flex justify-between items-end">
+                    <div>
+                        <h1 class="text-3xl font-black text-lab-900 uppercase tracking-tight">The Progress</h1>
+                        <p class="text-sm font-bold text-amber-600 uppercase tracking-widest mt-1">Swabhimaan Bio <br> 1000 Jar / Cycle</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-4xl font-black text-lab-900">${percent}%</p>
+                    </div>
+                </div>
+            `;
+
+            if (appData.startDate) {
+                const startDateStr = new Date(appData.startDate).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' });
+                html += `<div class="text-center mb-6"><p class="text-sm font-medium text-lab-700 bg-lab-50 p-3 rounded-lg inline-block border border-lab-200 shadow-sm"><strong>Official Start Date:</strong> ${startDateStr}</p></div>`;
+            }
+
+            let hasCompletedTasks = false;
+
+            appData.schedule.forEach(day => {
+                const completed = day.tasks.filter(t => t.completed);
+                if (completed.length > 0) {
+                    hasCompletedTasks = true;
+                    const dateStr = getFormattedDate(day.day);
+                    const dateBadge = dateStr ? `<span class="ml-2 text-xs font-normal text-lab-500 bg-lab-100 px-2 py-0.5 rounded border border-lab-200">${dateStr}</span>` : '';
+                    
+                    html += `
+                        <div class="mb-5 pb-4 border-b border-lab-100 last:border-0 page-break-inside-avoid">
+                            <h3 class="font-bold text-lab-800 text-base mb-2 flex items-center">
+                                Day ${day.day}: ${day.title} ${dateBadge}
+                            </h3>
+                            <ul class="space-y-1.5 ml-1">
+                    `;
+                    
+                    completed.forEach(task => {
+                        html += `
+                            <li class="flex items-start text-sm text-lab-600 font-medium">
+                                <svg class="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                <span>${task.title}</span>
+                            </li>
+                        `;
+                    });
+
+                    html += `</ul></div>`;
+                }
+            });
+
+            if (!hasCompletedTasks) {
+                html += `
+                    <div class="text-center p-8 bg-lab-50 rounded-lg border border-dashed border-lab-200 mt-4">
+                        <p class="text-lab-500 font-bold">No tasks have been completed yet.</p>
+                        <p class="text-xs text-lab-400 mt-1">Begin checking off tasks in your daily view to generate your report.</p>
+                    </div>
+                `;
+            }
+
+            // Footer for PDF
+            const generatedDate = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour:'2-digit', minute:'2-digit' });
+            html += `
+                <div class="mt-8 pt-4 border-t border-lab-200 text-[10px] text-center text-lab-400 font-medium uppercase tracking-widest leading-relaxed">
+                    Report Generated: ${generatedDate} <br> Produced By Atish Ak Sharma
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // --- Data Generation ---
+        function generateSchedule() {
+            const schedule = [];
+            const hospitalRoomNote = "Lab Environment: Keep the 1.5 Ton AC running to strictly maintain target temps. Ensure the filtered intake is providing positive pressure to keep unfiltered air out of the sealed lab.";
+
+            for (let i = 1; i <= 90; i++) {
+                let phase = ""; let title = ""; let tasks = []; let tips = "";
+
+                if (i === 1) {
+                    phase = "Culture Expansion"; title = "Prep Agar & LC Broth";
+                    tasks = [
+                        { id: `d${i}-t1`, title: "Prepare Master Agar (MEA) & LC Broth", details: ["Use 15L RO System.", "Agar: 500ml water, 10g Malt, 10g Agar.", "LC: 4x 1L flasks. Per flask: 1L water, 20g Dextrose, 10g Peptone, 10g Yeast.", "Heat/stir on Hot Plate until dissolved."], completed: false },
+                        { id: `d${i}-t2`, title: "Autoclave Sterilization", details: ["Cover with foil.", "Load 50L Autoclave.", "Run 121°C (15 PSI) for 45 mins.", "Depressurize overnight."], completed: false }
+                    ];
+                    tips = hospitalRoomNote;
+                } else if (i === 2) {
+                    phase = "Culture Expansion"; title = "Inoculate Cultures";
+                    tasks = [
+                        { id: `d${i}-t1`, title: "Pour Agar Plates", details: ["Use Laminar Flow Hood.", "Pour 20-25 sterile petri dishes."], completed: false },
+                        { id: `d${i}-t2`, title: "Inoculate from 50ml Market LC", details: ["Make Masters: Drop LC onto 10 agar plates.", "Production LC: Inject 10ml into each 1L flask."], completed: false },
+                        { id: `d${i}-t3`, title: "Magnetic Stirring", details: ["Move flasks to stirrer (No Heat).", "Set 100-150 RPM."], completed: false }
+                    ];
+                } else if (i >= 3 && i <= 5) {
+                    phase = "Culture Expansion"; title = "Incubate & Monitor";
+                    tasks = [ { id: `d${i}-t1`, title: "Monitor LC & Agar", details: ["Maintain AC 20°C - 22°C.", "Ensure stirrer is active.", "Observe agar for white growth."], completed: false } ];
+                } else if (i === 6) {
+                    phase = "Culture Expansion"; title = "Refrigerate Master Cultures";
+                    tasks = [ { id: `d${i}-t1`, title: "Archive Master Plates", details: ["Select 5 best plates.", "Store in Refrigerator (4°C - 5°C) for future cycles."], completed: false } ];
+                } else if (i === 7) {
+                    phase = "Culture Expansion"; title = "Microscopy QC";
+                    tasks = [ { id: `d${i}-t1`, title: "Test LC Purity", details: ["In flow hood, prep slide from LC.", "Use Bifocal Microscope at 400x.", "Look for fungal hyphae. Discard if swimming dots (bacteria) seen."], completed: false } ];
+                } else if (i >= 8 && i <= 22) {
+                    phase = "Rolling Production"; title = "Daily 70-Jar Batch";
+                    tasks = [
+                        { id: `d${i}-t1`, title: "Prepare Daily Broth (5 Liters)", details: ["Mix 5L RO Water, 100g Dextrose, 50g Peptone, 50g Yeast, 7.5g MgSO4, 5g KH2PO4."], completed: false },
+                        { id: `d${i}-t2`, title: "Load & Autoclave (5 Runs)", details: ["Load 50g Rice / 70ml Broth into 70 jars.", "Do 5 autoclave runs (14 jars each) at 15 PSI for 60m."], completed: false },
+                        { id: `d${i}-t3`, title: "Flow Hood Inoculation", details: ["Inject 6-8ml LC into each jar inside Flow Hood."], completed: false }
+                    ];
+                    if (i === 8) tips = "Rolling production starts! Doing 70 jars/day for 15 days yields exactly 1,050 jars, perfectly maximizing your 14-jar autoclave limit without wasting broth.";
+                } else if (i >= 23 && i <= 36) {
+                    phase = "Dark Incubation"; title = "Mycelium Colonization";
+                    tasks = [ { id: `d${i}-t1`, title: "Climate Check", details: ["Room dark. AC at 20°C - 22°C.", "Inspect jars. Remove contamination."], completed: false } ];
+                } else if (i >= 37 && i <= 43) {
+                    phase = "Light Induction"; title = "Stimulating Pinning";
+                    tasks = [ { id: `d${i}-t1`, title: "Lighting & Temp Drop", details: ["LEDs on 12hr/12hr cycle.", "Drop AC to 18°C - 20°C.", "Watch for orange color change."], completed: false } ];
+                    if (i === 37) tips = "With 1,000+ jars generating heat, AC works harder. Ensure cold air circulates evenly so top racks don't overheat.";
+                } else if (i >= 44 && i <= 75) {
+                    phase = "Fruiting"; title = "Stroma Development";
+                    tasks = [ { id: `d${i}-t1`, title: "Environment Maintenance", details: ["Maintain 12/12 light & 18-22°C.", "Run 5L Humidifier to keep ambient humidity ~60% to prevent jar gas-filters from drying out."], completed: false } ];
+                    if (i === 55) tips = "Randomly select 10 jars from different rack levels to check stroma (fruit) length. The orange 'clubs' should be growing steadily upwards.";
+                } else if (i >= 76 && i <= 85) {
+                    phase = "Harvest & Processing"; title = "Rolling Harvest & Dehydration";
+                    tasks = [
+                        { id: `d${i}-t1`, title: "Harvesting Batch", details: ["Harvest rolling batches based on maturity.", "Scrape fruits from rice cake."], completed: false },
+                        { id: `d${i}-t2`, title: "8-Tray Dehydrator", details: ["Load dehydrator.", "Set strictly to 40°C - 45°C (105-115°F).", "Run 12-24 hours. Store with silica."], completed: false }
+                    ];
+                    if(i === 76) tips = "Process exactly as you planted: harvest roughly 70 jars a day. This ensures the dehydrator is never overloaded.";
+                } else if (i >= 86 && i <= 90) {
+                    phase = "Lab Reset"; title = "Decon & Restock";
+                    tasks = [
+                        { id: `d${i}-t1`, title: "Mass Jar Cleaning", details: ["Empty rice blocks.", "Wash and sterilize all 1000 jars."], completed: false },
+                        { id: `d${i}-t2`, title: "Room Decontamination", details: ["Change fan filters.", "Wipe racks, hood, AC, floors with alcohol.", "Check Master Plates in fridge."], completed: false }
+                    ];
+                    if (i === 90) tips = "Cycle Complete! You successfully ran a commercial batch of 1,050 jars using zero-wastage batching. Log final dry weights.";
+                }
+
+                schedule.push({ day: i, phase, title, tasks, tips });
+            }
+            return schedule;
+        }
+
+        // --- Render Functions ---
+        function renderTimelines() {
+            const desktopTimeline = document.getElementById('desktop-timeline');
+            const mobileTimeline = document.getElementById('mobile-timeline');
+            desktopTimeline.innerHTML = ''; mobileTimeline.innerHTML = '';
+
+            appData.schedule.forEach(dayData => {
+                const totalTasks = dayData.tasks.length;
+                const completedTasks = dayData.tasks.filter(t => t.completed).length;
+                const isDayComplete = totalTasks > 0 && totalTasks === completedTasks;
+
+                // Desktop
+                const dItem = document.createElement('button');
+                dItem.className = `w-full text-left px-4 py-3 rounded-lg transition-all duration-200 border flex items-center justify-between group ${appData.currentDay === dayData.day ? 'bg-white border-amber-400 shadow-md relative z-10 ring-1 ring-amber-400' : 'bg-transparent border-transparent hover:bg-white hover:shadow-sm hover:border-lab-200'}`;
+                dItem.onclick = () => selectDay(dayData.day);
+                
+                dItem.innerHTML = `
+                    <div class="flex flex-col">
+                        <span class="text-xs font-bold ${appData.currentDay === dayData.day ? 'text-amber-600' : 'text-lab-400 group-hover:text-lab-600'}">Day ${dayData.day}</span>
+                        <span class="text-sm font-semibold truncate max-w-[180px] mt-0.5 ${appData.currentDay === dayData.day ? 'text-lab-900' : 'text-lab-600'}">${dayData.title}</span>
+                    </div>
+                    ${isDayComplete ? `<svg class="w-5 h-5 text-emerald-500 drop-shadow-sm flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>` : ''}
+                `;
+                desktopTimeline.appendChild(dItem);
+
+                // Mobile
+                const mItem = document.createElement('button');
+                mItem.className = `flex-shrink-0 mx-1 px-4 py-2 rounded-full border text-sm font-bold transition-all flex flex-col items-center ${appData.currentDay === dayData.day ? 'bg-amber-500 border-amber-600 text-white shadow-md' : 'bg-white border-lab-200 text-lab-600 shadow-sm'}`;
+                mItem.onclick = () => selectDay(dayData.day);
+                mItem.innerHTML = `Day ${dayData.day} ${isDayComplete ? '✓' : ''}`;
+                mobileTimeline.appendChild(mItem);
+            });
+        }
+
+        function selectDay(dayNumber) {
+            appData.currentDay = dayNumber;
+            appData.openAccordions = {}; 
+            renderTimelines();
+            renderDayDetails();
+            
+            const mobileBtns = document.getElementById('mobile-timeline').children;
+            if(mobileBtns[dayNumber - 1]) {
+                mobileBtns[dayNumber - 1].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+        }
+
+        function renderDayDetails() {
+            const dayDetails = document.getElementById('day-details');
+            
+            // Render Initial Setup Screen if no start date
+            if (!appData.startDate) {
+                dayDetails.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full min-h-[400px] sm:min-h-[60vh] animate-fade-in">
+                        <div class="bg-white p-8 rounded-2xl shadow-xl border border-amber-200 max-w-md w-full text-center relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-full h-2 bg-amber-500"></div>
+                            <div class="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 border border-amber-200 shadow-inner">
+                                <svg class="w-8 h-8 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h2 class="text-2xl font-black text-lab-900 mb-2 tracking-tight">Project Initialization</h2>
+                            <p class="text-lab-500 text-sm mb-8 font-medium">Please set the official start date for your 1,000 Jar Cordyceps Cycle to begin tracking protocol.</p>
+                            
+                            <div class="text-left mb-2">
+                                <label for="main-start-date" class="block text-xs font-bold text-lab-600 uppercase tracking-wider mb-2 ml-1">Cycle Start Date</label>
+                                <input type="date" id="main-start-date" class="w-full bg-slate-50 border-2 border-lab-200 rounded-xl p-3.5 text-lab-900 font-bold focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all shadow-inner cursor-pointer" onchange="updateStartDate(this.value)">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const dayData = appData.schedule.find(d => d.day === appData.currentDay);
+            if (!dayData) return;
+
+            const totalTasks = dayData.tasks.length;
+            const completedTasks = dayData.tasks.filter(t => t.completed).length;
+            const progressPercent = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+
+            const dateStr = getFormattedDate(dayData.day);
+            const dateBadge = dateStr ? `<span class="ml-3 text-lg md:text-xl font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-lg border border-amber-200 shadow-sm whitespace-nowrap">${dateStr}</span>` : '';
+
+            let html = `
+                <div class="mb-6">
+                    <span class="inline-block px-3 py-1 rounded bg-lab-800 text-white text-[10px] font-bold uppercase tracking-widest mb-3 shadow-sm">
+                        ${dayData.phase}
+                    </span>
+                    <div class="flex items-center flex-wrap gap-y-2 mb-1">
+                        <h2 class="text-3xl md:text-5xl font-black text-lab-900 tracking-tight drop-shadow-sm">Day ${dayData.day}</h2>
+                        ${dateBadge}
+                    </div>
+                    <h3 class="text-xl md:text-2xl text-lab-500 font-semibold mt-1">${dayData.title}</h3>
+                </div>
+
+                <!-- Daily Progress -->
+                <div class="bg-white rounded-xl p-5 mb-8 border border-lab-200 shadow-sm">
+                    <div class="flex justify-between items-end mb-3">
+                        <span class="text-sm font-bold text-lab-600 uppercase tracking-wide">Daily Task Completion</span>
+                        <span class="text-xl font-black text-lab-900">${progressPercent}%</span>
+                    </div>
+                    <div class="w-full bg-lab-100 rounded-full h-3 overflow-hidden shadow-inner">
+                        <div class="bg-emerald-500 h-3 rounded-full transition-all duration-700 ease-out" style="width: ${progressPercent}%"></div>
+                    </div>
+                </div>
+
+                <!-- Task List -->
+                <div class="space-y-4 mb-8">
+            `;
+
+            if (dayData.tasks.length > 0) {
+                dayData.tasks.forEach((task) => {
+                    const isOpen = appData.openAccordions[task.id];
+                    html += `
+                        <div class="bg-white rounded-xl border-2 ${task.completed ? 'border-emerald-400 bg-emerald-50/20' : 'border-lab-200 hover:border-amber-300'} shadow-sm overflow-hidden transition-all duration-200">
+                            <div class="flex items-center p-5 cursor-pointer transition-colors" onclick="toggleAccordion('${task.id}')">
+                                <div class="relative flex items-center justify-center mr-5" onclick="event.stopPropagation();">
+                                    <input type="checkbox" class="peer sr-only" ${task.completed ? 'checked' : ''} onchange="toggleTask(${dayData.day}, '${task.id}')" id="cb-${task.id}">
+                                    <label for="cb-${task.id}" class="w-7 h-7 rounded border-2 cursor-pointer ${task.completed ? 'border-emerald-500 bg-emerald-500' : 'border-lab-300 bg-white hover:border-amber-400'} flex items-center justify-center transition-all shadow-sm">
+                                        <svg class="w-5 h-5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    </label>
+                                </div>
+                                <span class="text-lg font-bold ${task.completed ? 'text-lab-400 line-through' : 'text-lab-800'} transition-all flex-1">
+                                    ${task.title}
+                                </span>
+                                <div class="bg-lab-50 p-2 rounded-full">
+                                    <svg class="w-5 h-5 text-lab-500 transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+                                </div>
+                            </div>
+                            <div class="accordion-content bg-slate-50 border-t border-lab-100 ${isOpen ? 'open' : ''}">
+                                <div class="p-6 pl-16">
+                                    <ul class="space-y-3 text-sm text-lab-700 list-disc marker:text-amber-500 leading-relaxed font-medium">
+                                        ${task.details.map(detail => `<li>${detail}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                html += `
+                    <div class="text-center p-10 bg-white rounded-xl border-2 border-lab-200 border-dashed shadow-sm">
+                        <svg class="w-12 h-12 text-lab-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-lg text-lab-600 font-bold">No manual interventions required today.</p>
+                        <p class="text-sm text-lab-500 mt-2 font-medium">System is running automatically.</p>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+
+            // Note Logic
+            const noteBtn = document.getElementById('header-note-btn');
+            const noteContentText = document.getElementById('note-modal-content-text');
+            if (dayData.tips) {
+                noteBtn.classList.remove('hidden');
+                noteBtn.classList.add('flex');
+                noteContentText.innerHTML = dayData.tips;
+            } else {
+                noteBtn.classList.add('hidden');
+                noteBtn.classList.remove('flex');
+            }
+
+            // Navigation Buttons
+            html += `
+                <div class="flex justify-between items-center mt-10 pt-6 border-t border-lab-200">
+                    <button onclick="selectDay(${Math.max(1, dayData.day - 1)})" class="px-6 py-3 rounded-lg text-sm font-bold text-lab-600 hover:text-lab-900 hover:bg-lab-100 transition-colors border border-transparent ${dayData.day === 1 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}">
+                        &larr; Previous Day
+                    </button>
+                    <button onclick="selectDay(${Math.min(90, dayData.day + 1)})" class="px-8 py-3 rounded-lg text-sm font-bold bg-lab-900 hover:bg-black text-white transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 ${dayData.day === 90 ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}">
+                        Next Day &rarr;
+                    </button>
+                </div>
+            `;
+
+            dayDetails.innerHTML = html;
+            
+            setTimeout(() => {
+                document.querySelectorAll('.accordion-content.open').forEach(el => {
+                    el.style.paddingTop = '1px'; 
+                });
+            }, 10);
+        }
+
+        // --- Actions ---
+        window.toggleAccordion = function(taskId) {
+            appData.openAccordions[taskId] = !appData.openAccordions[taskId];
+            renderDayDetails();
+        };
+
+        window.toggleTask = function(dayNumber, taskId) {
+            const day = appData.schedule.find(d => d.day === dayNumber);
+            const task = day.tasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                saveData(); // Save to local storage immediately
+                renderDayDetails();
+                renderTimelines();
+                updateOverallProgress();
+            }
+        };
+
+        function updateOverallProgress() {
+            let totalTasks = 0;
+            let completedTasks = 0;
+
+            appData.schedule.forEach(day => {
+                totalTasks += day.tasks.length;
+                completedTasks += day.tasks.filter(t => t.completed).length;
+            });
+
+            const percent = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+            
+            const ringText = document.getElementById('ring-progress-text');
+            if (ringText) {
+                ringText.textContent = `${String(percent).padStart(2, '0')} %`;
+            }
+
+            const offset = 125.6 - (percent / 100) * 125.6;
+            
+            setTimeout(() => {
+                const ring = document.getElementById('progress-ring');
+                if(ring) {
+                    const radius = ring.r.baseVal.value;
+                    const circumference = radius * 2 * Math.PI;
+                    ring.style.strokeDasharray = `${circumference} ${circumference}`;
+                    ring.style.strokeDashoffset = circumference - (percent / 100) * circumference;
+                }
+            }, 50);
+
+            // Re-render report silently if modal is open
+            if(progressModal && !progressModal.classList.contains('hidden')) {
+                renderProgressReport();
+            }
+        }
+
+        // Start app
+        function init() {
+            loadData(); // Load saved data before rendering
+            renderTimelines();
+            selectDay(1);
+            updateOverallProgress();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
