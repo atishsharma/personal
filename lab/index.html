@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Primary Meta Tags -->
-    <title>Swabhimaan Bio - Mushroom Lab Project Cycle</title>
-    <meta name="title" content="Swabhimaan Bio - Mushroom Lab Project Cycle">
+    <title>Atish's Swabhimaan Bio - Mushroom Lab Project Cycle</title>
+    <meta name="title" content="Atish's Swabhimaan Bio - Mushroom Lab Project Cycle">
     <meta name="description" content="A comprehensive 90-day management system for commercial-scale Cordyceps Militaris cultivation. Tracking 1,000 jars, culture expansion, and lab environment protocols.">
     <meta name="keywords" content="Mushroom Lab, Cordyceps Militaris, Cultivation Cycle, Commercial Mushroom Growing, Lab Management, Agar Protocol, Liquid Culture">
     <meta name="author" content="Atish">
@@ -14,14 +14,14 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="">
-    <meta property="og:title" content="Swabhimaan Bio - Mushroom Lab Project Cycle">
+    <meta property="og:title" content="Atish's Swabhimaan Bio - Mushroom Lab Project Cycle">
     <meta property="og:description" content="A comprehensive 90-day management system for commercial-scale Cordyceps Militaris cultivation. Tracking 1,000 jars, culture expansion, and lab environment protocols.">
     <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="">
-    <meta property="twitter:title" content="Swabhimaan Bio - Mushroom Lab Project Cycle">
+    <meta property="twitter:title" content="Atish's Swabhimaan Bio - Mushroom Lab Project Cycle">
     <meta property="twitter:description" content="A comprehensive 90-day management system for commercial-scale Cordyceps Militaris cultivation. Tracking 1,000 jars, culture expansion, and lab environment protocols.">
     <meta property="twitter:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
 
@@ -87,8 +87,8 @@
         
         <!-- Left Side: Logo & Title -->
         <div class="flex items-center gap-2 sm:gap-3">
-            <div class="bg-amber-100 p-1 rounded-lg shadow-inner overflow-hidden border border-amber-200 flex-shrink-0">
-                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Lab Logo" class="w-8 h-8 rounded-md object-cover shadow-sm">
+            <div class="bg-amber-100 p-0.5 rounded-full shadow-inner overflow-hidden border border-amber-200 flex-shrink-0">
+                <img src="app_icon.png" onerror="this.src='https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg'" alt="Swabhimaan Bio Logo" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover shadow-sm bg-white">
             </div>
             <div>
                 <h1 class="text-lg sm:text-xl font-extrabold tracking-tight text-lab-900 leading-none">Atish's <span class="text-amber-600">Mushroom Lab</span></h1>
@@ -113,9 +113,9 @@
 
             <!-- Equipment Status Badges -->
             <div class="hidden lg:flex gap-2 mr-2">
-                <span class="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-bold rounded border border-blue-200 uppercase">AC: 1.5T</span>
-                <span class="px-2 py-1 bg-green-50 text-green-600 text-[10px] font-bold rounded border border-green-200 uppercase">HEPA Flow</span>
-                <span class="px-2 py-1 bg-purple-50 text-purple-600 text-[10px] font-bold rounded border border-purple-200 uppercase">Auto: 14 Jars</span>
+                <span id="header-ac-badge" class="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-bold rounded border border-blue-200 uppercase whitespace-nowrap transition-colors duration-300">AC: 20°C - 22°C</span>
+                <span class="px-2 py-1 bg-green-50 text-green-600 text-[10px] font-bold rounded border border-green-200 uppercase whitespace-nowrap">HEPA Flow</span>
+                <span class="px-2 py-1 bg-purple-50 text-purple-600 text-[10px] font-bold rounded border border-purple-200 uppercase whitespace-nowrap">Autoclave: 14 Jars</span>
             </div>
 
             <!-- Progress Ring (NOW CLICKABLE) -->
@@ -332,14 +332,18 @@
             schedule: generateSchedule(),
             currentDay: 1,
             openAccordions: {},
-            startDate: null // Stored as YYYY-MM-DD
+            startDate: null, // Stored as YYYY-MM-DD
+            customTasks: {}, // Stored as { dayNumber: [{id, title, details, completed}] }
+            dailyNotes: {}   // Stored as { dayNumber: "text" }
         };
 
         // --- Local Storage Management ---
         function saveData() {
             const dataToSave = {
                 startDate: appData.startDate,
-                completedTasks: {}
+                completedTasks: {},
+                customTasks: appData.customTasks,
+                dailyNotes: appData.dailyNotes
             };
             appData.schedule.forEach(day => {
                 day.tasks.forEach(t => {
@@ -355,6 +359,9 @@
                 try {
                     const parsed = JSON.parse(saved);
                     if (parsed.startDate) appData.startDate = parsed.startDate;
+                    if (parsed.customTasks) appData.customTasks = parsed.customTasks;
+                    if (parsed.dailyNotes) appData.dailyNotes = parsed.dailyNotes;
+                    
                     if (parsed.completedTasks) {
                         appData.schedule.forEach(day => {
                             day.tasks.forEach(t => {
@@ -411,6 +418,7 @@
             saveData(); // Save to local storage
             renderTimelines();
             renderDayDetails();
+            updateACBadge(appData.currentDay);
             updateOverallProgress();
         }
 
@@ -431,8 +439,6 @@
                 html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
-            
-            // Add downloading state to button if desired, but execution is fast
             html2pdf().set(opt).from(element).save();
         }
 
@@ -442,64 +448,109 @@
             // Calculate overall stats
             let totalTasks = 0; let completedTasks = 0;
             appData.schedule.forEach(day => {
-                totalTasks += day.tasks.length;
-                completedTasks += day.tasks.filter(t => t.completed).length;
+                const combinedTasks = [...day.tasks, ...(appData.customTasks[day.day] || [])];
+                totalTasks += combinedTasks.length;
+                completedTasks += combinedTasks.filter(t => t.completed).length;
             });
             const percent = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
             // Start PDF HTML Build
             let html = `
-                <div class="mb-6 border-b-2 border-lab-900 pb-4 flex justify-between items-end">
+                <div class="text-center mb-8 pt-2 flex flex-col items-center">
+                    <img src="app_icon.png" onerror="this.style.display='none'" alt="Swabhimaan Bio Logo" class="w-24 h-24 rounded-full object-cover shadow-lg mb-5 border-4 border-amber-100 bg-white">
+                    <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Swabhimaan Bio's Cordyceps Mushroom Production Cycle Report</h1>
+                </div>
+
+                <div class="mb-8 pb-6 flex justify-between items-center bg-gradient-to-r from-slate-50 via-white to-slate-50 p-6 rounded-2xl shadow-sm border border-slate-200">
                     <div>
-                        <h1 class="text-3xl font-black text-lab-900 uppercase tracking-tight">The Progress</h1>
-                        <p class="text-sm font-bold text-amber-600 uppercase tracking-widest mt-1">Swabhimaan Bio <br> 1000 Jar / Cycle</p>
+                        <h2 class="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-600">Cycle Progress</h2>
+                        <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mt-2">Swabhimaan Bio <br> 1000 Jar / Cycle</p>
                     </div>
-                    <div class="text-right">
-                        <p class="text-4xl font-black text-lab-900">${percent}%</p>
+                    <div class="flex items-center justify-center relative w-24 h-24 sm:w-28 sm:h-28 drop-shadow-md">
+                        <svg class="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" stroke="#e2e8f0" stroke-width="8" fill="transparent" />
+                            <circle cx="50" cy="50" r="42" stroke="url(#gradient)" stroke-width="8" fill="transparent" stroke-dasharray="263.89" stroke-dashoffset="${263.89 - (percent / 100) * 263.89}" stroke-linecap="round" />
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" stop-color="#f59e0b" />
+                                    <stop offset="100%" stop-color="#ea580c" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span class="text-2xl sm:text-3xl font-black text-slate-800 relative z-10">${percent}%</span>
                     </div>
                 </div>
             `;
 
             if (appData.startDate) {
                 const startDateStr = new Date(appData.startDate).toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' });
-                html += `<div class="text-center mb-6"><p class="text-sm font-medium text-lab-700 bg-lab-50 p-3 rounded-lg inline-block border border-lab-200 shadow-sm"><strong>Official Start Date:</strong> ${startDateStr}</p></div>`;
+                html += `<div class="text-center mb-10">
+                            <p class="text-sm font-black text-white bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-3 rounded-xl inline-block shadow-lg border border-emerald-400 tracking-wide uppercase">
+                                Official Start Date: ${startDateStr}
+                            </p>
+                         </div>`;
             }
 
-            let hasCompletedTasks = false;
+            let hasContentToDisplay = false;
 
             appData.schedule.forEach(day => {
-                const completed = day.tasks.filter(t => t.completed);
-                if (completed.length > 0) {
-                    hasCompletedTasks = true;
+                const combinedTasks = [...day.tasks, ...(appData.customTasks[day.day] || [])];
+                const completed = combinedTasks.filter(t => t.completed);
+                const dailyNote = appData.dailyNotes[day.day];
+                
+                if (completed.length > 0 || (dailyNote && dailyNote.trim() !== '')) {
+                    hasContentToDisplay = true;
                     const dateStr = getFormattedDate(day.day);
-                    const dateBadge = dateStr ? `<span class="ml-2 text-xs font-normal text-lab-500 bg-lab-100 px-2 py-0.5 rounded border border-lab-200">${dateStr}</span>` : '';
+                    const dateBadge = dateStr ? `<span class="text-[10px] font-bold text-white bg-slate-400 px-2 py-1 rounded shadow-inner tracking-wider">${dateStr}</span>` : '';
                     
                     html += `
-                        <div class="mb-5 pb-4 border-b border-lab-100 last:border-0 page-break-inside-avoid">
-                            <h3 class="font-bold text-lab-800 text-base mb-2 flex items-center">
-                                Day ${day.day}: ${day.title} ${dateBadge}
+                        <div class="mb-6 bg-white p-5 rounded-xl shadow-sm border-l-4 border-emerald-400 border-y border-r border-slate-200 page-break-inside-avoid relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-50 to-transparent rounded-bl-full -z-10 opacity-70"></div>
+                            <h3 class="font-bold text-slate-800 text-base mb-3 flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <span class="bg-gradient-to-r from-emerald-100 to-teal-100 text-emerald-800 px-2.5 py-1 rounded mr-3 text-xs uppercase tracking-wider font-black shadow-sm border border-emerald-200">Day ${day.day}</span>
+                                    ${day.title}
+                                </div>
+                                ${dateBadge}
                             </h3>
-                            <ul class="space-y-1.5 ml-1">
                     `;
                     
-                    completed.forEach(task => {
+                    if(completed.length > 0) {
+                        html += `<ul class="space-y-2 ml-1 relative z-10 mb-3">`;
+                        completed.forEach(task => {
+                            const isCustom = task.id.startsWith('custom');
+                            const customBadge = isCustom ? `<span class="ml-2 text-[9px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded uppercase font-bold">Custom</span>` : '';
+                            html += `
+                                <li class="flex items-start text-sm text-slate-600 font-medium bg-slate-50/50 p-2 rounded border border-slate-100">
+                                    <svg class="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                                    <span>${task.title} ${customBadge}</span>
+                                </li>
+                            `;
+                        });
+                        html += `</ul>`;
+                    }
+                    
+                    if(dailyNote && dailyNote.trim() !== '') {
                         html += `
-                            <li class="flex items-start text-sm text-lab-600 font-medium">
-                                <svg class="w-4 h-4 text-emerald-500 mr-2 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
-                                <span>${task.title}</span>
-                            </li>
+                            <div class="mt-2 bg-amber-50/50 border border-amber-100 p-3 rounded-lg relative z-10">
+                                <h4 class="text-[10px] uppercase font-bold text-amber-600 mb-1 flex items-center gap-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                    Day ${day.day} Notes
+                                </h4>
+                                <p class="text-xs text-slate-700 font-medium leading-relaxed whitespace-pre-wrap">${dailyNote}</p>
+                            </div>
                         `;
-                    });
+                    }
 
-                    html += `</ul></div>`;
+                    html += `</div>`;
                 }
             });
 
-            if (!hasCompletedTasks) {
+            if (!hasContentToDisplay) {
                 html += `
-                    <div class="text-center p-8 bg-lab-50 rounded-lg border border-dashed border-lab-200 mt-4">
-                        <p class="text-lab-500 font-bold">No tasks have been completed yet.</p>
-                        <p class="text-xs text-lab-400 mt-1">Begin checking off tasks in your daily view to generate your report.</p>
+                    <div class="text-center p-8 bg-slate-50 rounded-xl border border-dashed border-slate-300 mt-4">
+                        <p class="text-slate-500 font-bold">No tasks or notes have been logged yet.</p>
+                        <p class="text-xs text-slate-400 mt-1">Begin checking off tasks or writing daily notes to generate your report.</p>
                     </div>
                 `;
             }
@@ -507,7 +558,7 @@
             // Footer for PDF
             const generatedDate = new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour:'2-digit', minute:'2-digit' });
             html += `
-                <div class="mt-8 pt-4 border-t border-lab-200 text-[10px] text-center text-lab-400 font-medium uppercase tracking-widest leading-relaxed">
+                <div class="mt-8 pt-6 border-t-2 border-amber-200 text-xs sm:text-sm text-center font-black uppercase tracking-widest leading-relaxed bg-clip-text text-transparent bg-gradient-to-r from-amber-500 via-orange-500 to-red-500">
                     Report Generated: ${generatedDate} <br> Produced By Atish Ak Sharma
                 </div>
             `;
@@ -593,8 +644,9 @@
             desktopTimeline.innerHTML = ''; mobileTimeline.innerHTML = '';
 
             appData.schedule.forEach(dayData => {
-                const totalTasks = dayData.tasks.length;
-                const completedTasks = dayData.tasks.filter(t => t.completed).length;
+                const combinedTasks = [...dayData.tasks, ...(appData.customTasks[dayData.day] || [])];
+                const totalTasks = combinedTasks.length;
+                const completedTasks = combinedTasks.filter(t => t.completed).length;
                 const isDayComplete = totalTasks > 0 && totalTasks === completedTasks;
 
                 // Desktop
@@ -620,11 +672,28 @@
             });
         }
 
+        function updateACBadge(dayNumber) {
+            const acBadge = document.getElementById('header-ac-badge');
+            if(!acBadge) return;
+            
+            if(dayNumber <= 36) {
+                acBadge.textContent = 'AC: 20°C - 22°C';
+                acBadge.className = 'px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-bold rounded border border-blue-200 uppercase whitespace-nowrap transition-colors duration-300';
+            } else if (dayNumber >= 37 && dayNumber <= 43) {
+                acBadge.textContent = 'AC: 18°C - 20°C';
+                acBadge.className = 'px-2 py-1 bg-cyan-50 text-cyan-600 text-[10px] font-bold rounded border border-cyan-200 uppercase whitespace-nowrap transition-colors duration-300';
+            } else {
+                acBadge.textContent = 'AC: 18°C - 22°C';
+                acBadge.className = 'px-2 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded border border-indigo-200 uppercase whitespace-nowrap transition-colors duration-300';
+            }
+        }
+
         function selectDay(dayNumber) {
             appData.currentDay = dayNumber;
             appData.openAccordions = {}; 
             renderTimelines();
             renderDayDetails();
+            updateACBadge(dayNumber);
             
             const mobileBtns = document.getElementById('mobile-timeline').children;
             if(mobileBtns[dayNumber - 1]) {
@@ -660,23 +729,26 @@
             const dayData = appData.schedule.find(d => d.day === appData.currentDay);
             if (!dayData) return;
 
-            const totalTasks = dayData.tasks.length;
-            const completedTasks = dayData.tasks.filter(t => t.completed).length;
+            const customTasksForDay = appData.customTasks[appData.currentDay] || [];
+            const combinedTasks = [...dayData.tasks, ...customTasksForDay];
+            
+            const totalTasks = combinedTasks.length;
+            const completedTasks = combinedTasks.filter(t => t.completed).length;
             const progressPercent = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
             const dateStr = getFormattedDate(dayData.day);
-            const dateBadge = dateStr ? `<span class="ml-3 text-lg md:text-xl font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-lg border border-amber-200 shadow-sm whitespace-nowrap">${dateStr}</span>` : '';
+            const dateBadge = dateStr ? `<span class="text-lg md:text-xl font-bold text-amber-700 bg-amber-100 px-3 py-1 rounded-lg border border-amber-200 shadow-sm whitespace-nowrap">${dateStr}</span>` : '';
 
             let html = `
-                <div class="mb-6">
-                    <span class="inline-block px-3 py-1 rounded bg-lab-800 text-white text-[10px] font-bold uppercase tracking-widest mb-3 shadow-sm">
-                        ${dayData.phase}
-                    </span>
-                    <div class="flex items-center flex-wrap gap-y-2 mb-1">
+                <div class="mb-8">
+                    <div class="flex items-center flex-wrap gap-3 mb-2">
                         <h2 class="text-3xl md:text-5xl font-black text-lab-900 tracking-tight drop-shadow-sm">Day ${dayData.day}</h2>
                         ${dateBadge}
+                        <span class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-lab-800 to-lab-900 text-amber-400 text-xs font-black uppercase tracking-widest shadow-md border border-lab-700 ml-1">
+                            ${dayData.phase}
+                        </span>
                     </div>
-                    <h3 class="text-xl md:text-2xl text-lab-500 font-semibold mt-1">${dayData.title}</h3>
+                    <h3 class="text-xl md:text-2xl text-lab-500 font-semibold mb-6">${dayData.title}</h3>
                 </div>
 
                 <!-- Daily Progress -->
@@ -691,12 +763,15 @@
                 </div>
 
                 <!-- Task List -->
-                <div class="space-y-4 mb-8">
+                <div class="space-y-4 mb-4">
             `;
 
-            if (dayData.tasks.length > 0) {
-                dayData.tasks.forEach((task) => {
+            if (combinedTasks.length > 0) {
+                combinedTasks.forEach((task) => {
                     const isOpen = appData.openAccordions[task.id];
+                    const isCustom = task.id.startsWith('custom');
+                    const customBadge = isCustom ? `<span class="ml-2 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700 border border-amber-200">Custom</span>` : '';
+                    
                     html += `
                         <div class="bg-white rounded-xl border-2 ${task.completed ? 'border-emerald-400 bg-emerald-50/20' : 'border-lab-200 hover:border-amber-300'} shadow-sm overflow-hidden transition-all duration-200">
                             <div class="flex items-center p-5 cursor-pointer transition-colors" onclick="toggleAccordion('${task.id}')">
@@ -706,8 +781,8 @@
                                         <svg class="w-5 h-5 text-white opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
                                     </label>
                                 </div>
-                                <span class="text-lg font-bold ${task.completed ? 'text-lab-400 line-through' : 'text-lab-800'} transition-all flex-1">
-                                    ${task.title}
+                                <span class="text-lg font-bold ${task.completed ? 'text-lab-400 line-through' : 'text-lab-800'} transition-all flex-1 flex items-center">
+                                    ${task.title} ${customBadge}
                                 </span>
                                 <div class="bg-lab-50 p-2 rounded-full">
                                     <svg class="w-5 h-5 text-lab-500 transform transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
@@ -716,7 +791,7 @@
                             <div class="accordion-content bg-slate-50 border-t border-lab-100 ${isOpen ? 'open' : ''}">
                                 <div class="p-6 pl-16">
                                     <ul class="space-y-3 text-sm text-lab-700 list-disc marker:text-amber-500 leading-relaxed font-medium">
-                                        ${task.details.map(detail => `<li>${detail}</li>`).join('')}
+                                        ${task.details && task.details.length > 0 ? task.details.map(detail => `<li>${detail}</li>`).join('') : '<li>No additional details provided.</li>'}
                                     </ul>
                                 </div>
                             </div>
@@ -726,7 +801,6 @@
             } else {
                 html += `
                     <div class="text-center p-10 bg-white rounded-xl border-2 border-lab-200 border-dashed shadow-sm">
-                        <svg class="w-12 h-12 text-lab-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <p class="text-lg text-lab-600 font-bold">No manual interventions required today.</p>
                         <p class="text-sm text-lab-500 mt-2 font-medium">System is running automatically.</p>
                     </div>
@@ -734,6 +808,43 @@
             }
 
             html += `</div>`;
+            
+            // Add Custom Task Form Area
+            html += `
+                <div class="mb-8">
+                    <button onclick="toggleCustomTaskForm()" class="flex items-center gap-2 text-amber-600 font-bold hover:text-amber-700 bg-amber-50 hover:bg-amber-100 px-4 py-2.5 rounded-lg border border-amber-200 transition-colors shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        Add Custom Task
+                    </button>
+                    
+                    <div id="custom-task-form" class="hidden mt-3 bg-white p-5 rounded-xl border border-lab-200 shadow-inner">
+                        <div class="mb-3">
+                            <label class="block text-xs font-bold text-lab-600 uppercase tracking-wider mb-1">Task Title</label>
+                            <input type="text" id="ct-title" placeholder="E.g., Recalibrate Humidity Sensor" class="w-full bg-slate-50 border border-lab-200 rounded-lg p-2.5 text-lab-900 font-medium focus:ring-2 focus:ring-amber-500 outline-none transition-all">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-lab-600 uppercase tracking-wider mb-1">Details (Optional)</label>
+                            <textarea id="ct-details" placeholder="Any specific instructions..." class="w-full bg-slate-50 border border-lab-200 rounded-lg p-2.5 text-sm text-lab-900 font-medium focus:ring-2 focus:ring-amber-500 outline-none transition-all h-20 resize-none"></textarea>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="saveCustomTask(${dayData.day})" class="bg-lab-900 hover:bg-black text-white px-5 py-2 rounded-lg font-bold shadow-md transition-colors">Save Task</button>
+                            <button onclick="toggleCustomTaskForm()" class="text-lab-500 hover:text-lab-800 px-4 py-2 font-bold transition-colors">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Daily Notes Section
+            const currentNote = appData.dailyNotes[dayData.day] || '';
+            html += `
+                <div class="mb-8 bg-white rounded-xl shadow-sm border border-lab-200 overflow-hidden">
+                    <div class="bg-lab-50 px-5 py-3.5 border-b border-lab-100 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <h4 class="font-bold text-lab-800 tracking-wide uppercase text-sm">Daily Log & Observations</h4>
+                    </div>
+                    <textarea onchange="saveDailyNote(${dayData.day}, this.value)" class="w-full h-32 p-5 outline-none resize-none text-sm text-lab-800 font-medium placeholder-lab-400 focus:bg-amber-50/30 transition-colors" placeholder="Record your observations, climate variations, or thoughts for today...">${currentNote}</textarea>
+                </div>
+            `;
 
             // Note Logic
             const noteBtn = document.getElementById('header-note-btn');
@@ -769,6 +880,48 @@
         }
 
         // --- Actions ---
+        window.toggleCustomTaskForm = function() {
+            const form = document.getElementById('custom-task-form');
+            if(form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+                document.getElementById('ct-title').focus();
+            } else {
+                form.classList.add('hidden');
+                document.getElementById('ct-title').value = '';
+                document.getElementById('ct-details').value = '';
+            }
+        }
+
+        window.saveCustomTask = function(dayNumber) {
+            const titleInput = document.getElementById('ct-title').value.trim();
+            const detailsInput = document.getElementById('ct-details').value.trim();
+            
+            if(!titleInput) return alert("Task title cannot be empty.");
+            
+            if(!appData.customTasks[dayNumber]) {
+                appData.customTasks[dayNumber] = [];
+            }
+            
+            const newId = `custom-d${dayNumber}-${Date.now()}`;
+            appData.customTasks[dayNumber].push({
+                id: newId,
+                title: titleInput,
+                details: detailsInput ? [detailsInput] : [],
+                completed: false
+            });
+            
+            saveData();
+            renderDayDetails();
+            renderTimelines();
+            updateOverallProgress();
+        }
+
+        window.saveDailyNote = function(dayNumber, text) {
+            appData.dailyNotes[dayNumber] = text.trim();
+            saveData();
+            updateOverallProgress(); // Re-render report if open
+        }
+
         window.toggleAccordion = function(taskId) {
             appData.openAccordions[taskId] = !appData.openAccordions[taskId];
             renderDayDetails();
@@ -776,7 +929,12 @@
 
         window.toggleTask = function(dayNumber, taskId) {
             const day = appData.schedule.find(d => d.day === dayNumber);
-            const task = day.tasks.find(t => t.id === taskId);
+            let task = day.tasks.find(t => t.id === taskId);
+            
+            if(!task && appData.customTasks[dayNumber]) {
+                task = appData.customTasks[dayNumber].find(t => t.id === taskId);
+            }
+            
             if (task) {
                 task.completed = !task.completed;
                 saveData(); // Save to local storage immediately
@@ -791,8 +949,9 @@
             let completedTasks = 0;
 
             appData.schedule.forEach(day => {
-                totalTasks += day.tasks.length;
-                completedTasks += day.tasks.filter(t => t.completed).length;
+                const combinedTasks = [...day.tasks, ...(appData.customTasks[day.day] || [])];
+                totalTasks += combinedTasks.length;
+                completedTasks += combinedTasks.filter(t => t.completed).length;
             });
 
             const percent = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
@@ -825,6 +984,7 @@
             loadData(); // Load saved data before rendering
             renderTimelines();
             selectDay(1);
+            updateACBadge(appData.currentDay);
             updateOverallProgress();
         }
 
