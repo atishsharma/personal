@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atish's Food Lens | Smart Nutrition & Ingredient Scanner</title>
+    <meta name="description" content="Discover ingredients, allergens, nutrition facts, and eco-scores instantly with Atish's Food Lens. Scan barcodes or upload photos to analyze your food.">
+    <meta name="keywords" content="food scanner, nutrition, ingredients, open food facts, barcode scanner, Atish Ak Sharma, eco-score, nutri-score">
+    <meta name="author" content="Atish Ak Sharma">
+    <meta property="og:title" content="Atish's Food Lens | Smart Nutrition Scanner">
+    <meta property="og:description" content="Scan any food barcode to instantly see its nutrition facts, ingredients, and eco-score.">
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <meta property="og:type" content="website">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], display: ['Poppins', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 900: '#064e3b' },
+                        nutri: { a: '#038141', b: '#85bb2f', c: '#fecb02', d: '#ee8100', e: '#e63e11' }
+                    },
+                    animation: { 'gradient-x': 'gradient-x 15s ease infinite' },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': { 'background-size': '200% 200%', 'background-position': 'left center' },
+                            '50%': { 'background-size': '200% 200%', 'background-position': 'right center' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8); }
+        #reader video { object-fit: cover !important; border-radius: 1rem !important; width: 100% !important; }
+        .glass-panel { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); }
+        .dark .glass-panel { background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+        .tooltip-container { position: relative; cursor: help; }
+        .tooltip-container .tooltip-text { visibility: hidden; opacity: 0; width: max-content; max-width: 250px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 8px 12px; position: absolute; z-index: 60; bottom: 110%; left: 50%; transform: translateX(-50%); transition: opacity 0.2s; font-size: 0.75rem; font-weight: 500; font-family: 'Inter', sans-serif; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); pointer-events: none; letter-spacing: normal; text-transform: none; }
+        .tooltip-container .tooltip-text::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent; }
+        .tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+        .dark .tooltip-container .tooltip-text { background-color: #f8fafc; color: #0f172a; }
+        .dark .tooltip-container .tooltip-text::after { border-color: #f8fafc transparent transparent transparent; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-teal-100 dark:from-slate-900 dark:via-indigo-950 dark:to-teal-950 animate-gradient-x text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white transition-colors duration-500">
+
+    <header class="glass-panel sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3 text-brand-600 dark:text-brand-400">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-500 to-emerald-300 flex items-center justify-center text-white shadow-lg shadow-brand-500/30">
+                    <i class="fa-solid fa-leaf text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold tracking-tight font-display bg-clip-text text-transparent bg-gradient-to-r from-brand-600 to-teal-600 dark:from-brand-400 dark:to-teal-400">Atish's Food Lens</h1>
+            </div>
+            <button onclick="toggleDarkMode()" id="darkModeBtn" class="w-10 h-10 rounded-full flex items-center justify-center bg-white/50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition-colors border border-white/60 dark:border-slate-600 shadow-sm" title="Toggle Dark Mode">
+                <i class="fa-solid fa-moon text-lg"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-8 w-full">
+        <div class="glass-panel rounded-3xl p-6 md:p-8 mb-10 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-300 dark:bg-purple-900 rounded-full mix-blend-multiply filter blur-2xl opacity-50 dark:opacity-30 pointer-events-none transition-colors"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-teal-300 dark:bg-teal-900 rounded-full mix-blend-multiply filter blur-2xl opacity-50 dark:opacity-30 pointer-events-none transition-colors"></div>
+            
+            <div class="text-center mb-8 relative z-10">
+                <h2 class="text-3xl font-bold mb-3 font-display text-slate-800 dark:text-white">Scan or Search Product</h2>
+                <p class="text-slate-600 dark:text-slate-300 font-medium">Discover deep insights: ingredients, allergens, eco-scores, and more.</p>
+            </div>
+
+            <div class="max-w-3xl mx-auto flex flex-col sm:flex-row gap-4 relative z-10">
+                <div class="relative flex-grow">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-barcode text-slate-400 dark:text-slate-500"></i>
+                    </div>
+                    <input type="text" id="barcodeInput" class="block w-full pl-12 pr-4 py-4 bg-white/70 dark:bg-slate-800/70 border border-white dark:border-slate-700 focus:bg-white dark:focus:bg-slate-800 rounded-2xl focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 transition-all outline-none shadow-inner text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500" placeholder="Enter barcode manually (e.g., 7622300336738)">
+                </div>
+                <button onclick="searchManual()" class="bg-gradient-to-r from-brand-500 to-emerald-400 hover:from-brand-600 hover:to-emerald-500 text-white font-semibold py-4 px-8 rounded-2xl transition-all shadow-lg shadow-brand-500/30 hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-magnifying-glass"></i> Search
+                </button>
+            </div>
+
+            <div class="max-w-3xl mx-auto mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+                <button onclick="toggleCamera()" class="bg-white/60 dark:bg-slate-800/60 hover:bg-white/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 font-semibold py-4 px-6 rounded-2xl transition-all border border-white/80 dark:border-slate-600 shadow-sm hover:shadow-md flex items-center justify-center gap-3 backdrop-blur-sm">
+                    <i class="fa-solid fa-camera text-brand-500 dark:text-brand-400 text-lg"></i> <span id="cameraBtnText">Scan with Camera</span>
+                </button>
+                <label class="bg-white/60 dark:bg-slate-800/60 hover:bg-white/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 font-semibold py-4 px-6 rounded-2xl transition-all border border-white/80 dark:border-slate-600 shadow-sm hover:shadow-md flex items-center justify-center gap-3 backdrop-blur-sm cursor-pointer">
+                    <i class="fa-solid fa-image text-purple-500 dark:text-purple-400 text-lg"></i> Upload Photo
+                    <input type="file" id="fileInput" accept="image/*" class="hidden" onchange="handleFileUpload(event)">
+                </label>
+            </div>
+
+            <div id="scannerContainer" class="hidden max-w-lg mx-auto mt-8 relative rounded-2xl overflow-hidden shadow-2xl border-4 border-white/50 dark:border-slate-700/50 z-10">
+                <div id="reader" class="w-full bg-slate-900"></div>
+                <div class="absolute inset-0 border-4 border-brand-400/50 pointer-events-none m-4 rounded-xl"></div>
+                <p class="absolute top-4 left-0 right-0 text-center text-white text-sm font-medium bg-black/40 py-2 backdrop-blur-md mx-8 rounded-full z-10 border border-white/20">Align barcode within frame</p>
+                <div id="captureBtnContainer" class="absolute bottom-6 left-0 right-0 flex justify-center hidden z-10">
+                    <button onclick="captureAndScan()" class="bg-white dark:bg-slate-800 text-brand-600 dark:text-brand-400 rounded-full w-16 h-16 flex items-center justify-center shadow-[0_0_20px_rgba(0,0,0,0.3)] border-4 border-brand-100 dark:border-slate-600 hover:bg-brand-50 dark:hover:bg-slate-700 hover:scale-105 transition-all" title="Capture if auto-scan fails">
+                        <i class="fa-solid fa-camera text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="systemMessage" class="hidden mb-10 text-center py-12 glass-panel rounded-3xl">
+            <i id="sysIcon" class="fa-solid fa-circle-notch fa-spin text-5xl text-brand-500 mb-4"></i>
+            <h3 id="sysTitle" class="text-2xl font-bold font-display text-slate-800 dark:text-white">Loading product data...</h3>
+            <p id="sysDesc" class="text-slate-600 dark:text-slate-400 mt-2 font-medium"></p>
+        </div>
+
+        <div id="resultsSection" class="hidden opacity-0 transition-opacity duration-700">
+            <div class="glass-panel rounded-3xl p-6 md:p-8 mb-6 flex flex-col md:flex-row gap-8 items-start">
+                <div class="w-full md:w-1/3 lg:w-1/4 flex-shrink-0 flex flex-col items-center gap-4">
+                    <div class="relative w-full aspect-[3/4] bg-white/80 dark:bg-slate-800/80 rounded-2xl border border-white dark:border-slate-600 flex items-center justify-center overflow-hidden shadow-lg p-4 cursor-pointer group" onclick="openImageModal()">
+                        <img id="productImage" src="" alt="Product" class="w-full h-full object-contain mix-blend-multiply dark:mix-blend-normal transition-transform group-hover:scale-105 duration-300">
+                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 dark:group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                            <i class="fa-solid fa-magnifying-glass-plus text-white opacity-0 group-hover:opacity-100 text-3xl drop-shadow-md transition-opacity"></i>
+                        </div>
+                        <div id="noImageFallback" class="hidden absolute inset-0 flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 bg-slate-50/50 dark:bg-slate-800/50 cursor-default">
+                            <i class="fa-solid fa-camera-slash text-5xl mb-3 text-slate-300 dark:text-slate-600"></i>
+                            <span class="font-medium">No photo available</span>
+                        </div>
+                    </div>
+                    <div class="inline-flex items-center gap-2 px-4 py-2 bg-brand-100/80 dark:bg-brand-900/40 border border-brand-200 dark:border-brand-800/50 text-brand-800 dark:text-brand-300 text-xs font-bold rounded-xl tracking-wider shadow-sm w-fit" id="dataSourceBadge">
+                        <i class="fa-solid fa-database"></i> <span id="dataSourceText">Open Food Facts</span>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-2/3 lg:w-3/4 flex flex-col">
+                    <h2 id="productName" class="text-4xl md:text-5xl font-extrabold text-slate-800 dark:text-white mb-2 font-display leading-tight drop-shadow-sm text-justify"></h2>
+                    <p id="productBrands" class="text-xl text-slate-600 dark:text-slate-400 font-medium mb-4 text-justify"></p>
+                    
+                    <p id="productSizeDisplay" class="text-lg font-bold text-slate-700 dark:text-slate-300 mb-6 text-center w-full bg-slate-100 dark:bg-slate-800 py-2 rounded-xl shadow-inner border border-slate-200 dark:border-slate-700"></p>
+                    
+                    <div class="flex justify-center mb-6 w-full">
+                        <div class="bg-white/90 dark:bg-slate-800 p-2 rounded-xl border border-white dark:border-slate-600 shadow-sm inline-flex flex-col items-center justify-center min-w-[150px] h-[90px]">
+                            <svg id="barcodeSvg" class="h-full w-full"></svg>
+                        </div>
+                    </div>
+                    
+                    <div id="categoriesContainer" class="flex flex-wrap gap-2 mb-6 hidden"></div>
+                    <div id="labelsContainer" class="flex flex-wrap gap-2 mb-6 hidden"></div>
+                </div>
+            </div>
+
+            <div id="scoresPanel" class="glass-panel rounded-3xl p-6 md:p-8 mb-6 hidden">
+                <div class="flex items-center gap-4 mb-6 border-b border-slate-200/50 dark:border-slate-700/50 pb-5">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+                        <i class="fa-solid fa-award text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold font-display dark:text-white">Health & Environmental Scores</h3>
+                </div>
+                <div class="flex flex-wrap gap-4" id="badgesContainer">
+                    <button onclick="openScoreModal('nutri')" id="nutriScoreBadge" class="hidden hover:scale-105 transition-transform flex items-center gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white dark:border-slate-600 rounded-2xl p-2 pr-5 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-left">
+                        <div class="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-3">Nutri-Score</div>
+                        <div id="nsIcon" class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-inner"></div>
+                    </button>
+                    <button onclick="openScoreModal('eco')" id="ecoScoreBadge" class="hidden hover:scale-105 transition-transform flex items-center gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white dark:border-slate-600 rounded-2xl p-2 pr-5 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-left">
+                        <div class="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-3">Eco-Score</div>
+                        <div id="ecoIcon" class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-inner"></div>
+                    </button>
+                    <button onclick="openScoreModal('nova')" id="novaGroupBadge" class="hidden hover:scale-105 transition-transform flex items-center gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white dark:border-slate-600 rounded-2xl p-2 pr-5 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-left">
+                        <div class="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-3">NOVA Group</div>
+                        <div id="novaIcon" class="w-12 h-12 rounded-xl bg-slate-800 dark:bg-slate-900 border dark:border-slate-700 flex flex-col items-center justify-center text-white font-black leading-none shadow-inner"><span class="text-[10px] font-medium opacity-80 mb-0.5">GROUP</span><span id="novaValue" class="text-xl"></span></div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="flex flex-col gap-6">
+                    <div class="glass-panel rounded-3xl p-6 md:p-8 h-full">
+                        <div class="flex items-center gap-4 mb-6 border-b border-slate-200/50 dark:border-slate-700/50 pb-5">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-400 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                                <i class="fa-solid fa-wheat-awn text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold font-display dark:text-white">Detailed Ingredients</h3>
+                        </div>
+                        <div id="ingredientsContainer" class="w-full">
+                            <p id="ingredientsText" class="text-slate-700 dark:text-slate-300 leading-relaxed text-base text-justify mb-2"></p>
+                            <div id="ingredientsTableContainer"></div>
+                        </div>
+                        <div id="allergensContainer" class="hidden mt-6 p-5 bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/40 dark:to-amber-900/40 border border-orange-200/60 dark:border-orange-800/50 rounded-2xl shadow-sm">
+                            <h4 class="text-orange-800 dark:text-orange-400 font-bold mb-2 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Allergens Detected</h4>
+                            <p id="allergensText" class="text-orange-900 dark:text-orange-300 font-medium"></p>
+                        </div>
+                        <div id="tracesContainer" class="hidden mt-4 p-5 bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm">
+                            <h4 class="text-slate-700 dark:text-slate-300 font-bold mb-2 flex items-center gap-2"><i class="fa-solid fa-magnifying-glass-chart"></i> May Contain Traces Of</h4>
+                            <p id="tracesText" class="text-slate-600 dark:text-slate-400 font-medium"></p>
+                        </div>
+                        <div id="additivesContainer" class="hidden mt-4 p-5 bg-gradient-to-r from-purple-50 to-fuchsia-50 dark:from-purple-900/30 dark:to-fuchsia-900/30 border border-purple-200/60 dark:border-purple-800/50 rounded-2xl shadow-sm">
+                            <h4 class="text-purple-800 dark:text-purple-400 font-bold mb-3 flex items-center gap-2"><i class="fa-solid fa-flask"></i> Additives</h4>
+                            <div id="additivesTags" class="flex flex-wrap gap-2 text-sm"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-6 md:p-8 h-fit">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 border-b border-slate-200/50 dark:border-slate-700/50 pb-5 gap-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-400 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-rose-500/20">
+                                <i class="fa-solid fa-fire-burner text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold font-display dark:text-white">Nutrition Facts</h3>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full shadow-inner border border-slate-200 dark:border-slate-700">
+                            <span class="text-xs font-bold px-3 py-1 rounded-full transition-colors" id="label100g">Per 100g/ml</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="nutritionToggle" class="sr-only peer" onchange="toggleNutritionContext()">
+                                <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer dark:bg-slate-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-500 peer-checked:bg-brand-500"></div>
+                            </label>
+                            <span class="text-xs font-medium px-3 py-1 rounded-full transition-colors text-slate-500 dark:text-slate-400" id="labelServing">1 Serving</span>
+                        </div>
+                    </div>
+                    <p id="servingSizeContainer" class="text-sm text-slate-600 dark:text-slate-400 font-medium hidden mb-4 bg-brand-50 dark:bg-brand-900/20 px-4 py-2 rounded-xl border border-brand-100 dark:border-brand-800/50 text-center">Serving size: <span id="servingSize" class="font-bold text-slate-800 dark:text-slate-200"></span></p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="nutritionGrid"></div>
+                    <p class="mt-8 text-xs text-slate-500 dark:text-slate-400 text-center border-t border-slate-200/50 dark:border-slate-700/50 pt-5 font-medium">* Percent Daily Values (% DV) are based on a 2,000 calorie diet.</p>
+                </div>
+            </div>
+
+            <div id="packagingPanel" class="glass-panel rounded-3xl p-6 md:p-8 hidden mb-6">
+                <div class="flex items-center gap-4 mb-6 border-b border-slate-200/50 dark:border-slate-700/50 pb-5">
+                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/20">
+                        <i class="fa-solid fa-recycle text-xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold font-display dark:text-white">Packaging, Disposal & Origin</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div id="packagingContainer" class="hidden bg-white/50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3"><i class="fa-solid fa-box mr-1"></i> Packaging Materials</span>
+                        <div id="packagingText" class="text-slate-700 dark:text-slate-300 font-medium leading-relaxed"></div>
+                    </div>
+                    <div id="disposalContainer" class="hidden bg-emerald-50/50 dark:bg-emerald-900/20 p-4 rounded-2xl border border-emerald-200/60 dark:border-emerald-800/50">
+                        <span class="block text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-trash-can-arrow-up mr-1"></i> How to Dispose</span>
+                        <div id="disposalText" class="text-emerald-800 dark:text-emerald-300 font-medium leading-relaxed"></div>
+                    </div>
+                    <div id="originsContainer" class="hidden bg-white/50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3"><i class="fa-solid fa-earth-americas mr-1"></i> Origin of Ingredients</span>
+                        <p id="originsText" class="text-slate-700 dark:text-slate-300 font-medium leading-relaxed text-justify"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="imageModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4 bg-slate-900/90 backdrop-blur-md transition-opacity cursor-zoom-out" onclick="closeImageModal()">
+        <img id="fullSizeImage" src="" class="max-w-full max-h-[90vh] object-contain rounded-xl shadow-2xl cursor-default" onclick="event.stopPropagation()">
+        <button onclick="closeImageModal()" class="absolute top-6 right-6 text-white bg-slate-800/50 hover:bg-slate-800 rounded-full w-12 h-12 flex items-center justify-center border border-white/20 transition-colors">
+            <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+    </div>
+
+    <div id="scoreModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-lg w-full shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 transform transition-transform scale-100">
+            <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
+                <h3 id="modalTitle" class="text-xl font-bold font-display text-slate-800 dark:text-white">Score Explained</h3>
+                <button onclick="closeScoreModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors bg-white dark:bg-slate-800 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-slate-200 dark:border-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="modalContent" class="p-6 text-slate-600 dark:text-slate-300 leading-relaxed text-justify"></div>
+        </div>
+    </div>
+
+    <footer class="glass-panel mt-auto border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] dark:shadow-none relative z-10">
+        <div class="max-w-6xl mx-auto px-4 py-8 text-center text-slate-600 dark:text-slate-400">
+            <p class="font-medium text-lg">Designed By <a href="https://atishaksharma.com" target="_blank" class="text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 hover:underline font-bold transition-colors">Atish Ak Sharma</a></p>
+            <p class="mt-3 text-sm opacity-80">Data provided by <a href="https://world.openfoodfacts.org/" target="_blank" class="text-brand-600 dark:text-brand-400 hover:underline font-semibold">Open Food Facts</a>. Copyright &copy; 2026. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const barcodeInput = document.getElementById('barcodeInput');
+        const scannerContainer = document.getElementById('scannerContainer');
+        const cameraBtnText = document.getElementById('cameraBtnText');
+        const sysMsg = document.getElementById('systemMessage');
+        const sysIcon = document.getElementById('sysIcon');
+        const sysTitle = document.getElementById('sysTitle');
+        const sysDesc = document.getElementById('sysDesc');
+        const resultsSection = document.getElementById('resultsSection');
+        const captureBtnContainer = document.getElementById('captureBtnContainer');
+
+        let html5QrCode = null;
+        let isCameraActive = false;
+        let currentProductData = null;
+        let showNutritionPerServing = false;
+
+        window.addEventListener('load', () => {
+            html5QrCode = new Html5Qrcode("reader");
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                updateDarkModeIcon(true);
+            } else {
+                document.documentElement.classList.remove('dark');
+                updateDarkModeIcon(false);
+            }
+        });
+
+        function toggleDarkMode() {
+            const d = document.documentElement.classList.toggle('dark');
+            localStorage.theme = d ? 'dark' : 'light';
+            updateDarkModeIcon(d);
+        }
+
+        function updateDarkModeIcon(d) {
+            const i = document.querySelector('#darkModeBtn i');
+            i.className = d ? 'fa-solid fa-sun text-lg text-amber-400' : 'fa-solid fa-moon text-lg';
+        }
+
+        function openImageModal() {
+            const i = document.getElementById('productImage');
+            if (i && i.src && !i.src.endsWith(window.location.host + '/')) {
+                document.getElementById('fullSizeImage').src = i.src;
+                const m = document.getElementById('imageModal');
+                m.classList.remove('hidden');
+                m.classList.add('flex');
+            }
+        }
+
+        function closeImageModal() {
+            const m = document.getElementById('imageModal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        function searchManual() {
+            const b = barcodeInput.value.trim();
+            if (!b) return showError("Please enter a barcode.");
+            stopCameraIfActive();
+            fetchProductData(b);
+        }
+
+        async function toggleCamera() {
+            isCameraActive ? await stopCameraIfActive() : startCamera();
+        }
+
+        async function startCamera() {
+            try {
+                scannerContainer.classList.remove('hidden');
+                captureBtnContainer.classList.remove('hidden');
+                cameraBtnText.innerHTML = `<i class="fa-solid fa-stop text-red-500"></i> Stop Camera`;
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 280, height: 180 } },
+                    d => {
+                        html5QrCode.pause(true);
+                        playBeep();
+                        barcodeInput.value = d;
+                        stopCameraIfActive();
+                        fetchProductData(d);
+                    },
+                    e => {}
+                );
+                isCameraActive = true;
+            } catch (e) {
+                showError("Failed to access camera. Please ensure permissions are granted.");
+                scannerContainer.classList.add('hidden');
+                cameraBtnText.innerHTML = `<i class="fa-solid fa-camera text-brand-500 dark:text-brand-400 text-lg"></i> Scan with Camera`;
+                isCameraActive = false;
+            }
+        }
+
+        async function stopCameraIfActive() {
+            if (isCameraActive && html5QrCode) {
+                try { await html5QrCode.stop(); } catch (e) {}
+                scannerContainer.classList.add('hidden');
+                captureBtnContainer.classList.add('hidden');
+                cameraBtnText.innerHTML = `<i class="fa-solid fa-camera text-brand-500 dark:text-brand-400 text-lg"></i> Scan with Camera`;
+                isCameraActive = false;
+            }
+        }
+
+        async function captureAndScan() {
+            if (!isCameraActive) return;
+            const v = document.querySelector('#reader video');
+            if (!v) return;
+            showLoading("Analyzing captured image...");
+            const c = document.createElement('canvas');
+            c.width = v.videoWidth;
+            c.height = v.videoHeight;
+            c.getContext('2d').drawImage(v, 0, 0, c.width, c.height);
+            await stopCameraIfActive();
+            const d = c.toDataURL('image/jpeg', 0.8);
+            c.toBlob(async b => {
+                if (!b) return;
+                const f = new File([b], "capture.jpg", { type: "image/jpeg" });
+                try {
+                    const t = await html5QrCode.scanFile(f, true);
+                    barcodeInput.value = t;
+                    playBeep();
+                    fetchProductData(t);
+                } catch (e) {
+                    showLoading("Local scanner missed it. Using AI to scan photo...");
+                    const a = await extractBarcodeWithGemini(d);
+                    if (a) {
+                        barcodeInput.value = a;
+                        playBeep();
+                        fetchProductData(a);
+                    } else {
+                        showError("Could not detect a barcode in the photo.");
+                    }
+                }
+            }, 'image/jpeg');
+        }
+
+        async function handleFileUpload(e) {
+            const f = e.target.files[0];
+            if (!f) return;
+            stopCameraIfActive();
+            showLoading("Scanning image for barcode...");
+            try {
+                const t = await html5QrCode.scanFile(f, true);
+                barcodeInput.value = t;
+                fetchProductData(t);
+            } catch (err) {
+                showLoading("Local scanner missed it. Using AI to scan photo...");
+                const r = new FileReader();
+                r.onload = async event => {
+                    const d = event.target.result;
+                    const a = await extractBarcodeWithGemini(d);
+                    if (a) {
+                        barcodeInput.value = a;
+                        fetchProductData(a);
+                    } else {
+                        showError("No valid barcode found in the image.");
+                    }
+                };
+                r.readAsDataURL(f);
+            }
+            e.target.value = '';
+        }
+
+        async function fetchProductData(b) {
+            showLoading(`Fetching data for ${b}...`);
+            resultsSection.classList.add('hidden');
+            resultsSection.classList.remove('opacity-100');
+            try {
+                let p = await fetchFromOpenFoodFacts(b, 'in');
+                if (!p || (!p.ingredients_text && !p.nutriments)) {
+                    let g = await fetchFromOpenFoodFacts(b, 'world');
+                    if (g && (g.ingredients_text || !p)) p = g;
+                }
+                if (!p) p = await fetchFromUPCItemDB(b);
+                p ? renderProduct(p) : showError("Product not found in any available databases.");
+            } catch (e) {
+                showError("Error connecting to the databases.");
+            }
+        }
+
+        async function fetchFromOpenFoodFacts(b, r) {
+            try {
+                const res = await fetch(`https://${r}.openfoodfacts.org/api/v0/product/${b}.json`);
+                if (!res.ok) return null;
+                const d = await res.json();
+                if (d.status === 1 && d.product) {
+                    d.product._source = `Open Food Facts (${r === 'in' ? 'India' : 'Global'})`;
+                    return d.product;
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        async function fetchFromUPCItemDB(b) {
+            try {
+                const res = await fetch(`https://api.upcitemdb.com/prod/trial/lookup?upc=${b}`);
+                if (!res.ok) return null;
+                const d = await res.json();
+                if (d.code === 'OK' && d.items && d.items.length > 0) {
+                    const i = d.items[0];
+                    return {
+                        code: i.upc || i.ean || b,
+                        product_name: i.title,
+                        brands: i.brand,
+                        image_url: i.images && i.images.length > 0 ? i.images[0] : null,
+                        ingredients_text: i.description ? `Description: ${i.description}` : null,
+                        nutriments: {},
+                        _source: 'UPCitemDB (General Fallback)'
+                    };
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        function renderProduct(p) {
+            hideSystemMessage();
+            currentProductData = p;
+            
+            try {
+                JsBarcode("#barcodeSvg", p.code, {
+                    format: "CODE128",
+                    lineColor: document.documentElement.classList.contains('dark') ? "#f8fafc" : "#0f172a",
+                    background: "transparent",
+                    width: 2,
+                    height: 40,
+                    displayValue: true,
+                    fontSize: 16,
+                    fontOptions: "bold",
+                    margin: 0
+                });
+            } catch (e) {
+                console.warn("Barcode rendering failed", e);
+                document.getElementById('barcodeSvg').outerHTML = `<span class="font-bold font-mono tracking-widest px-2 text-slate-800 dark:text-white">${p.code}</span>`;
+            }
+
+            document.getElementById('dataSourceText').innerText = p._source || 'Unknown Database';
+            document.getElementById('productName').innerText = p.product_name || 'Unknown Product';
+            document.getElementById('productBrands').innerText = p.brands ? p.brands.split(',').join(', ') : 'Brand unknown';
+            
+            const sizeStr = p.quantity ? p.quantity : (p.product_quantity ? p.product_quantity + 'g/ml' : 'Unknown Size');
+            document.getElementById('productSizeDisplay').innerText = `Package Size: ${sizeStr}`;
+
+            const img = document.getElementById('productImage');
+            const fb = document.getElementById('noImageFallback');
+            if (p.image_front_url || p.image_url) {
+                img.src = p.image_front_url || p.image_url;
+                img.classList.remove('hidden');
+                fb.classList.add('hidden');
+            } else {
+                img.src = '';
+                img.classList.add('hidden');
+                fb.classList.remove('hidden');
+            }
+
+            renderNutriScore(p.nutriscore_grade);
+            renderEcoScore(p.ecoscore_grade);
+            renderNovaGroup(p.nova_group);
+            
+            if (p.nutriscore_grade || p.ecoscore_grade || p.nova_group) {
+                document.getElementById('scoresPanel').classList.remove('hidden');
+            } else {
+                document.getElementById('scoresPanel').classList.add('hidden');
+            }
+
+            renderCategoriesAndLabels(p);
+            renderIngredientsDetailed(p);
+            renderPackagingAndOrigins(p);
+            renderNutritionGrid(p);
+            
+            resultsSection.classList.remove('hidden');
+            setTimeout(() => { resultsSection.classList.add('opacity-100'); }, 50);
+        }
+
+        function renderIngredientsDetailed(p) {
+            const tCont = document.getElementById('ingredientsTableContainer');
+            const tQty = p.product_quantity ? parseFloat(p.product_quantity) : null;
+            let u = 'g';
+            if (p.quantity && typeof p.quantity === 'string') {
+                const m = p.quantity.match(/[a-zA-Z]+/);
+                if (m) u = m[0].toLowerCase();
+            }
+            
+            const sStr = tQty ? `${tQty}${u}` : 'Unknown Size';
+            document.getElementById('ingredientsText').innerHTML = `Amounts calculated based on package size: <strong class="text-brand-600 dark:text-brand-400">${sStr}</strong>`;
+            
+            if (p.ingredients && p.ingredients.length > 0) {
+                let h = `<div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 mt-2 shadow-sm">
+                    <table class="w-full text-sm text-left text-slate-600 dark:text-slate-400">
+                        <thead class="text-xs text-slate-700 uppercase bg-slate-50 dark:bg-slate-800 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700">
+                            <tr>
+                                <th scope="col" class="px-4 py-3 font-bold">Ingredient Name</th>
+                                <th scope="col" class="px-4 py-3 text-center font-bold">Est. Amount</th>
+                                <th scope="col" class="px-4 py-3 text-center font-bold">Dietary Note</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                
+                p.ingredients.forEach(i => {
+                    let n = i.text ? i.text.replace(/_/g, '') : 'Unknown';
+                    n = n.charAt(0).toUpperCase() + n.slice(1);
+                    let aStr = '-';
+                    if (i.percent_estimate || i.percent_max) {
+                        const pct = Math.round(i.percent_estimate || i.percent_max);
+                        let qStr = '';
+                        if (tQty) {
+                            const cq = ((pct / 100) * tQty).toFixed(1);
+                            qStr = `<span class="font-bold mr-1">${cq.endsWith('.0') ? parseInt(cq) : cq}${u}</span>`;
+                        }
+                        aStr = `<div class="inline-flex items-center justify-center px-2 py-1 rounded text-xs bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800 whitespace-nowrap">${qStr}(${pct}%)</div>`;
+                    }
+                    
+                    let d = '';
+                    if (i.vegan === 'yes') d += '<i class="fa-solid fa-seedling text-green-500 mr-1" title="Vegan"></i>';
+                    else if (i.vegan === 'no') d += '<i class="fa-solid fa-skull-crossbones text-red-500 mr-1" title="Non-Vegan"></i>';
+                    if (i.vegetarian === 'yes' && i.vegan !== 'yes') d += '<i class="fa-solid fa-leaf text-emerald-500 mr-1" title="Vegetarian"></i>';
+                    
+                    h += `<tr class="bg-white dark:bg-slate-900 border-b dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                        <td class="px-4 py-3 font-medium text-slate-900 dark:text-white text-justify">${n}</td>
+                        <td class="px-4 py-3 text-center">${aStr}</td>
+                        <td class="px-4 py-3 text-center">${d || '-'}</td>
+                    </tr>`;
+                });
+                h += `</tbody></table></div>`;
+                tCont.innerHTML = h;
+            } else if (p.ingredients_text) {
+                tCont.innerHTML = `<p class="text-slate-700 dark:text-slate-300 leading-relaxed text-base text-justify mt-2">${p.ingredients_text}</p>`;
+            } else {
+                tCont.innerHTML = `<p class="italic text-slate-400 dark:text-slate-500 text-justify mt-2">Ingredients list not available for this product.</p>`;
+            }
+
+            const allC = document.getElementById('allergensContainer');
+            const allT = document.getElementById('allergensText');
+            if (p.allergens_hierarchy && p.allergens_hierarchy.length > 0) {
+                allT.innerText = p.allergens_hierarchy.map(a => a.replace('en:', '').replace(/-/g, ' ')).join(', ').toUpperCase();
+                allC.classList.remove('hidden');
+            } else {
+                allC.classList.add('hidden');
+            }
+
+            const trC = document.getElementById('tracesContainer');
+            const trT = document.getElementById('tracesText');
+            if (p.traces_tags && p.traces_tags.length > 0) {
+                trT.innerText = p.traces_tags.map(t => t.replace('en:', '').replace(/-/g, ' ')).join(', ').toUpperCase();
+                trC.classList.remove('hidden');
+            } else {
+                trC.classList.add('hidden');
+            }
+
+            const addC = document.getElementById('additivesContainer');
+            const addT = document.getElementById('additivesTags');
+            const risks = {
+                'e129': { level: 'high', desc: 'Allura Red AC (Coloring). May cause hyperactivity in children.' },
+                'e250': { level: 'high', desc: 'Sodium nitrite (Preservative). Linked to health risks in large amounts.' },
+                'e951': { level: 'high', desc: 'Aspartame (Sweetener). Contains phenylalanine.' },
+                'e621': { level: 'moderate', desc: 'MSG (Flavor enhancer). May cause sensitivity in some.' },
+                'e330': { level: 'low', desc: 'Citric acid (Preservative/Flavor). Naturally occurring, generally safe.' },
+                'e300': { level: 'low', desc: 'Ascorbic acid (Vitamin C). Safe.' },
+                'e322': { level: 'low', desc: 'Lecithin (Emulsifier). Generally safe.' }
+            };
+
+            if (p.additives_tags && p.additives_tags.length > 0) {
+                addT.innerHTML = p.additives_tags.map(t => {
+                    const ct = t.replace('en:', '').toLowerCase();
+                    const dt = ct.toUpperCase();
+                    const ri = risks[ct] || { level: 'unknown', desc: 'Food additive used for preservation, coloring, or texture.' };
+                    let c = 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700';
+                    let i = 'fa-circle-question text-slate-400';
+                    
+                    if (ri.level === 'high') {
+                        c = 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800/50';
+                        i = 'fa-triangle-exclamation text-red-500';
+                    } else if (ri.level === 'moderate') {
+                        c = 'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800/50';
+                        i = 'fa-circle-exclamation text-yellow-500';
+                    } else if (ri.level === 'low') {
+                        c = 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800/50';
+                        i = 'fa-check text-green-500';
+                    }
+                    
+                    return `<div class="tooltip-container">
+                                <span class="px-3 py-1 rounded-lg border shadow-sm font-bold tracking-wide flex items-center gap-1 cursor-help ${c}">
+                                    <i class="fa-solid ${i}"></i> ${dt}
+                                </span>
+                                <span class="tooltip-text">${ri.desc}</span>
+                            </div>`;
+                }).join('');
+                addC.classList.remove('hidden');
+            } else {
+                addC.classList.add('hidden');
+            }
+        }
+
+        function renderCategoriesAndLabels(p) {
+            const cC = document.getElementById('categoriesContainer');
+            const uC = new Set();
+            if (p.categories_tags && p.categories_tags.length > 0) {
+                let h = '';
+                p.categories_tags.forEach(c => {
+                    let cl = c.replace('en:', '').replace(/-/g, ' ');
+                    cl = cl.charAt(0).toUpperCase() + cl.slice(1);
+                    if (!uC.has(cl.toLowerCase()) && uC.size < 6) {
+                        uC.add(cl.toLowerCase());
+                        h += `<div class="tooltip-container">
+                                <span class="px-3 py-1 bg-slate-800 dark:bg-slate-700 text-white text-xs font-semibold rounded-full shadow-sm cursor-help">${cl}</span>
+                                <span class="tooltip-text">Product Category: ${cl}</span>
+                              </div>`;
+                    }
+                });
+                cC.innerHTML = h;
+                cC.classList.remove('hidden');
+            } else {
+                cC.classList.add('hidden');
+            }
+
+            const lC = document.getElementById('labelsContainer');
+            const uL = new Set();
+            let lh = '';
+            
+            if (p.labels_tags && p.labels_tags.length > 0) {
+                p.labels_tags.filter(l => !l.includes('en:none')).forEach(l => {
+                    let cl = l.replace('en:', '').replace(/-/g, ' ');
+                    if (!uL.has(cl.toLowerCase())) {
+                        uL.add(cl.toLowerCase());
+                        lh += `<div class="tooltip-container">
+                                <span class="px-3 py-1 bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700/50 text-xs font-bold rounded-full cursor-help"><i class="fa-solid fa-certificate mr-1"></i> ${cl.toUpperCase()}</span>
+                                <span class="tooltip-text">Certified Label: ${cl}</span>
+                               </div>`;
+                    }
+                });
+            }
+
+            if (p.ingredients_analysis_tags) {
+                const a = p.ingredients_analysis_tags;
+                if (a.includes('en:vegan') && !uL.has('vegan')) {
+                    uL.add('vegan');
+                    lh += `<div class="tooltip-container">
+                            <span class="px-3 py-1 bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 border border-green-300 dark:border-green-700/50 text-xs font-bold rounded-full cursor-help"><i class="fa-solid fa-seedling mr-1"></i> VEGAN</span>
+                            <span class="tooltip-text">Ingredients analysis indicates no animal products are used.</span>
+                           </div>`;
+                }
+                if (a.includes('en:vegetarian') && !uL.has('vegetarian') && !uL.has('vegan')) {
+                    uL.add('vegetarian');
+                    lh += `<div class="tooltip-container">
+                            <span class="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/50 text-xs font-bold rounded-full cursor-help"><i class="fa-solid fa-leaf mr-1"></i> VEGETARIAN</span>
+                            <span class="tooltip-text">Ingredients analysis indicates no meat is used.</span>
+                           </div>`;
+                }
+                if (a.includes('en:palm-oil-free') && !uL.has('palm oil free')) {
+                    uL.add('palm oil free');
+                    lh += `<div class="tooltip-container">
+                            <span class="px-3 py-1 bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-700/50 text-xs font-bold rounded-full cursor-help"><i class="fa-solid fa-tree mr-1"></i> PALM-OIL FREE</span>
+                            <span class="tooltip-text">Does not contain palm oil, reducing deforestation impact.</span>
+                           </div>`;
+                } else if (a.includes('en:palm-oil') && !uL.has('contains palm oil')) {
+                    uL.add('contains palm oil');
+                    lh += `<div class="tooltip-container">
+                            <span class="px-3 py-1 bg-red-50 dark:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-700/50 text-xs font-bold rounded-full cursor-help"><i class="fa-solid fa-triangle-exclamation mr-1"></i> CONTAINS PALM OIL</span>
+                            <span class="tooltip-text">Contains Palm Oil, an ingredient often linked to deforestation.</span>
+                           </div>`;
+                }
+            }
+
+            if (lh) {
+                lC.innerHTML = lh;
+                lC.classList.remove('hidden');
+            } else {
+                lC.classList.add('hidden');
+            }
+        }
+
+        function openScoreModal(t) {
+            const m = document.getElementById('scoreModal');
+            const title = document.getElementById('modalTitle');
+            const c = document.getElementById('modalContent');
+            
+            if (t === 'nutri') {
+                title.innerHTML = '<i class="fa-solid fa-heart-pulse text-brand-500 mr-2"></i> Nutri-Score Explained';
+                c.innerHTML = `
+                    <p class="mb-4 text-sm font-medium">Nutri-Score evaluates the overall nutritional quality of a product based on 100g/ml.</p>
+                    <div class="grid grid-cols-5 gap-1 mb-5 text-center font-bold text-white text-base shadow-inner rounded-xl overflow-hidden">
+                        <div class="bg-nutri-a py-3">A</div>
+                        <div class="bg-nutri-b py-3">B</div>
+                        <div class="bg-nutri-c py-3">C</div>
+                        <div class="bg-nutri-d py-3">D</div>
+                        <div class="bg-nutri-e py-3">E</div>
+                    </div>
+                    <ul class="text-sm space-y-3">
+                        <li class="flex gap-2"><strong class="text-nutri-a whitespace-nowrap">A & B:</strong> <span>High nutritional quality. Rich in fiber, protein, fruits. <strong>Best choices.</strong></span></li>
+                        <li class="flex gap-2"><strong class="text-nutri-c whitespace-nowrap">C:</strong> <span>Moderate nutritional quality. Consume in moderation.</span></li>
+                        <li class="flex gap-2"><strong class="text-nutri-e whitespace-nowrap">D & E:</strong> <span>Lower nutritional quality. High in sugar, salt, or saturated fat. <strong>Consume sparingly.</strong></span></li>
+                    </ul>`;
+            } else if (t === 'eco') {
+                title.innerHTML = '<i class="fa-solid fa-earth-americas text-emerald-500 mr-2"></i> Eco-Score Explained';
+                c.innerHTML = `
+                    <p class="mb-4 text-sm font-medium">Eco-Score measures the environmental impact of the product from farm to fork.</p>
+                    <div class="grid grid-cols-5 gap-1 mb-5 text-center font-bold text-white text-base shadow-inner rounded-xl overflow-hidden">
+                        <div class="bg-[#1e8f4e] py-3">A</div>
+                        <div class="bg-[#2ecc71] py-3">B</div>
+                        <div class="bg-[#f1c40f] py-3 text-slate-800">C</div>
+                        <div class="bg-[#e67e22] py-3">D</div>
+                        <div class="bg-[#e74c3c] py-3">E</div>
+                    </div>
+                    <ul class="text-sm space-y-3">
+                        <li class="flex gap-2"><strong class="text-[#1e8f4e] whitespace-nowrap">A:</strong> <span>Very low environmental impact. Sustainable practices.</span></li>
+                        <li class="flex gap-2"><strong class="text-[#2ecc71] whitespace-nowrap">B:</strong> <span>Low environmental impact. Mostly sustainable.</span></li>
+                        <li class="flex gap-2"><strong class="text-[#f1c40f] whitespace-nowrap">C:</strong> <span>Moderate environmental impact.</span></li>
+                        <li class="flex gap-2"><strong class="text-[#e67e22] whitespace-nowrap">D:</strong> <span>High environmental impact. Significant footprint.</span></li>
+                        <li class="flex gap-2"><strong class="text-[#e74c3c] whitespace-nowrap">E:</strong> <span>Very high environmental impact (e.g., intensive farming, unrecyclable packaging, high transport emissions).</span></li>
+                    </ul>`;
+            } else if (t === 'nova') {
+                title.innerHTML = '<i class="fa-solid fa-industry text-purple-500 mr-2"></i> NOVA Group Explained';
+                c.innerHTML = `
+                    <p class="mb-4 text-sm font-medium">The NOVA classification assigns a group to food products based on how much processing they have gone through.</p>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-center gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/50">
+                            <div class="w-8 h-8 rounded bg-green-500 text-white font-bold flex items-center justify-center shrink-0">1</div>
+                            <span><strong>Unprocessed / minimally processed</strong> foods (e.g., fresh fruit, raw seeds).</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800/50">
+                            <div class="w-8 h-8 rounded bg-yellow-500 text-white font-bold flex items-center justify-center shrink-0">2</div>
+                            <span><strong>Processed culinary ingredients</strong> (e.g., butter, sugar, oils).</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-lg bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800/50">
+                            <div class="w-8 h-8 rounded bg-orange-500 text-white font-bold flex items-center justify-center shrink-0">3</div>
+                            <span><strong>Processed foods</strong> (e.g., canned beans, simple breads, cheese).</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50">
+                            <div class="w-8 h-8 rounded bg-red-500 text-white font-bold flex items-center justify-center shrink-0">4</div>
+                            <span><strong>Ultra-processed foods</strong> (e.g., sodas, mass-produced packaged snacks, instant noodles). Heavily modified with additives.</span>
+                        </div>
+                    </div>`;
+            }
+            
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+
+        function closeScoreModal() {
+            const m = document.getElementById('scoreModal');
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        function renderPackagingAndOrigins(p) {
+            const pP = document.getElementById('packagingPanel');
+            const pC = document.getElementById('packagingContainer');
+            const oC = document.getElementById('originsContainer');
+            const dC = document.getElementById('disposalContainer');
+            
+            let hD = false;
+            let packagingItemsHTML = [];
+            let disposalInstructionsHTML = [];
+
+            if (p.packagings && p.packagings.length > 0) {
+                p.packagings.forEach(pack => {
+                    let materialRaw = pack.material ? pack.material.replace('en:', '').toLowerCase() : '';
+                    if (materialRaw.includes('7-other-plastics') || materialRaw.includes('o-7')) {
+                        materialRaw = '♹ Other Plastics (O7)';
+                    } else if (materialRaw) {
+                        materialRaw = materialRaw.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    }
+
+                    let shape = pack.shape ? pack.shape.replace('en:', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Packaging';
+                    let weight = pack.weight ? `${pack.weight}g` : (pack.weight_measured ? `${pack.weight_measured}g` : '');
+                    
+                    let materialText = `<div class="mb-4 pb-4 border-b border-slate-200/50 dark:border-slate-700/50 last:border-0 last:mb-0 last:pb-0">
+                                            <div class="font-bold text-slate-800 dark:text-white text-base">${shape}</div>`;
+                    materialText += `<div class="text-sm text-slate-600 dark:text-slate-400 mt-1">Material: <span class="font-semibold text-slate-700 dark:text-slate-300">${materialRaw || 'Unspecified'}</span></div>`;
+                    if (weight) materialText += `<div class="text-sm text-slate-600 dark:text-slate-400">Weight: <span class="font-semibold text-slate-700 dark:text-slate-300">${weight}</span></div>`;
+                    materialText += `</div>`;
+                    
+                    packagingItemsHTML.push(materialText);
+
+                    if (pack.recycling) {
+                        let rec = pack.recycling.replace('en:', '').toUpperCase();
+                        let rrrBox = '';
+                        let actionIcon = '<i class="fa-solid fa-arrow-right text-slate-400 mx-2"></i>';
+                        let actionText = `<span class="font-bold tracking-wide">${rec}</span>`;
+
+                        if (rec === 'RECYCLE' || rec.includes('RECYCLABLE')) {
+                            actionIcon = '<i class="fa-solid fa-arrow-right text-emerald-500 mx-2"></i>';
+                            actionText = '<span class="font-bold tracking-wide text-emerald-600 dark:text-emerald-400">♻️ RECYCLE</span>';
+                            rrrBox = `<div class="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 border border-emerald-200 dark:border-emerald-700/50 text-emerald-800 dark:text-emerald-300 text-xs font-bold shadow-sm"><i class="fa-solid fa-recycle"></i> RRR: Recover & Recycle</div>`;
+                        } else if (rec === 'DISCARD' || rec === 'TRASH' || rec.includes('DISCARD')) {
+                            actionIcon = '<i class="fa-solid fa-arrow-right text-red-500 mx-2"></i>';
+                            actionText = '<span class="font-bold tracking-wide text-red-600 dark:text-red-400">🗑️ DISPOSE</span>';
+                            rrrBox = `<div class="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-red-100 dark:bg-red-900/40 border border-red-200 dark:border-red-700/50 text-red-800 dark:text-red-300 text-xs font-bold shadow-sm"><i class="fa-solid fa-trash-can"></i> RRR: Residual Waste</div>`;
+                        }
+                        
+                        let instr = `<div class="mb-4 pb-4 border-b border-emerald-200/30 dark:border-emerald-700/30 last:border-0 last:mb-0 last:pb-0">
+                                        <div class="flex items-center text-sm mb-2 text-slate-700 dark:text-slate-300 font-medium">
+                                            ${shape} ${actionIcon} ${actionText}
+                                        </div>
+                                        ${rrrBox}
+                                    </div>`;
+                        disposalInstructionsHTML.push(instr);
+                    }
+                });
+            }
+
+            if (packagingItemsHTML.length > 0) {
+                document.getElementById('packagingText').innerHTML = packagingItemsHTML.join('');
+                pC.classList.remove('hidden');
+                hD = true;
+            } else if (p.packaging) {
+                document.getElementById('packagingText').innerHTML = `<div class="text-sm font-medium text-slate-700 dark:text-slate-300">${p.packaging}</div>`;
+                pC.classList.remove('hidden');
+                hD = true;
+            } else {
+                pC.classList.add('hidden');
+            }
+
+            if (disposalInstructionsHTML.length > 0) {
+                document.getElementById('disposalText').innerHTML = disposalInstructionsHTML.join('');
+                dC.classList.remove('hidden');
+                hD = true;
+            } else if (p.packaging_recycling_tags && p.packaging_recycling_tags.length > 0) {
+                document.getElementById('disposalText').innerHTML = `<div class="text-sm font-medium text-slate-700 dark:text-slate-300">${p.packaging_recycling_tags.map(t => t.replace('en:', '').toUpperCase()).join(', ')}</div>`;
+                dC.classList.remove('hidden');
+                hD = true;
+            } else {
+                dC.classList.add('hidden');
+            }
+
+            if (p.origins) {
+                document.getElementById('originsText').innerText = p.origins;
+                oC.classList.remove('hidden');
+                hD = true;
+            } else {
+                oC.classList.add('hidden');
+            }
+
+            if (hD) {
+                pP.classList.remove('hidden');
+            } else {
+                pP.classList.add('hidden');
+            }
+        }
+
+        function renderNutriScore(g) {
+            const b = document.getElementById('nutriScoreBadge');
+            const i = document.getElementById('nsIcon');
+            if (!g || g === 'unknown' || g === 'not-applicable') {
+                b.classList.add('hidden'); return;
+            }
+            const lg = g.toLowerCase();
+            const colors = { 'a': 'bg-nutri-a', 'b': 'bg-nutri-b', 'c': 'bg-nutri-c', 'd': 'bg-nutri-d', 'e': 'bg-nutri-e' };
+            i.className = "w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-inner uppercase";
+            i.classList.add(colors[lg] || 'bg-slate-400');
+            i.innerText = lg;
+            b.classList.remove('hidden');
+        }
+
+        function renderEcoScore(g) {
+            const b = document.getElementById('ecoScoreBadge');
+            const i = document.getElementById('ecoIcon');
+            if (!g || g === 'unknown' || g === 'not-applicable') {
+                b.classList.add('hidden'); return;
+            }
+            const lg = g.toLowerCase();
+            const colors = { 'a': 'bg-[#1e8f4e]', 'b': 'bg-[#2ecc71]', 'c': 'bg-[#f1c40f]', 'd': 'bg-[#e67e22]', 'e': 'bg-[#e74c3c]' };
+            i.className = "w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-inner uppercase";
+            i.classList.add(colors[lg] || 'bg-slate-400');
+            i.innerText = lg;
+            b.classList.remove('hidden');
+        }
+
+        function renderNovaGroup(g) {
+            const b = document.getElementById('novaGroupBadge');
+            const v = document.getElementById('novaValue');
+            if (!g) { b.classList.add('hidden'); return; }
+            v.innerText = g;
+            b.classList.remove('hidden');
+        }
+
+        function toggleNutritionContext() {
+            showNutritionPerServing = document.getElementById('nutritionToggle').checked;
+            
+            const l100 = document.getElementById('label100g');
+            const lServ = document.getElementById('labelServing');
+            
+            if (showNutritionPerServing) {
+                l100.classList.replace('text-slate-800', 'text-slate-500');
+                l100.classList.replace('dark:text-white', 'dark:text-slate-400');
+                l100.classList.remove('bg-white', 'dark:bg-slate-700', 'shadow-sm');
+                
+                lServ.classList.replace('text-slate-500', 'text-slate-800');
+                lServ.classList.replace('dark:text-slate-400', 'dark:text-white');
+                lServ.classList.add('bg-white', 'dark:bg-slate-700', 'shadow-sm');
+            } else {
+                lServ.classList.replace('text-slate-800', 'text-slate-500');
+                lServ.classList.replace('dark:text-white', 'dark:text-slate-400');
+                lServ.classList.remove('bg-white', 'dark:bg-slate-700', 'shadow-sm');
+                
+                l100.classList.replace('text-slate-500', 'text-slate-800');
+                l100.classList.replace('dark:text-slate-400', 'dark:text-white');
+                l100.classList.add('bg-white', 'dark:bg-slate-700', 'shadow-sm');
+            }
+
+            if (currentProductData) {
+                renderNutritionGrid(currentProductData);
+            }
+        }
+
+        function renderNutritionGrid(p) {
+            const n = p.nutriments;
+            const g = document.getElementById('nutritionGrid');
+            const sC = document.getElementById('servingSizeContainer');
+            const tW = document.getElementById('nutritionToggle').parentElement.parentElement;
+            
+            g.innerHTML = '';
+
+            if (!n || Object.keys(n).length === 0) {
+                g.innerHTML = '<div class="col-span-full text-slate-500 italic bg-white/50 dark:bg-slate-800/50 p-4 rounded-xl">Nutrition data not available.</div>';
+                tW.classList.add('hidden');
+                sC.classList.add('hidden');
+                return;
+            }
+
+            let isPerServing = showNutritionPerServing;
+            
+            if (!p.serving_size || n['energy-kcal_serving'] === undefined) {
+                isPerServing = false;
+                tW.classList.add('opacity-50', 'pointer-events-none');
+                tW.title = "Serving data not provided by manufacturer";
+                document.getElementById('nutritionToggle').checked = false;
+                document.getElementById('label100g').classList.add('bg-white', 'dark:bg-slate-700', 'shadow-sm', 'text-slate-800', 'dark:text-white');
+                document.getElementById('labelServing').classList.remove('bg-white', 'dark:bg-slate-700', 'shadow-sm', 'text-slate-800', 'dark:text-white');
+                document.getElementById('labelServing').classList.add('text-slate-500', 'dark:text-slate-400');
+            } else {
+                tW.classList.remove('opacity-50', 'pointer-events-none');
+                tW.title = "";
+            }
+
+            if (p.serving_size && isPerServing) {
+                document.getElementById('servingSize').innerText = p.serving_size;
+                sC.classList.remove('hidden');
+            } else {
+                sC.classList.add('hidden');
+            }
+
+            if (!tW.classList.contains('pointer-events-none') && !document.getElementById('label100g').classList.contains('bg-white') && !document.getElementById('labelServing').classList.contains('bg-white')) {
+                 document.getElementById('label100g').classList.add('bg-white', 'dark:bg-slate-700', 'shadow-sm', 'text-slate-800', 'dark:text-white');
+            }
+
+            const dailyValues = {
+                'energy-kcal': 2000, 'fat': 78, 'saturated-fat': 20, 'carbohydrates': 275,
+                'sugars': 50, 'proteins': 50, 'salt': 6, 'fiber': 28
+            };
+
+            const groupedNutrients = [
+                { main: { id: 'energy-kcal', name: 'Energy', unit: 'kcal', icon: 'bolt', color: 'text-amber-500', border: 'border-amber-200 dark:border-amber-800/50', bg: 'bg-gradient-to-br from-white to-amber-50 dark:from-slate-800 dark:to-amber-900/20' } },
+                { 
+                  main: { id: 'fat', name: 'Fat', unit: 'g', icon: 'droplet', color: 'text-rose-500', border: 'border-rose-200 dark:border-rose-800/50', bg: 'bg-gradient-to-br from-white to-rose-50 dark:from-slate-800 dark:to-rose-900/20' },
+                  subs: [ { id: 'saturated-fat', name: 'Saturated Fat', unit: 'g' } ]
+                },
+                { 
+                  main: { id: 'carbohydrates', name: 'Carbs', unit: 'g', icon: 'cube', color: 'text-blue-500', border: 'border-blue-200 dark:border-blue-800/50', bg: 'bg-gradient-to-br from-white to-blue-50 dark:from-slate-800 dark:to-blue-900/20' },
+                  subs: [ { id: 'sugars', name: 'Sugars', unit: 'g' } ]
+                },
+                { main: { id: 'proteins', name: 'Proteins', unit: 'g', icon: 'drumstick-bite', color: 'text-emerald-500', border: 'border-emerald-200 dark:border-emerald-800/50', bg: 'bg-gradient-to-br from-white to-emerald-50 dark:from-slate-800 dark:to-emerald-900/20' } },
+                { main: { id: 'fiber', name: 'Fiber', unit: 'g', icon: 'leaf', color: 'text-green-600', border: 'border-green-300 dark:border-green-800/50', bg: 'bg-gradient-to-br from-white to-green-50 dark:from-slate-800 dark:to-green-900/20' } },
+                { main: { id: 'salt', name: 'Salt', unit: 'g', icon: 'spoon', color: 'text-slate-500 dark:text-slate-400', border: 'border-slate-300 dark:border-slate-600', bg: 'bg-gradient-to-br from-white to-slate-100 dark:from-slate-800 dark:to-slate-700/50' } }
+            ];
+
+            let hasData = false;
+
+            groupedNutrients.forEach(group => {
+                const nut = group.main;
+                const valKey = isPerServing ? `${nut.id}_serving` : `${nut.id}_100g`;
+                let val = n[valKey];
+                
+                if (val === undefined && isPerServing) val = n[`${nut.id}_100g`];
+
+                if (val !== undefined && val !== null) {
+                    hasData = true;
+                    const formattedVal = Number.isInteger(val) ? val : parseFloat(val).toFixed(1);
+                    
+                    let dvPercentageHtml = '';
+                    if (dailyValues[nut.id]) {
+                        const dvPct = Math.round((val / dailyValues[nut.id]) * 100);
+                        let dvColorClass = 'text-slate-500 dark:text-slate-400';
+                        if (dvPct > 20) dvColorClass = 'text-brand-600 dark:text-brand-400 font-bold';
+                        dvPercentageHtml = `<div class="text-[10px] font-semibold mt-1 ${dvColorClass} bg-white/50 dark:bg-slate-900/50 inline-block px-1.5 py-0.5 rounded border border-white/40 dark:border-slate-700">${dvPct}% DV</div>`;
+                    }
+                    
+                    let subsHtml = '';
+                    if (group.subs && group.subs.length > 0) {
+                        group.subs.forEach(sub => {
+                            const subValKey = isPerServing ? `${sub.id}_serving` : `${sub.id}_100g`;
+                            let subVal = n[subValKey];
+                            if (subVal === undefined && isPerServing) subVal = n[`${sub.id}_100g`];
+
+                            if (subVal !== undefined && subVal !== null) {
+                                const subFormatted = Number.isInteger(subVal) ? subVal : parseFloat(subVal).toFixed(1);
+                                let subDvHtml = '';
+                                if (dailyValues[sub.id]) {
+                                    const subDvPct = Math.round((subVal / dailyValues[sub.id]) * 100);
+                                    let subDvColor = 'text-slate-500 dark:text-slate-400';
+                                    if(subDvPct > 20) subDvColor = 'text-red-500 dark:text-red-400 font-bold';
+                                    subDvHtml = `<span class="ml-2 text-[10px] ${subDvColor}">${subDvPct}% DV</span>`;
+                                }
+
+                                subsHtml += `
+                                    <div class="flex justify-between items-center text-xs mt-2 pt-2 border-t border-slate-200/60 dark:border-slate-700/60">
+                                        <span class="text-slate-600 dark:text-slate-400 pl-2 border-l-2 border-slate-300 dark:border-slate-600">of which ${sub.name}</span>
+                                        <div class="text-right">
+                                            <span class="font-bold text-slate-800 dark:text-slate-200">${subFormatted}${sub.unit}</span>
+                                            ${subDvHtml}
+                                        </div>
+                                    </div>
+                                `;
+                            }
+                        });
+                    }
+
+                    const card = document.createElement('div');
+                    card.className = `${nut.bg} rounded-2xl p-4 flex flex-col border ${nut.border} shadow-sm hover:shadow-md transition-shadow relative group`;
+                    card.innerHTML = `
+                        <div class="flex items-center gap-2 mb-1">
+                            <div class="w-6 h-6 rounded-full bg-white/60 dark:bg-slate-900/60 flex items-center justify-center shadow-sm">
+                                <i class="fa-solid fa-${nut.icon} ${nut.color} text-[10px]"></i>
+                            </div>
+                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-widest">${nut.name}</span>
+                        </div>
+                        <div class="flex items-end justify-between">
+                            <div class="text-3xl font-black text-slate-800 dark:text-white font-display leading-none mt-1">
+                                ${formattedVal}<span class="text-sm font-bold text-slate-500 dark:text-slate-400 ml-1 opacity-70">${nut.unit}</span>
+                            </div>
+                            ${dvPercentageHtml}
+                        </div>
+                        ${subsHtml}
+                    `;
+                    g.appendChild(card);
+                }
+            });
+
+            if (!hasData) {
+                g.innerHTML = '<div class="col-span-full text-slate-500 italic bg-white/50 dark:bg-slate-800/50 p-4 rounded-xl">Specific nutrition values not specified.</div>';
+            }
+        }
+
+        function showLoading(m) {
+            sysIcon.className = "fa-solid fa-circle-notch fa-spin text-5xl text-brand-500 mb-4";
+            sysTitle.innerText = "Loading...";
+            sysTitle.className = "text-2xl font-bold font-display text-slate-800 dark:text-white";
+            sysDesc.innerText = m;
+            sysMsg.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+        }
+
+        function showError(m) {
+            sysIcon.className = "fa-solid fa-circle-exclamation text-5xl text-red-500 mb-4 drop-shadow-md";
+            sysTitle.innerText = "Oops!";
+            sysTitle.className = "text-2xl font-bold font-display text-red-600 dark:text-red-400";
+            sysDesc.innerText = m;
+            sysMsg.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+        }
+
+        function hideSystemMessage() {
+            sysMsg.classList.add('hidden');
+        }
+
+        async function extractBarcodeWithGemini(dUrl) {
+            const aKey = ""; 
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${aKey}`;
+            try {
+                const [h, bD] = dUrl.split(',');
+                const mT = h.match(/:(.*?);/)[1] || "image/jpeg";
+                const p = {
+                    contents: [{
+                        role: "user",
+                        parts: [
+                            { text: "Extract the exact numerical barcode (UPC/EAN) from this image. Return ONLY the digits. If you cannot find a clear barcode, return exactly 'NOT_FOUND'." },
+                            { inlineData: { mimeType: mT, data: bD } }
+                        ]
+                    }]
+                };
+                for (let a = 0; a <= 3; a++) {
+                    try {
+                        const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) });
+                        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+                        const re = await r.json();
+                        const t = re.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+                        if (t && t !== 'NOT_FOUND') {
+                            const n = t.replace(/\D/g, ''); 
+                            if (n.length >= 6) return n;
+                        }
+                        return null; 
+                    } catch (e) {
+                        if (a === 3) return null;
+                        await new Promise(re => setTimeout(re, [1000, 2000, 4000][a]));
+                    }
+                }
+            } catch (e) {}
+            return null;
+        }
+
+        function playBeep() {
+            try {
+                const c = new(window.AudioContext || window.webkitAudioContext)();
+                const o = c.createOscillator();
+                const g = c.createGain();
+                o.connect(g); g.connect(c.destination);
+                o.type = 'sine'; o.frequency.value = 800;
+                g.gain.setValueAtTime(0.1, c.currentTime);
+                o.start(c.currentTime); o.stop(c.currentTime + 0.1);
+            } catch (e) {}
+        }
+    </script>
+</body>
+</html>
