@@ -68,6 +68,9 @@
             </a>
             
             <div class="flex items-center gap-2">
+                <button onclick="openHistoryModal()" class="w-10 h-10 rounded-full flex items-center justify-center bg-white/50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition-colors border border-white/60 dark:border-slate-600 shadow-sm" title="Scan History">
+                    <i class="fa-solid fa-clock-rotate-left text-lg"></i>
+                </button>
                 <button onclick="location.reload()" class="w-10 h-10 rounded-full flex items-center justify-center bg-white/50 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition-colors border border-white/60 dark:border-slate-600 shadow-sm" title="Clear Page / Start Fresh">
                     <i class="fa-solid fa-rotate-right text-lg"></i>
                 </button>
@@ -100,9 +103,14 @@
                 </button>
             </div>
 
+            <!-- Quick History Container (New) -->
+            <div id="quickHistoryContainer" class="max-w-3xl mx-auto mt-4 hidden relative z-10 flex flex-wrap gap-2 justify-center">
+                <!-- Populated by JS -->
+            </div>
+
             <div class="max-w-3xl mx-auto mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
                 <button onclick="toggleCamera()" class="bg-white/60 dark:bg-slate-800/60 hover:bg-white/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 font-semibold py-4 px-6 rounded-2xl transition-all border border-white/80 dark:border-slate-600 shadow-sm hover:shadow-md flex items-center justify-center gap-3 backdrop-blur-sm">
-                    <i class="fa-solid fa-camera text-brand-500 dark:text-brand-400 text-lg"></i> <span id="cameraBtnText">Scan with Camera</span>
+                    <i id="cameraBtnIcon" class="fa-solid fa-camera text-brand-500 dark:text-brand-400 text-lg"></i> <span id="cameraBtnText">Scan with Camera</span>
                 </button>
                 <label class="bg-white/60 dark:bg-slate-800/60 hover:bg-white/90 dark:hover:bg-slate-700/90 text-slate-700 dark:text-slate-200 font-semibold py-4 px-6 rounded-2xl transition-all border border-white/80 dark:border-slate-600 shadow-sm hover:shadow-md flex items-center justify-center gap-3 backdrop-blur-sm cursor-pointer">
                     <i class="fa-solid fa-image text-purple-500 dark:text-purple-400 text-lg"></i> Upload Photo
@@ -289,6 +297,24 @@
         </div>
     </div>
 
+    <!-- History Modal -->
+    <div id="historyModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl max-w-lg w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 transform transition-transform scale-100">
+            <div class="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 shrink-0">
+                <h3 class="text-xl font-bold font-display text-slate-800 dark:text-white"><i class="fa-solid fa-clock-rotate-left text-brand-500 mr-2"></i> Scan History</h3>
+                <div class="flex items-center gap-2">
+                    <button onclick="clearHistory()" class="text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 dark:bg-red-900/30 px-3 py-1.5 rounded-lg transition-colors">Clear</button>
+                    <button onclick="closeHistoryModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors bg-white dark:bg-slate-800 rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-slate-200 dark:border-slate-600">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="historyList" class="p-4 md:p-6 overflow-y-auto flex flex-col gap-3 flex-grow">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
     <footer class="glass-panel mt-auto border-t-0 shadow-[0_-4px_20px_rgba(0,0,0,0.02)] dark:shadow-none relative z-10">
         <div class="max-w-6xl mx-auto px-4 py-8 text-center text-slate-600 dark:text-slate-400">
             <p class="font-medium text-lg">Designed By <a href="https://atishaksharma.com" target="_blank" class="text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 hover:underline font-bold transition-colors">Atish Ak Sharma</a></p>
@@ -324,7 +350,77 @@
                 document.documentElement.classList.remove('dark');
                 updateDarkModeIcon(false);
             }
+            
+            renderQuickHistory();
         });
+
+        // --- History & Caching Logic ---
+        function getHistory() {
+            return JSON.parse(localStorage.getItem('foodlens_history') || '[]');
+        }
+
+        function saveToHistory(product) {
+            let history = getHistory();
+            history = history.filter(p => p.code !== product.code); // remove existing
+            history.unshift(product); // Add to front
+            if(history.length > 30) history.pop(); // Keep limit to 30 to avoid quota issues
+            localStorage.setItem('foodlens_history', JSON.stringify(history));
+            renderQuickHistory();
+        }
+
+        function renderQuickHistory() {
+            const history = getHistory();
+            const qhc = document.getElementById('quickHistoryContainer');
+            if(history.length === 0) {
+                qhc.classList.add('hidden');
+                return;
+            }
+            qhc.classList.remove('hidden');
+            qhc.innerHTML = history.slice(0, 4).map(p => `
+                <button onclick="fetchProductData('${p.code}')" class="flex items-center gap-2 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-700 px-4 py-2 rounded-full text-xs font-semibold text-slate-700 dark:text-slate-300 border border-white/80 dark:border-slate-600 transition-colors shadow-sm cursor-pointer">
+                    <i class="fa-solid fa-clock-rotate-left text-brand-500 dark:text-brand-400"></i>
+                    <span class="truncate max-w-[120px]">${p.product_name || p.code}</span>
+                </button>
+            `).join('');
+        }
+
+        function openHistoryModal() {
+            const history = getHistory();
+            const list = document.getElementById('historyList');
+            if(history.length === 0) {
+                list.innerHTML = '<p class="text-center text-slate-500 dark:text-slate-400 py-8 font-medium">No scan history yet.</p>';
+            } else {
+                list.innerHTML = history.map(p => {
+                    const img = p.image_front_url || p.image_url || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2NjYyIgZD0iTTIxIDE5VjVjMC0xLjEtLjktMi0yLTJIMUMtMS4xIDMtMiAzLjlFLTIgNXYxNGMwIDEuMS45IDIgMiAyaDE2YzEuMSAwIDItLjkgMi0yek04LjUgMTMuNWwyLjUgMy4wMSBMMTQuNSAxMmw0LjUgNkg1bDMuNS00LjV6Ii8+PC9zdmc+';
+                    return `
+                    <div onclick="closeHistoryModal(); fetchProductData('${p.code}')" class="flex items-center gap-4 p-3 bg-white dark:bg-slate-800 hover:bg-brand-50 dark:hover:bg-slate-700/80 rounded-2xl cursor-pointer transition-colors border border-slate-100 dark:border-slate-700 shadow-sm">
+                        <div class="w-14 h-14 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-600 flex items-center justify-center p-1 overflow-hidden">
+                            <img src="${img}" class="w-full h-full object-contain">
+                        </div>
+                        <div class="flex-grow min-w-0">
+                            <h4 class="font-bold text-slate-800 dark:text-white text-sm truncate uppercase">${p.product_name || 'Unknown Product'}</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-mono mt-0.5"><i class="fa-solid fa-barcode mr-1"></i> ${p.code}</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-slate-300 dark:text-slate-600 mr-2"></i>
+                    </div>
+                `}).join('');
+            }
+            document.getElementById('historyModal').classList.remove('hidden');
+            document.getElementById('historyModal').classList.add('flex');
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('historyModal').classList.add('hidden');
+            document.getElementById('historyModal').classList.remove('flex');
+        }
+
+        function clearHistory() {
+            if(confirm("Are you sure you want to clear your scan history?")) {
+                localStorage.removeItem('foodlens_history');
+                renderQuickHistory();
+                openHistoryModal(); // Refresh modal
+            }
+        }
 
         function toggleDarkMode() {
             const d = document.documentElement.classList.toggle('dark');
@@ -368,7 +464,8 @@
             try {
                 scannerContainer.classList.remove('hidden');
                 captureBtnContainer.classList.remove('hidden');
-                cameraBtnText.innerHTML = `<i class="fa-solid fa-stop text-red-500"></i> Stop Camera`;
+                document.getElementById('cameraBtnIcon').className = "fa-solid fa-stop text-red-500 text-lg";
+                document.getElementById('cameraBtnText').innerText = "Stop Camera";
                 await html5QrCode.start(
                     { facingMode: "environment" },
                     { fps: 10, qrbox: { width: 280, height: 180 } },
@@ -385,7 +482,8 @@
             } catch (e) {
                 showError("Failed to access camera. Please ensure permissions are granted.");
                 scannerContainer.classList.add('hidden');
-                cameraBtnText.innerHTML = `<i class="fa-solid fa-camera text-brand-500 dark:text-brand-400 text-lg"></i> Scan with Camera`;
+                document.getElementById('cameraBtnIcon').className = "fa-solid fa-camera text-brand-500 dark:text-brand-400 text-lg";
+                document.getElementById('cameraBtnText').innerText = "Scan with Camera";
                 isCameraActive = false;
             }
         }
@@ -395,7 +493,8 @@
                 try { await html5QrCode.stop(); } catch (e) {}
                 scannerContainer.classList.add('hidden');
                 captureBtnContainer.classList.add('hidden');
-                cameraBtnText.innerHTML = `<i class="fa-solid fa-camera text-brand-500 dark:text-brand-400 text-lg"></i> Scan with Camera`;
+                document.getElementById('cameraBtnIcon').className = "fa-solid fa-camera text-brand-500 dark:text-brand-400 text-lg";
+                document.getElementById('cameraBtnText').innerText = "Scan with Camera";
                 isCameraActive = false;
             }
         }
@@ -462,6 +561,16 @@
 
         async function fetchProductData(b) {
             searchSection.classList.remove('my-auto'); // Push search box to top
+            
+            // 1. Check Local Cache first
+            const history = getHistory();
+            const cachedProduct = history.find(p => p.code === b);
+            if (cachedProduct) {
+                saveToHistory(cachedProduct); // Bumps to top of history list
+                renderProduct(cachedProduct);
+                return;
+            }
+
             showLoading(`Fetching data for ${b}...`);
             resultsSection.classList.add('hidden');
             resultsSection.classList.remove('opacity-100');
@@ -472,7 +581,13 @@
                     if (g && (g.ingredients_text || !p)) p = g;
                 }
                 if (!p) p = await fetchFromUPCItemDB(b);
-                p ? renderProduct(p) : showError("Product not found in any available databases.");
+                
+                if (p) {
+                    saveToHistory(p); // Cache successful fetch
+                    renderProduct(p);
+                } else {
+                    showError("Product not found in any available databases.");
+                }
             } catch (e) {
                 showError("Error connecting to the databases.");
             }
