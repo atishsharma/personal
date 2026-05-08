@@ -46,8 +46,8 @@
         ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.5); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.8); }
         #reader video { object-fit: cover !important; border-radius: 1rem !important; width: 100% !important; }
-        .glass-panel { background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); }
-        .dark .glass-panel { background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
+        .glass-panel { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07); }
+        .dark .glass-panel { background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); }
         .tooltip-container { position: relative; cursor: help; }
         .tooltip-container .tooltip-text { visibility: hidden; opacity: 0; width: max-content; max-width: 250px; background-color: #1e293b; color: #fff; text-align: center; border-radius: 8px; padding: 8px 12px; position: absolute; z-index: 60; bottom: 110%; left: 50%; transform: translateX(-50%); transition: opacity 0.2s; font-size: 0.75rem; font-weight: 500; font-family: 'Inter', sans-serif; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); pointer-events: none; letter-spacing: normal; text-transform: none; }
         .tooltip-container .tooltip-text::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #1e293b transparent transparent transparent; }
@@ -56,7 +56,10 @@
         .dark .tooltip-container .tooltip-text::after { border-color: #f8fafc transparent transparent transparent; }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-teal-100 dark:from-slate-900 dark:via-indigo-950 dark:to-teal-950 animate-gradient-x text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white transition-colors duration-500">
+<body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-teal-100 dark:from-slate-900 dark:via-indigo-950 dark:to-teal-950 animate-gradient-x text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans selection:bg-brand-500 selection:text-white transition-colors duration-500 relative">
+
+    <!-- Fixed Stock Photo Background -->
+    <div class="fixed inset-0 z-[-1] bg-[url('https://images.unsplash.com/photo-1490818387583-1b5f28c1ea0a?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center bg-no-repeat opacity-[0.12] dark:opacity-[0.04] pointer-events-none transition-opacity duration-500"></div>
 
     <header class="glass-panel sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -82,7 +85,8 @@
     </header>
 
     <main class="flex-grow flex flex-col max-w-6xl mx-auto px-4 py-8 w-full">
-        <div id="searchSection" class="glass-panel rounded-3xl p-6 md:p-8 mb-10 relative overflow-hidden my-auto shrink-0 transition-all duration-500">
+        <!-- Replaced my-auto with mt-8 md:mt-16 to prevent cutting off text -->
+        <div id="searchSection" class="glass-panel rounded-3xl p-6 md:p-8 mb-10 relative overflow-hidden mt-8 md:mt-16 lg:mt-24 mb-auto shrink-0 transition-all duration-500">
             <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-300 dark:bg-purple-900 rounded-full mix-blend-multiply filter blur-2xl opacity-50 dark:opacity-30 pointer-events-none transition-colors"></div>
             <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-teal-300 dark:bg-teal-900 rounded-full mix-blend-multiply filter blur-2xl opacity-50 dark:opacity-30 pointer-events-none transition-colors"></div>
             
@@ -177,18 +181,19 @@
                     </div>
                     <h3 class="text-2xl font-bold font-display dark:text-white">Health & Environmental Scores</h3>
                 </div>
-                <div class="flex flex-wrap gap-4" id="badgesContainer">
-                    <button onclick="openScoreModal('nutri')" id="nutriScoreBadge" class="hidden hover:scale-105 transition-transform flex items-center gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white dark:border-slate-600 rounded-2xl p-2 pr-5 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-left">
+                <!-- Updated Flex layout for Scores per user request -->
+                <div class="flex flex-col sm:flex-row sm:flex-wrap gap-4 w-full" id="badgesContainer">
+                    <button onclick="openScoreModal('nutri')" id="nutriScoreBadge" class="hidden hover:scale-[1.02] sm:hover:scale-105 transition-transform flex w-full sm:w-auto items-center justify-between sm:justify-start gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white dark:border-slate-600 rounded-2xl p-2 sm:pr-5 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-left">
                         <div class="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-3">Nutri-Score</div>
-                        <div id="nsIcon" class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-inner"></div>
+                        <div id="nsIcon" class="w-12 h-12 rounded-xl flex shrink-0 items-center justify-center text-white font-black text-2xl shadow-inner"></div>
                     </button>
-                    <button onclick="openScoreModal('eco')" id="ecoScoreBadge" class="hidden hover:scale-105 transition-transform flex items-center gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white dark:border-slate-600 rounded-2xl p-2 pr-5 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-left">
+                    <button onclick="openScoreModal('eco')" id="ecoScoreBadge" class="hidden hover:scale-[1.02] sm:hover:scale-105 transition-transform flex w-full sm:w-auto items-center justify-between sm:justify-start gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white dark:border-slate-600 rounded-2xl p-2 sm:pr-5 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-left">
                         <div class="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-3">Eco-Score</div>
-                        <div id="ecoIcon" class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-inner"></div>
+                        <div id="ecoIcon" class="w-12 h-12 rounded-xl flex shrink-0 items-center justify-center text-white font-black text-2xl shadow-inner"></div>
                     </button>
-                    <button onclick="openScoreModal('nova')" id="novaGroupBadge" class="hidden hover:scale-105 transition-transform flex items-center gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white dark:border-slate-600 rounded-2xl p-2 pr-5 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-left">
+                    <button onclick="openScoreModal('nova')" id="novaGroupBadge" class="hidden hover:scale-[1.02] sm:hover:scale-105 transition-transform flex w-full sm:w-auto items-center justify-between sm:justify-start gap-3 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border border-white dark:border-slate-600 rounded-2xl p-2 sm:pr-5 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-left">
                         <div class="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400 ml-3">NOVA Group</div>
-                        <div id="novaIcon" class="w-12 h-12 rounded-xl bg-slate-800 dark:bg-slate-900 border dark:border-slate-700 flex flex-col items-center justify-center text-white font-black leading-none shadow-inner"><span class="text-[10px] font-medium opacity-80 mb-0.5">GROUP</span><span id="novaValue" class="text-xl"></span></div>
+                        <div id="novaIcon" class="w-12 h-12 rounded-xl bg-slate-800 dark:bg-slate-900 border dark:border-slate-700 flex flex-col shrink-0 items-center justify-center text-white font-black leading-none shadow-inner"><span class="text-[10px] font-medium opacity-80 mb-0.5">GROUP</span><span id="novaValue" class="text-xl"></span></div>
                     </button>
                 </div>
             </div>
@@ -248,7 +253,7 @@
                         <p class="mt-8 text-xs text-slate-500 dark:text-slate-400 text-center border-t border-slate-200/50 dark:border-slate-700/50 pt-5 font-medium">* Percent Daily Values (% DV) are based on a 2,000 calorie diet.</p>
                     </div>
 
-                    <!-- Packaging Panel (Moved under Nutrition) -->
+                    <!-- Packaging Panel -->
                     <div id="packagingPanel" class="glass-panel rounded-3xl p-6 md:p-8 hidden">
                         <div class="flex items-center gap-4 mb-6 border-b border-slate-200/50 dark:border-slate-700/50 pb-5">
                             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-400 to-emerald-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/20">
@@ -521,9 +526,16 @@
                 document.getElementById('cameraBtnIcon').className = "fa-solid fa-stop text-red-500 text-lg";
                 document.getElementById('cameraBtnText').innerText = "Stop Camera";
                 
+                // Intelligently scroll exactly to the top of the scanner container
                 setTimeout(() => {
-                    scannerContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 100);
+                    const headerOffset = 90; // Approximate height of sticky header
+                    const elementPosition = scannerContainer.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                    window.scrollTo({
+                         top: offsetPosition,
+                         behavior: "smooth"
+                    });
+                }, 150);
 
                 await html5QrCode.start(
                     { facingMode: "environment" },
@@ -655,7 +667,8 @@
         }
 
         async function fetchProductData(b) {
-            searchSection.classList.remove('my-auto'); // Push search box to top
+            // Remove margin-top spacing so section shifts nicely when displaying results
+            searchSection.classList.remove('mt-8', 'md:mt-16', 'lg:mt-24');
             
             // 1. Check Local Cache first
             const history = getHistory();
@@ -1139,7 +1152,7 @@
             }
             const lg = g.toLowerCase();
             const colors = { 'a': 'bg-nutri-a', 'b': 'bg-nutri-b', 'c': 'bg-nutri-c', 'd': 'bg-nutri-d', 'e': 'bg-nutri-e' };
-            i.className = "w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-inner uppercase";
+            i.className = "w-12 h-12 rounded-xl flex shrink-0 items-center justify-center text-white font-black text-2xl shadow-inner uppercase";
             i.classList.add(colors[lg] || 'bg-slate-400');
             i.innerText = lg;
             b.classList.remove('hidden');
@@ -1153,7 +1166,7 @@
             }
             const lg = g.toLowerCase();
             const colors = { 'a': 'bg-[#1e8f4e]', 'b': 'bg-[#2ecc71]', 'c': 'bg-[#f1c40f]', 'd': 'bg-[#e67e22]', 'e': 'bg-[#e74c3c]' };
-            i.className = "w-12 h-12 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-inner uppercase";
+            i.className = "w-12 h-12 rounded-xl flex shrink-0 items-center justify-center text-white font-black text-2xl shadow-inner uppercase";
             i.classList.add(colors[lg] || 'bg-slate-400');
             i.innerText = lg;
             b.classList.remove('hidden');
