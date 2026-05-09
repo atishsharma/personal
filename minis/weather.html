@@ -155,6 +155,22 @@
             animation: outlineGlow 4s linear infinite;
         }
 
+        /* Animated 1px Outline using mask */
+        .animated-outline-1px::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(90deg, rgba(var(--c-main), 1), transparent, rgba(var(--c-main), 1), transparent);
+            background-size: 300% 300%;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: outlineGlow 4s linear infinite;
+        }
+
         /* Inputs & Buttons */
         .glass-input {
             background: var(--input-bg);
@@ -330,7 +346,7 @@
     <div class="bg-air-flow"></div>
 
     <!-- Header / Controls -->
-    <div class="glass glass-header w-full max-w-7xl p-3 md:p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-3 md:gap-4 mx-auto" style="--card-color: var(--c-main);">
+    <div class="glass glass-header animated-outline-1px w-full max-w-7xl p-3 md:p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-3 md:gap-4 mx-auto" style="--card-color: var(--c-main);">
         
         <!-- Logo -->
         <div class="flex items-center gap-3 w-full lg:w-auto justify-center lg:justify-start flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.location.reload()" title="Reload Station">
@@ -703,7 +719,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="mt-auto w-full text-center py-6 font-bold z-10 opacity-80">
+    <footer class="mt-4 md:mt-8 w-full text-center py-6 font-bold z-10 opacity-80">
         <p>&copy; <span id="current-year"></span> Atish's Weather Station.</p>
         <p class="mt-1">Designed by <a href="https://atishaksharma.com" target="_blank" rel="noopener noreferrer" class="text-[rgb(var(--c-main))] transition-colors duration-300 hover:opacity-70 underline decoration-2 underline-offset-4">Atish Ak Sharma</a></p>
     </footer>
