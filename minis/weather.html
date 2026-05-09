@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-color="purple">
+<html lang="en" data-theme="light" data-color="blue">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,6 +59,7 @@
         :root[data-color="orange"] { --c-main: 249, 115, 22; }
         :root[data-color="cyan"] { --c-main: 6, 182, 212; }
         :root[data-color="red"] { --c-main: 239, 68, 68; }
+        :root[data-color="teal"] { --c-main: 20, 184, 166; }
 
         /* Secondary Fixed Logical Palette */
         :root {
@@ -208,7 +209,7 @@
             transform: translateX(-50%) translateY(100px);
             opacity: 0;
             transition: all 0.3s ease-out;
-            z-index: 70;
+            z-index: 90;
         }
         #toast.show {
             transform: translateX(-50%) translateY(0);
@@ -219,6 +220,9 @@
         .search-scroll::-webkit-scrollbar-track { background: transparent; }
         .search-scroll::-webkit-scrollbar-thumb { background: rgba(var(--c-main), 0.3); border-radius: 10px; }
         
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         .panel-clickable { cursor: pointer; }
         .panel-clickable:hover { transform: scale(1.03); box-shadow: 0 25px 50px var(--glass-shadow), inset 0 4px 6px var(--inner-glow); }
         .panel-clickable:active { transform: scale(0.98); }
@@ -238,6 +242,66 @@
 
         @keyframes animSlideX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
         .anim-slide-x { animation: animSlideX 2s ease-in-out infinite; }
+
+        /* High-End Weather Background Animations for Main Card */
+        .weather-fx-layer {
+            transition: all 1s ease;
+        }
+        .weather-anim-sun {
+            background: linear-gradient(105deg, transparent 15%, rgba(255,255,255,0.6) 20%, transparent 25%);
+            background-size: 300% 300%;
+            animation: fxSweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+        .weather-anim-lightning {
+            background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.9) 0%, transparent 50%);
+            opacity: 0;
+            animation: fxLightning 6s infinite;
+        }
+        .weather-anim-rain {
+            background-image: repeating-linear-gradient(-25deg, transparent 0%, rgba(255,255,255,0.2) 2%, transparent 4%, transparent 10%);
+            background-size: 200% 200%;
+            animation: fxRain 0.7s linear infinite;
+        }
+        .weather-anim-snow {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.8) 10%, transparent 20%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            animation: fxSnow 3s linear infinite;
+        }
+        .weather-anim-cloud {
+            background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.2) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.15) 0%, transparent 40%);
+            animation: fxCloud 10s alternate infinite ease-in-out;
+        }
+        .weather-anim-moon {
+            background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 40%);
+            animation: fxMoon 4s alternate infinite ease-in-out;
+        }
+
+        @keyframes fxSweep {
+            0%, 20% { background-position: 200% 0; }
+            100% { background-position: -100% 0; }
+        }
+        @keyframes fxLightning {
+            0%, 91%, 95%, 98%, 100% { opacity: 0; }
+            92%, 96% { opacity: 1; transform: scale(1.05); }
+        }
+        @keyframes fxRain {
+            0% { background-position: 0 0; }
+            100% { background-position: -50px 100px; }
+        }
+        @keyframes fxSnow {
+            0% { background-position: 0 0, 10px 10px; }
+            100% { background-position: 20px 40px, 30px 50px; }
+        }
+        @keyframes fxCloud {
+            0% { transform: scale(1) translate(0,0); }
+            100% { transform: scale(1.1) translate(5%, 5%); }
+        }
+        @keyframes fxMoon {
+            0% { opacity: 0.5; filter: blur(2px); }
+            100% { opacity: 1; filter: blur(0px); }
+        }
     </style>
 </head>
 <body class="p-4 md:p-6 lg:p-8 items-center flex-grow">
@@ -246,10 +310,10 @@
     <div class="bg-air-flow"></div>
 
     <!-- Header / Controls -->
-    <div class="glass glass-header w-full max-w-7xl p-4 mb-8 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-4 mx-auto" style="--card-color: var(--c-main);">
+    <div class="glass glass-header w-full max-w-7xl p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-4 mx-auto" style="--card-color: var(--c-main);">
         
         <!-- Logo -->
-        <div class="flex items-center gap-3 w-full lg:w-auto justify-center lg:justify-start flex-shrink-0">
+        <div class="flex items-center gap-3 w-full lg:w-auto justify-center lg:justify-start flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.location.reload()" title="Reload Station">
             <i data-lucide="cloud-lightning" class="w-8 h-8 md:w-10 md:h-10 text-[rgb(var(--c-main))] drop-shadow-md transition-colors duration-300 anim-pulse"></i>
             <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold tracking-tight whitespace-nowrap">
                 <span>Atish's</span> 
@@ -261,16 +325,16 @@
             </h1>
         </div>
 
-        <!-- Right Controls Container: Search + Buttons -->
-        <div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto lg:ml-auto">
+        <!-- Right Controls Container: Search + Buttons in Single Row -->
+        <div class="flex flex-row items-center gap-2 md:gap-3 w-full lg:w-auto lg:ml-auto">
             
             <!-- Search Bar with integrated Location Button -->
-            <div class="relative w-full sm:w-64 md:w-80 lg:w-96">
-                <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 opacity-50 text-secondary"></i>
-                <input type="text" id="city-search" placeholder="Search any city..." autocomplete="off" class="glass-input w-full pl-12 pr-12 py-3 md:py-3.5 rounded-full font-bold text-sm md:text-base">
+            <div class="relative w-full flex-1 lg:w-96">
+                <i data-lucide="search" class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-50 text-secondary"></i>
+                <input type="text" id="city-search" placeholder="Search any city..." autocomplete="off" class="glass-input w-full pl-9 md:pl-12 pr-10 md:pr-12 py-2.5 md:py-3.5 rounded-full font-bold text-sm md:text-base">
                 
-                <button id="locate-btn" class="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors group" title="Use Current Location">
-                    <i data-lucide="map-pin" class="w-5 h-5 text-[rgb(var(--c-cool))] group-hover:scale-110 transition-transform"></i>
+                <button id="locate-btn" class="absolute right-1.5 md:right-2 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full border-2 border-[rgb(var(--c-cool))] shadow-sm hover:bg-black/5 dark:hover:bg-white/10 transition-colors group" title="Use Current Location">
+                    <i data-lucide="map-pin" class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-cool))] group-hover:scale-110 transition-transform"></i>
                 </button>
 
                 <!-- Dynamic Search Results -->
@@ -278,14 +342,45 @@
             </div>
 
             <!-- Utility Buttons -->
-            <div class="flex items-center gap-2 md:gap-3 shrink-0">
-                <button id="theme-btn" class="glass-btn flex items-center justify-center p-3 md:p-3.5 rounded-full font-bold" title="Toggle Theme">
-                    <span id="theme-icon-wrapper"><i data-lucide="sun" class="w-5 h-5 md:w-6 md:h-6 text-[rgb(var(--c-main))] transition-colors duration-300"></i></span>
+            <div class="flex items-center gap-2 shrink-0">
+                <button id="theme-btn" class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold" title="Toggle Theme">
+                    <span id="theme-icon-wrapper"><i data-lucide="moon" class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i></span>
                 </button>
 
-                <button id="settings-btn" class="glass-btn flex items-center justify-center p-3 md:p-3.5 rounded-full font-bold" title="Settings">
-                    <i data-lucide="settings" class="w-5 h-5 md:w-6 md:h-6 text-[rgb(var(--c-main))] transition-colors duration-300"></i>
+                <button id="settings-btn" class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold" title="Settings">
+                    <i data-lucide="settings" class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pinned Cities Carousel -->
+    <div id="pinned-wrapper" class="w-full max-w-7xl mx-auto relative hidden z-20 mb-6 px-12 group">
+        <button id="scroll-left-btn" onclick="scrollPinned(-1)" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 glass rounded-full opacity-100 transition-transform hover:scale-110 hidden">
+            <i data-lucide="chevron-left" class="w-6 h-6 text-[rgb(var(--c-main))]"></i>
+        </button>
+        
+        <!-- Added py-10 and -my-8 so the large glass shadows don't get clipped flat by overflow-x-auto -->
+        <div id="pinned-cities-container" class="flex gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar py-10 -my-8 px-4 -mx-4">
+            <!-- Pinned items dynamically injected -->
+        </div>
+
+        <button id="scroll-right-btn" onclick="scrollPinned(1)" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 glass rounded-full opacity-100 transition-transform hover:scale-110 hidden">
+            <i data-lucide="chevron-right" class="w-6 h-6 text-[rgb(var(--c-main))]"></i>
+        </button>
+    </div>
+
+    <!-- Confirm Remove Modal -->
+    <div id="confirm-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
+        <div class="glass modal-glass w-full max-w-sm p-6 m-4 relative flex flex-col gap-4 text-center">
+            <div class="w-14 h-14 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center mx-auto mb-2 border border-red-500/30">
+                <i data-lucide="trash-2" class="w-7 h-7"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-[rgb(var(--text-primary))]">Remove City?</h3>
+            <p class="font-bold opacity-80 text-lg text-[rgb(var(--c-main))]" id="confirm-city-name"></p>
+            <div class="flex gap-3 mt-4 w-full">
+                <button onclick="cancelRemove()" class="glass-btn flex-1 py-3 rounded-xl font-bold">No, Keep</button>
+                <button onclick="confirmRemove()" class="glass-btn flex-1 py-3 rounded-xl font-bold !bg-red-500 !text-white !border-red-500 hover:!bg-red-600 shadow-[0_4px_15px_rgba(239,68,68,0.4)]">Yes, Remove</button>
             </div>
         </div>
     </div>
@@ -314,9 +409,10 @@
             <div class="flex flex-col gap-3">
                 <label class="font-bold text-sm opacity-80">Glass Accent Color</label>
                 <div class="flex gap-3 flex-wrap">
+                    <button class="color-btn w-10 h-10 rounded-full border-2 border-transparent bg-blue-500 active" data-color="blue" title="Blue"></button>
+                    <button class="color-btn w-10 h-10 rounded-full border-2 border-transparent bg-teal-500" data-color="teal" title="Teal"></button>
                     <button class="color-btn w-10 h-10 rounded-full border-2 border-transparent bg-pink-500" data-color="pink" title="Pink"></button>
-                    <button class="color-btn w-10 h-10 rounded-full border-2 border-transparent bg-blue-500" data-color="blue" title="Blue"></button>
-                    <button class="color-btn w-10 h-10 rounded-full border-2 border-transparent bg-purple-500 active" data-color="purple" title="Purple"></button>
+                    <button class="color-btn w-10 h-10 rounded-full border-2 border-transparent bg-purple-500" data-color="purple" title="Purple"></button>
                     <button class="color-btn w-10 h-10 rounded-full border-2 border-transparent bg-green-500" data-color="green" title="Green"></button>
                     <button class="color-btn w-10 h-10 rounded-full border-2 border-transparent bg-orange-500" data-color="orange" title="Orange"></button>
                     <button class="color-btn w-10 h-10 rounded-full border-2 border-transparent bg-cyan-500" data-color="cyan" title="Cyan"></button>
@@ -353,7 +449,7 @@
     </div>
 
     <!-- Info/Details Modal -->
-    <div id="info-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
+    <div id="info-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
         <div class="glass modal-glass w-full max-w-lg p-6 relative flex flex-col gap-4 max-h-[90vh] overflow-y-auto" style="--card-color: var(--c-main);">
             <button id="close-info" class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors z-10">
                 <i data-lucide="x" class="w-6 h-6"></i>
@@ -372,10 +468,14 @@
         
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Primary Weather Card (MAIN) -->
-            <div class="glass floating col-span-1 lg:col-span-1 p-8 flex flex-col justify-between relative overflow-hidden panel-clickable" onclick="showInfo('main')" style="--card-color: var(--c-main);" title="Click for Details">
-                <div class="absolute -top-20 -right-20 w-64 h-64 opacity-20 rounded-full blur-3xl pointer-events-none mix-blend-overlay transition-colors duration-300" style="background-color: rgb(var(--c-main));"></div>
+            <div class="glass floating col-span-1 lg:col-span-1 p-8 flex flex-col justify-between relative overflow-hidden panel-clickable group" onclick="showInfo('main')" style="--card-color: var(--c-main);" title="Click for Details">
                 
-                <div>
+                <!-- High-End Weather Effect Layer -->
+                <div id="weather-fx-layer" class="absolute inset-0 z-0 pointer-events-none opacity-60 mix-blend-overlay weather-fx-layer"></div>
+
+                <div class="absolute -top-20 -right-20 w-64 h-64 opacity-20 rounded-full blur-3xl pointer-events-none mix-blend-overlay transition-colors duration-300 z-0" style="background-color: rgb(var(--c-main));"></div>
+                
+                <div class="relative z-10">
                     <div class="flex justify-between items-start mb-6">
                         <div>
                             <h2 id="location-name" class="text-3xl lg:text-4xl font-extrabold mb-1 tracking-tight">Loading...</h2>
@@ -383,24 +483,24 @@
                         </div>
                     </div>
 
-                    <div id="main-icon-wrapper" class="flex items-center justify-center my-8 transition-transform hover:scale-110 duration-500">
+                    <div id="main-icon-wrapper" class="flex items-center justify-center my-8 transition-transform group-hover:scale-110 duration-500">
                         <i data-lucide="loader" class="w-40 h-40 drop-shadow-2xl text-[rgb(var(--c-main))] transition-colors duration-300 anim-spin-slow"></i>
                     </div>
                 </div>
 
-                <div>
+                <div class="relative z-10">
                     <div class="flex items-start gap-1 mb-1">
                         <span id="temperature" class="text-7xl lg:text-8xl font-extrabold tracking-tighter text-[rgb(var(--c-main))] drop-shadow-sm transition-colors duration-300">--</span>
                         <span class="text-3xl font-bold mt-2 text-[rgb(var(--c-main))] temp-unit-label transition-colors duration-300">°C</span>
                     </div>
-                    <p id="condition-desc" class="text-2xl font-bold capitalize tracking-wide mb-4">--</p>
+                    <p id="condition-desc" class="text-2xl font-bold capitalize tracking-wide mb-3">--</p>
                     
-                    <div class="flex flex-col gap-2 mt-2">
+                    <div class="flex flex-col gap-1.5 mt-2">
                         <div class="flex items-center gap-1 text-sm font-bold opacity-80" title="Feels Like">
                             <i data-lucide="thermometer" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-pulse"></i>
                             <span id="feels-like">Feels like --</span><span class="temp-unit-label">°C</span>
                         </div>
-                        <div class="flex items-center gap-4 text-sm font-bold opacity-80">
+                        <div class="flex items-center gap-4 text-sm font-bold opacity-80 mt-1">
                             <span class="flex items-center gap-1" title="Rain Probability"><i data-lucide="cloud-rain" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i> <span id="current-rain-prob">--</span>%</span>
                             <span class="flex items-center gap-1" title="Cloud Cover"><i data-lucide="cloud" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i> <span id="current-cloud-cover">--</span>%</span>
                         </div>
@@ -438,7 +538,7 @@
                 <!-- Humidity (COOL) -->
                 <div class="glass floating p-5 flex flex-col justify-between panel-clickable" onclick="showInfo('humidity')" style="--card-color: var(--c-cool);" title="Click for details">
                     <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-cool))] mb-3">
-                        <i data-lucide="droplets" class="w-6 h-6 anim-float"></i>
+                        <i data-lucide="droplets" class="w-6 h-6 anim-pulse"></i>
                         <span>Humidity</span>
                     </div>
                     <div>
@@ -462,7 +562,7 @@
                 <!-- AQI (EARTH) -->
                 <div class="glass floating floating-delay-2 p-5 flex flex-col justify-between panel-clickable" onclick="showInfo('aqi')" style="--card-color: var(--c-earth);" title="Click for AQI Table">
                     <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-earth))] mb-3">
-                        <i data-lucide="leaf" class="w-6 h-6 anim-rock"></i>
+                        <span id="aqi-icon-wrapper"><i data-lucide="leaf" class="w-6 h-6 anim-rock"></i></span>
                         <span>AQI</span>
                     </div>
                     <div>
@@ -484,20 +584,30 @@
                 </div>
 
                 <!-- Sunrise / Sunset (WARM) -->
-                <div class="glass floating floating-delay-1 p-5 flex flex-col justify-center col-span-2 md:col-span-2 panel-clickable" onclick="showInfo('sun')" style="--card-color: var(--c-warm);" title="Click for details">
+                <!-- Changed justify-center to justify-between to keep title at the top -->
+                <div class="glass floating floating-delay-1 p-5 flex flex-col justify-between col-span-2 md:col-span-2 panel-clickable" onclick="showInfo('sun')" style="--card-color: var(--c-warm);" title="Click for details">
                     <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-4">
-                        <i data-lucide="sunrise" class="w-6 h-6 anim-float"></i>
+                        <i data-lucide="sun" class="w-5 h-5"></i>
                         <span>Sun Cycle</span>
                     </div>
-                    <div class="flex justify-between items-center px-2">
-                        <div class="flex flex-col">
-                            <span class="text-xs font-bold opacity-70 mb-1">Sunrise</span>
-                            <span class="text-2xl font-extrabold" id="sunrise">--:--</span>
+                    <div class="flex-grow flex flex-row md:flex-col justify-between md:justify-center items-center md:items-start px-2 gap-0 md:gap-6 w-full mt-2">
+                        <!-- Sunrise -->
+                        <div class="flex items-center gap-2 md:gap-4">
+                            <i data-lucide="sunrise" class="w-10 h-10 md:w-14 md:h-14 text-orange-400 drop-shadow-md anim-float"></i>
+                            <div class="flex flex-col text-left">
+                                <span class="text-[10px] md:text-sm font-bold opacity-70 mb-0.5">Sunrise</span>
+                                <span class="text-lg md:text-4xl font-extrabold leading-none" id="sunrise">--:--</span>
+                            </div>
                         </div>
-                        <div class="h-10 border-l-2 border-[rgb(var(--c-warm))] opacity-30"></div>
-                        <div class="flex flex-col text-right">
-                            <span class="text-xs font-bold opacity-70 mb-1">Sunset</span>
-                            <span class="text-2xl font-extrabold" id="sunset">--:--</span>
+                        <!-- Divider on Mobile only -->
+                        <div class="h-8 md:h-0 border-l-2 border-[rgb(var(--c-warm))] opacity-30 block md:hidden"></div>
+                        <!-- Sunset -->
+                        <div class="flex items-center gap-2 md:gap-4">
+                            <i data-lucide="sunset" class="w-10 h-10 md:w-14 md:h-14 text-orange-500 drop-shadow-md anim-float" style="animation-delay: 1s"></i>
+                            <div class="flex flex-col text-left">
+                                <span class="text-[10px] md:text-sm font-bold opacity-70 mb-0.5">Sunset</span>
+                                <span class="text-lg md:text-4xl font-extrabold leading-none" id="sunset">--:--</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -546,18 +656,19 @@
         const _kPart3 = 'ZjEwNDUzMDI2MDkwNQ==';
         function getBuiltInKey() { return atob(_kPart1 + _kPart2 + _kPart3); }
 
-        // Use v2 storage key to ensure a clean slate and default to Chandigarh
-        const savedSettings = JSON.parse(localStorage.getItem('atish_weather_v2')) || {};
+        // LocalStorage keys and state. Defaulting theme to LIGHT and color to BLUE
+        const savedSettings = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
 
         const state = {
             lat: savedSettings.lat || 30.7333, 
             lon: savedSettings.lon || 76.7794,
-            locationName: savedSettings.locationName || "Chandigarh, India",
+            locationName: savedSettings.locationName || "Chandigarh",
             provider: savedSettings.provider || "open-meteo", 
             apiKey: savedSettings.apiKey || "",
-            theme: savedSettings.theme || "dark", 
-            color: savedSettings.color || "purple", 
+            theme: savedSettings.theme || "light", 
+            color: savedSettings.color || "blue", 
             units: savedSettings.units || "metric",
+            pinnedCities: savedSettings.pinnedCities || [],
             weatherData: null,
             isLoading: false
         };
@@ -593,6 +704,8 @@
             toast: document.getElementById('toast'),
             toastMsg: document.getElementById('toast-msg'),
             toastIconWrapper: document.getElementById('toast-icon-wrapper'),
+            pinnedWrapper: document.getElementById('pinned-wrapper'),
+            pinnedContainer: document.getElementById('pinned-cities-container'),
             
             locationName: document.getElementById('location-name'),
             dateTime: document.getElementById('date-time'),
@@ -615,12 +728,17 @@
             uvDesc: document.getElementById('uv-desc'),
             aqi: document.getElementById('aqi'),
             aqiDesc: document.getElementById('aqi-desc'),
+            aqiIconWrapper: document.getElementById('aqi-icon-wrapper'),
             sunrise: document.getElementById('sunrise'),
             sunset: document.getElementById('sunset'),
             forecastContainer: document.getElementById('forecast-container')
         };
 
         let searchTimeout;
+        let pressTimer;
+        let isDragging = false;
+        let startX = 0;
+        let cityToRemoveIndex = -1;
 
         function init() {
             document.documentElement.setAttribute('data-theme', state.theme);
@@ -687,6 +805,9 @@
             updateClock();
             setInterval(updateClock, 1000);
             fetchWeather();
+            
+            renderPinnedCities();
+            window.addEventListener('resize', updatePinnedArrows);
         }
 
         function checkApiFieldVisibility() {
@@ -724,16 +845,36 @@
             results.forEach(city => {
                 const div = document.createElement('div');
                 div.className = 'p-4 hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer flex flex-col transition-colors border-b border-black/5 dark:border-white/5 last:border-0';
-                // explicitly coloring the state/country subtext so it is readable on both themes
                 div.innerHTML = `<span class="font-extrabold text-[rgb(var(--c-main))] transition-colors duration-300">${city.name}</span><span class="text-xs font-bold text-gray-500 dark:text-gray-400 mt-1">${city.admin1 ? city.admin1 + ', ' : ''}${city.country}</span>`;
+                
                 div.addEventListener('click', () => {
+                    // Pin Logic: If first time searching, auto add current location as Home first
+                    if (state.pinnedCities.length === 0) {
+                        state.pinnedCities.push({
+                            name: state.locationName,
+                            lat: state.lat,
+                            lon: state.lon,
+                            isHome: true
+                        });
+                    }
+
                     state.lat = city.latitude;
                     state.lon = city.longitude;
                     state.locationName = city.name;
+                    
+                    const newCity = { name: city.name, lat: city.latitude, lon: city.longitude };
+                    const existingIndex = state.pinnedCities.findIndex(c => c.name === city.name && !c.isHome);
+                    if (existingIndex > 0) state.pinnedCities.splice(existingIndex, 1);
+                    
+                    // Insert at index 1 (after home)
+                    state.pinnedCities.splice(1, 0, newCity);
+                    if(state.pinnedCities.length > 6) state.pinnedCities.pop(); // Max 6
+
                     els.citySearch.value = '';
                     els.searchResults.classList.add('hidden');
                     saveLocationToStorage();
                     fetchWeather();
+                    renderPinnedCities();
                 });
                 els.searchResults.appendChild(div);
             });
@@ -741,11 +882,12 @@
         }
 
         function saveLocationToStorage() {
-            const saved = JSON.parse(localStorage.getItem('atish_weather_v2')) || {};
+            const saved = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
             saved.lat = state.lat;
             saved.lon = state.lon;
             saved.locationName = state.locationName;
-            localStorage.setItem('atish_weather_v2', JSON.stringify(saved));
+            saved.pinnedCities = state.pinnedCities;
+            localStorage.setItem('atish_weather_v5', JSON.stringify(saved));
         }
 
         function saveSettings() {
@@ -753,7 +895,7 @@
             state.apiKey = els.apiKeyInput.value;
             state.units = els.unitSelect.value;
 
-            localStorage.setItem('atish_weather_v2', JSON.stringify({
+            localStorage.setItem('atish_weather_v5', JSON.stringify({
                 lat: state.lat,
                 lon: state.lon,
                 locationName: state.locationName,
@@ -761,11 +903,13 @@
                 apiKey: state.apiKey,
                 theme: state.theme,
                 color: state.color,
-                units: state.units
+                units: state.units,
+                pinnedCities: state.pinnedCities
             }));
 
             els.settingsModal.classList.add('hidden');
             fetchWeather();
+            renderPinnedCities();
         }
 
         function toggleTheme() {
@@ -773,14 +917,177 @@
             document.documentElement.setAttribute('data-theme', state.theme);
             updateThemeIcon();
             
-            const saved = JSON.parse(localStorage.getItem('atish_weather_v2')) || {};
+            const saved = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
             saved.theme = state.theme;
-            localStorage.setItem('atish_weather_v2', JSON.stringify(saved));
+            localStorage.setItem('atish_weather_v5', JSON.stringify(saved));
         }
 
         function updateThemeIcon() {
             const iconName = state.theme === 'light' ? 'moon' : 'sun';
-            updateLucideIconWrapper(els.themeIconWrapper, iconName, "w-5 h-5 md:w-6 md:h-6 text-[rgb(var(--c-main))] transition-colors duration-300");
+            updateLucideIconWrapper(els.themeIconWrapper, iconName, "w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300");
+        }
+
+        function updatePinnedArrows() {
+            const lBtn = document.getElementById('scroll-left-btn');
+            const rBtn = document.getElementById('scroll-right-btn');
+            const isDesktop = window.innerWidth >= 768; // md breakpoint
+            const total = state.pinnedCities.length;
+            
+            // Show arrows only if more than 3 cities on desktop, or more than 1 on mobile
+            const needsScroll = isDesktop ? total > 3 : total > 1;
+            
+            if(needsScroll) {
+                lBtn.classList.remove('hidden');
+                rBtn.classList.remove('hidden');
+            } else {
+                lBtn.classList.add('hidden');
+                rBtn.classList.add('hidden');
+            }
+        }
+
+        // Pinned Cities Scroll Logic
+        window.scrollPinned = function(direction) {
+            const container = els.pinnedContainer;
+            const cardWidth = container.querySelector('.glass')?.offsetWidth || 0;
+            const scrollAmount = cardWidth + 16; 
+            container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+        }
+
+        // Pinned Cities Long Press Logic
+        window.handleTouchStart = function(index, e) {
+            isDragging = false;
+            startX = e.touches ? e.touches[0].clientX : e.clientX;
+            pressTimer = window.setTimeout(() => {
+                if (!isDragging) {
+                    isDragging = true;
+                    showConfirmModal(index);
+                }
+            }, 800);
+        }
+        
+        window.handleTouchMove = function(e) {
+            const currentX = e.touches ? e.touches[0].clientX : e.clientX;
+            if (Math.abs(currentX - startX) > 10) {
+                isDragging = true;
+                clearTimeout(pressTimer);
+            }
+        }
+
+        window.handleTouchEnd = function() {
+            clearTimeout(pressTimer);
+        }
+        
+        window.handlePinnedClick = function(index) {
+            if (!isDragging) {
+                const c = state.pinnedCities[index];
+                state.lat = c.lat;
+                state.lon = c.lon;
+                state.locationName = c.name;
+                saveLocationToStorage();
+                fetchWeather();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        window.showConfirmModal = function(index) {
+            cityToRemoveIndex = index;
+            document.getElementById('confirm-city-name').textContent = state.pinnedCities[index].name;
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+
+        window.confirmRemove = function() {
+            if (cityToRemoveIndex > -1) {
+                const removed = state.pinnedCities[cityToRemoveIndex].name;
+                state.pinnedCities.splice(cityToRemoveIndex, 1);
+
+                saveLocationToStorage();
+                renderPinnedCities();
+                showToast(`${removed} removed`, "trash-2", "red");
+                document.getElementById('confirm-modal').classList.add('hidden');
+                cityToRemoveIndex = -1;
+            }
+        }
+
+        window.cancelRemove = function() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            cityToRemoveIndex = -1;
+        }
+
+        async function renderPinnedCities() {
+            if (state.pinnedCities.length === 0) {
+                els.pinnedWrapper.classList.add('hidden');
+                return;
+            }
+            els.pinnedWrapper.classList.remove('hidden');
+            
+            const lats = state.pinnedCities.map(c => c.lat).join(',');
+            const lons = state.pinnedCities.map(c => c.lon).join(',');
+            const unitParams = state.units === 'imperial' ? '&temperature_unit=fahrenheit' : '';
+            
+            const wUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,weather_code&daily=precipitation_probability_max,temperature_2m_min&timezone=auto${unitParams}`;
+            const aUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lats}&longitude=${lons}&current=us_aqi&timezone=auto`;
+            
+            try {
+                const [wRes, aRes] = await Promise.all([
+                    fetch(wUrl),
+                    fetch(aUrl).catch(() => null)
+                ]);
+
+                const wData = await wRes.json();
+                const aData = aRes && aRes.ok ? await aRes.json() : null;
+
+                const results = Array.isArray(wData) ? wData : [wData];
+                const aqiResults = aData ? (Array.isArray(aData) ? aData : [aData]) : [];
+                
+                els.pinnedContainer.innerHTML = '';
+                results.forEach((d, i) => {
+                    const c = state.pinnedCities[i];
+                    const { icon } = mapWMOCode(d.current.weather_code, d.current.is_day || 1);
+                    const temp = Math.round(d.current.temperature_2m);
+                    const minTemp = Math.round(d.daily?.temperature_2m_min?.[0] || 0);
+                    const rain = d.daily?.precipitation_probability_max?.[0] || 0;
+                    const humidity = d.current.relative_humidity_2m || 0;
+                    
+                    const aqiObj = aqiResults[i];
+                    const aqi = aqiObj && aqiObj.current && aqiObj.current.us_aqi ? aqiObj.current.us_aqi : "--";
+                    const aqiCol = getAqiColorClass(parseFloat(aqi));
+                    
+                    const item = document.createElement('div');
+                    item.className = 'glass flex flex-col p-4 shrink-0 snap-center w-[85vw] md:w-[calc(33.333%-1rem)] cursor-pointer hover:bg-white/10 transition-colors group/card select-none';
+                    item.style.setProperty('--card-color', 'var(--c-main)');
+                    
+                    // Attach interaction events
+                    item.onmousedown = (e) => handleTouchStart(i, e);
+                    item.onmousemove = handleTouchMove;
+                    item.onmouseup = handleTouchEnd;
+                    item.onmouseleave = handleTouchEnd;
+                    item.ontouchstart = (e) => handleTouchStart(i, e);
+                    item.ontouchmove = handleTouchMove;
+                    item.ontouchend = handleTouchEnd;
+                    item.onclick = () => handlePinnedClick(i);
+
+                    item.innerHTML = `
+                        <div class="flex justify-between items-start w-full mb-1">
+                            <span class="font-extrabold text-base md:text-lg text-[rgb(var(--c-main))] truncate pr-2 group-hover/card:scale-[1.02] transition-transform origin-left flex items-center gap-1">${c.isHome ? '<i data-lucide="map-pin" class="w-4 h-4"></i>' : ''} ${c.name}</span>
+                            <i data-lucide="${icon}" class="w-8 h-8 md:w-10 md:h-10 text-[rgb(var(--c-main))] shrink-0 drop-shadow-md ${getIconAnimClass(icon)}"></i>
+                        </div>
+                        <div class="flex items-end gap-2 w-full mt-1">
+                            <span class="text-3xl font-extrabold text-[rgb(var(--c-main))] leading-none">${temp}°</span>
+                            <span class="text-xs font-bold text-blue-500 dark:text-blue-400 opacity-80 mb-1">Min: ${minTemp}°</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] sm:text-xs font-bold opacity-80 mt-3 w-full bg-black/5 dark:bg-white/5 px-2 py-1.5 rounded-lg border border-black/5 dark:border-white/10">
+                            <span title="Rain Probability" class="flex items-center gap-1"><i data-lucide="cloud-rain" class="w-3 h-3 text-blue-500 dark:text-blue-400"></i> ${rain}%</span>
+                            <span title="Humidity" class="flex items-center gap-1"><i data-lucide="droplets" class="w-3 h-3 text-[rgb(var(--c-cool))]"></i> ${humidity}%</span>
+                            <span title="AQI" class="flex items-center gap-1 ${aqiCol}"><i data-lucide="leaf" class="w-3 h-3"></i> ${aqi}</span>
+                        </div>
+                    `;
+                    els.pinnedContainer.appendChild(item);
+                });
+                lucide.createIcons();
+                updatePinnedArrows();
+            } catch (e) {
+                console.error("Failed fetching pinned cities", e);
+            }
         }
 
         function getUserLocation() {
@@ -796,8 +1103,18 @@
                     state.lat = position.coords.latitude;
                     state.lon = position.coords.longitude;
                     await reverseGeocode();
+                    
+                    // Update index 0 to Home
+                    state.pinnedCities[0] = {
+                        name: state.locationName,
+                        lat: state.lat,
+                        lon: state.lon,
+                        isHome: true
+                    };
+
                     saveLocationToStorage();
                     fetchWeather();
+                    renderPinnedCities();
                 },
                 (error) => {
                     setLoading(false);
@@ -837,14 +1154,15 @@
                     content = `<p class="font-bold opacity-80">The current temperature is <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${w.temp}${tu}</span>, with a condition of <span class="capitalize font-extrabold text-lg text-[rgb(var(--c-main))]">${w.conditionText}</span>.</p>
                                <p class="font-medium opacity-70 mt-2">The "Feels Like" temperature of ${w.feelsLike}${tu} factors in wind and humidity to give you a better idea of how it actually feels outside.</p>
                                <div class="flex flex-col gap-2 mt-3 p-4 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10">
-                                   <div class="flex justify-between items-center"><span class="font-bold"><i data-lucide="cloud-rain" class="inline w-4 h-4 mr-1 anim-float"></i> Rain Probability</span><span class="font-extrabold">${w.rainProb}%</span></div>
-                                   <div class="flex justify-between items-center"><span class="font-bold"><i data-lucide="cloud" class="inline w-4 h-4 mr-1 anim-float"></i> Cloud Cover</span><span class="font-extrabold">${w.cloudCover}%</span></div>
+                                   <div class="flex justify-between items-center"><span class="font-bold"><i data-lucide="cloud-rain" class="inline w-4 h-4 mr-1 anim-float"></i> Rain Probability</span><span class="font-extrabold text-blue-500">${w.rainProb}%</span></div>
+                                   <div class="flex justify-between items-center"><span class="font-bold"><i data-lucide="cloud" class="inline w-4 h-4 mr-1 anim-float"></i> Cloud Cover</span><span class="font-extrabold text-gray-500">${w.cloudCover}%</span></div>
                                </div>`;
                     break;
                 }
                 case 'uv': {
                     title = 'UV Index'; icon = 'sun'; colorCls = 'text-[rgb(var(--c-warm))]';
-                    const uv = parseFloat(w.uvIndex) || 0;
+                    const showUv = w.uvIndex.current !== "--" ? w.uvIndex.current : w.uvIndex.max;
+                    const uv = parseFloat(showUv) || 0;
                     content = `
                         <p class="opacity-80 font-medium">The Ultraviolet (UV) Index indicates the risk of harm from unprotected sun exposure.</p>
                         <div class="w-full rounded-xl overflow-hidden border border-black/10 dark:border-white/10 mt-3">
@@ -861,7 +1179,7 @@
                         </div>
                         <div class="p-4 rounded-xl border border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5 mt-3 flex justify-between items-center">
                             <span class="font-bold">Your Location:</span>
-                            <span class="font-extrabold text-lg">${w.uvIndex} (${getUvDescription(w.uvIndex)})</span>
+                            <span class="font-extrabold text-lg">${showUv} (${getUvDescription(showUv)})</span>
                         </div>`;
                     break;
                 }
@@ -925,13 +1243,17 @@
                 case 'forecast': {
                     title = '7-Day Forecast'; icon = 'calendar-days'; colorCls = 'text-[rgb(var(--c-main))]';
                     const list = w.forecast.map(f => `
-                        <div class="flex justify-between items-center p-3 border-b border-black/5 dark:border-white/5 last:border-0">
-                            <span class="font-bold w-1/3">${f.day}</span>
-                            <i data-lucide="${f.icon}" class="w-6 h-6 w-1/3 text-center ${getIconAnimClass(f.icon)}"></i>
-                            <div class="font-extrabold w-1/3 text-right"><span class="text-red-500">${f.max}°</span> <span class="text-blue-500 opacity-70">${f.min}°</span></div>
+                        <div class="flex justify-between items-center p-4 border-b border-black/5 dark:border-white/5 last:border-0 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                            <span class="font-extrabold w-1/4 text-sm md:text-base">${f.day}</span>
+                            <div class="flex items-center justify-center w-2/4 gap-3 md:gap-5">
+                                <span class="flex items-center gap-1 text-blue-500 dark:text-blue-400 text-xs md:text-sm font-bold w-14 justify-end" title="Rain Probability"><i data-lucide="cloud-rain" class="w-3.5 h-3.5"></i> ${f.rainProb}%</span>
+                                <i data-lucide="${f.icon}" class="w-8 h-8 md:w-10 md:h-10 text-[rgb(var(--c-main))] ${getIconAnimClass(f.icon)} shrink-0 drop-shadow-md"></i>
+                                <span class="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-xs md:text-sm font-bold w-14 justify-start" title="Cloud Cover"><i data-lucide="cloud" class="w-3.5 h-3.5"></i> ${f.cloudCover}%</span>
+                            </div>
+                            <div class="font-extrabold w-1/4 text-right text-sm md:text-base"><span class="text-red-500 drop-shadow-sm">${f.max}°</span> <span class="text-blue-500 opacity-80 ml-1">${f.min}°</span></div>
                         </div>
                     `).join('');
-                    content = `<div class="w-full rounded-xl border border-black/10 dark:border-white/10 mt-2">${list}</div>`;
+                    content = `<div class="w-full rounded-xl border border-black/10 dark:border-white/10 mt-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-inner">${list}</div>`;
                     break;
                 }
             }
@@ -1021,7 +1343,7 @@
                 windSpeed: Math.round(curr.wind_speed_10m),
                 windDir: curr.wind_direction_10m,
                 pressure: Math.round(curr.surface_pressure),
-                uvIndex: daily.uv_index_max && daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : "--",
+                uvIndex: { current: "--", max: daily.uv_index_max && daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : "--" },
                 aqi: aData && aData.current && aData.current.us_aqi ? aData.current.us_aqi : "--",
                 sunrise: formatTime(daily.sunrise[0]),
                 sunset: formatTime(daily.sunset[0]),
@@ -1068,7 +1390,7 @@
                 windSpeed: wSpeed,
                 windDir: data.wind.deg,
                 pressure: data.main.pressure,
-                uvIndex: "--", aqi: "--",
+                uvIndex: { current: "--", max: "--" }, aqi: "--",
                 sunrise: formatTime(data.sys.sunrise * 1000, true),
                 sunset: formatTime(data.sys.sunset * 1000, true),
                 conditionText: data.weather[0].description,
@@ -1115,7 +1437,10 @@
                 windSpeed: Math.round(state.units === 'imperial' ? curr.wind_mph : curr.wind_kph),
                 windDir: curr.wind_degree,
                 pressure: curr.pressure_mb,
-                uvIndex: curr.uv,
+                uvIndex: { 
+                    current: curr.uv !== undefined ? curr.uv.toFixed(1) : "--", 
+                    max: today.uv !== undefined ? today.uv.toFixed(1) : "--" 
+                },
                 aqi: curr.air_quality ? Math.round(curr.air_quality['us-epa-index'] * 50) : "--",
                 sunrise: data.forecast.forecastday[0].astro.sunrise,
                 sunset: data.forecast.forecastday[0].astro.sunset,
@@ -1151,7 +1476,7 @@
                 windSpeed: w,
                 windDir: 0,
                 pressure: 1013,
-                uvIndex: "--", aqi: "--", sunrise: "--:--", sunset: "--:--",
+                uvIndex: { current: "--", max: "--" }, aqi: "--", sunrise: "--:--", sunset: "--:--",
                 conditionText: curr.weather,
                 iconType: curr.weather.includes('rain') ? 'cloud-rain' : (curr.weather.includes('clear') ? 'sun' : 'cloud'),
                 rainProb: "--",
@@ -1174,6 +1499,15 @@
             if (aqi <= 200) return "Unhealthy";
             if (aqi <= 300) return "Very Unhealthy";
             return "Hazardous";
+        }
+
+        function getAqiColorClass(aqi) {
+            if (isNaN(aqi)) return 'text-[rgb(var(--c-earth))]';
+            if (aqi <= 50) return 'text-green-500';
+            if (aqi <= 100) return 'text-yellow-500';
+            if (aqi <= 150) return 'text-orange-500';
+            if (aqi <= 200) return 'text-red-500';
+            return 'text-purple-500';
         }
 
         function getUvDescription(uv) {
@@ -1237,11 +1571,17 @@
             els.tempHigh.textContent = `${w.high}`;
             els.tempLow.textContent = `${w.low}`;
             
-            els.uvIndex.textContent = w.uvIndex;
-            els.uvDesc.textContent = getUvDescription(w.uvIndex);
+            const uvCur = w.uvIndex.current;
+            const uvMax = w.uvIndex.max;
+            const showUv = uvCur !== "--" ? uvCur : uvMax;
+            
+            els.uvIndex.textContent = showUv;
+            els.uvDesc.textContent = uvCur !== "--" ? `Max today: ${uvMax}` : `Daily Max`;
 
+            const aqiVal = parseFloat(w.aqi);
             els.aqi.textContent = w.aqi;
             els.aqiDesc.textContent = getAqiDescription(w.aqi);
+            updateLucideIconWrapper(els.aqiIconWrapper, 'leaf', `w-6 h-6 anim-rock ${getAqiColorClass(aqiVal)}`);
             
             els.humidity.textContent = w.humidity;
             els.humidityDesc.textContent = w.humidity > 60 ? "High moisture" : w.humidity < 30 ? "Dry air" : "Comfortable";
@@ -1253,6 +1593,17 @@
             els.sunrise.textContent = w.sunrise;
             els.sunset.textContent = w.sunset;
 
+            // Apply Dynamic FX Layer based on weather condition
+            const fxLayer = document.getElementById('weather-fx-layer');
+            fxLayer.className = 'absolute inset-0 z-0 pointer-events-none opacity-60 mix-blend-overlay weather-fx-layer transition-all duration-1000';
+            
+            if(w.iconType.includes('lightning')) fxLayer.classList.add('weather-anim-lightning');
+            else if(w.iconType.includes('rain') || w.iconType.includes('drizzle')) fxLayer.classList.add('weather-anim-rain');
+            else if(w.iconType.includes('snow')) fxLayer.classList.add('weather-anim-snow');
+            else if(w.iconType.includes('cloud')) fxLayer.classList.add('weather-anim-cloud');
+            else if(w.iconType === 'sun') fxLayer.classList.add('weather-anim-sun');
+            else if(w.iconType === 'moon') fxLayer.classList.add('weather-anim-moon');
+
             const mainAnim = getIconAnimClass(w.iconType);
             updateLucideIconWrapper(els.mainIconWrapper, w.iconType, `w-48 h-48 drop-shadow-2xl text-[rgb(var(--c-main))] transition-colors duration-300 ${mainAnim}`);
 
@@ -1260,7 +1611,7 @@
             els.forecastContainer.innerHTML = '';
             w.forecast.forEach((f) => {
                 const item = document.createElement('div');
-                item.className = 'glass flex flex-col items-center justify-center p-3 sm:p-4 lg:p-5 w-full rounded-3xl transform transition hover:bg-white/10 border-none shadow-none pointer-events-none';
+                item.className = 'glass flex flex-col items-center justify-center p-3 sm:p-4 lg:p-5 w-full rounded-3xl transform transition hover:bg-white/10 border-none shadow-none pointer-events-none last:col-span-2 sm:last:col-span-1 lg:last:col-span-1';
                 
                 const fAnim = getIconAnimClass(f.icon);
                 item.innerHTML = `
@@ -1269,10 +1620,6 @@
                     <div class="flex gap-2 lg:gap-3 text-sm md:text-base lg:text-lg font-extrabold">
                         <span class="text-[rgb(var(--c-main))] transition-colors duration-300">${f.max}°</span>
                         <span class="text-[rgb(var(--c-main))] opacity-60 transition-colors duration-300">${f.min}°</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1 text-xs font-bold opacity-70 mt-2 w-full">
-                        <div class="flex items-center gap-1" title="Rain Probability"><i data-lucide="cloud-rain" class="w-3 h-3 anim-float"></i> ${f.rainProb}%</div>
-                        <div class="flex items-center gap-1" title="Cloud Cover"><i data-lucide="cloud" class="w-3 h-3 anim-float"></i> ${f.cloudCover}%</div>
                     </div>
                 `;
                 els.forecastContainer.appendChild(item);
