@@ -346,7 +346,8 @@
     <div class="bg-air-flow"></div>
 
     <!-- Header / Controls -->
-    <div class="glass glass-header animated-outline-1px w-full max-w-7xl p-3 md:p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-3 md:gap-4 mx-auto" style="--card-color: var(--c-main);">
+    <!-- Added mt-1 specifically for 4px clearance on mobile so it's not stuck to the top -->
+    <div class="glass glass-header animated-outline-1px w-full max-w-7xl mt-1 md:mt-0 p-3 md:p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-3 md:gap-4 mx-auto" style="--card-color: var(--c-main);">
         
         <!-- Logo -->
         <div class="flex items-center gap-3 w-full lg:w-auto justify-center lg:justify-start flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.location.reload()" title="Reload Station">
@@ -420,18 +421,20 @@
     </div>
 
     <!-- Settings Modal -->
-    <div id="settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity">
-        <div class="glass modal-glass w-full max-w-[95vw] lg:max-w-4xl p-4 md:p-6 m-2 relative flex flex-col gap-3 lg:gap-5" style="--card-color: var(--c-main);">
-            <button id="close-settings" class="absolute top-3 right-3 lg:top-4 lg:right-4 text-secondary hover:text-primary transition-colors">
+    <!-- Added p-4 to outer wrapper to ensure the modal respects left/right boundaries on mobile -->
+    <div id="settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
+        <div class="glass modal-glass w-full max-w-3xl p-5 md:p-6 relative flex flex-col gap-4 lg:gap-5 max-h-[90vh] overflow-y-auto hide-scrollbar" style="--card-color: var(--c-main);">
+            <button id="close-settings" class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors">
                 <i data-lucide="x" class="w-5 h-5 lg:w-6 lg:h-6"></i>
             </button>
             
             <h2 class="text-xl lg:text-2xl font-extrabold flex items-center gap-2 lg:gap-3 text-[rgb(var(--c-main))] transition-colors duration-300 mb-1">
-                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Icon" class="w-7 h-7 lg:w-8 lg:h-8 rounded-full border-2 border-[rgb(var(--c-main))] shadow-md">
+                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Icon" loading="lazy" class="w-7 h-7 lg:w-8 lg:h-8 rounded-full border-2 border-[rgb(var(--c-main))] shadow-md">
                 Settings
             </h2>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-5">
+            <!-- Changed to 2-column grid layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-5">
                 
                 <!-- Column 1 -->
                 <div class="flex flex-col gap-3">
@@ -467,7 +470,6 @@
                             <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-60"></i>
                         </div>
                     </div>
-                    <p class="text-[10px] md:text-xs opacity-70 font-medium">Auto-syncs when you use GPS Location.</p>
                 </div>
 
                 <!-- Column 2 -->
@@ -496,8 +498,8 @@
                     </div>
                 </div>
 
-                <!-- Column 3 -->
-                <div class="flex flex-col gap-3 justify-between">
+                <!-- Row 2: Full Width Items (Spans 2 columns on large screens) -->
+                <div class="flex flex-col gap-4 lg:col-span-2 pt-2 border-t border-black/5 dark:border-white/5">
                     <div class="flex flex-col gap-2">
                         <label class="font-bold text-xs lg:text-sm opacity-80">Glass Accent Color</label>
                         <div class="flex gap-2 flex-wrap">
@@ -511,10 +513,10 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-col gap-3 mt-auto">
-                        <div class="p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-between shrink-0">
+                    <div class="flex flex-col gap-3 mt-1 w-full">
+                        <div class="p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-between w-full shrink-0 gap-4">
                             <div class="flex items-center gap-2">
-                                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Atish Ak Sharma" class="w-8 h-8 rounded-full border border-[rgb(var(--c-main))]">
+                                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Atish Ak Sharma" loading="lazy" class="w-8 h-8 rounded-full border border-[rgb(var(--c-main))]">
                                 <div class="flex flex-col">
                                     <span class="text-[10px] opacity-70 font-bold leading-tight">Developer Portfolio</span>
                                     <span class="text-xs font-extrabold text-[rgb(var(--c-main))] leading-tight">Atish Ak Sharma</span>
@@ -524,7 +526,7 @@
                                 <i data-lucide="external-link" class="w-3.5 h-3.5 text-[rgb(var(--c-main))]"></i>
                             </a>
                         </div>
-                        <button id="save-settings-btn" class="w-full py-2.5 rounded-xl font-extrabold text-sm md:text-base text-white transition-all hover:scale-[1.02] active:scale-[0.98] duration-300" style="background-color: rgb(var(--c-main)); box-shadow: 0 4px 15px rgba(var(--c-main), 0.3);">
+                        <button id="save-settings-btn" class="w-full py-3 px-6 rounded-xl font-extrabold text-sm md:text-base text-white transition-all hover:scale-[1.02] active:scale-[0.98] duration-300" style="background-color: rgb(var(--c-main)); box-shadow: 0 4px 15px rgba(var(--c-main), 0.3);">
                             Save & Apply
                         </button>
                     </div>
@@ -682,7 +684,8 @@
                             <i data-lucide="sun" class="w-4 h-4 lg:w-5 lg:h-5"></i>
                             <span>Sun Cycle</span>
                         </div>
-                        <div class="flex-grow flex flex-col justify-center gap-3 w-full mt-1 px-1 lg:px-2">
+                        <!-- Added px-8 on mobile to ensure it doesn't stretch to the edges -->
+                        <div class="flex-grow flex flex-col justify-center gap-3 w-full mt-1 px-8 lg:px-2 mx-auto">
                             <!-- Sunrise -->
                             <div class="flex items-center justify-start gap-3 w-full">
                                 <div class="flex items-center gap-2 lg:gap-3 w-[75px]">
@@ -1273,8 +1276,9 @@
             switch(type) {
                 case 'main': {
                     title = 'Current Weather'; icon = 'cloud-lightning'; colorCls = 'text-[rgb(var(--c-main))]';
-                    content = `<p class="font-bold opacity-80">The current temperature is <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${w.temp}${tu}</span>, with a condition of <span class="capitalize font-extrabold text-lg text-[rgb(var(--c-main))]">${w.conditionText}</span>.</p>
-                               <p class="font-medium opacity-70 mt-2">The "Feels Like" temperature of ${w.feelsLike}${tu} factors in wind and humidity to give you a better idea of how it actually feels outside.</p>
+                    content = `<p class="font-bold opacity-80 mb-2">Location: <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${state.locationName}</span></p>
+                               <p class="font-bold opacity-80">Current temperature is <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${w.temp}${tu}</span>, with a condition of <span class="capitalize font-extrabold text-lg text-[rgb(var(--c-main))]">${w.conditionText}</span>.</p>
+                               <p class="font-medium opacity-80 mt-2">Feels like: <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${w.feelsLike}${tu}</span></p>
                                <div class="flex flex-col gap-2 mt-3 p-4 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10">
                                    <div class="flex justify-between items-center"><span class="font-bold"><i data-lucide="cloud-rain" class="inline w-4 h-4 mr-1 anim-float"></i> Rain Probability</span><span class="font-extrabold text-blue-500">${w.rainProb}%</span></div>
                                    <div class="flex justify-between items-center"><span class="font-bold"><i data-lucide="cloud" class="inline w-4 h-4 mr-1 anim-float"></i> Cloud Cover</span><span class="font-extrabold text-gray-500">${w.cloudCover}%</span></div>
@@ -1761,7 +1765,7 @@
                     <i data-lucide="${f.icon}" class="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 mb-2 lg:mb-3 drop-shadow-md text-[rgb(var(--c-main))] transition-colors duration-300 ${fAnim}"></i>
                     <div class="flex gap-1.5 lg:gap-2 text-xs md:text-sm lg:text-base font-extrabold">
                         <span class="text-[rgb(var(--c-main))] transition-colors duration-300">${f.max}°</span>
-                        <span class="text-[rgb(var(--c-main))] opacity-60 transition-colors duration-300">${f.min}°</span>
+                        <span class="text-blue-500 transition-colors duration-300">${f.min}°</span>
                     </div>
                 `;
                 els.forecastContainer.appendChild(item);
