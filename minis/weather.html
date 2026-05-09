@@ -76,6 +76,71 @@
             overflow-x: hidden;
             display: flex;
             flex-direction: column;
+            zoom: 0.89;
+        }
+
+        /* 3D Card Flip - Book Page Peel */
+        .card-flip-out-left {
+            animation: flipOutLeft 0.5s ease-in forwards;
+            transform-origin: left center;
+        }
+        .card-flip-in-right {
+            animation: flipInRight 0.5s ease-out forwards;
+            transform-origin: right center;
+        }
+        .card-flip-out-right {
+            animation: flipOutRight 0.5s ease-in forwards;
+            transform-origin: right center;
+        }
+        .card-flip-in-left {
+            animation: flipInLeft 0.5s ease-out forwards;
+            transform-origin: left center;
+        }
+        @keyframes flipOutLeft {
+            0% { transform: perspective(2000px) rotateY(0deg); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: perspective(2000px) rotateY(-90deg); opacity: 0; }
+        }
+        @keyframes flipInRight {
+            0% { transform: perspective(2000px) rotateY(90deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: perspective(2000px) rotateY(0deg); opacity: 1; }
+        }
+        @keyframes flipOutRight {
+            0% { transform: perspective(2000px) rotateY(0deg); opacity: 1; }
+            50% { opacity: 1; }
+            100% { transform: perspective(2000px) rotateY(90deg); opacity: 0; }
+        }
+        @keyframes flipInLeft {
+            0% { transform: perspective(2000px) rotateY(-90deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: perspective(2000px) rotateY(0deg); opacity: 1; }
+        }
+
+        /* Swipe notch indicators */
+        .swipe-notch {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 48px;
+            border-radius: 8px;
+            background: rgba(var(--c-main), 0.5);
+            z-index: 20;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        .swipe-notch-left { left: 8px; }
+        .swipe-notch-right { right: 8px; }
+
+        /* Animated Locate Button Outline */
+        @keyframes locatePulse {
+            0% { box-shadow: 0 0 0 0 rgba(var(--c-cool), 0.5); }
+            70% { box-shadow: 0 0 0 6px rgba(var(--c-cool), 0); }
+            100% { box-shadow: 0 0 0 0 rgba(var(--c-cool), 0); }
+        }
+        .locate-animated {
+            animation: locatePulse 2s ease-in-out infinite;
         }
 
         /* Flowing Air Background */
@@ -145,8 +210,8 @@
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            padding: 2px;
-            background: linear-gradient(90deg, rgba(var(--c-main), 1), transparent, rgba(var(--c-main), 1), transparent);
+            padding: var(--out-w, 4px);
+            background: linear-gradient(90deg, rgba(var(--out-c, var(--c-main)), 1), transparent, rgba(var(--out-c, var(--c-main)), 1), transparent);
             background-size: 300% 300%;
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
@@ -340,14 +405,36 @@
         }
     </style>
 </head>
-<body class="p-2 md:p-6 lg:p-8 items-center flex-grow">
+<body class="p-2 md:p-6 lg:p-8 items-center flex-grow" id="app-body">
 
     <!-- Animated Flowing Air Background -->
     <div class="bg-air-flow"></div>
 
+    <!-- Mobile Bottom Navigation Bar -->
+    <div id="mobile-bottom-bar" class="fixed bottom-0 left-0 right-0 z-50 lg:hidden hidden" style="padding-bottom: env(safe-area-inset-bottom);">
+        <div class="glass glass-header mx-2 mb-2 p-2 flex items-center gap-2 rounded-2xl" style="--card-color: var(--c-main); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);">
+            <!-- Search -->
+            <div class="relative flex-1 rounded-full animated-outline" style="--out-w: 2px; --out-c: var(--c-cool);">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50"></i>
+                <input type="text" id="city-search-mobile" placeholder="Search city..." autocomplete="off" class="glass-input w-full pl-9 pr-10 py-2.5 rounded-full font-bold text-sm">
+                <button id="locate-btn-mobile" class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 rounded-full border-2 border-[rgb(var(--c-cool))] hover:bg-black/5 dark:hover:bg-white/10 transition-colors locate-animated" title="Use Current Location">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-[rgb(var(--c-cool))]"></i>
+                </button>
+                <div id="search-results-mobile" class="absolute bottom-[110%] left-0 right-0 !rounded-2xl hidden flex-col overflow-y-auto max-h-64 search-scroll z-50 bg-[#f8fafc] dark:bg-[#0f172a] backdrop-blur-3xl border border-black/10 dark:border-white/10 shadow-2xl"></div>
+            </div>
+            <!-- Theme Toggle -->
+            <button id="theme-btn-mobile" class="glass-btn flex items-center justify-center p-2.5 rounded-full relative animated-outline" title="Toggle Theme" style="--out-w: 2px; --out-c: var(--c-warm);">
+                <span id="theme-icon-wrapper-mobile"><i data-lucide="moon" class="w-5 h-5 text-[rgb(var(--c-main))]"></i></span>
+            </button>
+            <!-- Settings -->
+            <button id="settings-btn-mobile" class="glass-btn flex items-center justify-center p-2.5 rounded-full relative animated-outline" title="Settings" style="--out-w: 2px; --out-c: var(--c-earth);">
+                <i data-lucide="settings" class="w-5 h-5 text-[rgb(var(--c-main))]"></i>
+            </button>
+        </div>
+    </div>
+
     <!-- Header / Controls -->
-    <!-- Added mt-1 specifically for 4px clearance on mobile so it's not stuck to the top -->
-    <div class="glass glass-header animated-outline-1px w-full max-w-7xl mt-1 md:mt-0 p-3 md:p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-3 md:gap-4 mx-auto" style="--card-color: var(--c-main);">
+    <div id="header-bar" class="glass glass-header animated-outline-1px w-full max-w-7xl mt-1 md:mt-0 p-3 md:p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-3 md:gap-4 mx-auto" style="--card-color: var(--c-main);">
         
         <!-- Logo -->
         <div class="flex items-center gap-3 w-full lg:w-auto justify-center lg:justify-start flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.location.reload()" title="Reload Station">
@@ -362,14 +449,14 @@
         </div>
 
         <!-- Right Controls Container: Search + Buttons in Single Row -->
-        <div class="flex flex-row items-center gap-2 md:gap-3 w-full lg:w-auto lg:ml-auto">
+        <div id="header-controls" class="flex flex-row items-center gap-2 md:gap-3 w-full lg:w-auto lg:ml-auto">
             
             <!-- Search Bar with integrated Location Button -->
-            <div class="relative w-full flex-1 lg:w-96">
+            <div class="relative w-full flex-1 lg:w-96 rounded-full animated-outline" style="--out-w: 2px; --out-c: var(--c-cool);">
                 <i data-lucide="search" class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-50 text-secondary"></i>
                 <input type="text" id="city-search" placeholder="Search any city..." autocomplete="off" class="glass-input w-full pl-9 md:pl-12 pr-10 md:pr-12 py-2.5 md:py-3.5 rounded-full font-bold text-sm md:text-base">
                 
-                <button id="locate-btn" class="absolute right-1.5 md:right-2 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full border-2 border-[rgb(var(--c-cool))] shadow-sm hover:bg-black/5 dark:hover:bg-white/10 transition-colors group" title="Use Current Location">
+                <button id="locate-btn" class="absolute right-1.5 md:right-2 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full border-2 border-[rgb(var(--c-cool))] shadow-sm hover:bg-black/5 dark:hover:bg-white/10 transition-colors group locate-animated" title="Use Current Location">
                     <i data-lucide="map-pin" class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-cool))] group-hover:scale-110 transition-transform"></i>
                 </button>
 
@@ -379,11 +466,11 @@
 
             <!-- Utility Buttons -->
             <div class="flex items-center gap-2 shrink-0">
-                <button id="theme-btn" class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold" title="Toggle Theme">
+                <button id="theme-btn" class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold relative animated-outline" title="Toggle Theme" style="--out-w: 2px; --out-c: var(--c-warm);">
                     <span id="theme-icon-wrapper"><i data-lucide="moon" class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i></span>
                 </button>
 
-                <button id="settings-btn" class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold" title="Settings">
+                <button id="settings-btn" class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold relative animated-outline" title="Settings" style="--out-w: 2px; --out-c: var(--c-earth);">
                     <i data-lucide="settings" class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i>
                 </button>
             </div>
@@ -421,58 +508,50 @@
     </div>
 
     <!-- Settings Modal -->
-    <!-- Added p-4 to outer wrapper to ensure the modal respects left/right boundaries on mobile -->
     <div id="settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
         <div class="glass modal-glass w-full max-w-3xl p-5 md:p-6 relative flex flex-col gap-4 lg:gap-5 max-h-[90vh] overflow-y-auto hide-scrollbar" style="--card-color: var(--c-main);">
-            <button id="close-settings" class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors">
+            <button id="close-settings" class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors z-10">
                 <i data-lucide="x" class="w-5 h-5 lg:w-6 lg:h-6"></i>
             </button>
             
-            <h2 class="text-xl lg:text-2xl font-extrabold flex items-center gap-2 lg:gap-3 text-[rgb(var(--c-main))] transition-colors duration-300 mb-1">
+            <h2 class="text-xl lg:text-2xl font-extrabold flex items-center gap-2 lg:gap-3 text-[rgb(var(--c-main))] transition-colors duration-300 pr-8">
                 <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Icon" loading="lazy" class="w-7 h-7 lg:w-8 lg:h-8 rounded-full border-2 border-[rgb(var(--c-main))] shadow-md">
-                Settings
+                Atish's Weather Station
             </h2>
 
-            <!-- Changed to 2-column grid layout -->
+            <div class="flex items-center justify-between flex-wrap gap-2">
+                <div class="flex items-center gap-3 lg:gap-4">
+                    <h3 class="text-base lg:text-lg font-extrabold flex items-center gap-2 opacity-90">
+                        <i data-lucide="sliders-horizontal" class="w-4 h-4 lg:w-5 lg:h-5 text-[rgb(var(--c-main))]"></i>
+                        Customizations
+                    </h3>
+                    <button id="clear-data-btn" class="glass-btn p-2 md:px-3 md:py-1.5 rounded-full text-[11px] font-bold text-red-500 dark:text-red-400 border border-red-500/20 hover:bg-red-500/10 flex items-center gap-1.5 transition-all duration-300" title="Clear Cached City Data">
+                        <i data-lucide="trash-2" class="w-4 h-4 md:w-3.5 md:h-3.5"></i>
+                        <span class="hidden md:inline">Clear Data</span>
+                    </button>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- Mobile Layout Toggle -->
+                    <button id="layout-toggle-btn" class="lg:hidden glass-btn px-3 py-1.5 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all duration-300" title="Toggle controls position">
+                        <i data-lucide="search" class="w-3 h-3"></i>
+                        <span id="layout-toggle-label">App Like</span>
+                    </button>
+                    <!-- Desktop Zoom Toggle -->
+                    <button id="zoom-toggle-btn" class="hidden lg:flex glass-btn px-3 py-1.5 rounded-full text-[11px] font-bold items-center gap-1.5 transition-all duration-300" title="Toggle page zoom">
+                        <i data-lucide="maximize-2" class="w-3 h-3"></i>
+                        <span id="zoom-toggle-label">100%</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Hidden selects for internal use -->
+            <select id="country-input" class="hidden"><option value="India">India</option></select>
+            <select id="timezone-input" class="hidden"><option value="Asia/Kolkata">Asia/Kolkata (IST)</option></select>
+
+            <!-- 2-column grid layout -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-5">
                 
                 <!-- Column 1 -->
-                <div class="flex flex-col gap-3">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-bold text-xs lg:text-sm opacity-80">Country</label>
-                        <div class="relative">
-                            <select id="country-input" class="glass-input w-full pl-3 pr-8 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm cursor-pointer appearance-none">
-                                <option value="India">India</option>
-                                <option value="United States">United States</option>
-                                <option value="United Kingdom">United Kingdom</option>
-                                <option value="Australia">Australia</option>
-                                <option value="Canada">Canada</option>
-                                <option value="Germany">Germany</option>
-                                <option value="France">France</option>
-                                <option value="Japan">Japan</option>
-                            </select>
-                            <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-60"></i>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-bold text-xs lg:text-sm opacity-80">Timezone</label>
-                        <div class="relative">
-                            <select id="timezone-input" class="glass-input w-full pl-3 pr-8 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm cursor-pointer appearance-none">
-                                <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
-                                <option value="America/New_York">America/New_York (EST)</option>
-                                <option value="America/Los_Angeles">America/Los_Angeles (PST)</option>
-                                <option value="Europe/London">Europe/London (GMT)</option>
-                                <option value="Europe/Berlin">Europe/Berlin (CET)</option>
-                                <option value="Australia/Sydney">Australia/Sydney (AEST)</option>
-                                <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
-                                <option value="UTC">UTC</option>
-                            </select>
-                            <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-60"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Column 2 -->
                 <div class="flex flex-col gap-3">
                     <div class="flex flex-col gap-1.5">
                         <label class="font-bold text-xs lg:text-sm opacity-80">Weather Provider</label>
@@ -485,8 +564,11 @@
                         <input type="text" id="api-key-input" placeholder="Enter Private API Key" class="glass-input w-full px-3 py-2 rounded-xl text-xs md:text-sm font-medium hidden mt-1">
                         <p id="api-hint" class="text-[10px] opacity-70 hidden font-medium">Using secure built-in key for WeatherAPI.</p>
                     </div>
+                </div>
 
-                    <div class="flex flex-col gap-1.5 mt-auto lg:mt-0">
+                <!-- Column 2 -->
+                <div class="flex flex-col gap-3">
+                    <div class="flex flex-col gap-1.5">
                         <label class="font-bold text-xs lg:text-sm opacity-80">Measurement Units</label>
                         <div class="relative">
                             <select id="unit-select" class="glass-input w-full pl-3 pr-8 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm cursor-pointer appearance-none">
@@ -498,23 +580,24 @@
                     </div>
                 </div>
 
-                <!-- Row 2: Full Width Items (Spans 2 columns on large screens) -->
+                <!-- Row 2: Accent + Developer side by side on desktop -->
                 <div class="flex flex-col gap-4 lg:col-span-2 pt-2 border-t border-black/5 dark:border-white/5">
-                    <div class="flex flex-col gap-2">
-                        <label class="font-bold text-xs lg:text-sm opacity-80">Glass Accent Color</label>
-                        <div class="flex gap-2 flex-wrap">
-                            <button class="color-btn w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-transparent bg-blue-500 active" data-color="blue" title="Blue"></button>
-                            <button class="color-btn w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-transparent bg-teal-500" data-color="teal" title="Teal"></button>
-                            <button class="color-btn w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-transparent bg-pink-500" data-color="pink" title="Pink"></button>
-                            <button class="color-btn w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-transparent bg-purple-500" data-color="purple" title="Purple"></button>
-                            <button class="color-btn w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-transparent bg-orange-500" data-color="orange" title="Orange"></button>
-                            <button class="color-btn w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-transparent bg-cyan-500" data-color="cyan" title="Cyan"></button>
-                            <button class="color-btn w-8 h-8 md:w-9 md:h-9 rounded-full border-2 border-transparent bg-red-500" data-color="red" title="Red"></button>
+                    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                        <!-- Accent Color -->
+                        <div class="flex flex-col gap-2 flex-1">
+                            <label class="font-bold text-xs lg:text-sm opacity-80">Glass Accent Color</label>
+                            <div class="flex gap-2 flex-wrap lg:flex-nowrap w-full">
+                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-blue-500 active" data-color="blue" title="Blue"></button>
+                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-teal-500" data-color="teal" title="Teal"></button>
+                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-pink-500" data-color="pink" title="Pink"></button>
+                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-purple-500" data-color="purple" title="Purple"></button>
+                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-orange-500" data-color="orange" title="Orange"></button>
+                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-cyan-500" data-color="cyan" title="Cyan"></button>
+                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-red-500" data-color="red" title="Red"></button>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="flex flex-col gap-3 mt-1 w-full">
-                        <div class="p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-between w-full shrink-0 gap-4">
+                        <!-- Developer (right side on desktop) -->
+                        <div class="p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-between shrink-0 gap-4 lg:self-end">
                             <div class="flex items-center gap-2">
                                 <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Atish Ak Sharma" loading="lazy" class="w-8 h-8 rounded-full border border-[rgb(var(--c-main))]">
                                 <div class="flex flex-col">
@@ -526,10 +609,12 @@
                                 <i data-lucide="external-link" class="w-3.5 h-3.5 text-[rgb(var(--c-main))]"></i>
                             </a>
                         </div>
-                        <button id="save-settings-btn" class="w-full py-3 px-6 rounded-xl font-extrabold text-sm md:text-base text-white transition-all hover:scale-[1.02] active:scale-[0.98] duration-300" style="background-color: rgb(var(--c-main)); box-shadow: 0 4px 15px rgba(var(--c-main), 0.3);">
-                            Save & Apply
-                        </button>
                     </div>
+
+                    <button id="save-settings-btn" class="w-full py-3 px-6 rounded-xl font-extrabold text-sm md:text-base text-white transition-all hover:scale-[1.02] active:scale-[0.98] duration-300" style="background-color: rgb(var(--c-main)); box-shadow: 0 4px 15px rgba(var(--c-main), 0.3);">
+                        Save & Apply
+                    </button>
+                    <p class="text-center text-[11px] font-bold opacity-50 -mt-1">&copy; <span class="settings-year"></span> Atish's Weather Station.</p>
                 </div>
 
             </div>
@@ -555,8 +640,8 @@
     <div id="weather-container" class="w-full max-w-7xl mx-auto flex flex-col gap-4 lg:gap-6 opacity-0 transition-opacity duration-500 z-10 mb-8">
         
         <div class="grid grid-cols-1 lg:grid-cols-[31%_1fr] gap-4 lg:gap-6 items-stretch">
-            <!-- Primary Weather Card (MAIN) -->
-            <div class="glass animated-outline floating w-full p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden panel-clickable group shrink-0" onclick="showInfo('main')" style="--card-color: var(--c-main);" title="Click for Details">
+            <!-- Primary Weather Card (MAIN) - Swipeable -->
+            <div id="main-weather-card" class="glass animated-outline floating w-full p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden group shrink-0 select-none" style="--card-color: var(--c-main); touch-action: pan-y;">
                 
                 <!-- High-End Weather Effect Layer -->
                 <div id="weather-fx-layer" class="absolute inset-0 z-0 pointer-events-none opacity-60 mix-blend-overlay weather-fx-layer"></div>
@@ -567,7 +652,6 @@
                     <div class="flex justify-between items-start mb-6">
                         <div class="flex flex-col max-w-[80%]">
                             <h2 id="location-name" class="text-3xl lg:text-4xl font-extrabold mb-1 tracking-tight truncate w-full">Loading...</h2>
-                            <!-- Region Line (State, Country) -->
                             <p id="location-region" class="text-lg font-bold text-[rgb(var(--c-main))] mb-1 transition-colors duration-300 truncate w-full"></p>
                         </div>
                     </div>
@@ -582,20 +666,16 @@
                         <span id="temperature" class="text-6xl lg:text-7xl font-extrabold tracking-tighter text-[rgb(var(--c-main))] drop-shadow-sm transition-colors duration-300">--</span>
                         <span class="text-2xl lg:text-3xl font-bold mt-2 text-[rgb(var(--c-main))] temp-unit-label transition-colors duration-300">°C</span>
                     </div>
-                    <p id="condition-desc" class="text-2xl font-bold capitalize tracking-wide mb-1">--</p>
-                    <p id="date-time" class="text-sm font-bold opacity-70 mb-3"></p>
-                    
-                    <div class="flex flex-col gap-1.5 mt-2">
-                        <div class="flex items-center gap-1 text-sm font-bold opacity-80" title="Feels Like">
-                            <i data-lucide="thermometer" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-pulse"></i>
-                            <span id="feels-like">Feels like --</span><span class="temp-unit-label">°C</span>
-                        </div>
-                        <div class="flex items-center gap-4 text-sm font-bold opacity-80 mt-1">
-                            <span class="flex items-center gap-1" title="Rain Probability"><i data-lucide="cloud-rain" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i> <span id="current-rain-prob">--</span>%</span>
-                            <span class="flex items-center gap-1" title="Cloud Cover"><i data-lucide="cloud" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i> <span id="current-cloud-cover">--</span>%</span>
-                        </div>
+                    <div class="flex items-center gap-4 text-sm font-bold opacity-80 mt-2 mb-1">
+                        <span class="flex items-center gap-1" title="Rain Probability"><i data-lucide="cloud-rain" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i> <span id="current-rain-prob">--</span>%</span>
+                        <span class="flex items-center gap-1" title="Cloud Cover"><i data-lucide="cloud" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i> <span id="current-cloud-cover">--</span>%</span>
                     </div>
+                    <p class="text-2xl font-bold capitalize tracking-wide mb-1"><span id="condition-desc">--</span> <span class="text-lg text-[rgb(var(--c-main))] font-bold opacity-80" id="feels-like-inline">(Feels Like --)</span></p>
+                    <p id="date-time" class="text-base font-bold opacity-70 mt-2"></p>
                 </div>
+                <!-- Swipe notch indicators (shown when multiple cities) -->
+                <div id="swipe-notch-left" class="swipe-notch swipe-notch-left hidden"></div>
+                <div id="swipe-notch-right" class="swipe-notch swipe-notch-right hidden"></div>
             </div>
 
             <!-- Right Side: Details Grid + Forecast -->
@@ -619,7 +699,7 @@
                     <div class="glass floating floating-delay-2 p-4 flex flex-col justify-between panel-clickable" onclick="showInfo('extremes')" style="--card-color: var(--c-warm);" title="Click for details">
                         <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
                             <i data-lucide="thermometer-sun" class="w-5 h-5 lg:w-6 lg:h-6 anim-rock"></i>
-                            <span>Extremes</span>
+                            <span>Min/Max Temp</span>
                         </div>
                         <div class="flex flex-col gap-1">
                             <div class="flex items-center gap-2"><i data-lucide="arrow-up" class="w-4 h-4 lg:w-5 lg:h-5 text-red-500 anim-float"></i> <span class="text-xl lg:text-2xl font-extrabold" id="temp-high">--</span><span class="font-bold opacity-70 temp-unit-label">°C</span></div>
@@ -678,21 +758,20 @@
                         </div>
                     </div>
 
-                    <!-- Sunrise / Sunset (WARM) - Spans 2 cols on mobile, 1 on LG -->
-                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between col-span-2 lg:col-span-1 panel-clickable" onclick="showInfo('sun')" style="--card-color: var(--c-warm);" title="Click for details">
+                    <!-- Sunrise / Sunset (WARM) - centered on mobile with padding -->
+                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between col-span-2 lg:col-span-1 panel-clickable max-w-[220px] sm:max-w-none mx-auto w-full px-6 sm:px-4" onclick="showInfo('sun')" style="--card-color: var(--c-warm);" title="Click for details">
                         <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
                             <i data-lucide="sun" class="w-4 h-4 lg:w-5 lg:h-5"></i>
                             <span>Sun Cycle</span>
                         </div>
-                        <!-- Added px-8 on mobile to ensure it doesn't stretch to the edges -->
-                        <div class="flex-grow flex flex-col justify-center gap-3 w-full mt-1 px-8 lg:px-2 mx-auto">
+                        <div class="flex-grow flex flex-col justify-center gap-3 w-full mt-1 lg:px-2 mx-auto">
                             <!-- Sunrise -->
                             <div class="flex items-center justify-start gap-3 w-full">
                                 <div class="flex items-center gap-2 lg:gap-3 w-[75px]">
                                     <i data-lucide="sunrise" class="w-5 h-5 lg:w-6 lg:h-6 text-orange-400 drop-shadow-md anim-float"></i>
                                     <span class="text-xs lg:text-sm font-bold opacity-70">Rise</span>
                                 </div>
-                                <span class="text-sm md:text-base lg:text-lg font-extrabold leading-none" id="sunrise">--:--</span>
+                                <span class="text-sm md:text-base lg:text-lg font-extrabold leading-none whitespace-nowrap" id="sunrise">--:--</span>
                             </div>
                             <!-- Sunset -->
                             <div class="flex items-center justify-start gap-3 w-full">
@@ -700,7 +779,7 @@
                                     <i data-lucide="sunset" class="w-5 h-5 lg:w-6 lg:h-6 text-orange-500 drop-shadow-md anim-float" style="animation-delay: 1s"></i>
                                     <span class="text-xs lg:text-sm font-bold opacity-70">Set</span>
                                 </div>
-                                <span class="text-sm md:text-base lg:text-lg font-extrabold leading-none" id="sunset">--:--</span>
+                                <span class="text-sm md:text-base lg:text-lg font-extrabold leading-none whitespace-nowrap" id="sunset">--:--</span>
                             </div>
                         </div>
                     </div>
@@ -721,11 +800,26 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="mt-4 md:mt-8 w-full text-center py-6 font-bold z-10 opacity-80">
-        <p>&copy; <span id="current-year"></span> Atish's Weather Station.</p>
-        <p class="mt-1">Designed by <a href="https://atishaksharma.com" target="_blank" rel="noopener noreferrer" class="text-[rgb(var(--c-main))] transition-colors duration-300 hover:opacity-70 underline decoration-2 underline-offset-4">Atish Ak Sharma</a></p>
-    </footer>
+    <!-- Accent End-of-Page Bar -->
+    <!-- Accent End-of-Page Bar -->
+    <div class="flex justify-center py-[2px] z-10">
+        <div class="h-[4px] w-[90px] rounded-full overflow-hidden relative" style="background: rgba(var(--c-main), 0.2);">
+            <div class="absolute inset-0 rounded-full" style="background: rgb(var(--c-main)); animation: accentBarSlide 2s ease-in-out infinite;"></div>
+        </div>
+    </div>
+    <style>
+        @keyframes accentBarSlide {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0%); }
+            100% { transform: translateX(100%); }
+        }
+        /* Bottom bar spacing on mobile */
+        @media (max-width: 1023px) {
+            body.bottom-bar-active { padding-bottom: 80px !important; }
+        }
+    </style>
+
+
 
     <!-- Loading State -->
     <div id="loading-state" class="fixed inset-0 backdrop-blur-2xl flex flex-col items-center justify-center z-50 hidden bg-white/20 dark:bg-black/40">
@@ -741,7 +835,7 @@
 
     <script>
         lucide.createIcons();
-        document.getElementById('current-year').textContent = new Date().getFullYear();
+        document.querySelectorAll('.settings-year').forEach(el => el.textContent = new Date().getFullYear());
 
         // Obfuscated API Key Logic
         const _kPart1 = 'NzE2MThkMGE2';
@@ -790,6 +884,7 @@
             settingsBtn: document.getElementById('settings-btn'),
             closeSettingsBtn: document.getElementById('close-settings'),
             saveSettingsBtn: document.getElementById('save-settings-btn'),
+            clearDataBtn: document.getElementById('clear-data-btn'),
             settingsModal: document.getElementById('settings-modal'),
             infoModal: document.getElementById('info-modal'),
             closeInfoBtn: document.getElementById('close-info'),
@@ -812,7 +907,7 @@
             tempUnitLabels: document.querySelectorAll('.temp-unit-label'),
             windUnitLabel: document.getElementById('wind-unit-label'),
             conditionDesc: document.getElementById('condition-desc'),
-            feelsLike: document.getElementById('feels-like'),
+            feelsLikeInline: document.getElementById('feels-like-inline'),
             currentRainProb: document.getElementById('current-rain-prob'),
             currentCloudCover: document.getElementById('current-cloud-cover'),
             tempHigh: document.getElementById('temp-high'),
@@ -829,7 +924,19 @@
             aqiIconWrapper: document.getElementById('aqi-icon-wrapper'),
             sunrise: document.getElementById('sunrise'),
             sunset: document.getElementById('sunset'),
-            forecastContainer: document.getElementById('forecast-container')
+            forecastContainer: document.getElementById('forecast-container'),
+            // Mobile bottom bar
+            mobileBottomBar: document.getElementById('mobile-bottom-bar'),
+            headerBar: document.getElementById('header-bar'),
+            headerControls: document.getElementById('header-controls'),
+            citySearchMobile: document.getElementById('city-search-mobile'),
+            searchResultsMobile: document.getElementById('search-results-mobile'),
+            locateBtnMobile: document.getElementById('locate-btn-mobile'),
+            themeBtnMobile: document.getElementById('theme-btn-mobile'),
+            settingsBtnMobile: document.getElementById('settings-btn-mobile'),
+            themeIconWrapperMobile: document.getElementById('theme-icon-wrapper-mobile'),
+            layoutToggleBtn: document.getElementById('layout-toggle-btn'),
+            layoutToggleLabel: document.getElementById('layout-toggle-label')
         };
 
         let searchTimeout;
@@ -846,6 +953,41 @@
         }
 
         function init() {
+            // Apply saved zoom or default 90% on desktop
+            const savedZoom = localStorage.getItem('atish_weather_zoom');
+            const isDesktop = window.innerWidth >= 1024;
+            if (isDesktop) {
+                document.body.style.zoom = savedZoom || '0.9';
+            } else {
+                document.body.style.zoom = '1';
+            }
+
+            const zoomBtn = document.getElementById('zoom-toggle-btn');
+            const zoomLabel = document.getElementById('zoom-toggle-label');
+            function updateZoomBtnState() {
+                const current = parseFloat(document.body.style.zoom) || 0.9;
+                if (current >= 1) {
+                    zoomLabel.textContent = '90%';
+                    zoomBtn.style.background = 'rgb(var(--c-main))';
+                    zoomBtn.style.color = '#fff';
+                    zoomBtn.style.borderColor = 'rgb(var(--c-main))';
+                } else {
+                    zoomLabel.textContent = '100%';
+                    zoomBtn.style.background = '';
+                    zoomBtn.style.color = '';
+                    zoomBtn.style.borderColor = '';
+                }
+            }
+            updateZoomBtnState();
+
+            zoomBtn.addEventListener('click', () => {
+                const current = parseFloat(document.body.style.zoom) || 0.9;
+                const newZoom = current >= 1 ? '0.9' : '1';
+                document.body.style.zoom = newZoom;
+                localStorage.setItem('atish_weather_zoom', newZoom);
+                updateZoomBtnState();
+            });
+
             document.documentElement.setAttribute('data-theme', state.theme);
             document.documentElement.setAttribute('data-color', state.color);
             updateThemeIcon();
@@ -876,6 +1018,30 @@
             els.settingsBtn.addEventListener('click', () => els.settingsModal.classList.remove('hidden'));
             els.closeSettingsBtn.addEventListener('click', () => els.settingsModal.classList.add('hidden'));
             els.closeInfoBtn.addEventListener('click', () => els.infoModal.classList.add('hidden'));
+
+            // Mobile bottom bar wiring
+            els.locateBtnMobile.addEventListener('click', getUserLocation);
+            els.themeBtnMobile.addEventListener('click', toggleTheme);
+            els.settingsBtnMobile.addEventListener('click', () => els.settingsModal.classList.remove('hidden'));
+
+            // Sync mobile search
+            els.citySearchMobile.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                const query = e.target.value.trim();
+                if (query.length < 3) { els.searchResultsMobile.classList.add('hidden'); return; }
+                searchTimeout = setTimeout(() => fetchCitySuggestionsMobile(query), 400);
+            });
+
+            // Mobile layout toggle
+            const savedLayout = localStorage.getItem('atish_weather_layout') || 'app';
+            applyMobileLayout(savedLayout);
+
+            els.layoutToggleBtn.addEventListener('click', () => {
+                const current = localStorage.getItem('atish_weather_layout') || 'app';
+                const next = current === 'app' ? 'header' : 'app';
+                localStorage.setItem('atish_weather_layout', next);
+                applyMobileLayout(next);
+            });
             
             els.colorBtns.forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -889,6 +1055,16 @@
 
             els.providerSelect.addEventListener('change', checkApiFieldVisibility);
             els.saveSettingsBtn.addEventListener('click', saveSettings);
+            
+            if (els.clearDataBtn) {
+                els.clearDataBtn.addEventListener('click', () => {
+                    if (confirm("Are you sure you want to clear all cached data and pinned cities? This will reload the application.")) {
+                        localStorage.removeItem('atish_weather_v5');
+                        localStorage.removeItem('atish_weather_cache');
+                        window.location.reload();
+                    }
+                });
+            }
 
             // Dynamic City Search
             els.citySearch.addEventListener('input', (e) => {
@@ -905,6 +1081,9 @@
                 if(!els.citySearch.contains(e.target) && !els.searchResults.contains(e.target)) {
                     els.searchResults.classList.add('hidden');
                 }
+                if(!els.citySearchMobile.contains(e.target) && !els.searchResultsMobile.contains(e.target)) {
+                    els.searchResultsMobile.classList.add('hidden');
+                }
                 if(e.target === els.infoModal) els.infoModal.classList.add('hidden');
                 if(e.target === els.settingsModal) els.settingsModal.classList.add('hidden');
             });
@@ -916,6 +1095,87 @@
             renderPinnedCities();
             window.addEventListener('resize', updatePinnedArrows);
         }
+
+        function applyMobileLayout(mode) {
+            const isMobile = window.innerWidth < 1024;
+            if (!isMobile) { 
+                els.mobileBottomBar.classList.add('hidden');
+                els.headerControls.classList.remove('hidden');
+                document.body.classList.remove('bottom-bar-active');
+                return;
+            }
+            if (mode === 'app') {
+                els.mobileBottomBar.classList.remove('hidden');
+                els.headerControls.classList.add('hidden');
+                document.body.classList.add('bottom-bar-active');
+                els.layoutToggleBtn.style.background = 'rgb(var(--c-main))';
+                els.layoutToggleBtn.style.color = '#fff';
+                els.layoutToggleBtn.style.borderColor = 'rgb(var(--c-main))';
+                els.layoutToggleLabel.textContent = 'In Header';
+            } else {
+                els.mobileBottomBar.classList.add('hidden');
+                els.headerControls.classList.remove('hidden');
+                document.body.classList.remove('bottom-bar-active');
+                els.layoutToggleBtn.style.background = '';
+                els.layoutToggleBtn.style.color = '';
+                els.layoutToggleBtn.style.borderColor = '';
+                els.layoutToggleLabel.textContent = 'App Like';
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            const layout = localStorage.getItem('atish_weather_layout') || 'app';
+            applyMobileLayout(layout);
+        });
+
+        async function fetchCitySuggestionsMobile(query) {
+            try {
+                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`);
+                const data = await res.json();
+                if (data.results && data.results.length > 0) {
+                    renderSearchResultsMobile(data.results);
+                } else {
+                    els.searchResultsMobile.innerHTML = '<div class="p-4 text-center text-sm font-bold opacity-70">No cities found</div>';
+                    els.searchResultsMobile.classList.remove('hidden');
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        function renderSearchResultsMobile(results) {
+            els.searchResultsMobile.innerHTML = '';
+            results.forEach(city => {
+                const div = document.createElement('div');
+                div.className = 'p-4 hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer flex flex-col transition-colors border-b border-black/5 dark:border-white/5 last:border-0';
+                div.innerHTML = `<span class="font-extrabold text-[rgb(var(--c-main))]">${city.name}</span><span class="text-xs font-bold text-gray-500 dark:text-gray-400 mt-1">${city.admin1 ? city.admin1 + ', ' : ''}${city.country}</span>`;
+                div.addEventListener('click', () => {
+                    if (state.pinnedCities.length === 0) {
+                        state.pinnedCities.push({ name: state.locationName, lat: state.lat, lon: state.lon, isHome: true, stateRegion: state.stateRegion, country: state.country });
+                    }
+                    state.lat = city.latitude;
+                    state.lon = city.longitude;
+                    state.locationName = city.name;
+                    state.stateRegion = city.admin1 || '';
+                    state.country = city.country || 'India';
+                    state.timezone = city.timezone || 'Asia/Kolkata';
+                    updateSelectOption(els.countryInput, state.country);
+                    updateSelectOption(els.timezoneInput, state.timezone);
+                    const newCity = { name: city.name, lat: city.latitude, lon: city.longitude, stateRegion: city.admin1 || '', country: city.country || 'India' };
+                    const existingIndex = state.pinnedCities.findIndex(c => c.name === city.name && !c.isHome);
+                    if (existingIndex > 0) state.pinnedCities.splice(existingIndex, 1);
+                    state.pinnedCities.splice(1, 0, newCity);
+                    if(state.pinnedCities.length > 6) state.pinnedCities.pop();
+                    els.citySearchMobile.value = '';
+                    els.searchResultsMobile.classList.add('hidden');
+                    saveLocationToStorage();
+                    updateClock();
+                    fetchWeather();
+                    renderPinnedCities();
+                });
+                els.searchResultsMobile.appendChild(div);
+            });
+            els.searchResultsMobile.classList.remove('hidden');
+        }
+
 
         function checkApiFieldVisibility() {
             const provider = PROVIDERS.find(p => p.id === els.providerSelect.value);
@@ -956,7 +1216,7 @@
                 
                 div.addEventListener('click', () => {
                     if (state.pinnedCities.length === 0) {
-                        state.pinnedCities.push({ name: state.locationName, lat: state.lat, lon: state.lon, isHome: true });
+                        state.pinnedCities.push({ name: state.locationName, lat: state.lat, lon: state.lon, isHome: true, stateRegion: state.stateRegion, country: state.country });
                     }
 
                     state.lat = city.latitude;
@@ -969,7 +1229,7 @@
                     updateSelectOption(els.countryInput, state.country);
                     updateSelectOption(els.timezoneInput, state.timezone);
                     
-                    const newCity = { name: city.name, lat: city.latitude, lon: city.longitude };
+                    const newCity = { name: city.name, lat: city.latitude, lon: city.longitude, stateRegion: city.admin1 || '', country: city.country || 'India' };
                     const existingIndex = state.pinnedCities.findIndex(c => c.name === city.name && !c.isHome);
                     if (existingIndex > 0) state.pinnedCities.splice(existingIndex, 1);
                     
@@ -1032,6 +1292,7 @@
             state.theme = state.theme === 'light' ? 'dark' : 'light';
             document.documentElement.setAttribute('data-theme', state.theme);
             updateThemeIcon();
+            localStorage.setItem('atish_weather_theme_manual', '1');
             
             const saved = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
             saved.theme = state.theme;
@@ -1041,6 +1302,7 @@
         function updateThemeIcon() {
             const iconName = state.theme === 'light' ? 'moon' : 'sun';
             updateLucideIconWrapper(els.themeIconWrapper, iconName, "w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300");
+            updateLucideIconWrapper(els.themeIconWrapperMobile, iconName, "w-5 h-5 text-[rgb(var(--c-main))] transition-colors duration-300");
         }
 
         function updatePinnedArrows() {
@@ -1096,6 +1358,8 @@
                 state.lat = c.lat;
                 state.lon = c.lon;
                 state.locationName = c.name;
+                state.stateRegion = c.stateRegion || '';
+                state.country = c.country || '';
                 saveLocationToStorage();
                 fetchWeather();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1167,7 +1431,7 @@
                     const aqiCol = getAqiColorClass(parseFloat(aqi));
                     
                     const item = document.createElement('div');
-                    item.className = 'glass flex flex-col p-4 shrink-0 snap-center w-[64vw] md:w-[30%] cursor-pointer hover:bg-white/10 transition-colors group/card select-none';
+                    item.className = 'glass flex flex-col p-4 shrink-0 snap-center w-[64vw] md:w-[30%] cursor-pointer hover:bg-white/10 transition-colors group/card select-none !shadow-none';
                     item.style.setProperty('--card-color', 'var(--c-main)');
                     
                     item.onmousedown = (e) => handleTouchStart(i, e);
@@ -1221,7 +1485,9 @@
                         name: state.locationName,
                         lat: state.lat,
                         lon: state.lon,
-                        isHome: true
+                        isHome: true,
+                        stateRegion: state.stateRegion,
+                        country: state.country
                     };
 
                     saveLocationToStorage();
@@ -1276,13 +1542,7 @@
             switch(type) {
                 case 'main': {
                     title = 'Current Weather'; icon = 'cloud-lightning'; colorCls = 'text-[rgb(var(--c-main))]';
-                    content = `<p class="font-bold opacity-80 mb-2">Location: <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${state.locationName}</span></p>
-                               <p class="font-bold opacity-80">Current temperature is <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${w.temp}${tu}</span>, with a condition of <span class="capitalize font-extrabold text-lg text-[rgb(var(--c-main))]">${w.conditionText}</span>.</p>
-                               <p class="font-medium opacity-80 mt-2">Feels like: <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${w.feelsLike}${tu}</span></p>
-                               <div class="flex flex-col gap-2 mt-3 p-4 bg-black/5 dark:bg-white/5 rounded-xl border border-black/5 dark:border-white/10">
-                                   <div class="flex justify-between items-center"><span class="font-bold"><i data-lucide="cloud-rain" class="inline w-4 h-4 mr-1 anim-float"></i> Rain Probability</span><span class="font-extrabold text-blue-500">${w.rainProb}%</span></div>
-                                   <div class="flex justify-between items-center"><span class="font-bold"><i data-lucide="cloud" class="inline w-4 h-4 mr-1 anim-float"></i> Cloud Cover</span><span class="font-extrabold text-gray-500">${w.cloudCover}%</span></div>
-                               </div>`;
+                    content = `<p class="font-bold opacity-80 leading-relaxed">Currently <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${w.temp}${tu}</span> in <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${state.locationName}</span> with <span class="capitalize font-extrabold text-[rgb(var(--c-main))]">${w.conditionText}</span> skies, feels like <span class="font-extrabold text-[rgb(var(--c-main))]">${w.feelsLike}${tu}</span>. Rain probability is <span class="font-extrabold text-[rgb(var(--c-cool))]">${w.rainProb}%</span> and cloud cover is <span class="font-extrabold opacity-70">${w.cloudCover}%</span>.</p>`;
                     break;
                 }
                 case 'uv': {
@@ -1368,18 +1628,32 @@
                 }
                 case 'forecast': {
                     title = '7-Day Forecast'; icon = 'calendar-days'; colorCls = 'text-[rgb(var(--c-main))]';
-                    const list = w.forecast.map(f => `
-                        <div class="flex justify-between items-center p-4 border-b border-black/5 dark:border-white/5 last:border-0 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                            <span class="font-extrabold w-1/4 text-sm md:text-base">${f.day}</span>
-                            <div class="flex items-center justify-center w-2/4 gap-3 md:gap-5">
-                                <span class="flex items-center gap-1 text-blue-500 dark:text-blue-400 text-xs md:text-sm font-bold w-14 justify-end" title="Rain Probability"><i data-lucide="cloud-rain" class="w-3.5 h-3.5"></i> ${f.rainProb}%</span>
-                                <i data-lucide="${f.icon}" class="w-8 h-8 md:w-10 md:h-10 text-[rgb(var(--c-main))] ${getIconAnimClass(f.icon)} shrink-0 drop-shadow-md"></i>
-                                <span class="flex items-center gap-1 text-gray-500 dark:text-gray-400 text-xs md:text-sm font-bold w-14 justify-start" title="Cloud Cover"><i data-lucide="cloud" class="w-3.5 h-3.5"></i> ${f.cloudCover}%</span>
+                    const header = `
+                        <div class="flex justify-between items-center px-4 py-2 border-b border-black/10 dark:border-white/20 bg-black/5 dark:bg-white/5 text-[10px] md:text-xs font-bold uppercase tracking-widest opacity-80">
+                            <span class="w-1/4">Day</span>
+                            <div class="flex items-center justify-center w-2/4 gap-2 md:gap-4">
+                                <span class="w-12 md:w-16 flex justify-center" title="Rain Probability"><i data-lucide="cloud-rain" class="w-3.5 h-3.5"></i></span>
+                                <span class="w-6 md:w-8 shrink-0 flex justify-center text-[rgb(var(--c-main))]" title="Weather"><i data-lucide="cloud-sun" class="w-4 h-4"></i></span>
+                                <span class="w-12 md:w-16 flex justify-center" title="Cloud Cover"><i data-lucide="cloud" class="w-3.5 h-3.5"></i></span>
                             </div>
-                            <div class="font-extrabold w-1/4 text-right text-sm md:text-base"><span class="text-red-500 drop-shadow-sm">${f.max}°</span> <span class="text-blue-500 opacity-80 ml-1">${f.min}°</span></div>
+                            <div class="w-1/4 text-right pr-1">
+                                <span class="md:hidden">H</span><span class="hidden md:inline">High</span>
+                                <span class="md:hidden ml-1">L</span><span class="hidden md:inline ml-2">Low</span>
+                            </div>
+                        </div>
+                    `;
+                    const list = w.forecast.map(f => `
+                        <div class="flex justify-between items-center py-2.5 px-4 border-b border-black/5 dark:border-white/10 last:border-0 hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+                            <span class="font-extrabold w-1/4 text-xs md:text-sm">${f.day}</span>
+                            <div class="flex items-center justify-center w-2/4 gap-2 md:gap-4">
+                                <span class="flex items-center justify-center gap-1 text-[rgb(var(--c-cool))] text-[10px] md:text-xs font-bold w-12 md:w-16" title="Rain Probability"><i data-lucide="cloud-rain" class="w-3 h-3"></i> ${f.rainProb}%</span>
+                                <i data-lucide="${f.icon}" class="w-6 h-6 md:w-8 md:h-8 text-[rgb(var(--c-main))] ${getIconAnimClass(f.icon)} shrink-0 drop-shadow-md"></i>
+                                <span class="flex items-center justify-center gap-1 opacity-60 text-[10px] md:text-xs font-bold w-12 md:w-16" title="Cloud Cover"><i data-lucide="cloud" class="w-3 h-3"></i> ${f.cloudCover}%</span>
+                            </div>
+                            <div class="font-extrabold w-1/4 text-right text-xs md:text-sm"><span class="text-[rgb(var(--c-warm))]">${f.max}°</span> <span class="text-[rgb(var(--c-cool))] opacity-80 ml-1">${f.min}°</span></div>
                         </div>
                     `).join('');
-                    content = `<div class="w-full rounded-xl border border-black/10 dark:border-white/10 mt-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-inner">${list}</div>`;
+                    content = `<div class="w-full rounded-xl border border-black/5 dark:border-white/10 mt-2 bg-black/5 dark:bg-white/5 overflow-hidden">${header}${list}</div>`;
                     break;
                 }
             }
@@ -1390,7 +1664,48 @@
             els.infoModal.classList.remove('hidden');
         }
 
+        // Weather cache: keyed by lat+lon, 20-min TTL, max 6 entries
+        const CACHE_KEY = 'atish_weather_cache';
+        const CACHE_TTL = 20 * 60 * 1000; // 20 minutes
+        const CACHE_MAX = 6;
+
+        function getWeatherCache(lat, lon) {
+            try {
+                const cache = JSON.parse(localStorage.getItem(CACHE_KEY)) || {};
+                const key = `${parseFloat(lat).toFixed(2)}_${parseFloat(lon).toFixed(2)}`;
+                const entry = cache[key];
+                if (entry && Date.now() - entry.ts < CACHE_TTL) return entry.data;
+            } catch(e) {}
+            return null;
+        }
+
+        function setWeatherCache(lat, lon, data) {
+            try {
+                let cache = JSON.parse(localStorage.getItem(CACHE_KEY)) || {};
+                const key = `${parseFloat(lat).toFixed(2)}_${parseFloat(lon).toFixed(2)}`;
+                cache[key] = { data, ts: Date.now() };
+                // Enforce max 6 entries - remove oldest
+                const keys = Object.keys(cache);
+                if (keys.length > CACHE_MAX) {
+                    keys.sort((a, b) => cache[a].ts - cache[b].ts);
+                    while (Object.keys(cache).length > CACHE_MAX) {
+                        delete cache[keys.shift()];
+                    }
+                }
+                localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+            } catch(e) {}
+        }
+
         async function fetchWeather() {
+            // Check cache first
+            const cached = getWeatherCache(state.lat, state.lon);
+            if (cached) {
+                state.weatherData = cached;
+                updateWeatherUI();
+                autoThemeByTime(cached);
+                return;
+            }
+
             let activeKey = state.apiKey;
             
             if (state.provider === 'weatherapi' && !activeKey) {
@@ -1426,9 +1741,16 @@
                     if (wApiData && wApiData.aqi !== "--") data.aqi = wApiData.aqi;
                     if (omData && omData.aqiMax !== "--") data.aqiMax = omData.aqiMax;
 
+                    // UV Index: combine current from WeatherAPI + max from Open-Meteo
+                    if (wApiData && wApiData.uvIndex && wApiData.uvIndex.current !== "--") {
+                        data.uvIndex.current = wApiData.uvIndex.current;
+                    }
+                    if (omData && omData.uvIndex && omData.uvIndex.max !== "--") {
+                        data.uvIndex.max = omData.uvIndex.max;
+                    }
+
                     // Standard augmentation for missing elements
                     if (omData) {
-                        if (data.uvIndex.current === "--") data.uvIndex = omData.uvIndex;
                         if (data.rainProb === "--") data.rainProb = omData.rainProb;
                         if (data.windSpeed === "--" || data.windSpeed === undefined) {
                             data.windSpeed = omData.windSpeed;
@@ -1450,7 +1772,9 @@
                 }
 
                 state.weatherData = data;
+                setWeatherCache(state.lat, state.lon, data);
                 updateWeatherUI();
+                autoThemeByTime(data);
                 showToast("Weather updated successfully!", "check-circle", "green");
 
             } catch (err) {
@@ -1461,6 +1785,103 @@
                 setLoading(false);
             }
         }
+
+        function autoThemeByTime(data) {
+            if (localStorage.getItem('atish_weather_theme_manual')) return;
+            try {
+                const now = new Date();
+                const sunriseStr = data.sunrise;
+                const sunsetStr = data.sunset;
+                if (!sunriseStr || !sunsetStr || sunriseStr === '--:--' || sunsetStr === '--:--') return;
+                
+                const parseTime = (str) => {
+                    const match = str.match(/(\d+):(\d+)\s*(AM|PM)/i);
+                    if (!match) return null;
+                    let h = parseInt(match[1]);
+                    const m = parseInt(match[2]);
+                    const ampm = match[3].toUpperCase();
+                    if (ampm === 'PM' && h !== 12) h += 12;
+                    if (ampm === 'AM' && h === 12) h = 0;
+                    return h * 60 + m;
+                };
+                
+                const sunriseMin = parseTime(sunriseStr);
+                const sunsetMin = parseTime(sunsetStr);
+                if (sunriseMin === null || sunsetMin === null) return;
+                
+                let nowOpts = {};
+                if (state.timezone) { try { nowOpts.timeZone = state.timezone; } catch(e){} }
+                const nowH = parseInt(now.toLocaleString('en-US', { ...nowOpts, hour: 'numeric', hour12: false }));
+                const nowM = parseInt(now.toLocaleString('en-US', { ...nowOpts, minute: 'numeric' }));
+                const nowMin = nowH * 60 + nowM;
+                
+                const shouldBeDark = nowMin >= sunsetMin || nowMin < sunriseMin;
+                const newTheme = shouldBeDark ? 'dark' : 'light';
+                
+                if (state.theme !== newTheme) {
+                    state.theme = newTheme;
+                    document.documentElement.setAttribute('data-theme', newTheme);
+                    updateThemeIcon();
+                    const saved = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
+                    saved.theme = newTheme;
+                    localStorage.setItem('atish_weather_v5', JSON.stringify(saved));
+                }
+            } catch(e) { console.warn('Auto-theme failed', e); }
+        }
+
+        // Swipe on main weather card to change pinned city - 3D book flip
+        (function() {
+            let swipeStartX = 0, swipeDelta = 0, swiping = false, flipping = false;
+            const card = document.getElementById('main-weather-card');
+            if (!card) return;
+            // Removed perspective container to apply it directly in animation
+            // card.parentElement.classList.add('card-flip-container');
+
+            function handleSwipeEnd() {
+                if (!swiping || flipping) return;
+                swiping = false;
+                if (state.pinnedCities.length < 2 || Math.abs(swipeDelta) < 60) return;
+                flipping = true;
+                
+                let curIdx = state.pinnedCities.findIndex(c => c.name === state.locationName);
+                if (curIdx === -1) curIdx = 0;
+                const nextIdx = swipeDelta < 0
+                    ? (curIdx + 1) % state.pinnedCities.length
+                    : (curIdx - 1 + state.pinnedCities.length) % state.pinnedCities.length;
+                
+                const c = state.pinnedCities[nextIdx];
+                const outClass = swipeDelta < 0 ? 'card-flip-out-left' : 'card-flip-out-right';
+                const inClass = swipeDelta < 0 ? 'card-flip-in-right' : 'card-flip-in-left';
+                
+                card.classList.add(outClass);
+                
+                setTimeout(() => {
+                    state.lat = c.lat;
+                    state.lon = c.lon;
+                    state.locationName = c.name;
+                    state.stateRegion = c.stateRegion || '';
+                    state.country = c.country || '';
+                    saveLocationToStorage();
+                    card.classList.remove(outClass);
+                    card.classList.add(inClass);
+                    fetchWeather();
+                    updateSwipeNotches();
+                    
+                    setTimeout(() => {
+                        card.classList.remove(inClass);
+                        flipping = false;
+                    }, 500);
+                }, 500);
+            }
+
+            card.addEventListener('touchstart', e => { if (!flipping) { swipeStartX = e.touches[0].clientX; swiping = true; swipeDelta = 0; } }, { passive: true });
+            card.addEventListener('touchmove', e => { if (swiping) swipeDelta = e.touches[0].clientX - swipeStartX; }, { passive: true });
+            card.addEventListener('touchend', handleSwipeEnd);
+            card.addEventListener('mousedown', e => { if (!flipping) { swipeStartX = e.clientX; swiping = true; swipeDelta = 0; } });
+            card.addEventListener('mousemove', e => { if (swiping) swipeDelta = e.clientX - swipeStartX; });
+            card.addEventListener('mouseup', handleSwipeEnd);
+            card.addEventListener('mouseleave', () => { swiping = false; });
+        })();
 
         async function fetchOpenMeteo() {
             const unitParams = state.units === 'imperial' ? '&temperature_unit=fahrenheit&wind_speed_unit=mph' : '';
@@ -1713,7 +2134,8 @@
 
             els.temperature.textContent = w.temp;
             els.conditionDesc.textContent = w.conditionText;
-            els.feelsLike.textContent = `Feels like ${w.feelsLike}`;
+            const tu = isImp ? '°F' : '°C';
+            els.feelsLikeInline.textContent = `(Feels Like ${w.feelsLike}${tu})`;
             els.currentRainProb.textContent = w.rainProb;
             els.currentCloudCover.textContent = w.cloudCover;
             els.tempHigh.textContent = `${w.high}`;
@@ -1757,15 +2179,16 @@
             els.forecastContainer.innerHTML = '';
             w.forecast.forEach((f) => {
                 const item = document.createElement('div');
-                item.className = 'glass flex flex-col items-center justify-center p-3 lg:p-4 w-full rounded-2xl lg:rounded-3xl transform transition hover:bg-white/10 border-none shadow-none pointer-events-none last:col-span-2 sm:last:col-span-1 lg:last:col-span-1';
+                item.className = 'glass flex flex-col items-center justify-center p-3 lg:p-4 w-full rounded-2xl lg:rounded-3xl transform transition hover:bg-white/10 shadow-none pointer-events-none last:col-span-2 sm:last:col-span-1 lg:last:col-span-1';
+                item.style.border = '1px solid rgba(var(--c-main), 0.5)';
                 
                 const fAnim = getIconAnimClass(f.icon);
                 item.innerHTML = `
                     <span class="text-xs md:text-sm lg:text-base font-extrabold mb-1 lg:mb-2">${f.day}</span>
                     <i data-lucide="${f.icon}" class="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 mb-2 lg:mb-3 drop-shadow-md text-[rgb(var(--c-main))] transition-colors duration-300 ${fAnim}"></i>
                     <div class="flex gap-1.5 lg:gap-2 text-xs md:text-sm lg:text-base font-extrabold">
-                        <span class="text-[rgb(var(--c-main))] transition-colors duration-300">${f.max}°</span>
-                        <span class="text-blue-500 transition-colors duration-300">${f.min}°</span>
+                        <span class="text-[rgb(var(--c-warm))] transition-colors duration-300">${f.max}°</span>
+                        <span class="text-[rgb(var(--c-cool))] transition-colors duration-300">${f.min}°</span>
                     </div>
                 `;
                 els.forecastContainer.appendChild(item);
@@ -1773,6 +2196,21 @@
             lucide.createIcons();
 
             els.weatherContainer.style.opacity = '1';
+            updateSwipeNotches();
+        }
+
+        function updateSwipeNotches() {
+            const leftNotch = document.getElementById('swipe-notch-left');
+            const rightNotch = document.getElementById('swipe-notch-right');
+            if (!leftNotch || !rightNotch) return;
+            
+            if (state.pinnedCities.length >= 2) {
+                leftNotch.classList.remove('hidden');
+                rightNotch.classList.remove('hidden');
+            } else {
+                leftNotch.classList.add('hidden');
+                rightNotch.classList.add('hidden');
+            }
         }
 
         function updateLucideIconWrapper(wrapperElement, iconName, classes) {
@@ -1782,21 +2220,19 @@
 
         function updateClock() {
             const now = new Date();
-            const options = { 
-                weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit', second: '2-digit'
-            };
+            const dayOpts = { weekday: 'long' };
+            const dateOpts = { year: 'numeric', month: 'long', day: 'numeric' };
             
             if (state.timezone) {
                 try {
-                    options.timeZone = state.timezone;
-                    els.dateTime.textContent = now.toLocaleDateString('en-US', options);
-                    return;
-                } catch(e) {
-                    console.warn("Invalid timezone string provided, falling back to system timezone", e);
-                }
+                    dayOpts.timeZone = state.timezone;
+                    dateOpts.timeZone = state.timezone;
+                } catch(e) {}
             }
             
-            els.dateTime.textContent = now.toLocaleDateString('en-US', options);
+            const dayStr = now.toLocaleDateString('en-US', dayOpts);
+            const dateStr = now.toLocaleDateString('en-US', dateOpts);
+            els.dateTime.textContent = `${dayStr}, ${dateStr}`;
         }
 
         function setLoading(isLoading, text = "") {
