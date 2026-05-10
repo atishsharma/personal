@@ -7,19 +7,22 @@ const MapEngine = {
   selectedCountryId: null,
 
   init() {
+    const isMobile = window.innerWidth <= 768;
     this.map = L.map('map', {
-      center: [40, 0],
-      zoom: 2,
+      center: isMobile ? [22, 78] : [40, 0],
+      zoom: isMobile ? 3 : 2,
       minZoom: 2,
       maxBounds: [[-90, -180], [90, 180]],
-      zoomControl: false // We add it manually below
+      zoomControl: false,
+      attributionControl: false
     });
 
+    L.control.attribution({ position: 'bottomleft' }).addTo(this.map);
     L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
     // Dark minimalist basemap
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-      attribution: '&copy; Atish Geopolitics',
+      attribution: "&copy; Atish's Geopolitics Atlas",
       maxZoom: 17
     }).addTo(this.map);
 
@@ -159,6 +162,12 @@ const MapEngine = {
     });
     if (targetLayer) {
        this.map.flyToBounds(targetLayer.getBounds(), { padding: [50, 50], duration: 1.5, maxZoom: 4 });
+       
+       // Hide right panel on mobile to focus on the map
+       if (window.innerWidth <= 768) {
+         const rightPanel = document.getElementById('right-panel');
+         if (rightPanel) rightPanel.classList.add('hidden-right');
+       }
     }
   },
 

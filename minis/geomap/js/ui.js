@@ -39,10 +39,26 @@ const UI = {
     });
 
     // View profile button
-    document.getElementById('btn-view-profile').addEventListener('click', () => {
-      document.getElementById('left-panel').classList.remove('hidden-left');
-      if (window.innerWidth <= 768) {
-        document.getElementById('right-panel').classList.add('hidden-right');
+    document.getElementById('btn-view-profile').addEventListener('click', (e) => {
+      const leftPanel = document.getElementById('left-panel');
+      const rightPanel = document.getElementById('right-panel');
+      const isMobile = window.innerWidth <= 768;
+      const isVisible = !leftPanel.classList.contains('hidden-left');
+
+      if (isVisible) {
+        leftPanel.classList.add('hidden-left');
+        e.target.style.background = 'var(--accent-blue)';
+        e.target.textContent = 'View Country Profile';
+        if (isMobile) {
+          rightPanel.classList.remove('hidden-right');
+        }
+      } else {
+        leftPanel.classList.remove('hidden-left');
+        e.target.style.background = 'var(--accent-green)';
+        e.target.textContent = isMobile ? 'Back to Dossier' : 'Close Profile';
+        if (isMobile) {
+          rightPanel.classList.add('hidden-right');
+        }
       }
     });
 
@@ -100,6 +116,13 @@ const UI = {
     document.getElementById('right-panel').classList.remove('hidden-right');
     // Ensure left panel is hidden initially when clicking a new country
     document.getElementById('left-panel').classList.add('hidden-left');
+    
+    // Reset toggle button
+    const toggleBtn = document.getElementById('btn-view-profile');
+    if (toggleBtn) {
+        toggleBtn.style.background = 'var(--accent-blue)';
+        toggleBtn.textContent = 'View Country Profile';
+    }
 
     document.getElementById('country-title').textContent = id;
     document.getElementById('right-panel-title').textContent = id + ' Dossier';
