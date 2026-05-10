@@ -801,7 +801,6 @@
     </div>
 
     <!-- Accent End-of-Page Bar -->
-    <!-- Accent End-of-Page Bar -->
     <div class="flex justify-center py-[2px] z-10">
         <div class="h-[4px] w-[90px] rounded-full overflow-hidden relative" style="background: rgba(var(--c-main), 0.2);">
             <div class="absolute inset-0 rounded-full" style="background: rgb(var(--c-main)); animation: accentBarSlide 2s ease-in-out infinite;"></div>
@@ -818,8 +817,6 @@
             body.bottom-bar-active { padding-bottom: 80px !important; }
         }
     </style>
-
-
 
     <!-- Loading State -->
     <div id="loading-state" class="fixed inset-0 backdrop-blur-2xl flex flex-col items-center justify-center z-50 hidden bg-white/20 dark:bg-black/40">
@@ -847,12 +844,13 @@
         const savedSettings = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
 
         const state = {
-            lat: savedSettings.lat || 30.7333, 
-            lon: savedSettings.lon || 76.7794,
-            locationName: savedSettings.locationName || "Chandigarh",
-            stateRegion: savedSettings.stateRegion || "Chandigarh", 
-            country: savedSettings.country || "India", 
-            timezone: savedSettings.timezone || "Asia/Kolkata", 
+            // Nullified defaults here to detect first-time visitors
+            lat: savedSettings.lat || null, 
+            lon: savedSettings.lon || null,
+            locationName: savedSettings.locationName || null,
+            stateRegion: savedSettings.stateRegion || null, 
+            country: savedSettings.country || null, 
+            timezone: savedSettings.timezone || null, 
             provider: savedSettings.provider || "open-meteo", 
             apiKey: savedSettings.apiKey || "",
             theme: savedSettings.theme || "light", 
@@ -947,6 +945,7 @@
 
         // Helper to smoothly add options dynamically if they don't exist
         function updateSelectOption(selectEl, value) {
+            if (!value) return;
             let exists = Array.from(selectEl.options).some(opt => opt.value === value);
             if (!exists && value) selectEl.add(new Option(value, value));
             selectEl.value = value;
@@ -1002,8 +1001,8 @@
             els.providerSelect.value = state.provider;
             els.apiKeyInput.value = state.apiKey;
             els.unitSelect.value = state.units;
-            updateSelectOption(els.countryInput, state.country);
-            updateSelectOption(els.timezoneInput, state.timezone);
+            if (state.country) updateSelectOption(els.countryInput, state.country);
+            if (state.timezone) updateSelectOption(els.timezoneInput, state.timezone);
             
             els.colorBtns.forEach(btn => {
                 if(btn.dataset.color === state.color) btn.classList.add('active');
@@ -1012,7 +1011,7 @@
             
             checkApiFieldVisibility();
 
-            els.locateBtn.addEventListener('click', getUserLocation);
+            els.locateBtn.addEventListener('click', () => getUserLocation(false));
             els.themeBtn.addEventListener('click', toggleTheme);
             
             els.settingsBtn.addEventListener('click', () => els.settingsModal.classList.remove('hidden'));
@@ -1020,7 +1019,7 @@
             els.closeInfoBtn.addEventListener('click', () => els.infoModal.classList.add('hidden'));
 
             // Mobile bottom bar wiring
-            els.locateBtnMobile.addEventListener('click', getUserLocation);
+            els.locateBtnMobile.addEventListener('click', () => getUserLocation(false));
             els.themeBtnMobile.addEventListener('click', toggleTheme);
             els.settingsBtnMobile.addEventListener('click', () => els.settingsModal.classList.remove('hidden'));
 
@@ -1090,10 +1089,17 @@
 
             updateClock();
             setInterval(updateClock, 1000);
-            fetchWeather();
-            
-            renderPinnedCities();
             window.addEventListener('resize', updatePinnedArrows);
+
+            // ---- BOOT & LOCATION LOGIC ----
+            if (state.lat === null || state.lon === null) {
+                // First start: Ask for Location Permission Automatically
+                getUserLocation(true);
+            } else {
+                // Future visits: Load saved location seamlessly
+                fetchWeather();
+                renderPinnedCities();
+            }
         }
 
         function applyMobileLayout(mode) {
@@ -1148,7 +1154,7 @@
                 div.className = 'p-4 hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer flex flex-col transition-colors border-b border-black/5 dark:border-white/5 last:border-0';
                 div.innerHTML = `<span class="font-extrabold text-[rgb(var(--c-main))]">${city.name}</span><span class="text-xs font-bold text-gray-500 dark:text-gray-400 mt-1">${city.admin1 ? city.admin1 + ', ' : ''}${city.country}</span>`;
                 div.addEventListener('click', () => {
-                    if (state.pinnedCities.length === 0) {
+                    if (state.pinnedCities.length === 0 && state.locationName) {
                         state.pinnedCities.push({ name: state.locationName, lat: state.lat, lon: state.lon, isHome: true, stateRegion: state.stateRegion, country: state.country });
                     }
                     state.lat = city.latitude;
@@ -1215,7 +1221,7 @@
                 div.innerHTML = `<span class="font-extrabold text-[rgb(var(--c-main))] transition-colors duration-300">${city.name}</span><span class="text-xs font-bold text-gray-500 dark:text-gray-400 mt-1">${city.admin1 ? city.admin1 + ', ' : ''}${city.country}</span>`;
                 
                 div.addEventListener('click', () => {
-                    if (state.pinnedCities.length === 0) {
+                    if (state.pinnedCities.length === 0 && state.locationName) {
                         state.pinnedCities.push({ name: state.locationName, lat: state.lat, lon: state.lon, isHome: true, stateRegion: state.stateRegion, country: state.country });
                     }
 
@@ -1467,13 +1473,15 @@
             }
         }
 
-        function getUserLocation() {
+        // Updated getUserLocation with an `isInitialSetup` flag
+        function getUserLocation(isInitialSetup = false) {
             if (!navigator.geolocation) {
                 showToast("Geolocation is not supported by your browser", "x-circle", "red");
+                if (isInitialSetup) applyFallbackLocation();
                 return;
             }
 
-            setLoading(true, "Locating you...");
+            setLoading(true, isInitialSetup ? "Asking for location access..." : "Locating you...");
             
             navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -1496,10 +1504,42 @@
                 },
                 (error) => {
                     setLoading(false);
-                    showToast("Location access denied or unavailable.", "alert-circle", "red");
+                    if (isInitialSetup) {
+                        showToast("Location denied. Showing default city.", "alert-circle", "red");
+                        applyFallbackLocation();
+                    } else {
+                        showToast("Location access denied or unavailable.", "alert-circle", "red");
+                    }
                 },
                 { timeout: 10000 }
             );
+        }
+
+        // Added graceful fallback for users who deny permission on first load
+        function applyFallbackLocation() {
+            state.lat = 30.7333; // Chandigarh default
+            state.lon = 76.7794;
+            state.locationName = "Chandigarh";
+            state.stateRegion = "Chandigarh";
+            state.country = "India";
+            state.timezone = "Asia/Kolkata";
+            
+            if (state.pinnedCities.length === 0) {
+                state.pinnedCities.push({
+                    name: state.locationName,
+                    lat: state.lat,
+                    lon: state.lon,
+                    isHome: true,
+                    stateRegion: state.stateRegion,
+                    country: state.country
+                });
+            } else {
+                state.pinnedCities[0] = { name: state.locationName, lat: state.lat, lon: state.lon, isHome: true, stateRegion: state.stateRegion, country: state.country };
+            }
+            
+            saveLocationToStorage();
+            fetchWeather();
+            renderPinnedCities();
         }
 
         async function reverseGeocode() {
@@ -1834,9 +1874,7 @@
             let swipeStartX = 0, swipeDelta = 0, swiping = false, flipping = false;
             const card = document.getElementById('main-weather-card');
             if (!card) return;
-            // Removed perspective container to apply it directly in animation
-            // card.parentElement.classList.add('card-flip-container');
-
+            
             function handleSwipeEnd() {
                 if (!swiping || flipping) return;
                 swiping = false;
