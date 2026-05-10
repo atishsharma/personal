@@ -17,7 +17,6 @@ const MapEngine = {
       attributionControl: false
     });
 
-    L.control.attribution({ position: 'bottomleft' }).addTo(this.map);
     L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
     // Dark minimalist basemap
@@ -32,7 +31,7 @@ const MapEngine = {
   renderLayer() {
     if (this.geoLayer) this.map.removeLayer(this.geoLayer);
 
-    this.geoLayer = L.geoJSON(DataLoader.data.geomap, {
+    this.geoLayer = L.geoJSON(DataLoader.data.geomapFeatures, {
       style: (feature) => this.getFeatureStyle(feature),
       onEachFeature: (feature, layer) => {
         layer.on({
@@ -130,19 +129,24 @@ const MapEngine = {
     this.selectCountry(id);
   },
 
-  selectCountry(id) {
+  async selectCountry(id) {
     this.selectedCountryId = id;
+    
+    await DataLoader.loadChunkForCountry(id);
+    this.renderLayer(); // Re-render to show newly loaded chunk and update colors
+    
     let targetLayer = null;
-    this.geoLayer.eachLayer(layer => {
-      if (layer.feature.properties.name === id) {
-        targetLayer = layer;
-      }
-    });
+    if (this.geoLayer) {
+        this.geoLayer.eachLayer(layer => {
+          if (layer.feature.properties.name === id) {
+            targetLayer = layer;
+          }
+        });
+    }
     
     if (targetLayer) {
        this.map.flyToBounds(targetLayer.getBounds(), { padding: [50, 50], duration: 1 });
     }
-    this.renderLayer(); // Re-render to update colors based on selection
     UI.updateCountryProfile(id);
   },
 

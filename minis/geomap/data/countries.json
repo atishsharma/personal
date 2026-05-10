@@ -162,7 +162,7 @@
   {
     "id": "Bhutan",
     "name": "Bhutan",
-    "region": "Europe"
+    "region": "Asia"
   },
   {
     "id": "Ukraine",
@@ -172,7 +172,7 @@
   {
     "id": "Belarus",
     "name": "Belarus",
-    "region": "Oceania"
+    "region": "Europe"
   },
   {
     "id": "Namibia",
@@ -297,7 +297,7 @@
   {
     "id": "Belgium",
     "name": "Belgium",
-    "region": "Oceania"
+    "region": "Europe"
   },
   {
     "id": "Georgia",
@@ -312,7 +312,7 @@
   {
     "id": "Albania",
     "name": "Albania",
-    "region": "Americas"
+    "region": "Europe"
   },
   {
     "id": "Azerbaijan",
@@ -442,7 +442,7 @@
   {
     "id": "Austria",
     "name": "Austria",
-    "region": "Oceania"
+    "region": "Europe"
   },
   {
     "id": "Iraq",
@@ -502,12 +502,12 @@
   {
     "id": "Benin",
     "name": "Benin",
-    "region": "Oceania"
+    "region": "Africa"
   },
   {
     "id": "Angola",
     "name": "Angola",
-    "region": "Asia"
+    "region": "Africa"
   },
   {
     "id": "Croatia",
@@ -532,7 +532,7 @@
   {
     "id": "Botswana",
     "name": "Botswana",
-    "region": "Oceania"
+    "region": "Africa"
   },
   {
     "id": "Zimbabwe",
@@ -547,7 +547,7 @@
   {
     "id": "Bulgaria",
     "name": "Bulgaria",
-    "region": "Americas"
+    "region": "Europe"
   },
   {
     "id": "Thailand",
@@ -597,7 +597,7 @@
   {
     "id": "Brunei",
     "name": "Brunei",
-    "region": "Africa"
+    "region": "Asia"
   },
   {
     "id": "Monaco",
@@ -607,7 +607,7 @@
   {
     "id": "Algeria",
     "name": "Algeria",
-    "region": "Oceania"
+    "region": "Africa"
   },
   {
     "id": "Mozambique",
@@ -637,17 +637,17 @@
   {
     "id": "Bangladesh",
     "name": "Bangladesh",
-    "region": "Oceania"
+    "region": "Asia"
   },
   {
     "id": "Andorra",
     "name": "Andorra",
-    "region": "Asia"
+    "region": "Europe"
   },
   {
     "id": "Afghanistan",
     "name": "Afghanistan",
-    "region": "Americas"
+    "region": "Asia"
   },
   {
     "id": "Montenegro",
@@ -657,7 +657,7 @@
   {
     "id": "Bosnia and Herzegovina",
     "name": "Bosnia and Herzegovina",
-    "region": "Asia"
+    "region": "Europe"
   },
   {
     "id": "Uganda",
@@ -787,7 +787,7 @@
   {
     "id": "Belize",
     "name": "Belize",
-    "region": "Europe"
+    "region": "Americas"
   },
   {
     "id": "Panama",
@@ -882,7 +882,7 @@
   {
     "id": "Australia",
     "name": "Australia",
-    "region": "Americas"
+    "region": "Oceania"
   },
   {
     "id": "Greenland",
@@ -920,19 +920,19 @@
     "region": "Americas"
   },
   {
-    "id": "Cura\u00e7ao",
-    "name": "Cura\u00e7ao",
+    "id": "Curaçao",
+    "name": "Curaçao",
     "region": "Asia"
   },
   {
     "id": "Aruba",
     "name": "Aruba",
-    "region": "Africa"
+    "region": "Americas"
   },
   {
     "id": "Bahamas",
     "name": "Bahamas",
-    "region": "Europe"
+    "region": "Americas"
   },
   {
     "id": "Turks and Caicos Islands",
@@ -1007,7 +1007,7 @@
   {
     "id": "Barbados",
     "name": "Barbados",
-    "region": "Asia"
+    "region": "Americas"
   },
   {
     "id": "Saint Lucia",
@@ -1032,7 +1032,7 @@
   {
     "id": "Antigua and Barbuda",
     "name": "Antigua and Barbuda",
-    "region": "Africa"
+    "region": "Americas"
   },
   {
     "id": "Saint Kitts and Nevis",
@@ -1057,12 +1057,12 @@
   {
     "id": "Anguilla",
     "name": "Anguilla",
-    "region": "Asia"
+    "region": "Americas"
   },
   {
     "id": "British Virgin Islands",
     "name": "British Virgin Islands",
-    "region": "Europe"
+    "region": "Americas"
   },
   {
     "id": "Jamaica",
@@ -1077,7 +1077,7 @@
   {
     "id": "Bermuda",
     "name": "Bermuda",
-    "region": "Europe"
+    "region": "Americas"
   },
   {
     "id": "Heard Island and McDonald Islands",
@@ -1100,8 +1100,8 @@
     "region": "Africa"
   },
   {
-    "id": "S\u00e3o Tom\u00e9 and Principe",
-    "name": "S\u00e3o Tom\u00e9 and Principe",
+    "id": "São Tomé and Principe",
+    "name": "São Tomé and Principe",
     "region": "Asia"
   },
   {
@@ -1247,7 +1247,7 @@
   {
     "id": "Bahrain",
     "name": "Bahrain",
-    "region": "Americas"
+    "region": "Asia"
   },
   {
     "id": "Coral Sea Islands",

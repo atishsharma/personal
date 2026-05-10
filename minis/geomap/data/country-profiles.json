@@ -1,97 +1,57 @@
 {
   "Afghanistan": {
     "capital": "Kabul",
-    "population": 41128771,
-    "gdp_nominal_usd": 19660000000,
-    "gdp_ppp_usd": 81020000000,
-    "area_km2": 652230,
-    "population_density": 60,
-    "currency": "Afghani (AFN)",
-    "major_exports": [
-      "Dried Fruits",
-      "Carpets",
-      "Precious Stones"
-    ],
-    "major_imports": [
-      "Petroleum Products",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Agriculture",
-      "Mining",
-      "Textiles"
-    ],
-    "major_cities": [
-      {
-        "name": "Kabul",
-        "population": 4434550
-      },
-      {
-        "name": "Kandahar",
-        "population": 614118
-      },
-      {
-        "name": "Herat",
-        "population": 556205
-      }
-    ],
+    "population": 45047069,
+    "gdp_nominal_usd": 19662000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 140,
+    "gdp_growth_percent": 3.0,
+    "gdp_per_capita_usd": 448,
+    "area_km2": 652860,
+    "population_density": 69,
+    "currency": "Afghan afghani (AFN)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".af",
     "calling_code": "+93",
     "timezones": [
       "UTC+04:30"
     ],
     "languages": [
+      "Dari",
       "Pashto",
-      "Dari"
+      "Turkmen"
     ],
-    "government_type": "Interim Taliban government",
-    "head_of_state": "Supreme Leader",
+    "government_type": null,
+    "head_of_state": null,
     "military_spending": null,
-    "hdi": 0.462,
-    "neighboring_countries": [
-      "Pakistan",
-      "Iran",
-      "Turkmenistan",
-      "Uzbekistan",
-      "Tajikistan",
-      "China"
-    ]
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Albania": {
     "capital": "Tirana",
-    "population": 2761785,
-    "gdp_nominal_usd": 33330000000,
-    "gdp_ppp_usd": 51000000000,
-    "area_km2": 28748,
-    "population_density": 97,
-    "currency": "Lek (ALL)",
-    "major_exports": [
-      "Footwear",
-      "Iron",
-      "Crude Petroleum"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Cars",
-      "Packaged Medicaments"
-    ],
-    "largest_industries": [
-      "Agriculture",
-      "Energy",
-      "Mining",
-      "Tourism"
-    ],
-    "major_cities": [
-      {
-        "name": "Tirana",
-        "population": 418495
-      },
-      {
-        "name": "Durr\u00ebs",
-        "population": 113249
-      }
-    ],
+    "population": 2751025,
+    "gdp_nominal_usd": 33333312000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 119,
+    "gdp_growth_percent": 3.41,
+    "gdp_per_capita_usd": 12493,
+    "area_km2": 27400,
+    "population_density": 100,
+    "currency": "Albanian lek (ALL)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".al",
     "calling_code": "+355",
     "timezones": [
@@ -100,106 +60,70 @@
     "languages": [
       "Albanian"
     ],
-    "government_type": "Unitary parliamentary republic",
-    "head_of_state": "President",
-    "military_spending": 350000000,
-    "hdi": 0.796,
-    "neighboring_countries": [
-      "Montenegro",
-      "Kosovo",
-      "Macedonia",
-      "Greece"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Algeria": {
     "capital": "Algiers",
-    "population": 45400000,
-    "gdp_nominal_usd": 317170000000,
-    "gdp_ppp_usd": 705000000000,
-    "area_km2": 2381741,
-    "population_density": 19,
-    "currency": "Dinar (DZD)",
-    "major_exports": [
-      "Crude Petroleum",
-      "Petroleum Gas",
-      "Refined Petroleum"
-    ],
-    "major_imports": [
-      "Wheat",
-      "Cars",
-      "Refined Petroleum"
-    ],
-    "largest_industries": [
-      "Oil and Gas",
-      "Mining",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Algiers",
-        "population": 3915811
-      },
-      {
-        "name": "Oran",
-        "population": 852000
-      }
-    ],
+    "population": 48028334,
+    "gdp_nominal_usd": 317173000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 51,
+    "gdp_growth_percent": 3.78,
+    "gdp_per_capita_usd": 6628,
+    "area_km2": 2381740,
+    "population_density": 20,
+    "currency": "Algerian dinar (DZD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".dz",
     "calling_code": "+213",
     "timezones": [
       "UTC+01:00"
     ],
     "languages": [
-      "Arabic",
-      "Berber",
-      "French"
+      "Arabic"
     ],
-    "government_type": "Unitary semi-presidential republic",
-    "head_of_state": "President",
-    "military_spending": 18300000000,
-    "hdi": 0.745,
-    "neighboring_countries": [
-      "Morocco",
-      "Tunisia",
-      "Libya",
-      "Niger",
-      "Mali",
-      "Mauritania"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Africa",
+    "subregion": "Northern Africa",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Angola": {
     "capital": "Luanda",
-    "population": 35027000,
-    "gdp_nominal_usd": 152350000000,
-    "gdp_ppp_usd": 261000000000,
+    "population": 40215179,
+    "gdp_nominal_usd": 152354000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 64,
+    "gdp_growth_percent": 2.29,
+    "gdp_per_capita_usd": 3754,
     "area_km2": 1246700,
-    "population_density": 26,
-    "currency": "Kwanza (AOA)",
-    "major_exports": [
-      "Crude Petroleum",
-      "Diamonds",
-      "Refined Petroleum"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Cars",
-      "Poultry"
-    ],
-    "largest_industries": [
-      "Oil",
-      "Diamonds",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Luanda",
-        "population": 8952496
-      },
-      {
-        "name": "Huambo",
-        "population": 595000
-      }
-    ],
+    "population_density": 32,
+    "currency": "Angolan kwanza (AOA)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".ao",
     "calling_code": "+244",
     "timezones": [
@@ -208,105 +132,71 @@
     "languages": [
       "Portuguese"
     ],
-    "government_type": "Unitary presidential republic",
-    "head_of_state": "President",
-    "military_spending": 2500000000,
-    "hdi": 0.586,
-    "neighboring_countries": [
-      "Democratic Republic of the Congo",
-      "Republic of the Congo",
-      "Zambia",
-      "Namibia"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Africa",
+    "subregion": "Middle Africa",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Argentina": {
     "capital": "Buenos Aires",
-    "population": 46044703,
-    "gdp_nominal_usd": 688380000000,
-    "gdp_ppp_usd": 1196000000000,
-    "area_km2": 2780400,
+    "population": 46003734,
+    "gdp_nominal_usd": 688378000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 27,
+    "gdp_growth_percent": 3.5,
+    "gdp_per_capita_usd": 14357,
+    "area_km2": 2736690,
     "population_density": 17,
-    "currency": "Peso (ARS)",
-    "major_exports": [
-      "Soybeans",
-      "Corn",
-      "Cars",
-      "Wheat"
-    ],
-    "major_imports": [
-      "Cars",
-      "Refined Petroleum",
-      "Vehicle Parts"
-    ],
-    "largest_industries": [
-      "Agriculture",
-      "Manufacturing",
-      "Mining",
-      "Tourism"
-    ],
-    "major_cities": [
-      {
-        "name": "Buenos Aires",
-        "population": 15369919
-      },
-      {
-        "name": "C\u00f3rdoba",
-        "population": 1535868
-      },
-      {
-        "name": "Rosario",
-        "population": 1276000
-      }
-    ],
+    "currency": "Argentine peso (ARS)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".ar",
     "calling_code": "+54",
     "timezones": [
       "UTC-03:00"
     ],
     "languages": [
+      "Guaraní",
       "Spanish"
     ],
-    "government_type": "Federal presidential republic",
-    "head_of_state": "President",
-    "military_spending": 5500000000,
-    "hdi": 0.842,
-    "neighboring_countries": [
-      "Chile",
-      "Bolivia",
-      "Paraguay",
-      "Brazil",
-      "Uruguay"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "South America",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Armenia": {
     "capital": "Yerevan",
-    "population": 2777970,
-    "gdp_nominal_usd": 31870000000,
-    "gdp_ppp_usd": 60600000000,
-    "area_km2": 29743,
-    "population_density": 93,
-    "currency": "Dram (AMD)",
-    "major_exports": [
-      "Gold",
-      "Copper",
-      "Diamonds"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Cars",
-      "Wheat"
-    ],
-    "largest_industries": [
-      "Mining",
-      "Agriculture",
-      "IT"
-    ],
-    "major_cities": [
-      {
-        "name": "Yerevan",
-        "population": 1075800
-      }
-    ],
+    "population": 2930915,
+    "gdp_nominal_usd": 31873000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 121,
+    "gdp_growth_percent": 5.3,
+    "gdp_per_capita_usd": 10410,
+    "area_km2": 28470,
+    "population_density": 103,
+    "currency": "Armenian dram (AMD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".am",
     "calling_code": "+374",
     "timezones": [
@@ -315,103 +205,77 @@
     "languages": [
       "Armenian"
     ],
-    "government_type": "Unitary parliamentary republic",
-    "head_of_state": "President",
-    "military_spending": 1000000000,
-    "hdi": 0.786,
-    "neighboring_countries": [
-      "Turkey",
-      "Georgia",
-      "Azerbaijan",
-      "Iran"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Australia": {
     "capital": "Canberra",
-    "population": 26473055,
-    "gdp_nominal_usd": 2120000000000,
-    "gdp_ppp_usd": 1710000000000,
-    "area_km2": 7692024,
-    "population_density": 3,
-    "currency": "Australian Dollar (AUD)",
-    "major_exports": [
-      "Iron Ore",
-      "Coal",
-      "Petroleum Gas",
-      "Gold"
-    ],
-    "major_imports": [
-      "Cars",
-      "Refined Petroleum",
-      "Computers"
-    ],
-    "largest_industries": [
-      "Mining",
-      "Finance",
-      "Agriculture",
-      "Tourism"
-    ],
-    "major_cities": [
-      {
-        "name": "Sydney",
-        "population": 5312163
-      },
-      {
-        "name": "Melbourne",
-        "population": 5078193
-      },
-      {
-        "name": "Brisbane",
-        "population": 2560700
-      }
-    ],
+    "population": 27227096,
+    "gdp_nominal_usd": 2123963000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 12,
+    "gdp_growth_percent": 2.01,
+    "gdp_per_capita_usd": 75648,
+    "area_km2": 7682300,
+    "population_density": 4,
+    "currency": "Australian dollar (AUD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".au",
     "calling_code": "+61",
     "timezones": [
-      "UTC+08:00 to UTC+10:00"
+      "UTC+05:00",
+      "UTC+06:30",
+      "UTC+07:00",
+      "UTC+08:00",
+      "UTC+09:30",
+      "UTC+10:00",
+      "UTC+10:30",
+      "UTC+11:30"
     ],
     "languages": [
       "English"
     ],
-    "government_type": "Federal parliamentary constitutional monarchy",
-    "head_of_state": "Monarch",
-    "military_spending": 32600000000,
-    "hdi": 0.946,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Oceania",
+    "subregion": "Australia and New Zealand",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Austria": {
     "capital": "Vienna",
-    "population": 9104772,
-    "gdp_nominal_usd": 623720000000,
-    "gdp_ppp_usd": 629000000000,
-    "area_km2": 83871,
-    "population_density": 109,
-    "currency": "Euro (EUR)",
-    "major_exports": [
-      "Cars",
-      "Vehicle Parts",
-      "Packaged Medicaments"
-    ],
-    "major_imports": [
-      "Cars",
-      "Crude Petroleum",
-      "Vehicle Parts"
-    ],
-    "largest_industries": [
-      "Manufacturing",
-      "Tourism",
-      "Finance"
-    ],
-    "major_cities": [
-      {
-        "name": "Vienna",
-        "population": 1982442
-      },
-      {
-        "name": "Graz",
-        "population": 294630
-      }
-    ],
+    "population": 9107266,
+    "gdp_nominal_usd": 623719000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 29,
+    "gdp_growth_percent": 0.68,
+    "gdp_per_capita_usd": 67761,
+    "area_km2": 82409,
+    "population_density": 111,
+    "currency": "euro (EUR)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".at",
     "calling_code": "+43",
     "timezones": [
@@ -420,48 +284,34 @@
     "languages": [
       "German"
     ],
-    "government_type": "Federal parliamentary republic",
-    "head_of_state": "President",
-    "military_spending": 4000000000,
-    "hdi": 0.926,
-    "neighboring_countries": [
-      "Germany",
-      "Czech Republic",
-      "Slovakia",
-      "Hungary",
-      "Slovenia",
-      "Italy",
-      "Switzerland"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Europe",
+    "subregion": "Central Europe",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Azerbaijan": {
     "capital": "Baku",
-    "population": 10145000,
-    "gdp_nominal_usd": 78370000000,
-    "gdp_ppp_usd": 191000000000,
-    "area_km2": 86600,
-    "population_density": 123,
-    "currency": "Manat (AZN)",
-    "major_exports": [
-      "Crude Petroleum",
-      "Petroleum Gas"
-    ],
-    "major_imports": [
-      "Cars",
-      "Wheat",
-      "Iron"
-    ],
-    "largest_industries": [
-      "Oil and Gas",
-      "Agriculture",
-      "Mining"
-    ],
-    "major_cities": [
-      {
-        "name": "Baku",
-        "population": 2293100
-      }
-    ],
+    "population": 10454855,
+    "gdp_nominal_usd": 78372000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 91,
+    "gdp_growth_percent": 2.22,
+    "gdp_per_capita_usd": 7467,
+    "area_km2": 82658,
+    "population_density": 126,
+    "currency": "Azerbaijani manat (AZN)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".az",
     "calling_code": "+994",
     "timezones": [
@@ -470,51 +320,34 @@
     "languages": [
       "Azerbaijani"
     ],
-    "government_type": "Unitary semi-presidential republic",
-    "head_of_state": "President",
-    "military_spending": 3000000000,
-    "hdi": 0.745,
-    "neighboring_countries": [
-      "Russia",
-      "Georgia",
-      "Armenia",
-      "Iran",
-      "Turkey"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Bangladesh": {
     "capital": "Dhaka",
-    "population": 172954319,
-    "gdp_nominal_usd": 510700000000,
-    "gdp_ppp_usd": 1430000000000,
-    "area_km2": 147570,
-    "population_density": 1172,
-    "currency": "Taka (BDT)",
-    "major_exports": [
-      "Textiles",
-      "Garments",
-      "Footwear"
-    ],
-    "major_imports": [
-      "Cotton",
-      "Crude Petroleum",
-      "Iron"
-    ],
-    "largest_industries": [
-      "Garments",
-      "Agriculture",
-      "Pharmaceuticals"
-    ],
-    "major_cities": [
-      {
-        "name": "Dhaka",
-        "population": 22478116
-      },
-      {
-        "name": "Chittagong",
-        "population": 5020000
-      }
-    ],
+    "population": 177818044,
+    "gdp_nominal_usd": 510705000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 37,
+    "gdp_growth_percent": 4.69,
+    "gdp_per_capita_usd": 2911,
+    "area_km2": 130170,
+    "population_density": 1366,
+    "currency": "Bangladeshi taka (BDT)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".bd",
     "calling_code": "+880",
     "timezones": [
@@ -523,44 +356,34 @@
     "languages": [
       "Bengali"
     ],
-    "government_type": "Unitary parliamentary republic",
-    "head_of_state": "President",
-    "military_spending": 5100000000,
-    "hdi": 0.67,
-    "neighboring_countries": [
-      "India",
-      "Myanmar"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Belarus": {
     "capital": "Minsk",
-    "population": 9200000,
-    "gdp_nominal_usd": 102040000000,
-    "gdp_ppp_usd": 211000000000,
-    "area_km2": 207600,
+    "population": 8937018,
+    "gdp_nominal_usd": 102042000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 82,
+    "gdp_growth_percent": 1.22,
+    "gdp_per_capita_usd": 11286,
+    "area_km2": 202910,
     "population_density": 44,
-    "currency": "Belarusian Ruble (BYN)",
-    "major_exports": [
-      "Refined Petroleum",
-      "Potassic Fertilizers",
-      "Cheese"
-    ],
-    "major_imports": [
-      "Crude Petroleum",
-      "Cars",
-      "Packaged Medicaments"
-    ],
-    "largest_industries": [
-      "Manufacturing",
-      "Agriculture",
-      "IT"
-    ],
-    "major_cities": [
-      {
-        "name": "Minsk",
-        "population": 2020600
-      }
-    ],
+    "currency": "Belarusian ruble (BYN)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".by",
     "calling_code": "+375",
     "timezones": [
@@ -570,153 +393,110 @@
       "Belarusian",
       "Russian"
     ],
-    "government_type": "Unitary presidential republic",
-    "head_of_state": "President",
-    "military_spending": 1800000000,
-    "hdi": 0.808,
-    "neighboring_countries": [
-      "Russia",
-      "Ukraine",
-      "Poland",
-      "Lithuania",
-      "Latvia"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Europe",
+    "subregion": "Eastern Europe",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Belgium": {
     "capital": "Brussels",
-    "population": 11697557,
+    "population": 11774642,
     "gdp_nominal_usd": 776730000000,
-    "gdp_ppp_usd": 740000000000,
-    "area_km2": 30528,
-    "population_density": 383,
-    "currency": "Euro (EUR)",
-    "major_exports": [
-      "Cars",
-      "Refined Petroleum",
-      "Diamonds",
-      "Packaged Medicaments"
-    ],
-    "major_imports": [
-      "Cars",
-      "Crude Petroleum",
-      "Refined Petroleum"
-    ],
-    "largest_industries": [
-      "Chemicals",
-      "Automotive",
-      "Metals",
-      "Food"
-    ],
-    "major_cities": [
-      {
-        "name": "Brussels",
-        "population": 1222637
-      },
-      {
-        "name": "Antwerp",
-        "population": 530630
-      }
-    ],
+    "gdp_ppp_usd": null,
+    "gdp_rank": 24,
+    "gdp_growth_percent": 0.66,
+    "gdp_per_capita_usd": 65112,
+    "area_km2": 30280,
+    "population_density": 389,
+    "currency": "euro (EUR)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".be",
     "calling_code": "+32",
     "timezones": [
       "UTC+01:00"
     ],
     "languages": [
-      "Dutch",
+      "German",
       "French",
-      "German"
+      "Dutch"
     ],
-    "government_type": "Federal parliamentary constitutional monarchy",
-    "head_of_state": "Monarch",
-    "military_spending": 8000000000,
-    "hdi": 0.937,
-    "neighboring_countries": [
-      "France",
-      "Germany",
-      "Luxembourg",
-      "Netherlands"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Europe",
+    "subregion": "Western Europe",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Belize": {
     "capital": "Belmopan",
-    "population": 410000,
+    "population": 428644,
     "gdp_nominal_usd": 3450000000,
-    "gdp_ppp_usd": 5400000000,
-    "area_km2": 22966,
-    "population_density": 18,
-    "currency": "Belize Dollar (BZD)",
-    "major_exports": [
-      "Bananas",
-      "Sugar",
-      "Crude Petroleum"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Cars",
-      "Machinery"
-    ],
-    "largest_industries": [
-      "Tourism",
-      "Agriculture",
-      "Oil"
-    ],
-    "major_cities": [
-      {
-        "name": "Belize City",
-        "population": 57169
-      }
-    ],
+    "gdp_ppp_usd": null,
+    "gdp_rank": 181,
+    "gdp_growth_percent": 2.19,
+    "gdp_per_capita_usd": 8134,
+    "area_km2": 22810,
+    "population_density": 19,
+    "currency": "Belize dollar (BZD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".bz",
     "calling_code": "+501",
     "timezones": [
       "UTC-06:00"
     ],
     "languages": [
-      "English"
+      "Belizean Creole",
+      "English",
+      "Spanish"
     ],
-    "government_type": "Parliamentary constitutional monarchy",
-    "head_of_state": "Monarch",
-    "military_spending": 30000000,
-    "hdi": 0.7,
-    "neighboring_countries": [
-      "Mexico",
-      "Guatemala"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "Central America",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Benin": {
     "capital": "Porto-Novo",
-    "population": 13352864,
-    "gdp_nominal_usd": 27790000000,
-    "gdp_ppp_usd": 54000000000,
-    "area_km2": 112622,
-    "population_density": 104,
-    "currency": "CFA Franc (XOF)",
-    "major_exports": [
-      "Cotton",
-      "Cashews",
-      "Gold"
-    ],
-    "major_imports": [
-      "Rice",
-      "Refined Petroleum",
-      "Cars"
-    ],
-    "largest_industries": [
-      "Agriculture",
-      "Cotton",
-      "Trade"
-    ],
-    "major_cities": [
-      {
-        "name": "Cotonou",
-        "population": 679012
-      },
-      {
-        "name": "Porto-Novo",
-        "population": 264320
-      }
-    ],
+    "population": 15170419,
+    "gdp_nominal_usd": 27786000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 125,
+    "gdp_growth_percent": 6.97,
+    "gdp_per_capita_usd": 1809,
+    "area_km2": 112760,
+    "population_density": 135,
+    "currency": "West African CFA franc (XOF)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".bj",
     "calling_code": "+229",
     "timezones": [
@@ -725,46 +505,34 @@
     "languages": [
       "French"
     ],
-    "government_type": "Presidential republic",
-    "head_of_state": "President",
-    "military_spending": 200000000,
-    "hdi": 0.525,
-    "neighboring_countries": [
-      "Togo",
-      "Burkina Faso",
-      "Niger",
-      "Nigeria"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Africa",
+    "subregion": "Western Africa",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Bhutan": {
     "capital": "Thimphu",
-    "population": 782455,
-    "gdp_nominal_usd": 3860000000,
-    "gdp_ppp_usd": 10700000000,
-    "area_km2": 38394,
-    "population_density": 20,
-    "currency": "Ngultrum (BTN)",
-    "major_exports": [
-      "Electricity",
-      "Ferro-Silicon",
-      "Cement"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Machinery",
-      "Iron"
-    ],
-    "largest_industries": [
-      "Hydropower",
-      "Agriculture",
-      "Tourism"
-    ],
-    "major_cities": [
-      {
-        "name": "Thimphu",
-        "population": 114551
-      }
-    ],
+    "population": 802214,
+    "gdp_nominal_usd": 3856000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 179,
+    "gdp_growth_percent": 7.48,
+    "gdp_per_capita_usd": 4867,
+    "area_km2": 38117,
+    "population_density": 21,
+    "currency": "Bhutanese ngultrum (BTN), Indian rupee (INR)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".bt",
     "calling_code": "+975",
     "timezones": [
@@ -773,104 +541,73 @@
     "languages": [
       "Dzongkha"
     ],
-    "government_type": "Constitutional monarchy",
-    "head_of_state": "King",
-    "military_spending": 30000000,
-    "hdi": 0.666,
-    "neighboring_countries": [
-      "India",
-      "China"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Asia",
+    "subregion": "Southern Asia",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Bolivia": {
     "capital": "Sucre",
-    "population": 12224000,
-    "gdp_nominal_usd": 80740000000,
-    "gdp_ppp_usd": 119000000000,
-    "area_km2": 1098581,
-    "population_density": 11,
-    "currency": "Boliviano (BOB)",
-    "major_exports": [
-      "Petroleum Gas",
-      "Gold",
-      "Zinc",
-      "Soybeans"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Cars",
-      "Iron"
-    ],
-    "largest_industries": [
-      "Mining",
-      "Agriculture",
-      "Natural Gas"
-    ],
-    "major_cities": [
-      {
-        "name": "Santa Cruz",
-        "population": 1831434
-      },
-      {
-        "name": "La Paz",
-        "population": 2867504
-      }
-    ],
+    "population": 12749291,
+    "gdp_nominal_usd": 80743000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 90,
+    "gdp_growth_percent": -3.29,
+    "gdp_per_capita_usd": 6333,
+    "area_km2": 1083300,
+    "population_density": 12,
+    "currency": "Bolivian boliviano (BOB)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".bo",
     "calling_code": "+591",
     "timezones": [
       "UTC-04:00"
     ],
     "languages": [
-      "Spanish",
+      "Aymara",
+      "Guaraní",
       "Quechua",
-      "Aymara"
+      "Spanish"
     ],
-    "government_type": "Unitary presidential republic",
-    "head_of_state": "President",
-    "military_spending": 700000000,
-    "hdi": 0.692,
-    "neighboring_countries": [
-      "Brazil",
-      "Paraguay",
-      "Argentina",
-      "Chile",
-      "Peru"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "South America",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Bosnia and Herzegovina": {
     "capital": "Sarajevo",
-    "population": 3210847,
-    "gdp_nominal_usd": 36770000000,
-    "gdp_ppp_usd": 68000000000,
-    "area_km2": 51197,
-    "population_density": 63,
-    "currency": "Convertible Mark (BAM)",
-    "major_exports": [
-      "Electricity",
-      "Seats",
-      "Insulated Wire"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Cars",
-      "Packaged Medicaments"
-    ],
-    "largest_industries": [
-      "Manufacturing",
-      "Mining",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Sarajevo",
-        "population": 275524
-      },
-      {
-        "name": "Banja Luka",
-        "population": 185042
-      }
-    ],
+    "population": 3114242,
+    "gdp_nominal_usd": 36771000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 114,
+    "gdp_growth_percent": 2.2,
+    "gdp_per_capita_usd": 10701,
+    "area_km2": 51000,
+    "population_density": 61,
+    "currency": "Bosnia and Herzegovina convertible mark (BAM)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".ba",
     "calling_code": "+387",
     "timezones": [
@@ -881,46 +618,34 @@
       "Croatian",
       "Serbian"
     ],
-    "government_type": "Federal parliamentary republic",
-    "head_of_state": "Presidency",
-    "military_spending": 250000000,
-    "hdi": 0.78,
-    "neighboring_countries": [
-      "Croatia",
-      "Republic of Serbia",
-      "Montenegro"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Botswana": {
     "capital": "Gaborone",
-    "population": 2630296,
-    "gdp_nominal_usd": 21940000000,
-    "gdp_ppp_usd": 50800000000,
-    "area_km2": 581730,
-    "population_density": 4,
-    "currency": "Pula (BWP)",
-    "major_exports": [
-      "Diamonds",
-      "Copper",
-      "Nickel",
-      "Beef"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Diamonds",
-      "Cars"
-    ],
-    "largest_industries": [
-      "Diamonds",
-      "Tourism",
-      "Beef"
-    ],
-    "major_cities": [
-      {
-        "name": "Gaborone",
-        "population": 231626
-      }
-    ],
+    "population": 2603388,
+    "gdp_nominal_usd": 21937000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 134,
+    "gdp_growth_percent": 4.75,
+    "gdp_per_capita_usd": 8490,
+    "area_km2": 566730,
+    "population_density": 5,
+    "currency": "Botswana pula (BWP)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".bw",
     "calling_code": "+267",
     "timezones": [
@@ -928,157 +653,111 @@
     ],
     "languages": [
       "English",
-      "Setswana"
+      "Tswana"
     ],
-    "government_type": "Parliamentary republic",
-    "head_of_state": "President",
-    "military_spending": 600000000,
-    "hdi": 0.693,
-    "neighboring_countries": [
-      "South Africa",
-      "Namibia",
-      "Zimbabwe",
-      "Zambia"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Africa",
+    "subregion": "Southern Africa",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Brazil": {
-    "capital": "Bras\u00edlia",
-    "population": 216422446,
-    "gdp_nominal_usd": 2640000000000,
-    "gdp_ppp_usd": 4200000000000,
-    "area_km2": 8515767,
-    "population_density": 25,
-    "currency": "Real (BRL)",
-    "major_exports": [
-      "Soybeans",
-      "Iron Ore",
-      "Crude Petroleum",
-      "Sugar",
-      "Poultry"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Vehicle Parts",
-      "Integrated Circuits"
-    ],
-    "largest_industries": [
-      "Agriculture",
-      "Mining",
-      "Manufacturing",
-      "Energy"
-    ],
-    "major_cities": [
-      {
-        "name": "S\u00e3o Paulo",
-        "population": 22430000
-      },
-      {
-        "name": "Rio de Janeiro",
-        "population": 13634000
-      },
-      {
-        "name": "Bras\u00edlia",
-        "population": 4804000
-      }
-    ],
+    "capital": "Brasília",
+    "population": 213562666,
+    "gdp_nominal_usd": 2635912000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 10,
+    "gdp_growth_percent": 1.91,
+    "gdp_per_capita_usd": 12313,
+    "area_km2": 8358140,
+    "population_density": 26,
+    "currency": "Brazilian real (BRL)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".br",
     "calling_code": "+55",
     "timezones": [
-      "UTC-02:00 to UTC-05:00"
+      "UTC-05:00",
+      "UTC-04:00",
+      "UTC-03:00",
+      "UTC-02:00"
     ],
     "languages": [
       "Portuguese"
     ],
-    "government_type": "Federal presidential republic",
-    "head_of_state": "President",
-    "military_spending": 22600000000,
-    "hdi": 0.76,
-    "neighboring_countries": [
-      "Argentina",
-      "Paraguay",
-      "Uruguay",
-      "Venezuela",
-      "Colombia",
-      "Peru",
-      "Bolivia",
-      "Guyana",
-      "Suriname"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "South America",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Brunei": {
     "capital": "Bandar Seri Begawan",
-    "population": 449002,
-    "gdp_nominal_usd": 16860000000,
-    "gdp_ppp_usd": 36600000000,
-    "area_km2": 5765,
-    "population_density": 78,
-    "currency": "Brunei Dollar (BND)",
-    "major_exports": [
-      "Crude Petroleum",
-      "Petroleum Gas"
-    ],
-    "major_imports": [
-      "Cars",
-      "Machinery",
-      "Iron"
-    ],
-    "largest_industries": [
-      "Oil and Gas",
-      "Finance"
-    ],
-    "major_cities": [
-      {
-        "name": "Bandar Seri Begawan",
-        "population": 100700
-      }
-    ],
+    "population": 469775,
+    "gdp_nominal_usd": 16863000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 148,
+    "gdp_growth_percent": 2.6,
+    "gdp_per_capita_usd": 36288,
+    "area_km2": 5270,
+    "population_density": 89,
+    "currency": "Brunei dollar (BND), Singapore dollar (SGD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".bn",
     "calling_code": "+673",
     "timezones": [
       "UTC+08:00"
     ],
     "languages": [
-      "Malay",
-      "English"
+      "Malay"
     ],
-    "government_type": "Absolute monarchy",
-    "head_of_state": "Sultan",
-    "military_spending": 500000000,
-    "hdi": 0.829,
-    "neighboring_countries": [
-      "Malaysia"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Asia",
+    "subregion": "South-Eastern Asia",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Bulgaria": {
     "capital": "Sofia",
-    "population": 6447710,
-    "gdp_nominal_usd": 148120000000,
-    "gdp_ppp_usd": 224000000000,
-    "area_km2": 110879,
-    "population_density": 58,
-    "currency": "Lev (BGN)",
-    "major_exports": [
-      "Refined Petroleum",
-      "Wheat",
-      "Copper"
-    ],
-    "major_imports": [
-      "Crude Petroleum",
-      "Cars",
-      "Packaged Medicaments"
-    ],
-    "largest_industries": [
-      "Manufacturing",
-      "Mining",
-      "Agriculture",
-      "Tourism"
-    ],
-    "major_cities": [
-      {
-        "name": "Sofia",
-        "population": 1307439
-      }
-    ],
+    "population": 6667659,
+    "gdp_nominal_usd": 148121000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 65,
+    "gdp_growth_percent": 2.77,
+    "gdp_per_capita_usd": 23848,
+    "area_km2": 108560,
+    "population_density": 61,
+    "currency": "Bulgarian lev (BGN)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
     "internet_tld": ".bg",
     "calling_code": "+359",
     "timezones": [
@@ -1087,17 +766,18 @@
     "languages": [
       "Bulgarian"
     ],
-    "government_type": "Unitary parliamentary republic",
-    "head_of_state": "President",
-    "military_spending": 2600000000,
-    "hdi": 0.795,
-    "neighboring_countries": [
-      "Romania",
-      "Republic of Serbia",
-      "Macedonia",
-      "Greece",
-      "Turkey"
-    ]
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Europe",
+    "subregion": "Southeast Europe",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Burkina Faso": {
     "capital": "Ouagadougou",
@@ -1245,7 +925,7 @@
     ]
   },
   "Cameroon": {
-    "capital": "Yaound\u00e9",
+    "capital": "Yaoundé",
     "population": 28647293,
     "gdp_nominal_usd": 65140000000,
     "gdp_ppp_usd": 124000000000,
@@ -1273,7 +953,7 @@
         "population": 3663000
       },
       {
-        "name": "Yaound\u00e9",
+        "name": "Yaoundé",
         "population": 4100000
       }
     ],
@@ -1487,7 +1167,7 @@
         "population": 6310000
       },
       {
-        "name": "Valpara\u00edso",
+        "name": "Valparaíso",
         "population": 1005000
       }
     ],
@@ -1571,7 +1251,7 @@
     ]
   },
   "Colombia": {
-    "capital": "Bogot\u00e1",
+    "capital": "Bogotá",
     "population": 52085168,
     "gdp_nominal_usd": 539530000000,
     "gdp_ppp_usd": 1050000000000,
@@ -1596,11 +1276,11 @@
     ],
     "major_cities": [
       {
-        "name": "Bogot\u00e1",
+        "name": "Bogotá",
         "population": 11344312
       },
       {
-        "name": "Medell\u00edn",
+        "name": "Medellín",
         "population": 3934871
       }
     ],
@@ -1625,13 +1305,13 @@
     ]
   },
   "Costa Rica": {
-    "capital": "San Jos\u00e9",
+    "capital": "San José",
     "population": 5262227,
     "gdp_nominal_usd": 109930000000,
     "gdp_ppp_usd": 131000000000,
     "area_km2": 51100,
     "population_density": 100,
-    "currency": "Col\u00f3n (CRC)",
+    "currency": "Colón (CRC)",
     "major_exports": [
       "Medical Instruments",
       "Bananas",
@@ -1649,7 +1329,7 @@
     ],
     "major_cities": [
       {
-        "name": "San Jos\u00e9",
+        "name": "San José",
         "population": 1453500
       }
     ],
@@ -3146,7 +2826,7 @@
     "gdp_ppp_usd": 27000000000,
     "area_km2": 103000,
     "population_density": 4,
-    "currency": "Kr\u00f3na (ISK)",
+    "currency": "Króna (ISK)",
     "major_exports": [
       "Fish",
       "Aluminum",
@@ -4701,7 +4381,7 @@
     ]
   },
   "Moldova": {
-    "capital": "Chi\u0219in\u0103u",
+    "capital": "Chișinău",
     "population": 2512758,
     "gdp_nominal_usd": 21890000000,
     "gdp_ppp_usd": 44000000000,
@@ -4725,7 +4405,7 @@
     ],
     "major_cities": [
       {
-        "name": "Chi\u0219in\u0103u",
+        "name": "Chișinău",
         "population": 685900
       }
     ],
@@ -5210,7 +4890,7 @@
     "gdp_ppp_usd": 49000000000,
     "area_km2": 130373,
     "population_density": 51,
-    "currency": "C\u00f3rdoba (NIO)",
+    "currency": "Córdoba (NIO)",
     "major_exports": [
       "Gold",
       "Coffee",
@@ -5657,13 +5337,13 @@
     ]
   },
   "Paraguay": {
-    "capital": "Asunci\u00f3n",
+    "capital": "Asunción",
     "population": 6861524,
     "gdp_nominal_usd": 60540000000,
     "gdp_ppp_usd": 114000000000,
     "area_km2": 406752,
     "population_density": 17,
-    "currency": "Guaran\u00ed (PYG)",
+    "currency": "Guaraní (PYG)",
     "major_exports": [
       "Soybeans",
       "Electricity",
@@ -5682,7 +5362,7 @@
     ],
     "major_cities": [
       {
-        "name": "Asunci\u00f3n",
+        "name": "Asunción",
         "population": 3279000
       }
     ],
@@ -5693,7 +5373,7 @@
     ],
     "languages": [
       "Spanish",
-      "Guaran\u00ed"
+      "Guaraní"
     ],
     "government_type": "Unitary presidential republic",
     "head_of_state": "President",
@@ -5840,7 +5520,7 @@
         "population": 1860281
       },
       {
-        "name": "Krak\u00f3w",
+        "name": "Kraków",
         "population": 800653
       }
     ],
@@ -6971,7 +6651,7 @@
     ],
     "major_cities": [
       {
-        "name": "Z\u00fcrich",
+        "name": "Zürich",
         "population": 434335
       },
       {
@@ -7203,51 +6883,8 @@
       "Malaysia"
     ]
   },
-  "The Bahamas": {
-    "capital": "Nassau",
-    "population": 412623,
-    "gdp_nominal_usd": 17040000000,
-    "gdp_ppp_usd": 17000000000,
-    "area_km2": 13943,
-    "population_density": 39,
-    "currency": "Bahamian Dollar (BSD)",
-    "major_exports": [
-      "Refined Petroleum",
-      "Ships",
-      "Polystyrene"
-    ],
-    "major_imports": [
-      "Refined Petroleum",
-      "Cars",
-      "Crude Petroleum"
-    ],
-    "largest_industries": [
-      "Tourism",
-      "Finance",
-      "Fishing"
-    ],
-    "major_cities": [
-      {
-        "name": "Nassau",
-        "population": 274400
-      }
-    ],
-    "internet_tld": ".bs",
-    "calling_code": "+1-242",
-    "timezones": [
-      "UTC-05:00"
-    ],
-    "languages": [
-      "English"
-    ],
-    "government_type": "Parliamentary constitutional monarchy",
-    "head_of_state": "Monarch",
-    "military_spending": 140000000,
-    "hdi": 0.812,
-    "neighboring_countries": []
-  },
   "Togo": {
-    "capital": "Lom\u00e9",
+    "capital": "Lomé",
     "population": 8848699,
     "gdp_nominal_usd": 13440000000,
     "gdp_ppp_usd": 25000000000,
@@ -7272,7 +6909,7 @@
     ],
     "major_cities": [
       {
-        "name": "Lom\u00e9",
+        "name": "Lomé",
         "population": 1828000
       }
     ],
@@ -7860,7 +7497,7 @@
     "gdp_ppp_usd": 400000000000,
     "area_km2": 916445,
     "population_density": 32,
-    "currency": "Bol\u00edvar (VES)",
+    "currency": "Bolívar (VES)",
     "major_exports": [
       "Crude Petroleum",
       "Refined Petroleum",
@@ -9098,47 +8735,40 @@
     "neighboring_countries": []
   },
   "Andorra": {
-    "capital": "Andorra City",
-    "population": 5068022,
-    "gdp_nominal_usd": 63154042345,
-    "gdp_ppp_usd": 61946776731,
-    "area_km2": 621318,
-    "population_density": 118,
-    "currency": "Standard Dollar",
-    "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
-    ],
-    "major_imports": [
-      "Fuel",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Services",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Andorra City",
-        "population": 1700834
-      }
-    ],
-    "internet_tld": ".an",
-    "calling_code": "+875",
+    "capital": "Andorra la Vella",
+    "population": 83753,
+    "gdp_nominal_usd": 4879000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 174,
+    "gdp_growth_percent": 2.1,
+    "gdp_per_capita_usd": 53475,
+    "area_km2": 470,
+    "population_density": 178,
+    "currency": "euro (EUR)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
+    "internet_tld": ".ad",
+    "calling_code": "+376",
     "timezones": [
-      "UTC+00:00"
+      "UTC+01:00"
     ],
     "languages": [
-      "English",
-      "Local Language"
+      "Catalan"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 389982646,
-    "hdi": 0.785,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Europe",
+    "subregion": "Southern Europe",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "US Naval Base Guantanamo Bay": {
     "capital": "US Naval Base Guantanamo Bay City",
@@ -9785,8 +9415,8 @@
     "hdi": 0.557,
     "neighboring_countries": []
   },
-  "Cura\u00e7ao": {
-    "capital": "Cura\u00e7ao City",
+  "Curaçao": {
+    "capital": "Curaçao City",
     "population": 5238660,
     "gdp_nominal_usd": 79833662092,
     "gdp_ppp_usd": 126786036553,
@@ -9809,7 +9439,7 @@
     ],
     "major_cities": [
       {
-        "name": "Cura\u00e7ao City",
+        "name": "Curaçao City",
         "population": 96397
       }
     ],
@@ -9829,90 +9459,77 @@
     "neighboring_countries": []
   },
   "Aruba": {
-    "capital": "Aruba City",
-    "population": 3732945,
-    "gdp_nominal_usd": 34153875033,
-    "gdp_ppp_usd": 112399152410,
-    "area_km2": 267566,
-    "population_density": 434,
-    "currency": "Standard Dollar",
-    "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
-    ],
-    "major_imports": [
-      "Fuel",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Services",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Aruba City",
-        "population": 636954
-      }
-    ],
-    "internet_tld": ".ar",
-    "calling_code": "+340",
+    "capital": "Oranjestad",
+    "population": 108164,
+    "gdp_nominal_usd": 4671000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 177,
+    "gdp_growth_percent": 2.25,
+    "gdp_per_capita_usd": 42862,
+    "area_km2": 180,
+    "population_density": 601,
+    "currency": "Aruban florin (AWG)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
+    "internet_tld": ".aw",
+    "calling_code": "+297",
     "timezones": [
-      "UTC+00:00"
+      "UTC-04:00"
     ],
     "languages": [
-      "English",
-      "Local Language"
+      "Dutch",
+      "Papiamento"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 272752369,
-    "hdi": 0.559,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Bahamas": {
-    "capital": "Bahamas City",
-    "population": 1250514,
-    "gdp_nominal_usd": 39860142828,
-    "gdp_ppp_usd": 105316757745,
-    "area_km2": 263958,
-    "population_density": 466,
-    "currency": "Standard Dollar",
-    "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
-    ],
-    "major_imports": [
-      "Fuel",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Services",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Bahamas City",
-        "population": 1618068
-      }
-    ],
-    "internet_tld": ".ba",
-    "calling_code": "+157",
+    "capital": "Nassau",
+    "population": 404628,
+    "gdp_nominal_usd": 17042000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 146,
+    "gdp_growth_percent": 2.1,
+    "gdp_per_capita_usd": 40892,
+    "area_km2": 10010,
+    "population_density": 40,
+    "currency": "Bahamian dollar (BSD), United States dollar (USD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
+    "internet_tld": ".bs",
+    "calling_code": "+1242",
     "timezones": [
-      "UTC+00:00"
+      "UTC-05:00"
     ],
     "languages": [
-      "English",
-      "Local Language"
+      "English"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 94493343,
-    "hdi": 0.746,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Turks and Caicos Islands": {
     "capital": "Turks and Caicos Islands City",
@@ -10345,47 +9962,40 @@
     "neighboring_countries": []
   },
   "Barbados": {
-    "capital": "Barbados City",
-    "population": 6923479,
-    "gdp_nominal_usd": 82365686206,
-    "gdp_ppp_usd": 59742997786,
-    "area_km2": 592314,
-    "population_density": 195,
-    "currency": "Standard Dollar",
-    "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
-    ],
-    "major_imports": [
-      "Fuel",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Services",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Barbados City",
-        "population": 1161229
-      }
-    ],
-    "internet_tld": ".ba",
-    "calling_code": "+767",
+    "capital": "Bridgetown",
+    "population": 282724,
+    "gdp_nominal_usd": 8483000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 160,
+    "gdp_growth_percent": 2.46,
+    "gdp_per_capita_usd": 29020,
+    "area_km2": 430,
+    "population_density": 657,
+    "currency": "Barbadian dollar (BBD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
+    "internet_tld": ".bb",
+    "calling_code": "+1246",
     "timezones": [
-      "UTC+00:00"
+      "UTC-04:00"
     ],
     "languages": [
-      "English",
-      "Local Language"
+      "English"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 187959005,
-    "hdi": 0.757,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Saint Lucia": {
     "capital": "Saint Lucia City",
@@ -10560,47 +10170,40 @@
     "neighboring_countries": []
   },
   "Antigua and Barbuda": {
-    "capital": "Antigua and Barbuda City",
-    "population": 3574986,
-    "gdp_nominal_usd": 99811540687,
-    "gdp_ppp_usd": 33810842538,
-    "area_km2": 293148,
-    "population_density": 98,
-    "currency": "Standard Dollar",
-    "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
-    ],
-    "major_imports": [
-      "Fuel",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Services",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Antigua and Barbuda City",
-        "population": 1393060
-      }
-    ],
-    "internet_tld": ".an",
-    "calling_code": "+853",
+    "capital": "Saint John's",
+    "population": 94626,
+    "gdp_nominal_usd": 2385000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 190,
+    "gdp_growth_percent": 2.59,
+    "gdp_per_capita_usd": 22448,
+    "area_km2": 440,
+    "population_density": 215,
+    "currency": "Eastern Caribbean dollar (XCD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
+    "internet_tld": ".ag",
+    "calling_code": "+1268",
     "timezones": [
-      "UTC+00:00"
+      "UTC-04:00"
     ],
     "languages": [
-      "English",
-      "Local Language"
+      "English"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 105011404,
-    "hdi": 0.734,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Saint Kitts and Nevis": {
     "capital": "Saint Kitts and Nevis City",
@@ -10775,90 +10378,76 @@
     "neighboring_countries": []
   },
   "Anguilla": {
-    "capital": "Anguilla City",
-    "population": 1638771,
-    "gdp_nominal_usd": 37830771281,
-    "gdp_ppp_usd": 126686566274,
-    "area_km2": 749113,
-    "population_density": 226,
-    "currency": "Standard Dollar",
-    "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
-    ],
-    "major_imports": [
-      "Fuel",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Services",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Anguilla City",
-        "population": 1135705
-      }
-    ],
-    "internet_tld": ".an",
-    "calling_code": "+74",
+    "capital": "The Valley",
+    "population": 14817,
+    "gdp_nominal_usd": 415735284,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 211,
+    "gdp_growth_percent": 2.47,
+    "gdp_per_capita_usd": 28850,
+    "area_km2": 90,
+    "population_density": 165,
+    "currency": "Eastern Caribbean dollar (XCD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
+    "internet_tld": ".ai",
+    "calling_code": "+1264",
     "timezones": [
-      "UTC+00:00"
+      "UTC-04:00"
     ],
     "languages": [
-      "English",
-      "Local Language"
+      "English"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 62923930,
-    "hdi": 0.646,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "British Virgin Islands": {
-    "capital": "British Virgin Islands City",
-    "population": 8140103,
-    "gdp_nominal_usd": 77183803584,
-    "gdp_ppp_usd": 47793442728,
-    "area_km2": 217452,
-    "population_density": 56,
-    "currency": "Standard Dollar",
-    "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
-    ],
-    "major_imports": [
-      "Fuel",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Services",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "British Virgin Islands City",
-        "population": 1886919
-      }
-    ],
-    "internet_tld": ".br",
-    "calling_code": "+710",
+    "capital": "Road Town",
+    "population": 39936,
+    "gdp_nominal_usd": 1505856107,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 198,
+    "gdp_growth_percent": 2.76,
+    "gdp_per_capita_usd": 38627,
+    "area_km2": 150,
+    "population_density": 266,
+    "currency": "United States dollar (USD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
+    "internet_tld": ".vg",
+    "calling_code": "+1284",
     "timezones": [
-      "UTC+00:00"
+      "UTC-04:00"
     ],
     "languages": [
-      "English",
-      "Local Language"
+      "English"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 29395759,
-    "hdi": 0.622,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "Caribbean",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Cayman Islands": {
     "capital": "Cayman Islands City",
@@ -10904,47 +10493,40 @@
     "neighboring_countries": []
   },
   "Bermuda": {
-    "capital": "Bermuda City",
-    "population": 8542175,
-    "gdp_nominal_usd": 74068729227,
-    "gdp_ppp_usd": 47682089602,
-    "area_km2": 13434,
-    "population_density": 185,
-    "currency": "Standard Dollar",
-    "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
-    ],
-    "major_imports": [
-      "Fuel",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Services",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Bermuda City",
-        "population": 824533
-      }
-    ],
-    "internet_tld": ".be",
-    "calling_code": "+89",
+    "capital": "Hamilton",
+    "population": 64459,
+    "gdp_nominal_usd": 8980200000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 159,
+    "gdp_growth_percent": 2.11,
+    "gdp_per_capita_usd": 138935,
+    "area_km2": 50,
+    "population_density": 1289,
+    "currency": "Bermudian dollar (BMD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
+    "internet_tld": ".bm",
+    "calling_code": "+1441",
     "timezones": [
-      "UTC+00:00"
+      "UTC-04:00"
     ],
     "languages": [
-      "English",
-      "Local Language"
+      "English"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 283817234,
-    "hdi": 0.564,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Americas",
+    "subregion": "North America",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Heard Island and McDonald Islands": {
     "capital": "Heard Island and McDonald Islands City",
@@ -11118,8 +10700,8 @@
     "hdi": 0.762,
     "neighboring_countries": []
   },
-  "S\u00e3o Tom\u00e9 and Principe": {
-    "capital": "S\u00e3o Tom\u00e9 and Principe City",
+  "São Tomé and Principe": {
+    "capital": "São Tomé and Principe City",
     "population": 2959452,
     "gdp_nominal_usd": 12510902389,
     "gdp_ppp_usd": 70185143131,
@@ -11142,11 +10724,11 @@
     ],
     "major_cities": [
       {
-        "name": "S\u00e3o Tom\u00e9 and Principe City",
+        "name": "São Tomé and Principe City",
         "population": 1828908
       }
     ],
-    "internet_tld": ".s\u00e3",
+    "internet_tld": ".sã",
     "calling_code": "+510",
     "timezones": [
       "UTC+00:00"
@@ -12237,47 +11819,40 @@
     "neighboring_countries": []
   },
   "Bahrain": {
-    "capital": "Bahrain City",
-    "population": 2550766,
-    "gdp_nominal_usd": 56139640763,
-    "gdp_ppp_usd": 11477677236,
-    "area_km2": 821603,
-    "population_density": 11,
-    "currency": "Standard Dollar",
-    "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
-    ],
-    "major_imports": [
-      "Fuel",
-      "Machinery",
-      "Food"
-    ],
-    "largest_industries": [
-      "Services",
-      "Agriculture"
-    ],
-    "major_cities": [
-      {
-        "name": "Bahrain City",
-        "population": 814908
-      }
-    ],
-    "internet_tld": ".ba",
-    "calling_code": "+339",
+    "capital": "Manama",
+    "population": 1675572,
+    "gdp_nominal_usd": 48849000000,
+    "gdp_ppp_usd": null,
+    "gdp_rank": 103,
+    "gdp_growth_percent": -0.5,
+    "gdp_per_capita_usd": 29569,
+    "area_km2": 760,
+    "population_density": 2205,
+    "currency": "Bahraini dinar (BHD)",
+    "major_exports": [],
+    "major_imports": [],
+    "largest_industries": [],
+    "major_cities": [],
+    "internet_tld": ".bh",
+    "calling_code": "+973",
     "timezones": [
-      "UTC+00:00"
+      "UTC+03:00"
     ],
     "languages": [
-      "English",
-      "Local Language"
+      "Arabic"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 80895869,
-    "hdi": 0.782,
-    "neighboring_countries": []
+    "government_type": null,
+    "head_of_state": null,
+    "military_spending": null,
+    "hdi": null,
+    "neighboring_countries": [],
+    "region": "Asia",
+    "subregion": "Western Asia",
+    "data_sources": {
+      "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
+      "population": "Worldometer Population by Country 2026 - UN estimates",
+      "stable_facts": "REST Countries v3.1"
+    }
   },
   "Coral Sea Islands": {
     "capital": "Coral Sea Islands City",

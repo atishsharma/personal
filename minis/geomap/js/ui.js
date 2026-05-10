@@ -8,9 +8,14 @@ const UI = {
   bindEvents() {
     document.querySelectorAll('.mode-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
+        const targetBtn = e.currentTarget;
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        MapEngine.setMode(e.target.dataset.mode);
+        targetBtn.classList.add('active');
+        
+        const mode = targetBtn.dataset.mode;
+        setTimeout(() => {
+          MapEngine.setMode(mode);
+        }, 10);
       });
     });
 
@@ -125,21 +130,79 @@ const UI = {
     }
 
     document.getElementById('country-title').textContent = id;
-    document.getElementById('right-panel-title').textContent = id + ' Dossier';
+    document.getElementById('right-panel-title').textContent = id;
+
+    // Fetch official UN name
+    const officialNameDiv = document.getElementById('right-panel-official-name');
+    if (officialNameDiv) {
+        officialNameDiv.textContent = 'Loading official name...';
+        fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(id)}?fullText=true`)
+          .then(res => res.json())
+          .then(data => {
+            if (data && data.length > 0 && data[0].name.official) {
+              const officialName = data[0].name.official;
+              if (officialName.toLowerCase() === id.toLowerCase() || 
+                  (data[0].name.common && officialName.toLowerCase() === data[0].name.common.toLowerCase())) {
+                  officialNameDiv.textContent = '';
+              } else {
+                  officialNameDiv.textContent = officialName;
+              }
+            } else {
+              officialNameDiv.textContent = '';
+            }
+          }).catch(() => { officialNameDiv.textContent = ''; });
+    }
+    
     // Left Panel - General Stats
+    const flagImg = document.getElementById('country-flag');
+    if (flagImg) {
+      flagImg.src = 'assets/flags/' + id.replace(/ /g, '_').replace(/\//g, '_') + '.webp';
+      flagImg.style.display = 'block';
+      flagImg.onerror = () => { flagImg.src = 'assets/flags/noflag.jpg'; flagImg.onerror = null; };
+    }
+
     if (profile) {
-      document.getElementById('stat-capital').textContent = profile.capital;
+      document.getElementById('stat-capital').textContent = profile.capital || 'N/A';
       document.getElementById('stat-pop').textContent = (profile.population / 1000000).toFixed(1) + 'M';
-      document.getElementById('stat-gdp').textContent = '$' + (profile.gdp_nominal_usd / 1000000000000).toFixed(2) + 'T';
-      document.getElementById('stat-area').textContent = profile.area_km2.toLocaleString() + ' km²';
+      document.getElementById('stat-pop-density').textContent = profile.population_density ? profile.population_density + ' /km²' : '--';
       
-      document.getElementById('list-exports').innerHTML = profile.major_exports.map(e => `<div style="margin-bottom:4px">• ${e}</div>`).join('');
-      document.getElementById('list-cities').innerHTML = profile.major_cities.map(c => `<div style="margin-bottom:4px"><strong>${c.name}</strong> <span style="color:var(--text-muted); font-size:0.85em">(${(c.population/1000000).toFixed(1)}M)</span></div>`).join('');
+      if (profile.gdp_nominal_usd) {
+          document.getElementById('stat-gdp').textContent = '$' + (profile.gdp_nominal_usd / 1000000000000).toFixed(2) + 'T';
+      } else {
+          document.getElementById('stat-gdp').textContent = 'N/A';
+      }
+      
+      if (profile.gdp_per_capita_usd) {
+          document.getElementById('stat-gdp-per-capita').textContent = '$' + profile.gdp_per_capita_usd.toLocaleString() + ' per capita';
+      } else {
+          document.getElementById('stat-gdp-per-capita').textContent = '--';
+      }
+      
+      document.getElementById('stat-area').textContent = profile.area_km2 ? profile.area_km2.toLocaleString() + ' km²' : 'N/A';
+      
+      document.getElementById('stat-currency').textContent = profile.currency || 'N/A';
+      document.getElementById('stat-region').textContent = (profile.region || 'N/A') + (profile.subregion ? ' / ' + profile.subregion : '');
+      document.getElementById('stat-languages').textContent = (profile.languages && profile.languages.length > 0) ? profile.languages.join(', ') : 'N/A';
+      
+      let callingTld = [];
+      if (profile.calling_code) callingTld.push(profile.calling_code);
+      if (profile.internet_tld) callingTld.push(profile.internet_tld);
+      if (profile.timezones && profile.timezones.length > 0) callingTld.push(profile.timezones[0] + (profile.timezones.length > 1 ? ' +' : ''));
+      document.getElementById('stat-calling-tld').textContent = callingTld.length > 0 ? callingTld.join(' | ') : 'N/A';
+      
+      document.getElementById('list-exports').innerHTML = (profile.major_exports && profile.major_exports.length > 0) ? profile.major_exports.map(e => `<div style="margin-bottom:4px">• ${e}</div>`).join('') : "<div class='text-muted'>No data available</div>";
+      document.getElementById('list-cities').innerHTML = (profile.major_cities && profile.major_cities.length > 0) ? profile.major_cities.map(c => `<div style="margin-bottom:4px"><strong>${c.name}</strong> <span style="color:var(--text-muted); font-size:0.85em">(${(c.population/1000000).toFixed(1)}M)</span></div>`).join('') : "<div class='text-muted'>No data available</div>";
     } else {
       document.getElementById('stat-capital').textContent = "N/A";
       document.getElementById('stat-pop').textContent = "N/A";
+      document.getElementById('stat-pop-density').textContent = "--";
       document.getElementById('stat-gdp').textContent = "N/A";
+      document.getElementById('stat-gdp-per-capita').textContent = "--";
       document.getElementById('stat-area').textContent = "N/A";
+      document.getElementById('stat-currency').textContent = "N/A";
+      document.getElementById('stat-region').textContent = "N/A";
+      document.getElementById('stat-languages').textContent = "N/A";
+      document.getElementById('stat-calling-tld').textContent = "N/A";
       document.getElementById('list-exports').innerHTML = "<div class='text-muted'>No data available</div>";
       document.getElementById('list-cities').innerHTML = "<div class='text-muted'>No data available</div>";
     }
@@ -155,6 +218,19 @@ const UI = {
       document.getElementById('pass-free').textContent = "N/A";
       document.getElementById('pass-voa').textContent = "N/A";
       document.getElementById('pass-req').textContent = "N/A";
+    }
+
+    const passCoverImg = document.getElementById('pass-cover');
+    if (profile && profile.internet_tld) {
+      let alpha2 = typeof profile.internet_tld === 'string' ? profile.internet_tld : profile.internet_tld[0];
+      if (alpha2) {
+         alpha2 = alpha2.replace('.', '').toLowerCase();
+         passCoverImg.src = `assets/passpics/${alpha2}.png`;
+      } else {
+         passCoverImg.src = 'assets/passpics/nopassport.jpg';
+      }
+    } else {
+      passCoverImg.src = 'assets/passpics/nopassport.jpg';
     }
 
     // Links

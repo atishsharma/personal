@@ -118,8 +118,13 @@
 
                 <div class="card-section"
                     style="background: rgba(59, 130, 246, 0.1); border-bottom: 1px solid rgba(59, 130, 246, 0.2);">
-                    <h2 id="country-title" style="font-size: 1.5rem; margin-bottom:0.25rem;">Country Name</h2>
-                    <div class="section-title" style="margin:0; color:var(--accent-blue);">Sovereign Profile</div>
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img id="country-flag" src="" alt="Flag" style="width: 60px; height: auto; border-radius: 4px; display: none; object-fit: contain; background: rgba(255,255,255,0.1);" />
+                        <div>
+                            <h2 id="country-title" style="font-size: 1.5rem; margin-bottom:0.25rem;">Country Name</h2>
+                            <div class="section-title" style="margin:0; color:var(--accent-blue);">Sovereign Profile</div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="card-section">
@@ -131,14 +136,32 @@
                         <div class="stat-box">
                             <div class="label">Population</div>
                             <div class="value" id="stat-pop">--</div>
+                            <div class="label" style="font-size:0.65rem; margin-top:2px;" id="stat-pop-density">--</div>
                         </div>
                         <div class="stat-box">
                             <div class="label">GDP (Nominal)</div>
                             <div class="value text-accent" id="stat-gdp">--</div>
+                            <div class="label" style="font-size:0.65rem; margin-top:2px;" id="stat-gdp-per-capita">--</div>
                         </div>
                         <div class="stat-box">
                             <div class="label">Total Area</div>
                             <div class="value" id="stat-area">--</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">Currency</div>
+                            <div class="value" id="stat-currency" style="font-size:0.8rem; line-height:1.2;">--</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">Region</div>
+                            <div class="value" id="stat-region" style="font-size:0.8rem;">--</div>
+                        </div>
+                        <div class="stat-box" style="grid-column: span 2;">
+                            <div class="label">Languages</div>
+                            <div class="value" id="stat-languages" style="font-size:0.8rem; line-height:1.2;">--</div>
+                        </div>
+                        <div class="stat-box" style="grid-column: span 2;">
+                            <div class="label">Calling / TLD / Timezone</div>
+                            <div class="value" id="stat-calling-tld" style="font-size:0.8rem; line-height:1.2;">--</div>
                         </div>
                     </div>
                 </div>
@@ -159,33 +182,12 @@
                 <button id="close-right" class="panel-close" aria-label="Close Right Panel">✕</button>
 
                 <div class="card-section"
-                    style="background: rgba(255, 255, 255, 0.03); display: flex; flex-direction: column; gap: 0.5rem;">
-                    <div class="section-title" id="right-panel-title" style="color:white; margin:0;">Diplomatic Dossier
-                    </div>
-                </div>
-
-                <div class="card-section">
-                    <div class="section-title">Geopolitical Alignments</div>
-
-                    <div style="margin-bottom: 1rem;">
-                        <div
-                            style="font-size: 0.7rem; font-weight: 700; color: #34d399; text-transform: uppercase; margin-bottom:0.25rem;">
-                            Allies / Friends</div>
-                        <div id="geo-allies" class="badges"></div>
-                    </div>
-
-                    <div style="margin-bottom: 1rem;">
-                        <div
-                            style="font-size: 0.7rem; font-weight: 700; color: #f87171; text-transform: uppercase; margin-bottom:0.25rem;">
-                            Enemies / Rivals</div>
-                        <div id="geo-enemies" class="badges"></div>
-                    </div>
-
+                    style="background: rgba(255, 255, 255, 0.03); display: flex; align-items: center; gap: 1rem;">
+                    <img id="pass-cover" src="assets/passpics/nopassport.jpg" alt="Passport" style="height: 55px; border-radius: 4px; object-fit: contain; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" onerror="this.src='assets/passpics/nopassport.jpg'">
                     <div>
-                        <div
-                            style="font-size: 0.7rem; font-weight: 700; color: #fbbf24; text-transform: uppercase; margin-bottom:0.25rem;">
-                            Frenemies / Strategic Competitors</div>
-                        <div id="geo-frenemies" class="badges"></div>
+                        <div class="section-title" id="right-panel-title" style="color:white; margin:0; font-size: 1.25rem;">Country</div>
+                        <div id="right-panel-official-name" style="font-size: 0.8rem; font-style: italic; color: #cbd5e1; margin-top: 0.2rem;"></div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem;">Geopolitics & Passport Power</div>
                     </div>
                 </div>
 
@@ -216,6 +218,31 @@
                     </div>
                 </div>
 
+                <div class="card-section">
+                    <div class="section-title">Geopolitical Alignments</div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <div
+                            style="font-size: 0.7rem; font-weight: 700; color: #34d399; text-transform: uppercase; margin-bottom:0.25rem;">
+                            Allies / Friends</div>
+                        <div id="geo-allies" class="badges"></div>
+                    </div>
+
+                    <div style="margin-bottom: 1rem;">
+                        <div
+                            style="font-size: 0.7rem; font-weight: 700; color: #f87171; text-transform: uppercase; margin-bottom:0.25rem;">
+                            Enemies / Rivals</div>
+                        <div id="geo-enemies" class="badges"></div>
+                    </div>
+
+                    <div>
+                        <div
+                            style="font-size: 0.7rem; font-weight: 700; color: #fbbf24; text-transform: uppercase; margin-bottom:0.25rem;">
+                            Frenemies / Strategic Competitors</div>
+                        <div id="geo-frenemies" class="badges"></div>
+                    </div>
+                </div>
+
                 <div class="card-section" style="padding-top: 0.5rem;">
                     <button id="btn-view-profile"
                         style="width:100%; padding:0.5rem; margin-bottom:0.75rem; font-size:0.8rem; font-weight:600; border-radius:6px; background:var(--accent-blue); color:white; border:none; cursor:pointer; transition:background 0.2s; box-shadow:0 4px 10px rgba(59,130,246,0.3);">View
@@ -237,9 +264,13 @@
 
         <!-- Footer -->
         <footer class="glass-panel"
-            style="position: absolute; bottom: 1rem; left: 1rem; right: 1rem; padding: 0.75rem 1.5rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; z-index: 1000; pointer-events: auto; font-size: 0.75rem;">
+            style="position: absolute; bottom: 1rem; left: 1rem; right: 1rem; padding: 0.75rem 1.5rem; border-radius: 12px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; z-index: 1000; pointer-events: auto; font-size: 0.75rem;">
             <div>&copy; 2026 Geopolitics Atlas</div>
-            <div style="color:var(--text-muted);">Database updated April 2026</div>
+            <div style="color:var(--text-muted); text-align: center; flex: 1; min-width: 200px;">
+                Database updated April 2026 &nbsp;|&nbsp; 
+                <a href="https://leafletjs.com" target="_blank" style="color:inherit; text-decoration:underline;">Leaflet</a> &copy; 
+                <a href="https://carto.com/attributions" target="_blank" style="color:inherit; text-decoration:underline;">CARTO</a>
+            </div>
             <div>Designed by <a href="https://atishaksharma.com" target="_blank"
                     style="color:var(--accent-cyan); text-decoration:none; font-weight:600;">Atish</a></div>
         </footer>

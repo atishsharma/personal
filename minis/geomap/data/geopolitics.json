@@ -1663,14 +1663,6 @@
       "Cambodia"
     ]
   },
-  "The Bahamas": {
-    "allies": [
-      "United States of America",
-      "United Kingdom"
-    ],
-    "enemies": [],
-    "frenemies": []
-  },
   "Togo": {
     "allies": [
       "France",
@@ -2115,7 +2107,7 @@
     "enemies": [],
     "frenemies": []
   },
-  "Cura\u00e7ao": {
+  "Curaçao": {
     "allies": [],
     "enemies": [],
     "frenemies": []
@@ -2270,7 +2262,7 @@
     "enemies": [],
     "frenemies": []
   },
-  "S\u00e3o Tom\u00e9 and Principe": {
+  "São Tomé and Principe": {
     "allies": [],
     "enemies": [],
     "frenemies": []

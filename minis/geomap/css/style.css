@@ -295,7 +295,7 @@ header {
   transform: translateX(-50%);
   width: 300px;
   max-width: 90%;
-  z-index: 1000;
+  z-index: 2000;
 }
 .search-input {
   width: 100%;
@@ -320,7 +320,9 @@ header {
   backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
-  overflow: hidden;
+  overflow-y: auto;
+  max-height: 300px;
+  z-index: 1050;
   display: none;
 }
 .search-result-item {
