@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Atish's Atlas Editor - The master data management dashboard for the Geopolitical Intelligence Atlas. Bulk edit country relationships, stats, and assets.">
+    <meta name="keywords" content="Geopolitics, Atlas, Data Editor, Country Relationships, Intelligence Dashboard">
+    <meta property="og:title" content="Atish's Atlas Editor">
+    <meta property="og:description" content="Master JSON Relationship Manager for Geopolitical Data.">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <title>Atish's Atlas Editor | Geopolitical Intelligence Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-main: #000000;
+            --text-muted: #1a1a1a;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --border-color: rgba(0, 0, 0, 0.12);
+            --input-bg: #f8fafc;
+            --sidebar-item-hover: rgba(0, 0, 0, 0.04);
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-theme {
+            --bg-color: #0f172a;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --input-bg: rgba(15, 23, 42, 0.6);
+            --sidebar-item-hover: rgba(255, 255, 255, 0.05);
+            --card-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .glass { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid var(--border-color); 
+            box-shadow: var(--card-shadow);
+        }
+        
+        .animated-title {
+            background: linear-gradient(-45deg, #3b82f6, #06b6d4, #8b5cf6, #d946ef);
+            background-size: 300% 300%;
+            animation: gradient-shift 5s ease infinite;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+        }
+
+        .title-container {
+            position: relative;
+            background: var(--input-bg);
+            padding: 0.75rem 1.75rem;
+            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            display: inline-flex;
+            align-items: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .input-field { 
+            background: var(--input-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            padding: 0.5rem; 
+            width: 100%; 
+            color: var(--text-main); 
+            outline: none; 
+            transition: all 0.2s;
+        }
+
+        .input-field:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        
+        .tab-btn { padding: 0.5rem 1rem; border-radius: 8px; transition: all 0.2s; font-weight: 600; font-size: 0.875rem; }
+        .tab-btn.active { background: #3b82f6; color: white; }
+        .tab-btn:not(.active) { color: var(--text-muted); }
+        .tab-btn:not(.active):hover { background: var(--sidebar-item-hover); }
+        
+        .sidebar-btn:hover { background: var(--sidebar-item-hover); }
+        .text-muted { color: var(--text-muted); }
+        
+        footer a:hover { color: #3b82f6; text-decoration: underline; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+    </style>
+</head>
+<body class="light-theme">
+    <!-- Mobile Warning Overlay -->
+    <div class="md:hidden fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center p-8 text-center">
+        <div class="w-20 h-20 mb-6 bg-amber-500/20 rounded-full flex items-center justify-center animate-pulse">
+            <span class="text-4xl">💻</span>
+        </div>
+        <h1 class="text-2xl font-black text-white mb-2">Desktop Only Mode</h1>
+        <p class="text-slate-400">Atish's Atlas Editor is a complex relationship manager designed for large screens.</p>
+        <p class="mt-4 font-bold text-amber-400">Please switch to Desktop Mode or Edit on Laptop.</p>
+    </div>
+
+    <div class="max-w-7xl mx-auto flex-1 w-full px-6 pt-2 hidden md:flex flex-col">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-4">
+                <div class="title-container">
+                    <h1 class="text-3xl font-black animated-title">Atish's Atlas Editor</h1>
+                </div>
+                <button onclick="toggleTheme()" class="p-3 glass rounded-full hover:scale-110 transition-transform shadow-lg" title="Toggle Theme">
+                    <span id="theme-icon" class="text-xl">🌙</span>
+                </button>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="standardizeAssets()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all border border-amber-500 shadow-lg" title="Fix missing flags/passports across all countries">
+                    🛠️ Standardize Assets
+                </button>
+                <button onclick="loadAllData()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white rounded-lg font-semibold flex items-center gap-2 transition-all border border-slate-800">
+                    📂 Load Data Folder
+                </button>
+                <button onclick="saveAllData()" class="px-4 py-2 bg-blue-700 hover:bg-blue-800 text-white rounded-lg font-bold flex items-center gap-2 transition-all shadow-lg shadow-blue-500/20">
+                    💾 Save All Changes
+                </button>
+                <a href="index.html" class="px-4 py-2 bg-slate-900 hover:bg-black text-white rounded-lg font-semibold transition-all border border-slate-800 flex items-center gap-2">
+                    🌐 View Atlas
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-12 gap-6">
+            <!-- Sidebar: Country List -->
+            <div class="col-span-3 glass rounded-2xl p-4 flex flex-col h-[80vh]">
+                <div class="mb-4">
+                    <input type="text" id="country-search" placeholder="Search countries..." class="input-field" oninput="filterCountries()">
+                </div>
+                <div id="country-list" class="flex-1 overflow-y-auto space-y-1 pr-2">
+                    <!-- Loaded dynamically -->
+                    <p class="text-slate-500 text-center py-10 italic">Load data folder to begin</p>
+                </div>
+            </div>
+
+            <!-- Main Editor Area -->
+            <div id="editor-container" class="col-span-9 glass rounded-2xl p-6 hidden flex-col h-[80vh]">
+                <div class="flex items-center gap-4 mb-6 border-b border-slate-700 pb-4">
+                    <img id="edit-flag" src="" class="w-12 h-8 rounded border border-slate-700 object-cover hidden">
+                    <div>
+                        <h2 id="edit-country-name" class="text-2xl font-bold">Select a Country</h2>
+                        <div class="flex items-center gap-3">
+                            <p id="edit-country-id" class="text-muted text-sm"></p>
+                            <div id="data-status" class="text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest hidden"></div>
+                        </div>
+                    </div>
+                    <div class="ml-auto flex bg-slate-800/10 dark:bg-slate-800/50 p-1 rounded-xl gap-1">
+                        <button onclick="switchTab('basic')" class="tab-btn active" data-tab="basic">Basic Stats</button>
+                        <button onclick="switchTab('profile')" class="tab-btn" data-tab="profile">Full Profile</button>
+                        <button onclick="switchTab('geo')" class="tab-btn" data-tab="geo">Geopolitics</button>
+                        <button onclick="switchTab('passport')" class="tab-btn" data-tab="passport">Passport</button>
+                    </div>
+                </div>
+
+                <div id="tab-content" class="flex-1 overflow-y-auto pr-4">
+                    <!-- Content injected via JS -->
+                </div>
+            </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 py-4 glass">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-slate-400">
+            <div>&copy; 2026 Atish's Atlas &bull; All Intelligence Data Secured</div>
+            <div class="font-medium">
+                Designed By <a href="https://atishaksharma.com" target="_blank" class="text-cyan-400 hover:text-blue-400 transition-colors">Atish Ak Sharma</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hidden file inputs for manual loading fallback -->
+    <input type="file" id="file-input" multiple class="hidden" accept=".json">
+
+    <script>
+        let datasets = {
+            countries: [],
+            profiles: {},
+            geopolitics: {},
+            passport: {}
+        };
+        let currentCountryId = null;
+        let currentTab = 'basic';
+        let directoryHandle = null;
+        let isDataDirty = false;
+
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            if (body.classList.contains('light-theme')) {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                icon.textContent = '☀️';
+                localStorage.setItem('editor_theme', 'dark');
+            } else {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                icon.textContent = '🌙';
+                localStorage.setItem('editor_theme', 'light');
+            }
+        }
+
+        // Auto-load from cache on startup
+        window.addEventListener('DOMContentLoaded', () => {
+            // Restore theme
+            const savedTheme = localStorage.getItem('editor_theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.remove('light-theme');
+                document.body.classList.add('dark-theme');
+                document.getElementById('theme-icon').textContent = '☀️';
+            }
+
+            const cached = localStorage.getItem('atish_atlas_cache');
+            if (cached) {
+                try {
+                    const parsed = JSON.parse(cached);
+                    if (parsed.countries && parsed.countries.length > 0) {
+                        datasets = parsed;
+                        renderCountryList();
+                        updateStatus("Loaded from Cache", "bg-amber-100 text-amber-700");
+                        console.log("Restored data from local cache.");
+                    }
+                } catch (e) {
+                    console.error("Cache corrupted:", e);
+                }
+            }
+        });
+
+        function updateStatus(text, classes) {
+            const status = document.getElementById('data-status');
+            status.textContent = text;
+            status.className = `text-[10px] font-black px-2 py-0.5 rounded-md uppercase tracking-widest ${classes}`;
+            status.classList.remove('hidden');
+        }
+
+        function saveToCache() {
+            try {
+                localStorage.setItem('atish_atlas_cache', JSON.stringify(datasets));
+                isDataDirty = true;
+            } catch (e) {
+                console.warn("Cache limit reached:", e);
+                alert("Warning: Dataset is too large for browser cache. Please save your work frequently to disk!");
+            }
+        }
+
+        async function loadAllData() {
+            try {
+                if (window.showDirectoryPicker) {
+                    directoryHandle = await window.showDirectoryPicker();
+                    const files = ['countries.json', 'country-profiles.json', 'geopolitics.json', 'passport-rank.json'];
+                    
+                    for (const fileName of files) {
+                        try {
+                            const fileHandle = await directoryHandle.getFileHandle(fileName);
+                            const file = await fileHandle.getFile();
+                            const content = await file.text();
+                            const json = JSON.parse(content);
+                            
+                            if (fileName === 'countries.json') datasets.countries = json;
+                            if (fileName === 'country-profiles.json') datasets.profiles = json;
+                            if (fileName === 'geopolitics.json') datasets.geopolitics = json;
+                            if (fileName === 'passport-rank.json') datasets.passport = json;
+                        } catch (e) {
+                            console.warn(`Could not load ${fileName}:`, e);
+                        }
+                    }
+                    updateStatus("Live from Folder", "bg-emerald-100 text-emerald-700");
+                    saveToCache();
+                    renderCountryList();
+                } else {
+                    // Fallback to multiple file selection
+                    document.getElementById('file-input').click();
+                }
+            } catch (err) {
+                console.error("Error loading directory:", err);
+            }
+        }
+
+        document.getElementById('file-input').onchange = async (e) => {
+            for (const file of e.target.files) {
+                const content = await file.text();
+                const json = JSON.parse(content);
+                if (file.name === 'countries.json') datasets.countries = json;
+                if (file.name === 'country-profiles.json') datasets.profiles = json;
+                if (file.name === 'geopolitics.json') datasets.geopolitics = json;
+                if (file.name === 'passport-rank.json') datasets.passport = json;
+            }
+            renderCountryList();
+        };
+
+        function renderCountryList() {
+            const list = document.getElementById('country-list');
+            const sorted = [...datasets.countries].sort((a, b) => a.name.localeCompare(b.name));
+            
+            // Add "Add New" button at top
+            let html = `
+                <button onclick="addCountry()" class="w-full mb-4 px-4 py-3 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 rounded-xl border border-emerald-500/30 font-bold flex items-center justify-center gap-2 transition-all">
+                    ➕ Add New Country
+                </button>
+            `;
+
+            html += sorted.map((c, i) => `
+                <div class="flex items-center gap-1 group rounded-lg transition-all ${currentCountryId === c.id ? 'bg-blue-600/20 ring-1 ring-blue-500/30' : ''}">
+                    <span class="text-[10px] text-muted w-8 text-center shrink-0 font-mono">${(i + 1).toString().padStart(3, '0')}</span>
+                    <button onclick="selectCountry('${c.id}')" class="flex-1 text-left px-2 py-2 rounded-lg sidebar-btn transition-all truncate">
+                        <span class="font-medium ${currentCountryId === c.id ? 'text-blue-500' : ''}">${c.name}</span>
+                    </button>
+                    <button onclick="deleteCountry('${c.id}')" class="p-2 text-muted hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all shrink-0" title="Delete Entry">✕</button>
+                </div>
+            `).join('');
+
+            list.innerHTML = html;
+            document.getElementById('editor-container').classList.remove('hidden');
+            document.getElementById('editor-container').classList.add('flex');
+        }
+
+        function addCountry() {
+            const name = prompt("Enter Country Name:");
+            if (!name) return;
+            const id = prompt("Enter Unique ID (e.g., 'United Kingdom'):", name);
+            if (!id) return;
+
+            if (datasets.countries.find(c => c.id === id)) {
+                alert("This ID already exists!");
+                return;
+            }
+
+            datasets.countries.push({ id, name, region: 'N/A', unStatus: 'UN Member State' });
+            datasets.profiles[id] = { 
+                capital: '', population: 0, area_km2: 0, hdi: 0, 
+                gdp_nominal_usd: 0, gdp_ppp_usd: 0, currency: '', 
+                major_exports: [], neighboring_countries: [],
+                flag_path: 'assets/flags/noflag.jpg'
+            };
+            datasets.geopolitics[id] = { allies: [], enemies: [], frenemies: [] };
+            datasets.passport[id] = { rank: 99, visa_free: 0, passport_img: 'assets/passpics/nopassport.jpg' };
+            
+            renderCountryList();
+            selectCountry(id);
+            saveToCache();
+        }
+
+        function deleteCountry(id) {
+            if (!confirm(`Are you sure you want to delete ${id} from ALL datasets?`)) return;
+            
+            datasets.countries = datasets.countries.filter(c => c.id !== id);
+            delete datasets.profiles[id];
+            delete datasets.geopolitics[id];
+            delete datasets.passport[id];
+            
+            if (currentCountryId === id) {
+                currentCountryId = null;
+                document.getElementById('editor-container').classList.add('hidden');
+            }
+            renderCountryList();
+            saveToCache();
+        }
+
+        function standardizeAssets() {
+            if (datasets.countries.length === 0) {
+                alert("Please load data first.");
+                return;
+            }
+            
+            let count = 0;
+            datasets.countries.forEach(c => {
+                const id = c.id;
+                
+                // Fix Profile (Flags)
+                if (!datasets.profiles[id]) datasets.profiles[id] = {};
+                if (!datasets.profiles[id].flag_path) {
+                    datasets.profiles[id].flag_path = 'assets/flags/noflag.jpg';
+                    count++;
+                }
+
+                // Fix Passport (Photos)
+                if (!datasets.passport[id]) datasets.passport[id] = {};
+                if (!datasets.passport[id].passport_img) {
+                    datasets.passport[id].passport_img = 'assets/passpics/nopassport.jpg';
+                    count++;
+                }
+            });
+
+            alert(`Standardized ${count} missing asset entries. Remember to click "Save All Changes" to persist!`);
+            if (currentCountryId) renderTab();
+        }
+
+        function filterCountries() {
+            const q = document.getElementById('country-search').value.toLowerCase();
+            const listItems = document.getElementById('country-list').children;
+            // Skip the first child (Add New button)
+            for (let i = 1; i < listItems.length; i++) {
+                const item = listItems[i];
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(q) ? 'flex' : 'none';
+            }
+        }
+
+        function selectCountry(id) {
+            currentCountryId = id;
+            const country = datasets.countries.find(c => c.id === id);
+            document.getElementById('edit-country-name').textContent = country ? country.name : id;
+            document.getElementById('edit-country-id').textContent = id;
+            
+            const flag = document.getElementById('edit-flag');
+            flag.src = 'assets/flags/' + id.replace(/ /g, '_').replace(/\//g, '_') + '.webp';
+            flag.classList.remove('hidden');
+            flag.onerror = () => {
+                const profile = datasets.profiles[id];
+                if (profile && profile.flag_path && !profile.flag_path.includes('noflag.jpg')) {
+                    flag.src = profile.flag_path;
+                } else {
+                    flag.src = 'assets/flags/noflag.jpg';
+                }
+            };
+
+            renderCountryList(); // Update active state in sidebar
+            renderTab();
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.tab === tab);
+            });
+            renderTab();
+        }
+
+        function renderTab() {
+            const id = currentCountryId;
+            const content = document.getElementById('tab-content');
+            if (!id) return;
+
+            const country = datasets.countries.find(c => c.id === id) || { id, name: id, region: '', unStatus: '' };
+            const profile = datasets.profiles[id] || {};
+            const geo = datasets.geopolitics[id] || { allies: [], enemies: [], frenemies: [] };
+            const passport = datasets.passport[id] || { rank: '', visa_free: '', visa_required: '', visa_on_arrival: '', e_visa: '' };
+
+            let html = '';
+
+            if (currentTab === 'basic') {
+                html = `
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2"><h3 class="text-blue-400 font-bold border-b border-slate-700 pb-2 mb-4">Identity</h3></div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Display Name</label>
+                            <input type="text" value="${country.name}" class="input-field" onchange="updateDataset('countries', '${id}', 'name', this.value)">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Region</label>
+                            <input type="text" value="${country.region || ''}" class="input-field" onchange="updateDataset('countries', '${id}', 'region', this.value)">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">UN Status</label>
+                            <select class="input-field" onchange="updateDataset('countries', '${id}', 'unStatus', this.value)">
+                                <option value="UN Member State" ${country.unStatus === 'UN Member State' ? 'selected' : ''}>UN Member State</option>
+                                <option value="UN Observer State" ${country.unStatus === 'UN Observer State' ? 'selected' : ''}>UN Observer State</option>
+                                <option value="Non-UN Member" ${country.unStatus === 'Non-UN Member' ? 'selected' : ''}>Non-UN Member</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-span-2 mt-6"><h3 class="text-emerald-400 font-bold border-b border-slate-700 pb-2 mb-4">Assets & Media</h3></div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Flag Filename / URL</label>
+                            <input type="text" value="${profile.flag_path || 'assets/flags/noflag.jpg'}" class="input-field" onchange="updateProfile('${id}', 'flag_path', this.value)">
+                            <p class="text-[10px] text-slate-500 mt-1">Default placeholder: assets/flags/noflag.jpg</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Passport Cover Filename / URL</label>
+                            <input type="text" value="${passport.passport_img || 'assets/passpics/nopassport.jpg'}" class="input-field" onchange="updatePassport('${id}', 'passport_img', this.value)">
+                            <p class="text-[10px] text-slate-500 mt-1">Default placeholder: assets/passpics/nopassport.jpg</p>
+                        </div>
+                    </div>
+                `;
+            } else if (currentTab === 'profile') {
+                html = `
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2"><h3 class="text-blue-400 font-bold border-b border-slate-700 pb-2 mb-4">Demographics & Geography</h3></div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Capital City</label>
+                            <input type="text" value="${profile.capital || ''}" class="input-field" onchange="updateProfile('${id}', 'capital', this.value)">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Population</label>
+                            <input type="number" value="${profile.population || ''}" class="input-field" onchange="updateProfile('${id}', 'population', parseInt(this.value))">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Area (km²)</label>
+                            <input type="number" value="${profile.area_km2 || ''}" class="input-field" onchange="updateProfile('${id}', 'area_km2', parseInt(this.value))">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">HDI</label>
+                            <input type="number" step="0.001" value="${profile.hdi || ''}" class="input-field" onchange="updateProfile('${id}', 'hdi', parseFloat(this.value))">
+                        </div>
+                        
+                        <div class="col-span-2 mt-4"><h3 class="text-blue-400 font-bold border-b border-slate-700 pb-2 mb-4">Economy</h3></div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">GDP Nominal (USD)</label>
+                            <input type="number" value="${profile.gdp_nominal_usd || ''}" class="input-field" onchange="updateProfile('${id}', 'gdp_nominal_usd', parseInt(this.value))">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">GDP PPP (USD)</label>
+                            <input type="number" value="${profile.gdp_ppp_usd || ''}" class="input-field" onchange="updateProfile('${id}', 'gdp_ppp_usd', parseInt(this.value))">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Currency</label>
+                            <input type="text" value="${profile.currency || ''}" class="input-field" onchange="updateProfile('${id}', 'currency', this.value)">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Military Spending (USD)</label>
+                            <input type="number" value="${profile.military_spending || ''}" class="input-field" onchange="updateProfile('${id}', 'military_spending', parseInt(this.value))">
+                        </div>
+
+                        <div class="col-span-2 mt-4"><h3 class="text-blue-400 font-bold border-b border-slate-700 pb-2 mb-4">Lists (Comma Separated)</h3></div>
+                        <div class="col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Major Exports</label>
+                            <textarea class="input-field h-20" onchange="updateProfileList('${id}', 'major_exports', this.value)">${(profile.major_exports || []).join(', ')}</textarea>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Neighboring Countries</label>
+                            <textarea class="input-field h-20" onchange="updateProfileList('${id}', 'neighboring_countries', this.value)">${(profile.neighboring_countries || []).join(', ')}</textarea>
+                        </div>
+                    </div>
+                `;
+            } else if (currentTab === 'geo') {
+                html = `
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-bold text-emerald-500 uppercase mb-1">Allies / Friends (Comma Separated)</label>
+                            <textarea class="input-field h-24 border-emerald-900/30" onchange="updateGeoList('${id}', 'allies', this.value)">${(geo.allies || []).join(', ')}</textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-rose-500 uppercase mb-1">Enemies / Rivals (Comma Separated)</label>
+                            <textarea class="input-field h-24 border-rose-900/30" onchange="updateGeoList('${id}', 'enemies', this.value)">${(geo.enemies || []).join(', ')}</textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-amber-500 uppercase mb-1">Frenemies (Comma Separated)</label>
+                            <textarea class="input-field h-24 border-amber-900/30" onchange="updateGeoList('${id}', 'frenemies', this.value)">${(geo.frenemies || []).join(', ')}</textarea>
+                        </div>
+                    </div>
+                `;
+            } else if (currentTab === 'passport') {
+                html = `
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Global Rank</label>
+                            <input type="number" value="${passport.rank || ''}" class="input-field" onchange="updatePassport('${id}', 'rank', parseInt(this.value))">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Visa Free Access</label>
+                            <input type="number" value="${passport.visa_free || ''}" class="input-field" onchange="updatePassport('${id}', 'visa_free', parseInt(this.value))">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Visa on Arrival</label>
+                            <input type="number" value="${passport.visa_on_arrival || ''}" class="input-field" onchange="updatePassport('${id}', 'visa_on_arrival', parseInt(this.value))">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">e-Visa</label>
+                            <input type="number" value="${passport.e_visa || ''}" class="input-field" onchange="updatePassport('${id}', 'e_visa', parseInt(this.value))">
+                        </div>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+        }
+
+        function updateDataset(dataset, id, field, value) {
+            const entry = datasets[dataset].find(c => c.id === id);
+            if (entry) entry[field] = value;
+            saveToCache();
+        }
+
+        function updateProfile(id, field, value) {
+            if (!datasets.profiles[id]) datasets.profiles[id] = {};
+            datasets.profiles[id][field] = value;
+            saveToCache();
+        }
+
+        function updateProfileList(id, field, value) {
+            if (!datasets.profiles[id]) datasets.profiles[id] = {};
+            datasets.profiles[id][field] = value.split(',').map(s => s.trim()).filter(s => s);
+            saveToCache();
+        }
+
+        function updateGeoList(id, field, value) {
+            if (!datasets.geopolitics[id]) datasets.geopolitics[id] = { allies: [], enemies: [], frenemies: [] };
+            datasets.geopolitics[id][field] = value.split(',').map(s => s.trim()).filter(s => s);
+            saveToCache();
+        }
+
+        function updatePassport(id, field, value) {
+            if (!datasets.passport[id]) datasets.passport[id] = {};
+            datasets.passport[id][field] = value;
+            saveToCache();
+        }
+
+        async function saveAllData() {
+            if (directoryHandle) {
+                const files = {
+                    'countries.json': datasets.countries,
+                    'country-profiles.json': datasets.profiles,
+                    'geopolitics.json': datasets.geopolitics,
+                    'passport-rank.json': datasets.passport
+                };
+
+                for (const [fileName, data] of Object.entries(files)) {
+                    const fileHandle = await directoryHandle.getFileHandle(fileName, { create: true });
+                    const writable = await fileHandle.createWritable();
+                    await writable.write(JSON.stringify(data, null, 2));
+                    await writable.close();
+                }
+                alert("All files saved successfully!");
+            } else {
+                // Fallback: download individual files
+                const files = {
+                    'countries.json': datasets.countries,
+                    'country-profiles.json': datasets.profiles,
+                    'geopolitics.json': datasets.geopolitics,
+                    'passport-rank.json': datasets.passport
+                };
+                for (const [name, data] of Object.entries(files)) {
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = name;
+                    a.click();
+                }
+                alert("Downloading modified files. Please place them in the /data folder.");
+            }
+        }
+    </script>
+</body>
+</html>

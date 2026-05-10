@@ -105,7 +105,7 @@ const MapEngine = {
         if (gdp > 10000000000000) fillColor = 'var(--accent-cyan)';
         else if (gdp > 2000000000000) fillColor = 'var(--accent-blue)';
         else if (gdp > 500000000000) fillColor = 'var(--accent-green)';
-        else { fillColor = 'var(--accent-red)'; fillOpacity = 0.3; }
+        else { fillColor = 'var(--accent-red)'; fillOpacity = 0.5; }
         fillOpacity = fillOpacity || 0.8;
       } else {
         fillOpacity = 0.2;

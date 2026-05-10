@@ -53,7 +53,9 @@ body.light-theme [style*="color: #cbd5e1"]:not(button),
 body.light-theme [style*="color:#cbd5e1"]:not(button),
 body.light-theme [style*="color: white"]:not(button),
 body.light-theme [style*="color:white"]:not(button),
-body.light-theme [style*="color:rgba(255,255,255,0.7)"]:not(button) {
+body.light-theme [style*="color:rgba(255,255,255,0.7)"]:not(button),
+body.light-theme #right-panel-official-name,
+body.light-theme #stat-pop-density {
   color: #475569 !important;
 }
 
@@ -73,9 +75,9 @@ body.light-theme .search-result-item:hover {
 }
 
 /* Header Mode Buttons - Bring back color fill in light theme */
-body.light-theme .mode-btn:nth-child(1) { background: rgba(59, 130, 246, 0.08) !important; border-color: rgba(59, 130, 246, 0.2) !important; color: #2563eb !important; }
-body.light-theme .mode-btn:nth-child(2) { background: rgba(16, 185, 129, 0.08) !important; border-color: rgba(16, 185, 129, 0.2) !important; color: #059669 !important; }
-body.light-theme .mode-btn:nth-child(3) { background: rgba(139, 92, 246, 0.08) !important; border-color: rgba(139, 92, 246, 0.2) !important; color: #7c3aed !important; }
+body.light-theme .mode-btn:nth-child(1) { background: rgba(59, 130, 246, 0.08) !important; border-color: #cbd5e1 !important; color: #2563eb !important; border: 1px solid #cbd5e1 !important; }
+body.light-theme .mode-btn:nth-child(2) { background: rgba(16, 185, 129, 0.08) !important; border-color: #cbd5e1 !important; color: #059669 !important; border: 1px solid #cbd5e1 !important; }
+body.light-theme .mode-btn:nth-child(3) { background: rgba(139, 92, 246, 0.08) !important; border-color: #cbd5e1 !important; color: #7c3aed !important; border: 1px solid #cbd5e1 !important; }
 
 body.light-theme .mode-btn.active {
   border-color: transparent !important;
@@ -671,7 +673,7 @@ header {
   border-bottom: 2px solid transparent;
 }
 .compare-tab:hover { color: white; }
-body.light-theme .compare-tab:hover { color: var(--text-main); }
+body.light-theme .compare-tab:hover { color: #0f172a !important; }
 .compare-tab.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); background: rgba(6,182,212,0.05); }
 
 .compare-grid {
