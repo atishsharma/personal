@@ -1059,21 +1059,24 @@
             if (!isBackground) setLoading(true);
 
             try {
-                let data;
+                const fallbackKey = getBuiltInKey();
+                
+                let mainPromise;
                 switch (state.provider) {
-                    case "open-meteo": data = await fetchOpenMeteo(); break;
-                    case "openweathermap": data = await fetchOpenWeatherMap(activeKey); break;
-                    case "weatherapi": data = await fetchWeatherAPI(activeKey); break;
+                    case "open-meteo": mainPromise = fetchOpenMeteo(); break;
+                    case "openweathermap": mainPromise = fetchOpenWeatherMap(activeKey); break;
+                    case "weatherapi": mainPromise = fetchWeatherAPI(activeKey); break;
                 }
+                
+                const wApiPromise = state.provider !== 'weatherapi' ? fetchWeatherAPI(fallbackKey).catch(() => null) : Promise.resolve(null);
+                const omPromise = state.provider !== 'open-meteo' ? fetchOpenMeteo().catch(() => null) : Promise.resolve(null);
+                
+                const [data, wApiDataRaw, omDataRaw] = await Promise.all([mainPromise, wApiPromise, omPromise]);
                 
                 // DATA COMBINATION: Force combine Open-Meteo & WeatherAPI for optimal Real-Time vs Max data
                 try {
-                    const fallbackKey = getBuiltInKey();
-                    
-                    const [wApiData, omData] = await Promise.all([
-                        state.provider !== 'weatherapi' ? fetchWeatherAPI(fallbackKey).catch(()=>null) : Promise.resolve(data),
-                        state.provider !== 'open-meteo' ? fetchOpenMeteo().catch(()=>null) : Promise.resolve(data)
-                    ]);
+                    const wApiData = state.provider === 'weatherapi' ? data : wApiDataRaw;
+                    const omData = state.provider === 'open-meteo' ? data : omDataRaw;
 
                     // Inject Real-Time AQI from WeatherAPI and Max AQI from Open-Meteo
                     if (wApiData && wApiData.aqi !== "--") data.aqi = wApiData.aqi;
