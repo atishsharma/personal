@@ -24,12 +24,13 @@ const DataLoader = {
         }
       };
 
+      const v = Date.now();
       const [geomapIndexRes, countriesRes, geopoliticsRes, passportRes, profilesRes] = await Promise.all([
-        fetch('data/geomap_index.json'),
-        fetch('data/countries.json'),
-        fetch('data/geopolitics.json'),
-        fetch('data/passport-power.json'),
-        fetch('data/country-profiles.json')
+        fetch('data/geomap_index.json?v=' + v),
+        fetch('data/countries.json?v=' + v),
+        fetch('data/geopolitics.json?v=' + v),
+        fetch('data/passport-rank.json?v=' + v),
+        fetch('data/country-profiles.json?v=' + v)
       ]);
 
       this.data.geomapIndex = await geomapIndexRes.json();
@@ -64,7 +65,7 @@ const DataLoader = {
       const chunkData = await this.fetchWithCache('data/geomap_chunks/' + chunkFile);
       this.data.loadedChunks.add(chunkFile);
       this.data.geomapFeatures.push(...chunkData.features);
-      if (window.MapEngine && MapEngine.geoLayer) {
+      if (typeof MapEngine !== 'undefined' && MapEngine.geoLayer) {
         MapEngine.geoLayer.addData(chunkData.features);
       }
     } catch (e) {
@@ -80,7 +81,7 @@ const DataLoader = {
           const chunkData = await this.fetchWithCache('data/geomap_chunks/' + chunkFile);
           this.data.loadedChunks.add(chunkFile);
           this.data.geomapFeatures.push(...chunkData.features);
-          if (window.MapEngine && MapEngine.geoLayer) {
+          if (typeof MapEngine !== 'undefined' && MapEngine.geoLayer) {
             MapEngine.geoLayer.addData(chunkData.features);
           }
         } catch (e) {

@@ -2,1291 +2,1549 @@
   {
     "id": "Indonesia",
     "name": "Indonesia",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Malaysia",
     "name": "Malaysia",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Chile",
     "name": "Chile",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Bolivia",
     "name": "Bolivia",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Peru",
     "name": "Peru",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Argentina",
     "name": "Argentina",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Dhekelia Sovereign Base Area",
     "name": "Dhekelia Sovereign Base Area",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Cyprus",
     "name": "Cyprus",
-    "region": "Oceania"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "India",
     "name": "India",
-    "region": "Americas"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "China",
     "name": "China",
-    "region": "Africa"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Israel",
     "name": "Israel",
-    "region": "Americas"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Palestine",
     "name": "Palestine",
-    "region": "Africa"
+    "region": "Asia",
+    "unStatus": "UN Observer State"
   },
   {
     "id": "Lebanon",
     "name": "Lebanon",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Ethiopia",
     "name": "Ethiopia",
-    "region": "Asia"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "South Sudan",
     "name": "South Sudan",
-    "region": "Asia"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Somalia",
     "name": "Somalia",
-    "region": "Oceania"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Kenya",
     "name": "Kenya",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Malawi",
     "name": "Malawi",
-    "region": "Asia"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "United Republic of Tanzania",
     "name": "United Republic of Tanzania",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Syria",
     "name": "Syria",
-    "region": "Europe"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Somaliland",
     "name": "Somaliland",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "France",
     "name": "France",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Suriname",
     "name": "Suriname",
-    "region": "Africa"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Guyana",
     "name": "Guyana",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "South Korea",
     "name": "South Korea",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "North Korea",
     "name": "North Korea",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Morocco",
     "name": "Morocco",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Western Sahara",
     "name": "Western Sahara",
-    "region": "Europe"
+    "region": "Africa",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Costa Rica",
     "name": "Costa Rica",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Nicaragua",
     "name": "Nicaragua",
-    "region": "Oceania"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Republic of the Congo",
     "name": "Republic of the Congo",
-    "region": "Europe"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "DR Congo",
     "name": "DR Congo",
-    "region": "Oceania"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Bhutan",
     "name": "Bhutan",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Ukraine",
     "name": "Ukraine",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Belarus",
     "name": "Belarus",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Namibia",
     "name": "Namibia",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "South Africa",
     "name": "South Africa",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Saint Martin",
     "name": "Saint Martin",
-    "region": "Oceania"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Sint Maarten",
     "name": "Sint Maarten",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Oman",
     "name": "Oman",
-    "region": "Africa"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Uzbekistan",
     "name": "Uzbekistan",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Kazakhstan",
     "name": "Kazakhstan",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Tajikistan",
     "name": "Tajikistan",
-    "region": "Africa"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Lithuania",
     "name": "Lithuania",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Brazil",
     "name": "Brazil",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Uruguay",
     "name": "Uruguay",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Mongolia",
     "name": "Mongolia",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Russia",
     "name": "Russia",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Czechia",
     "name": "Czechia",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Germany",
     "name": "Germany",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Estonia",
     "name": "Estonia",
-    "region": "Americas"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Latvia",
     "name": "Latvia",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Norway",
     "name": "Norway",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Sweden",
     "name": "Sweden",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Finland",
     "name": "Finland",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Vietnam",
     "name": "Vietnam",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Cambodia",
     "name": "Cambodia",
-    "region": "Americas"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Luxembourg",
     "name": "Luxembourg",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "United Arab Emirates",
     "name": "United Arab Emirates",
-    "region": "Europe"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Belgium",
     "name": "Belgium",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Georgia",
     "name": "Georgia",
-    "region": "Americas"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "North Macedonia",
     "name": "North Macedonia",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Albania",
     "name": "Albania",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Azerbaijan",
     "name": "Azerbaijan",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Kosovo",
     "name": "Kosovo",
-    "region": "Americas"
+    "region": "Europe",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Turkey",
     "name": "Turkey",
-    "region": "Europe"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Spain",
     "name": "Spain",
-    "region": "Americas"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Laos",
     "name": "Laos",
-    "region": "Europe"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Kyrgyzstan",
     "name": "Kyrgyzstan",
-    "region": "Africa"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Armenia",
     "name": "Armenia",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Denmark",
     "name": "Denmark",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Libya",
     "name": "Libya",
-    "region": "Asia"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Tunisia",
     "name": "Tunisia",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Romania",
     "name": "Romania",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Hungary",
     "name": "Hungary",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Slovakia",
     "name": "Slovakia",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Poland",
     "name": "Poland",
-    "region": "Oceania"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Ireland",
     "name": "Ireland",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "United Kingdom",
     "name": "United Kingdom",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Greece",
     "name": "Greece",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Zambia",
     "name": "Zambia",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Sierra Leone",
     "name": "Sierra Leone",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Guinea",
     "name": "Guinea",
-    "region": "Oceania"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Liberia",
     "name": "Liberia",
-    "region": "Asia"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Central African Republic",
     "name": "Central African Republic",
-    "region": "Europe"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Sudan",
     "name": "Sudan",
-    "region": "Asia"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Djibouti",
     "name": "Djibouti",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Eritrea",
     "name": "Eritrea",
-    "region": "Oceania"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Austria",
     "name": "Austria",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Iraq",
     "name": "Iraq",
-    "region": "Americas"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Italy",
     "name": "Italy",
-    "region": "Americas"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Switzerland",
     "name": "Switzerland",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Iran",
     "name": "Iran",
-    "region": "Africa"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Netherlands",
     "name": "Netherlands",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Liechtenstein",
     "name": "Liechtenstein",
-    "region": "Americas"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Ivory Coast",
     "name": "Ivory Coast",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Republic of Serbia",
     "name": "Republic of Serbia",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Mali",
     "name": "Mali",
-    "region": "Europe"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Senegal",
     "name": "Senegal",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Nigeria",
     "name": "Nigeria",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Benin",
     "name": "Benin",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Angola",
     "name": "Angola",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Croatia",
     "name": "Croatia",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Slovenia",
     "name": "Slovenia",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Qatar",
     "name": "Qatar",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Saudi Arabia",
     "name": "Saudi Arabia",
-    "region": "Americas"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Botswana",
     "name": "Botswana",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Zimbabwe",
     "name": "Zimbabwe",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Pakistan",
     "name": "Pakistan",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Bulgaria",
     "name": "Bulgaria",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Thailand",
     "name": "Thailand",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "San Marino",
     "name": "San Marino",
-    "region": "Oceania"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Haiti",
     "name": "Haiti",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Dominican Republic",
     "name": "Dominican Republic",
-    "region": "Asia"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Chad",
     "name": "Chad",
-    "region": "Oceania"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Kuwait",
     "name": "Kuwait",
-    "region": "Europe"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "El Salvador",
     "name": "El Salvador",
-    "region": "Africa"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Guatemala",
     "name": "Guatemala",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "East Timor",
     "name": "East Timor",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Brunei",
     "name": "Brunei",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Monaco",
     "name": "Monaco",
-    "region": "Americas"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Algeria",
     "name": "Algeria",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Mozambique",
     "name": "Mozambique",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "eSwatini",
     "name": "eSwatini",
-    "region": "Europe"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Burundi",
     "name": "Burundi",
-    "region": "Oceania"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Rwanda",
     "name": "Rwanda",
-    "region": "Europe"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Myanmar",
     "name": "Myanmar",
-    "region": "Africa"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Bangladesh",
     "name": "Bangladesh",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Andorra",
     "name": "Andorra",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Afghanistan",
     "name": "Afghanistan",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Montenegro",
     "name": "Montenegro",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Bosnia and Herzegovina",
     "name": "Bosnia and Herzegovina",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Uganda",
     "name": "Uganda",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "US Naval Base Guantanamo Bay",
     "name": "US Naval Base Guantanamo Bay",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Cuba",
     "name": "Cuba",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Honduras",
     "name": "Honduras",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Ecuador",
     "name": "Ecuador",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Colombia",
     "name": "Colombia",
-    "region": "Asia"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Paraguay",
     "name": "Paraguay",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Brazilian Island",
     "name": "Brazilian Island",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Portugal",
     "name": "Portugal",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Moldova",
     "name": "Moldova",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Turkmenistan",
     "name": "Turkmenistan",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Jordan",
     "name": "Jordan",
-    "region": "Americas"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Nepal",
     "name": "Nepal",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Lesotho",
     "name": "Lesotho",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Cameroon",
     "name": "Cameroon",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Gabon",
     "name": "Gabon",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Niger",
     "name": "Niger",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Burkina Faso",
     "name": "Burkina Faso",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Togo",
     "name": "Togo",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Ghana",
     "name": "Ghana",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Guinea-Bissau",
     "name": "Guinea-Bissau",
-    "region": "Europe"
+    "region": "Africa",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Gibraltar",
     "name": "Gibraltar",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "United States",
     "name": "United States",
-    "region": "Africa"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Canada",
     "name": "Canada",
-    "region": "Africa"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Mexico",
     "name": "Mexico",
-    "region": "Asia"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Belize",
     "name": "Belize",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Panama",
     "name": "Panama",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Venezuela",
     "name": "Venezuela",
-    "region": "Africa"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Papua New Guinea",
     "name": "Papua New Guinea",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Egypt",
     "name": "Egypt",
-    "region": "Europe"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Yemen",
     "name": "Yemen",
-    "region": "Africa"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Mauritania",
     "name": "Mauritania",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Equatorial Guinea",
     "name": "Equatorial Guinea",
-    "region": "Oceania"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Gambia",
     "name": "Gambia",
-    "region": "Oceania"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Hong Kong S.A.R.",
     "name": "Hong Kong S.A.R.",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Vatican",
     "name": "Vatican",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "UN Observer State"
   },
   {
     "id": "Northern Cyprus",
     "name": "Northern Cyprus",
-    "region": "Europe"
+    "region": "Asia",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Cyprus No Mans Area",
     "name": "Cyprus No Mans Area",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Siachen Glacier",
     "name": "Siachen Glacier",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Baykonur Cosmodrome",
     "name": "Baykonur Cosmodrome",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Akrotiri Sovereign Base Area",
     "name": "Akrotiri Sovereign Base Area",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Southern Patagonian Ice Field",
     "name": "Southern Patagonian Ice Field",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Bir Tawil",
     "name": "Bir Tawil",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Antarctica",
     "name": "Antarctica",
-    "region": "Oceania"
+    "region": "Antarctic",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Australia",
     "name": "Australia",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Greenland",
     "name": "Greenland",
-    "region": "Africa"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Fiji",
     "name": "Fiji",
-    "region": "Americas"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "New Zealand",
     "name": "New Zealand",
-    "region": "Europe"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "New Caledonia",
     "name": "New Caledonia",
-    "region": "Africa"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Madagascar",
     "name": "Madagascar",
-    "region": "Americas"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Philippines",
     "name": "Philippines",
-    "region": "Africa"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Sri Lanka",
     "name": "Sri Lanka",
-    "region": "Americas"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Curaçao",
     "name": "Curaçao",
-    "region": "Asia"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Aruba",
     "name": "Aruba",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Bahamas",
     "name": "Bahamas",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Turks and Caicos Islands",
     "name": "Turks and Caicos Islands",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Taiwan",
     "name": "Taiwan",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Japan",
     "name": "Japan",
-    "region": "Oceania"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Saint Pierre and Miquelon",
     "name": "Saint Pierre and Miquelon",
-    "region": "Africa"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Iceland",
     "name": "Iceland",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Pitcairn Islands",
     "name": "Pitcairn Islands",
-    "region": "Africa"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "French Polynesia",
     "name": "French Polynesia",
-    "region": "Americas"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "French Southern and Antarctic Lands",
     "name": "French Southern and Antarctic Lands",
-    "region": "Europe"
+    "region": "Antarctic",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Seychelles",
     "name": "Seychelles",
-    "region": "Oceania"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Kiribati",
     "name": "Kiribati",
-    "region": "Africa"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Marshall Islands",
     "name": "Marshall Islands",
-    "region": "Americas"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Trinidad and Tobago",
     "name": "Trinidad and Tobago",
-    "region": "Oceania"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Grenada",
     "name": "Grenada",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Saint Vincent and the Grenadines",
     "name": "Saint Vincent and the Grenadines",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Barbados",
     "name": "Barbados",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Saint Lucia",
     "name": "Saint Lucia",
-    "region": "Europe"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Dominica",
     "name": "Dominica",
-    "region": "Oceania"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "United States Minor Outlying Islands",
     "name": "United States Minor Outlying Islands",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Montserrat",
     "name": "Montserrat",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Antigua and Barbuda",
     "name": "Antigua and Barbuda",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Saint Kitts and Nevis",
     "name": "Saint Kitts and Nevis",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "United States Virgin Islands",
     "name": "United States Virgin Islands",
-    "region": "Africa"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Saint Barthelemy",
     "name": "Saint Barthelemy",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Puerto Rico",
     "name": "Puerto Rico",
-    "region": "Africa"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Anguilla",
     "name": "Anguilla",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "British Virgin Islands",
     "name": "British Virgin Islands",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Jamaica",
     "name": "Jamaica",
-    "region": "Asia"
+    "region": "Americas",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Cayman Islands",
     "name": "Cayman Islands",
-    "region": "Oceania"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Bermuda",
     "name": "Bermuda",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Heard Island and McDonald Islands",
     "name": "Heard Island and McDonald Islands",
-    "region": "Asia"
+    "region": "Antarctic",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Saint Helena",
     "name": "Saint Helena",
-    "region": "Europe"
+    "region": "Africa",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Mauritius",
     "name": "Mauritius",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Comoros",
     "name": "Comoros",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "UN Member State"
   },
   {
     "id": "São Tomé and Principe",
     "name": "São Tomé and Principe",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Cabo Verde",
     "name": "Cabo Verde",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Malta",
     "name": "Malta",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Jersey",
     "name": "Jersey",
-    "region": "Americas"
+    "region": "Europe",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Guernsey",
     "name": "Guernsey",
-    "region": "Asia"
+    "region": "Europe",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Isle of Man",
     "name": "Isle of Man",
-    "region": "Oceania"
+    "region": "Europe",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Aland",
     "name": "Aland",
-    "region": "Americas"
+    "region": "Europe",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Faroe Islands",
     "name": "Faroe Islands",
-    "region": "Africa"
+    "region": "Europe",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Indian Ocean Territories",
     "name": "Indian Ocean Territories",
-    "region": "Europe"
+    "region": "Europe",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "British Indian Ocean Territory",
     "name": "British Indian Ocean Territory",
-    "region": "Asia"
+    "region": "Africa",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Singapore",
     "name": "Singapore",
-    "region": "Europe"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Norfolk Island",
     "name": "Norfolk Island",
-    "region": "Asia"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Cook Islands",
     "name": "Cook Islands",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Tonga",
     "name": "Tonga",
-    "region": "Africa"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Wallis and Futuna",
     "name": "Wallis and Futuna",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Samoa",
     "name": "Samoa",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Solomon Islands",
     "name": "Solomon Islands",
-    "region": "Europe"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Tuvalu",
     "name": "Tuvalu",
-    "region": "Asia"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Maldives",
     "name": "Maldives",
-    "region": "Americas"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Nauru",
     "name": "Nauru",
-    "region": "Africa"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Federated States of Micronesia",
     "name": "Federated States of Micronesia",
-    "region": "Europe"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "South Georgia and the Islands",
     "name": "South Georgia and the Islands",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Falkland Islands",
     "name": "Falkland Islands",
-    "region": "Asia"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Vanuatu",
     "name": "Vanuatu",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Niue",
     "name": "Niue",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "American Samoa",
     "name": "American Samoa",
-    "region": "Europe"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Palau",
     "name": "Palau",
-    "region": "Europe"
+    "region": "Oceania",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Guam",
     "name": "Guam",
-    "region": "Europe"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Northern Mariana Islands",
     "name": "Northern Mariana Islands",
-    "region": "Americas"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Bahrain",
     "name": "Bahrain",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "UN Member State"
   },
   {
     "id": "Coral Sea Islands",
     "name": "Coral Sea Islands",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Spratly Islands",
     "name": "Spratly Islands",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Clipperton Island",
     "name": "Clipperton Island",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Macao S.A.R",
     "name": "Macao S.A.R",
-    "region": "Asia"
+    "region": "Asia",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Ashmore and Cartier Islands",
     "name": "Ashmore and Cartier Islands",
-    "region": "Africa"
+    "region": "Africa",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Bajo Nuevo Bank (Petrel Is.)",
     "name": "Bajo Nuevo Bank (Petrel Is.)",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Serranilla Bank",
     "name": "Serranilla Bank",
-    "region": "Americas"
+    "region": "Americas",
+    "unStatus": "Non-UN Member"
   },
   {
     "id": "Scarborough Reef",
     "name": "Scarborough Reef",
-    "region": "Oceania"
+    "region": "Oceania",
+    "unStatus": "Non-UN Member"
   }
 ]

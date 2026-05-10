@@ -2,7 +2,7 @@
 const MapEngine = {
   map: null,
   geoLayer: null,
-  currentMode: 'geopolitics', // 'geopolitics', 'passport', 'gdp', 'visa-focus'
+  currentMode: 'geopolitics', // 'geopolitics', 'passport', 'gdp', 'visa-focus', 'border-focus'
   currentVisaFocus: null,
   selectedCountryId: null,
 
@@ -86,8 +86,8 @@ const MapEngine = {
         if (gdp > 10000000000000) fillColor = 'var(--accent-cyan)';
         else if (gdp > 2000000000000) fillColor = 'var(--accent-blue)';
         else if (gdp > 500000000000) fillColor = 'var(--accent-green)';
-        else fillColor = 'var(--bg-land)';
-        fillOpacity = 0.8;
+        else { fillColor = '#ffffff'; fillOpacity = 0.35; }
+        fillOpacity = fillOpacity || 0.8;
       } else {
         fillOpacity = 0.2;
       }
@@ -106,6 +106,16 @@ const MapEngine = {
         fillOpacity = 0.8;
       } else {
         fillOpacity = 0.2;
+      }
+    } else if (this.currentMode === 'border-focus') {
+      if (isSelected) {
+        fillColor = 'var(--accent-cyan)';
+        fillOpacity = 0.8;
+      } else {
+        fillColor = 'transparent';
+        fillOpacity = 0;
+        weight = 0;
+        color = 'transparent';
       }
     }
 
@@ -158,6 +168,12 @@ const MapEngine = {
 
   zoomToSelected() {
     if (!this.selectedCountryId) return;
+    // Switch to border-focus mode
+    this.currentMode = 'border-focus';
+    this.renderLayer();
+    UI.updateLegend('border-focus');
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+
     let targetLayer = null;
     this.geoLayer.eachLayer(layer => {
       if (layer.feature.properties.name === this.selectedCountryId) {
@@ -165,7 +181,7 @@ const MapEngine = {
       }
     });
     if (targetLayer) {
-       this.map.flyToBounds(targetLayer.getBounds(), { padding: [50, 50], duration: 1.5, maxZoom: 4 });
+       this.map.flyToBounds(targetLayer.getBounds(), { padding: [50, 50], duration: 1.5, maxZoom: 5 });
        
        // Hide right panel on mobile to focus on the map
        if (window.innerWidth <= 768) {

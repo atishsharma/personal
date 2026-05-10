@@ -25,7 +25,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=1.2">
 </head>
 
 <body>
@@ -48,11 +48,13 @@
         <!-- Header -->
         <header class="glass-panel" id="main-header"
             style="margin: 1rem 1rem 0; padding: 0.75rem 1.5rem; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
-            <div id="header-brand" style="display:flex; align-items:center; gap:0.75rem; flex: 1;">
-                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Logo"
-                    style="width:32px; height:32px; border-radius:8px;">
-                <div>
-                    <h1 style="font-size:1.1rem; margin:0;">Atish's Geopolitics Atlas</h1>
+            <div style="flex: 1; display: flex; align-items: center;">
+                <div id="header-brand" class="brand-gradient-border" style="display:flex; align-items:center; gap:0.75rem; cursor: pointer; width: fit-content;">
+                    <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Logo"
+                        style="width:32px; height:32px; border-radius:8px;">
+                    <div>
+                        <h1 style="font-size:1.1rem; margin:0;">Atish's Atlas</h1>
+                    </div>
                 </div>
             </div>
 
@@ -81,7 +83,7 @@
                                 d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
                             </path>
                         </svg>
-                        <span class="mode-text">Geo</span>
+                        <span class="mode-text">Geo<span class="laptop-only">-Political</span></span>
                     </button>
                     <button class="mode-btn" data-mode="passport" title="Passport Power">
                         <svg class="mode-icon" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -104,9 +106,9 @@
             </div>
         </header>
 
-        <!-- Centered Overlay Legend -->
-        <div id="legend-content" class="glass-panel"
-            style="position: absolute; top: 5.5rem; left: 50%; transform: translateX(-50%); display: flex; gap: 1.5rem; padding: 0.5rem 1.5rem; font-size: 0.75rem; border-radius: 20px; z-index: 1000; pointer-events: auto; white-space: nowrap;">
+        <!-- Centered Overlay Legend (desktop) -->
+        <div id="legend-content" class="glass-panel legend-desktop"
+            style="position: absolute; bottom: calc(3.5rem + 3px); left: 50%; transform: translateX(-50%); display: flex; gap: 1.5rem; padding: 0.5rem 1.5rem; font-size: 0.75rem; border-radius: 20px; z-index: 1000; pointer-events: auto; white-space: nowrap;">
         </div>
 
         <!-- Panels Container -->
@@ -115,6 +117,7 @@
             <!-- Left Panel: Country Stats -->
             <aside id="left-panel" class="panel glass-panel hidden-left">
                 <button id="close-left" class="panel-close" aria-label="Close Left Panel">✕</button>
+                <button id="back-to-right" class="panel-back-btn" aria-label="Back to Dossier">↩</button>
 
                 <div class="card-section"
                     style="background: rgba(59, 130, 246, 0.1); border-bottom: 1px solid rgba(59, 130, 246, 0.2);">
@@ -141,7 +144,10 @@
                         <div class="stat-box">
                             <div class="label">GDP (Nominal)</div>
                             <div class="value text-accent" id="stat-gdp">--</div>
-                            <div class="label" style="font-size:0.65rem; margin-top:2px;" id="stat-gdp-per-capita">--</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">GDP (PPP)</div>
+                            <div class="value" id="stat-gdp-ppp">--</div>
                         </div>
                         <div class="stat-box">
                             <div class="label">Total Area</div>
@@ -155,6 +161,26 @@
                             <div class="label">Region</div>
                             <div class="value" id="stat-region" style="font-size:0.8rem;">--</div>
                         </div>
+                        <div class="stat-box">
+                            <div class="label">UN Status</div>
+                            <div class="value" id="stat-un-status" style="font-size:0.75rem;">--</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">Government</div>
+                            <div class="value" id="stat-gov" style="font-size:0.8rem;">--</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">Head of State</div>
+                            <div class="value" id="stat-head" style="font-size:0.8rem;">--</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">HDI</div>
+                            <div class="value" id="stat-hdi" style="font-size:0.8rem;">--</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="label">Military Spending</div>
+                            <div class="value" id="stat-military" style="font-size:0.8rem;">--</div>
+                        </div>
                         <div class="stat-box" style="grid-column: span 2;">
                             <div class="label">Languages</div>
                             <div class="value" id="stat-languages" style="font-size:0.8rem; line-height:1.2;">--</div>
@@ -167,13 +193,31 @@
                 </div>
 
                 <div class="card-section">
-                    <div class="section-title">Major Exports</div>
-                    <div id="list-exports" style="font-size: 0.85rem; color: #cbd5e1;"></div>
+                    <div class="section-title">Economy & Trade</div>
+                    <div style="display: flex; gap: 1rem;">
+                        <div style="flex:1;">
+                            <div style="font-size: 0.7rem; font-weight: 700; color: var(--accent-blue); text-transform: uppercase; margin-bottom:0.25rem;">Major Exports</div>
+                            <div id="list-exports" style="font-size: 0.85rem; color: #cbd5e1; margin-bottom:0.5rem;"></div>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-size: 0.7rem; font-weight: 700; color: var(--accent-orange); text-transform: uppercase; margin-bottom:0.25rem;">Major Imports</div>
+                            <div id="list-imports" style="font-size: 0.85rem; color: #cbd5e1; margin-bottom:0.5rem;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.7rem; font-weight: 700; color: var(--accent-green); text-transform: uppercase; margin-bottom:0.25rem;">Largest Industries</div>
+                        <div id="list-industries" style="font-size: 0.85rem; color: #cbd5e1;"></div>
+                    </div>
                 </div>
 
                 <div class="card-section">
                     <div class="section-title">Major Cities (Population)</div>
                     <div id="list-cities" style="font-size: 0.85rem; color: #cbd5e1;"></div>
+                </div>
+                
+                <div class="card-section">
+                    <div class="section-title">Neighboring Countries</div>
+                    <div id="list-neighbors" style="font-size: 0.85rem; color: #cbd5e1;"></div>
                 </div>
             </aside>
 
@@ -193,18 +237,12 @@
 
                 <div class="card-section">
                     <div class="section-title">Passport Power Index</div>
-                    <div class="stat-grid" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="stat-grid" style="grid-template-columns: 1fr 1fr;">
                         <div class="stat-box"
                             style="border-color: var(--accent-green); background: rgba(16, 185, 129, 0.05); cursor:pointer;"
                             onclick="MapEngine.highlightVisaCountries('free')">
                             <div class="label" style="color:var(--accent-green);">Visa Free</div>
                             <div class="value text-green" id="pass-free">--</div>
-                        </div>
-                        <div class="stat-box"
-                            style="border-color: var(--accent-orange); background: rgba(245, 158, 11, 0.05); cursor:pointer;"
-                            onclick="MapEngine.highlightVisaCountries('voa')">
-                            <div class="label" style="color:var(--accent-orange);">On Arrival</div>
-                            <div class="value text-orange" id="pass-voa">--</div>
                         </div>
                         <div class="stat-box"
                             style="border-color: var(--accent-red); background: rgba(239, 68, 68, 0.05); cursor:pointer;"
@@ -214,7 +252,7 @@
                         </div>
                     </div>
                     <div style="text-align:center; margin-top:0.5rem; font-size:0.75rem; color:var(--text-muted);">
-                        Global Rank: <strong id="pass-rank" style="color:var(--accent-cyan);">--</strong>
+                        Global Rank: <strong id="pass-rank" style="color:var(--accent-cyan);">--</strong> | VoA/e-Visa: <strong id="pass-voa" style="color:var(--accent-orange);">--</strong> / <strong id="pass-evisa" style="color:var(--accent-green);">--</strong>
                     </div>
                 </div>
 
@@ -244,48 +282,75 @@
                 </div>
 
                 <div class="card-section" style="padding-top: 0.5rem;">
-                    <button id="btn-view-profile"
-                        style="width:100%; padding:0.5rem; margin-bottom:0.75rem; font-size:0.8rem; font-weight:600; border-radius:6px; background:var(--accent-blue); color:white; border:none; cursor:pointer; transition:background 0.2s; box-shadow:0 4px 10px rgba(59,130,246,0.3);">View
-                        Country Profile</button>
+                    <div style="display:flex; gap:0.5rem; margin-bottom:0.75rem;">
+                        <button id="btn-view-profile"
+                            style="flex:1; padding:0.5rem; font-size:0.8rem; font-weight:600; border-radius:6px; background:var(--accent-blue); color:white; border:none; cursor:pointer; transition:background 0.2s; box-shadow:0 4px 10px rgba(59,130,246,0.3);">View
+                            Country Profile</button>
+                        <button id="btn-compare"
+                            style="flex:1; padding:0.5rem; font-size:0.8rem; font-weight:600; border-radius:6px; background:var(--accent-purple, #8b5cf6); color:white; border:none; cursor:pointer; transition:background 0.2s; box-shadow:0 4px 10px rgba(139,92,246,0.3);">Compare</button>
+                    </div>
+                    <!-- Compare inline section -->
+                    <div id="compare-section" style="display:none; margin-bottom:0.75rem; padding:0.5rem; background:rgba(139,92,246,0.08); border:1px solid rgba(139,92,246,0.2); border-radius:8px;">
+                        <label style="font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.05em;">Compare with:</label>
+                        <select id="compare-select" style="width:100%; padding:0.4rem; margin-top:0.25rem; background:var(--glass-bg); color:white; border:1px solid var(--glass-border); border-radius:6px; font-family:inherit; font-size:0.8rem;"></select>
+                        <button id="btn-open-compare" style="display:none; width:100%; margin-top:0.5rem; padding:0.5rem; font-size:0.8rem; font-weight:600; border-radius:6px; background:var(--accent-purple); color:white; border:none; cursor:pointer; transition:background 0.2s;">Open Compare</button>
+                    </div>
                     <div style="display:flex; gap:0.5rem; margin-bottom:0.75rem;">
                         <a id="link-wiki" href="#" target="_blank"
-                            style="flex:1; text-align:center; padding:0.5rem; font-size:0.75rem; border-radius:6px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--text-main); text-decoration:none; transition:all 0.2s;">Wikipedia</a>
+                            style="flex:1; text-align:center; padding:0.5rem; font-size:0.75rem; border-radius:6px; background:var(--accent-cyan); font-weight:600; border:none; color:#0f172a; text-decoration:none; transition:all 0.2s;">Wikipedia</a>
                         <a id="link-gov" href="#" target="_blank"
-                            style="flex:1; text-align:center; padding:0.5rem; font-size:0.75rem; border-radius:6px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:var(--text-main); text-decoration:none; transition:all 0.2s;">Foreign
+                            style="flex:1; text-align:center; padding:0.5rem; font-size:0.75rem; border-radius:6px; background:var(--accent-orange); font-weight:600; border:none; color:#0f172a; text-decoration:none; transition:all 0.2s;">Foreign
                             Office</a>
                     </div>
-                    <button onclick="MapEngine.zoomToSelected()"
-                        style="width:100%; padding:0.5rem; font-size:0.8rem; font-weight:600; border-radius:6px; background:rgba(255,255,255,0.1); color:var(--text-main); border:1px solid rgba(255,255,255,0.2); cursor:pointer; transition:all 0.2s;">Focus
-                        on Borders</button>
+                    <div style="display:flex; gap:0.5rem;">
+                        <button onclick="MapEngine.zoomToSelected()"
+                            style="flex:1; padding:0.5rem; font-size:0.75rem; font-weight:600; border-radius:6px; background:var(--accent-red); color:white; border:none; cursor:pointer; transition:all 0.2s;">Focus Borders</button>
+                        <a id="link-external-affairs" href="#" target="_blank"
+                            style="flex:1; text-align:center; padding:0.5rem; font-size:0.75rem; font-weight:600; border-radius:6px; background:var(--accent-green); color:#0f172a; text-decoration:none; transition:all 0.2s;">Foreign Affairs</a>
+                    </div>
                 </div>
 
             </aside>
         </div>
 
+        <!-- Compare Popup (non-fullscreen modal) -->
+        <div id="compare-overlay" class="compare-overlay-hidden">
+            <div class="compare-modal glass-panel">
+                <div class="compare-modal-header">
+                    <h2 style="margin:0; font-size:1rem; display:flex; align-items:center; gap:0.5rem;">⚔️ Country Comparison</h2>
+                    <button onclick="UI.closeCompare()" class="compare-close-btn">✕</button>
+                </div>
+                <div class="compare-tabs" id="compare-tabs"></div>
+                <div id="compare-table" style="padding:0.75rem; max-height:60vh; overflow-y:auto;"></div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <footer class="glass-panel"
-            style="position: absolute; bottom: 1rem; left: 1rem; right: 1rem; padding: 0.75rem 1.5rem; border-radius: 12px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; z-index: 1000; pointer-events: auto; font-size: 0.75rem;">
-            <div>&copy; 2026 Geopolitics Atlas</div>
-            <div style="color:var(--text-muted); text-align: center; flex: 1; min-width: 200px;">
-                Database updated April 2026 &nbsp;|&nbsp; 
-                <a href="https://leafletjs.com" target="_blank" style="color:inherit; text-decoration:underline;">Leaflet</a> &copy; 
-                <a href="https://carto.com/attributions" target="_blank" style="color:inherit; text-decoration:underline;">CARTO</a>
+            style="position: absolute; bottom: 1rem; left: 1rem; right: 1rem; padding: 0.75rem 1.5rem; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 4px; z-index: 1000; pointer-events: auto; font-size: 0.75rem;">
+            <div id="legend-mobile" style="display:none; width:100%; overflow-x:auto; white-space:nowrap;"></div>
+            <div style="display:flex; width:100%; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
+                <div>&copy; 2026 Atish's Atlas</div>
+                <div style="color:var(--text-muted); text-align: center; flex: 1; min-width: 200px;">
+                    Updated April 2026 &nbsp;|&nbsp; 
+                    <a href="https://leafletjs.com" target="_blank" style="color:inherit; text-decoration:underline;">Leaflet</a> &copy; 
+                    <a href="https://carto.com/attributions" target="_blank" style="color:inherit; text-decoration:underline;">CARTO</a> &copy;
+                    <a href="#" onclick="location.reload(); return false;" style="color:inherit; text-decoration:none;">Atish's Atlas</a> &copy;
+                </div>
+                <div>Designed by <a href="https://atishaksharma.com" target="_blank"
+                        style="color:var(--accent-cyan); text-decoration:none; font-weight:600;">Atish</a></div>
             </div>
-            <div>Designed by <a href="https://atishaksharma.com" target="_blank"
-                    style="color:var(--accent-cyan); text-decoration:none; font-weight:600;">Atish</a></div>
         </footer>
 
     </div>
 
-    <!-- Leaflet JS -->
+    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-    <!-- Application Scripts -->
-    <script src="js/data-loader.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/data-loader.js?v=1.2"></script>
+    <script src="js/map.js?v=1.2"></script>
+    <script src="js/ui.js?v=1.2"></script>
+    <script src="js/app.js?v=1.2"></script>
 </body>
 
 </html>
