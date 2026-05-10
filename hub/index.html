@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atish Ak Sharma | Browser Local Bookmark Manager</title>
     <link rel="icon" type="image/png"
         href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
@@ -133,7 +133,8 @@
         }
 
         aside {
-            width: 300px;
+            width: min(300px, 30vw);
+            min-width: 200px;
             background: var(--surface-color);
             border-right: 1px solid var(--border-color);
             padding: 1.5rem 0.75rem;
@@ -168,7 +169,7 @@
 
         .section-title {
             font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
             font-weight: 700;
             color: var(--text-main);
             line-height: 1.1;
@@ -259,7 +260,7 @@
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            height: 230px;
+            height: min(230px, 50vw);
             cursor: pointer;
             transition: 0.4s cubic-bezier(0.2, 1, 0.3, 1);
             position: relative;
@@ -445,7 +446,7 @@
             font-weight: 600;
             font-size: 0.95rem;
             color: var(--text-main);
-            width: 260px;
+            width: min(260px, 40vw);
             flex-shrink: 0;
             white-space: nowrap;
             overflow: hidden;
@@ -670,7 +671,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            max-width: 350px;
+            max-width: min(350px, 80vw);
             margin: 0 auto 1.5rem;
         }
 
@@ -712,6 +713,53 @@
         .menu-item:hover {
             background: var(--accent-gradient);
             color: white;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            aside {
+                display: none;
+            }
+            nav {
+                padding: 0 1rem;
+                height: auto;
+                min-height: var(--nav-height);
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
+            .content-main {
+                padding: 1.25rem;
+            }
+            #bookmarkGrid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+            .folder-tile {
+                height: auto;
+                min-height: 180px;
+                border-radius: 24px;
+                padding: 1.5rem;
+            }
+            .inspect-body {
+                padding: 1rem 1.5rem 1.5rem;
+            }
+            #viewTitle {
+                font-size: 1.6rem;
+            }
+            .inspect-actions-row {
+                flex-wrap: wrap;
+            }
+            footer {
+                padding: 0 1rem;
+                height: auto;
+                min-height: var(--footer-height);
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+            }
         }
     </style>
 </head>

@@ -49,19 +49,27 @@
             justify-content: center;
             gap: 60px;
             width: 100%;
-            max-width: 1200px;
+            max-width: min(1200px, 100%);
             margin-bottom: 20px; 
         }
 
         @media (max-width: 1024px) {
-            .app-container { flex-direction: column; align-items: center; gap: 40px; }
+            .app-container { flex-direction: column; align-items: center; gap: 2.5rem; }
+        }
+        @media (max-width: 480px) {
+            .device-block { width: 100%; max-width: 340px; }
+            .remote-chassis { width: 100%; max-width: 300px; }
+            .remote-head { width: 100%; max-width: 300px; }
+            .remote-body, .remote-track { width: min(260px, 76%); }
+            .info-block { width: 100% !important; max-width: 100% !important; }
+            .manual-card { padding: 1rem !important; }
         }
 
         /* -------------------------------------------------------------------------- */
         /* THE DEVICE: CHASSIS & SHAPE                                                */
         /* -------------------------------------------------------------------------- */
         .device-block {
-            width: 380px;
+            width: min(380px, 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -71,7 +79,7 @@
 
         .remote-chassis {
             position: relative;
-            width: 340px;
+            width: min(340px, 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -81,7 +89,7 @@
         /* The Shovel-Head (Wide Top) */
         .remote-head {
             position: relative;
-            width: 340px;
+            width: min(340px, 100%);
             background: var(--remote-ivory);
             border-radius: 4px 4px 0 0;
             border: 1px solid #fff;
@@ -109,7 +117,7 @@
 
         /* The Handle (Narrow Bottom - Main Keys Only) */
         .remote-body {
-            width: 260px;
+            width: min(260px, 76%);
             background: var(--remote-ivory);
             border-left: 1px solid #fff;
             border-right: 1px solid #fff;
@@ -124,7 +132,7 @@
 
         /* Slider Track (Houses Micro Keys) */
         .remote-track {
-            width: 260px;
+            width: min(260px, 76%);
             position: relative;
             background: #d1cfc8; 
             border-left: 1px solid #fff;
@@ -301,7 +309,7 @@
         /* -------------------------------------------------------------------------- */
         /* MANUAL CARDS & INFO HUB                                                    */
         /* -------------------------------------------------------------------------- */
-        .info-block { width: 480px; display: flex; flex-direction: column; gap: 20px; }
+        .info-block { width: min(480px, 100%); display: flex; flex-direction: column; gap: 1.25rem; }
         
         .manual-card {
             background: #fff; border-radius: 8px; padding: 25px;

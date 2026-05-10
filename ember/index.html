@@ -87,6 +87,12 @@
         .staggered-grid>div:nth-child(even) {
             margin-top: 6rem;
         }
+
+        @media (max-width: 768px) {
+            .staggered-grid>div:nth-child(even) {
+                margin-top: 0;
+            }
+        }
     </style>
 </head>
 
@@ -135,7 +141,7 @@
             <h2 class="text-orange-400 text-[11px] font-bold tracking-[0.8em] uppercase mb-10 reveal-on-scroll">The New
                 Indian Aesthetic</h2>
             <h1
-                class="text-7xl md:text-[11rem] text-white font-serif mb-12 leading-[0.8] tracking-tighter reveal-on-scroll">
+                class="text-7xl md:text-[clamp(5rem,10vw,11rem)] text-white font-serif mb-12 leading-[0.8] tracking-tighter reveal-on-scroll">
                 Soul of <br><span class="italic font-light text-gradient">Karigari</span></h1>
             <p
                 class="text-white/60 max-w-xl mx-auto text-lg font-light mb-16 leading-relaxed tracking-wide reveal-on-scroll">

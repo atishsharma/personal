@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atish's UI Testing - A Powerful Website Preview Testing Platform</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Atish's UI Testing - A powerful Website Preview Testing Platform. Test responsive web designs instantly across simulated devices like iPhone, iPad, MacBook, and Android.">
+    <meta name="keywords"
+        content="UI testing, responsive design, website preview, device simulator, iPhone mockup, HTML tester, responsive testing tool">
+    <meta name="author" content="Atish">
+
+    <!-- Open Graph / Social Meta Tags -->
+    <meta property="og:title" content="Atish's UI Testing Platform">
+    <meta property="og:description"
+        content="Test your responsive web designs instantly across multiple simulated devices.">
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <meta property="og:type" content="website">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for control panel */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Mockup specific styles */
+        .mockup-container {
+            transition: transform 0.2s ease-out;
+            transform-origin: top center;
+        }
+
+        /* iPhone physical dimensions (Logical Pixels for Pro models: 393 x 852) */
+        .iphone-shell {
+            box-sizing: content-box;
+            width: 393px;
+            height: 852px;
+            border: 14px solid #1a1a1a;
+            border-radius: 55px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 0 0 2px #333;
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dynamic-island {
+            position: absolute;
+            top: 11px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 35px;
+            background-color: #000;
+            border-radius: 20px;
+            z-index: 50;
+        }
+
+        .camera-hole {
+            position: absolute;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 18px;
+            height: 18px;
+            background-color: #000;
+            border-radius: 50%;
+            z-index: 50;
+        }
+
+        .camera-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 30px;
+            background-color: #000;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 50;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 h-screen w-full flex flex-col md:flex-row overflow-hidden font-sans text-slate-800">
+
+    <!-- Left Sidebar: Controls -->
+    <div
+        class="w-full md:w-80 lg:w-96 h-[45vh] md:h-full bg-white shadow-xl flex flex-col z-20 flex-shrink-0 border-b md:border-b-0 md:border-r border-slate-200">
+        <div class="p-6 border-b border-slate-100 flex-shrink-0">
+            <h1 class="text-2xl font-bold flex items-center gap-2 text-slate-800">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-blue-500">
+                    <rect width="14" height="20" x="5" y="2" rx="2" ry="2" />
+                    <path d="M12 18h.01" />
+                </svg>
+                Atish's UI Testing
+            </h1>
+            <p class="text-sm text-slate-500 mt-1">Test responsive designs instantly.</p>
+        </div>
+
+        <div class="p-6 flex-1 overflow-y-auto flex flex-col gap-6">
+
+            <!-- URL Input -->
+            <div class="space-y-2">
+                <label class="block text-sm font-semibold text-slate-700">Enter Website URL</label>
+                <div class="flex">
+                    <input type="text" id="urlInput" placeholder="example.com"
+                        class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-md border border-slate-300 focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-slate-50 outline-none transition-colors"
+                        value="https://wikipedia.org">
+                    <button id="loadUrlBtn"
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-r-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        Go
+                    </button>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                    <div class="w-full border-t border-slate-200"></div>
+                </div>
+                <div class="relative flex justify-center">
+                    <span class="px-2 bg-white text-xs text-slate-500 font-medium">OR</span>
+                </div>
+            </div>
+
+            <!-- File Input -->
+            <div class="space-y-2">
+                <label class="block text-sm font-semibold text-slate-700">Upload Local HTML File</label>
+                <div
+                    class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-md hover:border-blue-400 transition-colors bg-slate-50 relative">
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-12 w-12 text-slate-400" stroke="currentColor" fill="none"
+                            viewBox="0 0 48 48" aria-hidden="true">
+                            <path
+                                d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="flex text-sm text-slate-600 justify-center">
+                            <label for="fileInput"
+                                class="relative cursor-pointer bg-transparent rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                <span>Select a file</span>
+                                <input id="fileInput" name="fileInput" type="file" accept=".html" class="sr-only">
+                            </label>
+                        </div>
+                        <p class="text-xs text-slate-500" id="fileNameDisplay">HTML files only</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="space-y-4 pt-4 border-t border-slate-100">
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Device</label>
+                    <select id="deviceSelect"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-slate-50">
+                        <option value="iphone15pro" selected>iPhone 15 Pro</option>
+                        <option value="ipadmini">iPad Mini (6th Gen)</option>
+                        <option value="macbookair">13-inch MacBook Air</option>
+                        <option value="pixel9pro">Pixel 9 Pro</option>
+                        <option value="samsungs26">Samsung Galaxy S26</option>
+                        <option value="nothing3apro">Nothing Phone (3a) Pro</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Preview Scaling</label>
+                    <select id="scaleSelect"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-slate-50">
+                        <option value="fit" selected>Fit to Screen (Desktop Default)</option>
+                        <option value="1">100% (Actual Logical Size)</option>
+                        <option value="0.85">85%</option>
+                        <option value="0.75">75%</option>
+                        <option value="0.50">50%</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1 flex justify-between items-center">
+                        Text Size (Dynamic Type)
+                        <span id="textScaleWarning"
+                            class="hidden text-[10px] text-amber-600 font-normal border border-amber-200 bg-amber-50 px-1.5 py-0.5 rounded">Local
+                            files only</span>
+                    </label>
+                    <select id="textSizeSelect"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-slate-50">
+                        <option value="85">85% (Small)</option>
+                        <option value="100" selected>100% (Default)</option>
+                        <option value="115">115% (Large)</option>
+                        <option value="135">135% (Extra Large)</option>
+                        <option value="160">160% (Accessibility)</option>
+                        <option value="200">200% (Accessibility Max)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-1">Safari Navigation</label>
+                    <select id="navPositionSelect"
+                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border border-slate-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md bg-slate-50">
+                        <option value="bottom" selected>Bottom (Modern)</option>
+                        <option value="top">Top (Classic)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div
+                class="mt-auto bg-slate-50 rounded-lg p-4 text-xs text-slate-500 leading-relaxed border border-slate-200 shadow-inner">
+                <strong>Device Specs Simulated:</strong><br>
+                Model: <span id="specModelDisplay">iPhone 15 Pro</span><br>
+                Logical Resolution: <span id="specResDisplay">393 x 852 px</span><br>
+                Safari Navigation: <span id="specNavDisplay">Bottom</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Area Wrapper -->
+    <div class="flex-1 flex flex-col relative bg-slate-200/60 h-[55vh] md:h-screen min-w-0">
+
+        <!-- Scrollable Device Area -->
+        <div class="flex-1 overflow-auto p-4 sm:p-8 flex justify-center items-start" id="previewArea">
+            <div class="mockup-container" id="mockupContainer">
+                <!-- Device Shell -->
+                <div class="iphone-shell flex flex-col transition-all duration-300 ease-in-out" id="deviceShell">
+                    <div class="dynamic-island" id="camIsland"></div>
+                    <div class="camera-hole hidden" id="camHole"></div>
+                    <div class="camera-notch hidden" id="camNotch"></div>
+
+                    <!-- iOS Status Bar (Mock) -->
+                    <div id="iosStatusBar"
+                        class="h-[47px] w-full flex items-center justify-between px-6 pt-1 text-[13px] font-semibold tracking-tight text-black z-40 bg-white/95 backdrop-blur-sm flex-shrink-0 order-1">
+                        <span id="clock">9:41</span>
+                        <div class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                                <line x1="12" y1="20" x2="12.01" y2="20" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="13" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="1" y="6" width="18" height="12" rx="2" ry="2" />
+                                <path d="M23 13v-2" />
+                                <path d="M23 10v4" stroke-width="3" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Android Status Bar -->
+                    <div id="androidStatusBar"
+                        class="hidden h-[36px] w-full flex items-center justify-between px-5 pt-1 text-[13px] font-medium tracking-tight text-black z-40 bg-white/95 backdrop-blur-sm flex-shrink-0 order-1">
+                        <span id="androidClock">9:41</span>
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                                fill="currentColor" stroke="none">
+                                <path
+                                    d="M16 4h-2V2h-4v2H8C6.9 4 6 4.9 6 6v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- macOS Menu Bar -->
+                    <div id="macOSMenuBar"
+                        class="hidden h-[28px] w-full flex items-center justify-between px-4 text-[12px] font-medium text-black z-40 bg-[#f6f6f6] border-b border-gray-300 flex-shrink-0 order-1">
+                        <div class="flex items-center gap-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 384 512"
+                                fill="currentColor">
+                                <path
+                                    d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 24 184.5 24 273.5c0 86.8 59.4 191.1 118.8 191.1 30.6 0 46.2-18.5 82.2-18.5 35 0 50 18.5 82.2 18.5 54.4 0 115.9-100.8 115.9-100.8-54.4-23.7-56-78.7-56-83.3zM250.3 85.6c17.2-20.8 28.7-49.6 25.5-78.6-24.8 1-54.1 16.5-71.8 37.3-15.5 18-28.7 47.6-25 76.2 27.6 2.1 53.6-14.1 71.3-34.9z" />
+                            </svg>
+                            <span
+                                class="font-bold">Safari</span><span>File</span><span>Edit</span><span>View</span><span>History</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                                <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                fill="currentColor">
+                                <path
+                                    d="M16 4h-2V2h-4v2H8C6.9 4 6 4.9 6 6v14c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" />
+                            </svg>
+                            <span id="macClock">Sun 9:41 AM</span>
+                        </div>
+                    </div>
+
+                    <!-- Main Content (Iframe) -->
+                    <!-- Deduct top bar (47) and bottom safari area (~100) from height -->
+                    <div class="flex-1 w-full bg-white relative order-3">
+                        <iframe id="previewFrame" class="w-full h-full border-none bg-white"
+                            sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+                            src="https://en.wikipedia.org/wiki/Main_Page">
+                        </iframe>
+                    </div>
+
+                    <!-- Safari Address Bar -->
+                    <div id="safariAddressBar"
+                        class="w-full bg-[#f9f9f9]/95 backdrop-blur-xl border-gray-300 flex flex-col flex-shrink-0 z-40 order-4 border-t transition-all duration-300">
+                        <div class="px-4 py-2 mt-1 mb-1">
+                            <div
+                                class="w-full bg-white shadow-sm border border-gray-200 rounded-xl h-12 flex items-center px-4 justify-between">
+                                <span class="text-lg font-serif text-gray-800">Aa</span>
+                                <div class="flex items-center gap-1 text-[15px]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="text-gray-400">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                    </svg>
+                                    <span id="safariDomain"
+                                        class="font-medium text-black truncate max-w-[150px]">wikipedia.org</span>
+                                </div>
+                                <svg id="refreshBtn" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round"
+                                    class="text-blue-500 cursor-pointer hover:text-blue-700 transition-transform duration-300">
+                                    <path
+                                        d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Safari Bottom Toolbar -->
+                    <div id="safariToolbar"
+                        class="w-full bg-[#f9f9f9]/95 backdrop-blur-xl border-gray-300 flex flex-col flex-shrink-0 z-40 pb-2 order-5 transition-all duration-300">
+                        <div class="flex justify-between items-center px-6 pt-2 pb-1 text-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="opacity-40">
+                                <path d="m15 18-6-6 6-6" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="opacity-40">
+                                <path d="m9 18 6-6-6-6" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                                <polyline points="16 6 12 2 8 6" />
+                                <line x1="12" y1="2" x2="12" y2="15" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                            </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+                                <rect x="9" y="9" width="16" height="16" rx="2" ry="2" />
+                            </svg>
+                        </div>
+                        <!-- Home indicator bar -->
+                        <div class="w-full flex justify-center mt-2 pb-1">
+                            <div class="w-32 h-1.5 bg-black rounded-full"></div>
+                        </div>
+                    </div>
+
+                    <!-- Android Gesture Pill -->
+                    <div id="androidGesture"
+                        class="hidden w-full bg-white flex justify-center pb-2 pt-2 flex-shrink-0 order-6 z-40">
+                        <div class="w-28 h-1 bg-gray-400 rounded-full"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Fixed Footer -->
+        <div
+            class="w-full flex-shrink-0 py-3 text-sm text-slate-500 text-center bg-slate-200/80 backdrop-blur border-t border-slate-300 z-10">
+            &copy; 2026 Atish's UI Testing. Designed By <a href="https://atishaksharma.com" target="_blank"
+                class="text-blue-600 hover:text-blue-800 font-medium transition-colors">Atish Ak Sharma</a>.
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlInput = document.getElementById('urlInput');
+            const loadUrlBtn = document.getElementById('loadUrlBtn');
+            const fileInput = document.getElementById('fileInput');
+            const fileNameDisplay = document.getElementById('fileNameDisplay');
+            const previewFrame = document.getElementById('previewFrame');
+            const safariDomain = document.getElementById('safariDomain');
+            const scaleSelect = document.getElementById('scaleSelect');
+            const mockupContainer = document.getElementById('mockupContainer');
+            const previewArea = document.getElementById('previewArea');
+            const textSizeSelect = document.getElementById('textSizeSelect');
+            const textScaleWarning = document.getElementById('textScaleWarning');
+            const navPositionSelect = document.getElementById('navPositionSelect');
+            const safariAddressBar = document.getElementById('safariAddressBar');
+            const safariToolbar = document.getElementById('safariToolbar');
+            const specNavDisplay = document.getElementById('specNavDisplay');
+            const refreshBtn = document.getElementById('refreshBtn');
+
+            // --- Device Elements & State ---
+            const deviceSelect = document.getElementById('deviceSelect');
+            const deviceShell = document.getElementById('deviceShell');
+            const camIsland = document.getElementById('camIsland');
+            const camHole = document.getElementById('camHole');
+            const camNotch = document.getElementById('camNotch');
+            const iosStatusBar = document.getElementById('iosStatusBar');
+            const androidStatusBar = document.getElementById('androidStatusBar');
+            const macOSMenuBar = document.getElementById('macOSMenuBar');
+            const androidGesture = document.getElementById('androidGesture');
+            const specModelDisplay = document.getElementById('specModelDisplay');
+            const specResDisplay = document.getElementById('specResDisplay');
+
+            const deviceConfig = {
+                'iphone15pro': { name: 'iPhone 15 Pro', w: 393, h: 852, br: 55, bw: 14, cam: 'island', os: 'ios' },
+                'ipadmini': { name: 'iPad Mini (6th Gen)', w: 744, h: 1133, br: 40, bw: 20, cam: 'none', os: 'ipados' },
+                'macbookair': { name: '13-inch MacBook Air', w: 1280, h: 832, br: 16, bw: 12, cam: 'notch', os: 'macos' },
+                'pixel9pro': { name: 'Pixel 9 Pro', w: 412, h: 892, br: 42, bw: 12, cam: 'hole', os: 'android' },
+                'samsungs26': { name: 'Samsung Galaxy S26', w: 412, h: 915, br: 24, bw: 8, cam: 'hole', os: 'android' },
+                'nothing3apro': { name: 'Nothing Phone (3a) Pro', w: 412, h: 912, br: 32, bw: 10, cam: 'hole', os: 'android' }
+            };
+
+            // --- Clock Logic ---
+            const clockEl = document.getElementById('clock');
+            const androidClockEl = document.getElementById('androidClock');
+            const macClockEl = document.getElementById('macClock');
+            setInterval(() => {
+                const now = new Date();
+                let h = now.getHours();
+                let m = now.getMinutes();
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                m = m < 10 ? '0' + m : m;
+
+                const timeStr = `${h}:${m}`;
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                if (clockEl) clockEl.textContent = timeStr;
+                if (androidClockEl) androidClockEl.textContent = timeStr;
+                if (macClockEl) macClockEl.textContent = `${days[now.getDay()]} ${timeStr} ${ampm}`;
+            }, 1000);
+
+            // --- URL Loading Logic ---
+            function loadUrl() {
+                let url = urlInput.value.trim();
+                if (!url) return;
+
+                // Auto append https:// if missing
+                if (!/^https?:\/\//i.test(url)) {
+                    url = 'https://' + url;
+                    urlInput.value = url;
+                }
+
+                previewFrame.src = url;
+                updateSafariDomain(url);
+            }
+
+            loadUrlBtn.addEventListener('click', loadUrl);
+            urlInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') loadUrl();
+            });
+
+            // --- Refresh Logic ---
+            refreshBtn.addEventListener('click', () => {
+                // Spin animation for visual feedback
+                refreshBtn.style.transform = `rotate(${(refreshBtn.rotation || 0) + 360}deg)`;
+                refreshBtn.rotation = (refreshBtn.rotation || 0) + 360;
+
+                // Refresh iframe (briefly blank it to make the refresh obvious)
+                const currentSrc = previewFrame.src;
+                previewFrame.src = 'about:blank';
+                setTimeout(() => {
+                    previewFrame.src = currentSrc;
+                }, 50);
+            });
+
+            // Extract domain for Safari UI
+            function updateSafariDomain(urlOrName) {
+                try {
+                    if (urlOrName.startsWith('blob:')) {
+                        safariDomain.textContent = 'Local File';
+                        return;
+                    }
+                    const urlObj = new URL(urlOrName);
+                    safariDomain.textContent = urlObj.hostname.replace(/^www\./, '');
+                } catch (e) {
+                    safariDomain.textContent = urlOrName;
+                }
+            }
+
+            // --- File Upload Logic ---
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                fileNameDisplay.textContent = file.name;
+
+                // Read and load file as blob URL
+                const reader = new FileReader();
+                reader.onload = function (evt) {
+                    const blob = new Blob([evt.target.result], { type: 'text/html' });
+                    const blobUrl = URL.createObjectURL(blob);
+
+                    // Clear previous content and load new
+                    previewFrame.src = blobUrl;
+                    urlInput.value = `Local: ${file.name}`;
+                    safariDomain.textContent = file.name;
+                };
+                reader.readAsText(file);
+            });
+
+            // --- Scaling Logic ---
+            function applyScale() {
+                const val = scaleSelect.value;
+                if (val === 'fit') {
+                    // Container dimensions minus padding (no longer need to account for footer)
+                    const containerHeight = previewArea.clientHeight - 64;
+                    const containerWidth = previewArea.clientWidth - 64;
+
+                    const config = deviceConfig[deviceSelect.value];
+                    const mockupHeight = config.h + (config.bw * 2);
+                    const mockupWidth = config.w + (config.bw * 2);
+
+                    // We calculate scale needed to fit both Height AND Width (useful for MacBooks)
+                    const scaleY = containerHeight / mockupHeight;
+                    const scaleX = containerWidth / mockupWidth;
+
+                    let scale = Math.min(scaleX, scaleY);
+
+                    // Cap scale at 1 to prevent it getting unnaturally huge on 4k monitors
+                    if (scale > 1) scale = 1;
+
+                    mockupContainer.style.transform = `scale(${scale})`;
+                } else {
+                    mockupContainer.style.transform = `scale(${val})`;
+                }
+            }
+
+            scaleSelect.addEventListener('change', applyScale);
+            window.addEventListener('resize', () => {
+                if (scaleSelect.value === 'fit') applyScale();
+            });
+
+            // --- Text Scaling Logic (Dynamic Type) ---
+            function applyTextScale() {
+                const scale = textSizeSelect.value;
+                try {
+                    // Try to access iframe document. This works for uploaded local files 
+                    // but throws a CORS error for external URLs.
+                    const iframeDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+
+                    textScaleWarning.classList.add('hidden');
+
+                    if (!iframeDoc.head) return; // Wait for iframe to fully populate
+
+                    let styleTag = iframeDoc.getElementById('dynamic-type-style');
+                    if (!styleTag) {
+                        styleTag = iframeDoc.createElement('style');
+                        styleTag.id = 'dynamic-type-style';
+                        iframeDoc.head.appendChild(styleTag);
+                    }
+
+                    // Modify root font size and text adjustment simulating iOS settings
+                    styleTag.innerHTML = `
+                        html { 
+                            font-size: ${scale}% !important; 
+                            -webkit-text-size-adjust: ${scale}% !important; 
+                        }
+                    `;
+                } catch (e) {
+                    // CORS error triggered (External URL)
+                    if (scale !== "100") {
+                        textScaleWarning.classList.remove('hidden');
+                    } else {
+                        textScaleWarning.classList.add('hidden');
+                    }
+                }
+            }
+
+            textSizeSelect.addEventListener('change', applyTextScale);
+            // Re-apply whenever the iframe finishes loading a new page
+            previewFrame.addEventListener('load', applyTextScale);
+
+            // --- Safari Navigation Position Logic ---
+            navPositionSelect.addEventListener('change', (e) => {
+                if (e.target.value === 'top') {
+                    // Move address bar up (order-2), change border from top to bottom
+                    safariAddressBar.classList.remove('order-4', 'border-t');
+                    safariAddressBar.classList.add('order-2', 'border-b');
+
+                    // Add top border to toolbar since address bar is no longer above it
+                    safariToolbar.classList.add('border-t');
+                    specNavDisplay.textContent = 'Top';
+                } else {
+                    // Move address bar down (order-4), change border from bottom to top
+                    safariAddressBar.classList.remove('order-2', 'border-b');
+                    safariAddressBar.classList.add('order-4', 'border-t');
+
+                    // Remove top border from toolbar since address bar is directly above it again
+                    safariToolbar.classList.remove('border-t');
+                    specNavDisplay.textContent = 'Bottom';
+                }
+            });
+
+            // --- Device Switching Logic ---
+            function changeDevice() {
+                const config = deviceConfig[deviceSelect.value];
+
+                // Set Physical Dimensions
+                deviceShell.style.width = config.w + 'px';
+                deviceShell.style.height = config.h + 'px';
+                deviceShell.style.borderRadius = config.br + 'px';
+                deviceShell.style.borderWidth = config.bw + 'px';
+
+                // Set Camera Cutout
+                if (camIsland) camIsland.classList.toggle('hidden', config.cam !== 'island');
+                if (camHole) camHole.classList.toggle('hidden', config.cam !== 'hole');
+                if (camNotch) camNotch.classList.toggle('hidden', config.cam !== 'notch');
+
+                // Toggle OS UI Elements
+                if (iosStatusBar) iosStatusBar.classList.toggle('hidden', config.os !== 'ios' && config.os !== 'ipados');
+                if (androidStatusBar) androidStatusBar.classList.toggle('hidden', config.os !== 'android');
+                if (macOSMenuBar) macOSMenuBar.classList.toggle('hidden', config.os !== 'macos');
+                if (androidGesture) androidGesture.classList.toggle('hidden', config.os !== 'android');
+
+                // Adjust Navigation layout based on OS
+                if (config.os !== 'ios') {
+                    navPositionSelect.value = 'top';
+                    navPositionSelect.disabled = true;
+                    // Force top bar style for non-iOS devices
+                    safariAddressBar.classList.remove('order-4', 'border-t');
+                    safariAddressBar.classList.add('order-2', 'border-b');
+                    safariToolbar.classList.add('hidden');
+                    specNavDisplay.textContent = 'Top (Forced)';
+                } else {
+                    navPositionSelect.disabled = false;
+                    safariToolbar.classList.remove('hidden');
+                    // Trigger the nav event to reset to user's current UI choice
+                    navPositionSelect.dispatchEvent(new Event('change'));
+                }
+
+                // Update Specs UI
+                specModelDisplay.textContent = config.name;
+                specResDisplay.textContent = config.w + ' x ' + config.h + ' px';
+
+                // Wait a tick for CSS width/height transition, then calculate new scale
+                setTimeout(applyScale, 50);
+            }
+
+            deviceSelect.addEventListener('change', changeDevice);
+
+            // Initial setup
+            changeDevice();
+
+            // Re-trigger clock to populate immediate text
+            const now = new Date();
+            let initialH = now.getHours() % 12 || 12;
+            let initialM = now.getMinutes() < 10 ? '0' + now.getMinutes() : now.getMinutes();
+            if (clockEl) clockEl.textContent = `${initialH}:${initialM}`;
+        });
+    </script>
+</body>
+
+</html>
