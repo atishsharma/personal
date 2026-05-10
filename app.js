@@ -122,10 +122,10 @@ function renderCategory(cat) {
         itemsHtml = `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 animate-fadeIn" ${cat.id === 'mini-projects' ? 'id="mini-projects-grid"' : ''}>
             ${visible.map(i => renderGridCard(i, cat.color)).join('')}
             ${hidden.map(i => `<a href="${i.url}" class="app-link extra-mini hidden flex-col p-6 glass-card rounded-2xl hover:bg-white/70 dark:hover:bg-white/10 transition-colors group/link" data-title="${i.dataTitle}">
-                <div class="flex items-center justify-between mb-4">${svg(i.icon || 'code', `w-8 h-8 ${(COLOR_MAP[i.color]||COLOR_MAP.emerald).text} group-hover/link:scale-110 transition-transform drop-shadow-md`)}</div>
-                <span class="font-bold text-lg block ${(COLOR_MAP[i.color]||COLOR_MAP.emerald).title} mb-2">${i.name}</span>
+                <div class="flex items-center justify-between mb-4">${svg(i.icon || 'code', `w-8 h-8 ${(COLOR_MAP[i.color] || COLOR_MAP.emerald).text} group-hover/link:scale-110 transition-transform drop-shadow-md`)}</div>
+                <span class="font-bold text-lg block ${(COLOR_MAP[i.color] || COLOR_MAP.emerald).title} mb-2">${i.name}</span>
                 <span class="text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed mb-4 flex-grow">${i.description}</span>
-                <div class="flex gap-2 mt-auto">${(i.tags||[]).map(t=>`<span class="text-[10px] ${(COLOR_MAP[i.color]||COLOR_MAP.emerald).tagBg} px-2 py-1 rounded ${(COLOR_MAP[i.color]||COLOR_MAP.emerald).tagText} uppercase font-bold border ${(COLOR_MAP[i.color]||COLOR_MAP.emerald).tagBorder}">${t}</span>`).join('')}</div>
+                <div class="flex gap-2 mt-auto">${(i.tags || []).map(t => `<span class="text-[10px] ${(COLOR_MAP[i.color] || COLOR_MAP.emerald).tagBg} px-2 py-1 rounded ${(COLOR_MAP[i.color] || COLOR_MAP.emerald).tagText} uppercase font-bold border ${(COLOR_MAP[i.color] || COLOR_MAP.emerald).tagBorder}">${t}</span>`).join('')}</div>
             </a>`).join('')}
         </div>`;
         if (hidden.length > 0) {
@@ -162,12 +162,12 @@ function renderContactCard(ch) {
     const colorMap = { emerald: 'emerald', red: 'red', blue: 'blue', pink: 'pink', slate: 'slate-800', indigo: 'indigo-600' };
     const hoverBorder = `hover:border-${ch.color}-500/50 dark:hover:border-${ch.color}-500/50`;
     const hoverText = ch.color === 'slate' ? 'group-hover:text-black dark:group-hover:text-slate-300' : `group-hover:text-${ch.color}-700 dark:group-hover:text-${ch.color}-400`;
-    const isFilled = ['github','instagram','twitter','facebook'].includes(ch.icon);
+    const isFilled = ['github', 'instagram', 'twitter', 'facebook'].includes(ch.icon);
     const iconColor = ch.color === 'slate' ? 'text-slate-800 dark:text-slate-200' : `text-${ch.color}-600 dark:text-${ch.color}-400`;
     return `<a href="${ch.url}" target="_blank" class="p-6 glass-panel ${hoverBorder} transition-all group flex items-center justify-between rounded-[2rem]">
         <div><p class="text-[10px] text-slate-600 dark:text-slate-400 uppercase tracking-widest font-bold mb-1">${ch.platform}</p>
         <p class="font-bold text-sm text-slate-900 dark:text-white ${hoverText} transition-colors truncate">${ch.handle}</p></div>
-        <svg class="w-6 h-6 ${iconColor} opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md shrink-0 ml-3" ${isFilled ? 'fill="currentColor"' : 'fill="none" stroke="currentColor"'} viewBox="0 0 24 24">${ICONS[ch.icon]||''}</svg>
+        <svg class="w-6 h-6 ${iconColor} opacity-40 group-hover:opacity-100 transition-opacity drop-shadow-md shrink-0 ml-3" ${isFilled ? 'fill="currentColor"' : 'fill="none" stroke="currentColor"'} viewBox="0 0 24 24">${ICONS[ch.icon] || ''}</svg>
     </a>`;
 }
 
@@ -175,7 +175,7 @@ function renderResume(data) {
     const p = data.profile;
     const r = data.resume;
     const socials = p.socialLinks.map(s => {
-        const isFilled = ['github','instagram','twitter','facebook'].includes(s.platform);
+        const isFilled = ['github', 'instagram', 'twitter', 'facebook'].includes(s.platform);
         const scColor = s.platform === 'github' ? 'text-slate-700 dark:text-slate-300' : s.platform === 'instagram' ? 'text-pink-600 dark:text-pink-400' : s.platform === 'twitter' ? 'text-slate-800 dark:text-slate-200' : 'text-indigo-600 dark:text-indigo-400';
         return `<a href="${s.url}" target="_blank" class="p-2 bg-white/50 dark:bg-white/5 border border-white/50 dark:border-white/10 hover:bg-white/80 dark:hover:bg-white/20 rounded-full transition-colors ${scColor}">${svg(s.platform, 'w-5 h-5', true)}</a>`;
     }).join('');
@@ -221,143 +221,147 @@ function renderResume(data) {
 
 // === INLINE DATA ===
 const DATA = {
-  "meta": {
-    "title": "Atish Ak Sharma - Official Portfolio",
-    "description": "Official portfolio of Atish Ak Sharma. A developer's garden of experiments, tools, and research. Documenting the journey of ATS Design Studio.",
-    "keywords": "Atish Ak Sharma, ATS Design Studio, Portfolio, Web Developer, Full Stack, Experimental UI, Web Design, Personal Vault",
-    "author": "Atish Ak Sharma",
-    "canonical": "https://atishaksharma.com/",
-    "ogImage": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg",
-    "favicon": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg"
-  },
-  "profile": {
-    "name": "Atish Sharma",
-    "displayName": "Atish Ak Sharma",
-    "title": "Full Stack Developer & Creative Technologist",
-    "avatar": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg",
-    "location": "Chandigarh, India",
-    "email": "mail@atishaksharma.com",
-    "studio": "Ats Design Studio",
-    "socialLinks": [
-      { "platform": "github", "url": "https://github.com/atishsharma", "handle": "@atishsharma" },
-      { "platform": "instagram", "url": "https://instagram.com/atishaksharma", "handle": "@atishaksharma" },
-      { "platform": "twitter", "url": "https://twitter.com/atishaksharma", "handle": "@atishaksharma" },
-      { "platform": "facebook", "url": "https://facebook.com/atishaksharma", "handle": "@atishaksharma" }
-    ]
-  },
-  "resume": {
-    "education": {
-      "degree": "M.Tech Computer Science and Technology",
-      "description": "Advanced specialization in software engineering, system architecture, and modern computing technologies."
+    "meta": {
+        "title": "Atish Ak Sharma - Official Portfolio",
+        "description": "Official portfolio of Atish Ak Sharma. A developer's garden of experiments, tools, and research. Documenting the journey of ATS Design Studio.",
+        "keywords": "Atish Ak Sharma, ATS Design Studio, Portfolio, Web Developer, Full Stack, Experimental UI, Web Design, Personal Vault",
+        "author": "Atish Ak Sharma",
+        "canonical": "https://atishaksharma.com/",
+        "ogImage": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg",
+        "favicon": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg"
     },
-    "featuredProjects": [
-      { "name": "AT Music Player", "url": "https://github.com/atishsharma/AT-Music-Player", "description": "A feature-rich, open-source audio platform.", "tag": "Audio App", "color": "indigo" },
-      { "name": "Tulip File Explorer", "url": "https://github.com/atishsharma/Tulip-File-Explorer", "description": "Cross-platform file management utility.", "tag": "System Tool", "color": "blue" },
-      { "name": "Hindu Calendar Widget", "url": "https://github.com/atishsharma/ats-hindu-calendar-widget", "description": "Desktop widget for tracking dates and events.", "tag": "Desktop Widget", "color": "orange" },
-      { "name": "Ember Studio", "url": "https://atishaksharma.com/ember/", "description": "Brand identity and market positioning logic.", "tag": "Design/Strategy", "color": "rose" }
-    ]
-  },
-  "hero": {
-    "badge": "© Ats Design Studio",
-    "heading": ["Welcome To My", "Portfolio"],
-    "description": "A developer's garden of <strong>experiments, tools, and research</strong>. Documenting the journey of ATS Design Studio.",
-    "ctaPrimary": { "text": "Explore Portfolio", "href": "#portfolio" },
-    "ctaSecondary": { "text": "Direct Contact", "href": "#contact" }
-  },
-  "portfolio": {
-    "title": "Portfolio Access.",
-    "subtitle": "Categorized access to all internal tools, system redesigns, and research modules.",
-    "cta": "Just Click And View Inside.",
-    "categories": [
-      {
-        "id": "open-source", "name": "Open Source Projects", "description": "Major software applications and open-source contributions.",
-        "color": "indigo", "icon": "code", "defaultOpen": true, "fullWidth": true, "layout": "grid",
-        "items": [
-          { "name": "AT Music Player", "url": "https://github.com/atishsharma/AT-Music-Player", "description": "A feature-rich, open-source music player project.", "external": true, "icon": "music", "color": "indigo", "tags": ["App", "Audio"] },
-          { "name": "Tulip File Explorer", "url": "https://github.com/atishsharma/Tulip-File-Explorer", "description": "An open-source, cross-platform file management utility.", "external": true, "icon": "folder", "color": "blue", "tags": ["Utility", "System"] },
-          { "name": "Hindu Calendar Widget", "url": "https://github.com/atishsharma/ats-hindu-calendar-widget", "description": "A cross-platform desktop widget for tracking dates and events.", "external": true, "icon": "calendar", "color": "orange", "tags": ["Widget", "Desktop"] }
+    "profile": {
+        "name": "Atish Sharma",
+        "displayName": "Atish Ak Sharma",
+        "title": "Full Stack Developer & Creative Technologist",
+        "avatar": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg",
+        "location": "Chandigarh, India",
+        "email": "mail@atishaksharma.com",
+        "studio": "Ats Design Studio",
+        "socialLinks": [
+            { "platform": "github", "url": "https://github.com/atishsharma", "handle": "@atishsharma" },
+            { "platform": "instagram", "url": "https://instagram.com/atishaksharma", "handle": "@atishaksharma" },
+            { "platform": "twitter", "url": "https://twitter.com/atishaksharma", "handle": "@atishaksharma" },
+            { "platform": "facebook", "url": "https://facebook.com/atishaksharma", "handle": "@atishaksharma" }
         ]
-      },
-      {
-        "id": "experimental-labs", "name": "Experimental Labs", "description": "Hardware simulations & research prototypes.",
-        "color": "emerald", "icon": "flask", "defaultOpen": false, "fullWidth": false, "layout": "list",
-        "items": [
-          { "name": "Testing Grounds (Main)", "url": "https://atishaksharma.com/testing/", "description": "Root hub for hardware interfaces.", "tag": "Index", "dataTitle": "Testing Grounds",
-            "subItems": [
-              { "name": "Camera Sim", "url": "https://atishaksharma.com/testing/camera.html", "icon": "camera", "dataTitle": "Camera Sim" },
-              { "name": "Chip Logic", "url": "https://atishaksharma.com/testing/chip.html", "icon": "chip", "dataTitle": "Chip Logic" },
-              { "name": "Fold Interaction", "url": "https://atishaksharma.com/testing/fold.html", "icon": "fold", "dataTitle": "Fold Interaction" },
-              { "name": "Laptop & Desktop", "url": "https://atishaksharma.com/testing/laptop.html", "icon": "laptop", "dataTitle": "Laptop & Desktop" },
-              { "name": "Smartphone", "url": "https://atishaksharma.com/testing/smartphone.html", "icon": "smartphone", "dataTitle": "Smartphone" }
-            ]
-          },
-          { "name": "The Lab", "url": "https://atishaksharma.com/lab/", "description": "General experimental web API playground.", "tag": "Research", "dataTitle": "The Lab" },
-          { "name": "Concept Hub", "url": "https://atishaksharma.com/concept/", "description": "Experimental design concepts.", "tag": "Idea", "dataTitle": "Concept Hub" }
+    },
+    "resume": {
+        "education": {
+            "degree": "M.Tech Computer Science and Technology",
+            "description": "Advanced specialization in software engineering, system architecture, and modern computing technologies."
+        },
+        "featuredProjects": [
+            { "name": "AT Music Player", "url": "https://github.com/atishsharma/AT-Music-Player", "description": "A feature-rich, open-source audio platform.", "tag": "Audio App", "color": "indigo" },
+            { "name": "Tulip File Explorer", "url": "https://github.com/atishsharma/Tulip-File-Explorer", "description": "Cross-platform file management utility.", "tag": "System Tool", "color": "blue" },
+            { "name": "Hindu Calendar Widget", "url": "https://github.com/atishsharma/ats-hindu-calendar-widget", "description": "Desktop widget for tracking dates and events.", "tag": "Desktop Widget", "color": "orange" },
+            { "name": "Ember Studio", "url": "https://atishaksharma.com/ember/", "description": "Brand identity and market positioning logic.", "tag": "Design/Strategy", "color": "rose" }
         ]
-      },
-      {
-        "id": "business-research", "name": "Business & Research", "description": "Strategic research and brand feasibility.",
-        "color": "orange", "icon": "chart", "defaultOpen": false, "fullWidth": false, "layout": "list",
-        "items": [
-          { "name": "Ember Core", "url": "https://atishaksharma.com/ember/", "description": "Main hub for Ember project.", "tag": "Index", "dataTitle": "Ember Core" },
-          { "name": "Ember Studio", "url": "https://atishaksharma.com/ember/studio/", "description": "Brand identity & visual research.", "tag": "Design", "dataTitle": "Ember Studio" },
-          { "name": "Ember Market", "url": "https://atishaksharma.com/ember/market.html", "description": "Feasibility and positioning strategy.", "tag": "Strategy", "dataTitle": "Ember Market" },
-          { "name": "Feasibility Report", "url": "https://atishaksharma.com/ember/Scented%20Candle%20Business%20Feasibility%20Report.pdf", "description": "PDF Document Analysis", "external": true, "isPdf": true, "dataTitle": "Feasibility Report" }
+    },
+    "hero": {
+        "badge": "© Ats Design Studio",
+        "heading": ["Welcome To My", "Portfolio"],
+        "description": "A developer's garden of <strong>experiments, tools, and research</strong>. Documenting the journey of ATS Design Studio.",
+        "ctaPrimary": { "text": "Explore Portfolio", "href": "#portfolio" },
+        "ctaSecondary": { "text": "Direct Contact", "href": "#contact" }
+    },
+    "portfolio": {
+        "title": "Portfolio Access.",
+        "subtitle": "Categorized access to all internal tools, system redesigns, and research modules.",
+        "cta": "Just Click And View Inside.",
+        "categories": [
+            {
+                "id": "open-source", "name": "Open Source Projects", "description": "Major software applications and open-source contributions.",
+                "color": "indigo", "icon": "code", "defaultOpen": true, "fullWidth": true, "layout": "grid",
+                "items": [
+                    { "name": "AT Music Player", "url": "https://github.com/atishsharma/AT-Music-Player", "description": "A feature-rich, open-source music player project.", "external": true, "icon": "music", "color": "indigo", "tags": ["App", "Audio"] },
+                    { "name": "Tulip File Explorer", "url": "https://github.com/atishsharma/Tulip-File-Explorer", "description": "An open-source, cross-platform file management utility.", "external": true, "icon": "folder", "color": "blue", "tags": ["Utility", "System"] },
+                    { "name": "Hindu Calendar Widget", "url": "https://github.com/atishsharma/ats-hindu-calendar-widget", "description": "A cross-platform desktop widget for tracking dates and events.", "external": true, "icon": "calendar", "color": "orange", "tags": ["Widget", "Desktop"] }
+                ]
+            },
+            {
+                "id": "experimental-labs", "name": "Experimental Labs", "description": "Hardware simulations & research prototypes.",
+                "color": "emerald", "icon": "flask", "defaultOpen": false, "fullWidth": false, "layout": "list",
+                "items": [
+                    {
+                        "name": "Testing Grounds (Main)", "url": "https://atishaksharma.com/testing/", "description": "Root hub for hardware interfaces.", "tag": "Index", "dataTitle": "Testing Grounds",
+                        "subItems": [
+                            { "name": "Camera Sim", "url": "https://atishaksharma.com/testing/camera.html", "icon": "camera", "dataTitle": "Camera Sim" },
+                            { "name": "Chip Logic", "url": "https://atishaksharma.com/testing/chip.html", "icon": "chip", "dataTitle": "Chip Logic" },
+                            { "name": "Fold Interaction", "url": "https://atishaksharma.com/testing/fold.html", "icon": "fold", "dataTitle": "Fold Interaction" },
+                            { "name": "Laptop & Desktop", "url": "https://atishaksharma.com/testing/laptop.html", "icon": "laptop", "dataTitle": "Laptop & Desktop" },
+                            { "name": "Smartphone", "url": "https://atishaksharma.com/testing/smartphone.html", "icon": "smartphone", "dataTitle": "Smartphone" }
+                        ]
+                    },
+                    { "name": "The Lab", "url": "https://atishaksharma.com/lab/", "description": "General experimental web API playground.", "tag": "Research", "dataTitle": "The Lab" },
+                    { "name": "Concept Hub", "url": "https://atishaksharma.com/concept/", "description": "Experimental design concepts.", "tag": "Idea", "dataTitle": "Concept Hub" }
+                ]
+            },
+            {
+                "id": "business-research", "name": "Business & Research", "description": "Strategic research and brand feasibility.",
+                "color": "orange", "icon": "chart", "defaultOpen": false, "fullWidth": false, "layout": "list",
+                "items": [
+                    { "name": "Ember Core", "url": "https://atishaksharma.com/ember/", "description": "Main hub for Ember project.", "tag": "Index", "dataTitle": "Ember Core" },
+                    { "name": "Ember Studio", "url": "https://atishaksharma.com/ember/studio/", "description": "Brand identity & visual research.", "tag": "Design", "dataTitle": "Ember Studio" },
+                    { "name": "Ember Market", "url": "https://atishaksharma.com/ember/market.html", "description": "Feasibility and positioning strategy.", "tag": "Strategy", "dataTitle": "Ember Market" },
+                    { "name": "Feasibility Report", "url": "https://atishaksharma.com/ember/Scented%20Candle%20Business%20Feasibility%20Report.pdf", "description": "PDF Document Analysis", "external": true, "isPdf": true, "dataTitle": "Feasibility Report" }
+                ]
+            },
+            {
+                "id": "personal-utilities", "name": "Personal Utilities", "description": "Internal tools for productivity & organization.",
+                "color": "blue", "icon": "code", "defaultOpen": false, "fullWidth": false, "layout": "list",
+                "items": [
+                    { "name": "Personal Hub", "url": "https://atishaksharma.com/hub/", "description": "Personal bookmark manager.", "tag": "PWA", "dataTitle": "Personal Hub" },
+                    { "name": "Memo Vault", "url": "https://atishaksharma.com/memo/", "description": "Minimalist note-taking & logging.", "tag": "Tools", "dataTitle": "Memo Vault" },
+                    { "name": "Time Calendar", "url": "https://atishaksharma.com/calendar/", "description": "Custom scheduling & event tracking.", "tag": "App", "dataTitle": "Time Calendar" }
+                ]
+            },
+            {
+                "id": "design-systems", "name": "Project Pages", "description": "Dedicated project landing pages and documentation.",
+                "color": "purple", "icon": "palette", "defaultOpen": false, "fullWidth": false, "layout": "list",
+                "items": [
+                    { "name": "AT Music Player", "url": "https://atishaksharma.com/atmusic/", "description": "Experimental web music interface.", "tag": "App", "dataTitle": "AT Music Player (Web)" },
+                    { "name": "Tulip File Explorer", "url": "https://atishaksharma.com/tulip/", "description": "Landing page for the cross-platform file management utility.", "tag": "Layout", "dataTitle": "Tulip File Explorer" },
+                    { "name": "Core1987 Remote", "url": "https://atishaksharma.com/core1987remote/", "description": "Nostalgic interface for management.", "tag": "Legacy", "dataTitle": "Core1987 Remote" }
+                ]
+            },
+            {
+                "id": "mini-projects", "name": "Mini Projects", "description": "Quick tools, data visualizations, and bite-sized experiments.",
+                "color": "emerald", "icon": "cube", "defaultOpen": true, "fullWidth": true, "layout": "grid",
+                "indexUrl": "https://atishaksharma.com/minis/",
+                "items": [
+                    { "name": "Indian Expressways", "url": "https://atishaksharma.com/minis/expressways.html", "description": "Interactive visualization of the Indian Expressway network.", "icon": "map-flag", "color": "emerald", "tags": ["DataViz"], "dataTitle": "Indian Expressways" },
+                    { "name": "Indian Highways", "url": "https://atishaksharma.com/minis/indianhighways.html", "description": "Detailed map view of National Highways across India.", "icon": "map-pin", "color": "blue", "tags": ["Map"], "dataTitle": "Indian Highways" },
+                    { "name": "GeoMap JS", "url": "https://atishaksharma.com/minis/geomap.html", "description": "A lightweight JavaScript utility for geographical mapping.", "icon": "globe", "color": "orange", "tags": ["Library"], "dataTitle": "GeoMap JS" },
+                    { "name": "Packager", "url": "https://atishaksharma.com/minis/packager.html", "description": "Small utility for resource bundling and organization.", "icon": "package", "color": "indigo", "tags": ["Tool"], "dataTitle": "Packager Tool", "hidden": true },
+                    { "name": "Loadbox", "url": "https://atishaksharma.com/minis/loadbox.html", "description": "UI loading state simulator and animation playground.", "icon": "refresh", "color": "rose", "tags": ["UI/UX"], "dataTitle": "Loadbox Sim", "hidden": true },
+                    { "name": "FoodLens", "url": "minis/foodlens.html", "description": "A QR code Food Scanner for getting detailed nutritional information and ingredients instantly.", "icon": "camera", "color": "orange", "tags": ["App"], "dataTitle": "FoodLens", "hidden": true },
+                    { "name": "Weather Station", "url": "minis/weather.html", "description": "A multi-provider weather station offering accurate, real-time data and forecasts.", "icon": "globe", "color": "blue", "tags": ["Tool"], "dataTitle": "Weather Station", "hidden": true },
+                    { "name": "UI Testing", "url": "minis/uitesting.html", "description": "A powerful Website Preview Testing Platform.", "icon": "smartphone", "color": "indigo", "tags": ["Utility"], "dataTitle": "UI Testing", "hidden": true }
+                ]
+            }
         ]
-      },
-      {
-        "id": "personal-utilities", "name": "Personal Utilities", "description": "Internal tools for productivity & organization.",
-        "color": "blue", "icon": "code", "defaultOpen": false, "fullWidth": false, "layout": "list",
-        "items": [
-          { "name": "Personal Hub", "url": "https://atishaksharma.com/hub/", "description": "Personal bookmark manager.", "tag": "PWA", "dataTitle": "Personal Hub" },
-          { "name": "Memo Vault", "url": "https://atishaksharma.com/memo/", "description": "Minimalist note-taking & logging.", "tag": "Tools", "dataTitle": "Memo Vault" },
-          { "name": "Time Calendar", "url": "https://atishaksharma.com/calendar/", "description": "Custom scheduling & event tracking.", "tag": "App", "dataTitle": "Time Calendar" }
+    },
+    "contact": {
+        "title": "Direct Communication",
+        "subtitle": "Connect with me across the web @atishaksharma",
+        "channels": [
+            { "platform": "Official Email", "handle": "mail@atishaksharma.com", "url": "mailto:mail@atishaksharma.com", "color": "emerald", "icon": "mail" },
+            { "platform": "Google Mail", "handle": "@atishaksharma", "url": "mailto:atishaksharma@gmail.com", "color": "red", "icon": "gmail" },
+            { "platform": "GitHub", "handle": "@atishsharma", "url": "https://github.com/atishsharma", "color": "blue", "icon": "github" },
+            { "platform": "Instagram", "handle": "@atishaksharma", "url": "https://instagram.com/atishaksharma", "color": "pink", "icon": "instagram" },
+            { "platform": "Twitter / X", "handle": "@atishaksharma", "url": "https://twitter.com/atishaksharma", "color": "slate", "icon": "twitter" },
+            { "platform": "Facebook", "handle": "@atishaksharma", "url": "https://facebook.com/atishaksharma", "color": "indigo", "icon": "facebook" }
         ]
-      },
-      {
-        "id": "design-systems", "name": "Project Pages", "description": "Dedicated project landing pages and documentation.",
-        "color": "purple", "icon": "palette", "defaultOpen": false, "fullWidth": false, "layout": "list",
-        "items": [
-          { "name": "AT Music Player", "url": "https://atishaksharma.com/atmusic/", "description": "Experimental web music interface.", "tag": "App", "dataTitle": "AT Music Player (Web)" },
-          { "name": "Tulip File Explorer", "url": "https://atishaksharma.com/tulip/", "description": "Landing page for the cross-platform file management utility.", "tag": "Layout", "dataTitle": "Tulip File Explorer" },
-          { "name": "Core1987 Remote", "url": "https://atishaksharma.com/core1987remote/", "description": "Nostalgic interface for management.", "tag": "Legacy", "dataTitle": "Core1987 Remote" }
-        ]
-      },
-      {
-        "id": "mini-projects", "name": "Mini Projects", "description": "Quick tools, data visualizations, and bite-sized experiments.",
-        "color": "emerald", "icon": "cube", "defaultOpen": true, "fullWidth": true, "layout": "grid",
-        "indexUrl": "https://atishaksharma.com/minis/",
-        "items": [
-          { "name": "Indian Expressways", "url": "https://atishaksharma.com/minis/expressways.html", "description": "Interactive visualization of the Indian Expressway network.", "icon": "map-flag", "color": "emerald", "tags": ["DataViz"], "dataTitle": "Indian Expressways" },
-          { "name": "Indian Highways", "url": "https://atishaksharma.com/minis/indianhighways.html", "description": "Detailed map view of National Highways across India.", "icon": "map-pin", "color": "blue", "tags": ["Map"], "dataTitle": "Indian Highways" },
-          { "name": "GeoMap JS", "url": "https://atishaksharma.com/minis/geomap.html", "description": "A lightweight JavaScript utility for geographical mapping.", "icon": "globe", "color": "orange", "tags": ["Library"], "dataTitle": "GeoMap JS" },
-          { "name": "Packager", "url": "https://atishaksharma.com/minis/packager.html", "description": "Small utility for resource bundling and organization.", "icon": "package", "color": "indigo", "tags": ["Tool"], "dataTitle": "Packager Tool", "hidden": true },
-          { "name": "Loadbox", "url": "https://atishaksharma.com/minis/loadbox.html", "description": "UI loading state simulator and animation playground.", "icon": "refresh", "color": "rose", "tags": ["UI/UX"], "dataTitle": "Loadbox Sim", "hidden": true }
-        ]
-      }
-    ]
-  },
-  "contact": {
-    "title": "Direct Communication",
-    "subtitle": "Connect with me across the web @atishaksharma",
-    "channels": [
-      { "platform": "Official Email", "handle": "mail@atishaksharma.com", "url": "mailto:mail@atishaksharma.com", "color": "emerald", "icon": "mail" },
-      { "platform": "Google Mail", "handle": "@atishaksharma", "url": "mailto:atishaksharma@gmail.com", "color": "red", "icon": "gmail" },
-      { "platform": "GitHub", "handle": "@atishsharma", "url": "https://github.com/atishsharma", "color": "blue", "icon": "github" },
-      { "platform": "Instagram", "handle": "@atishaksharma", "url": "https://instagram.com/atishaksharma", "color": "pink", "icon": "instagram" },
-      { "platform": "Twitter / X", "handle": "@atishaksharma", "url": "https://twitter.com/atishaksharma", "color": "slate", "icon": "twitter" },
-      { "platform": "Facebook", "handle": "@atishaksharma", "url": "https://facebook.com/atishaksharma", "color": "indigo", "icon": "facebook" }
-    ]
-  },
-  "footer": { "text": "All The Rights Reserved By Atish Ak Sharma" },
-  "nav": {
-    "links": [
-      { "text": "Home", "href": "#home" },
-      { "text": "Portfolio", "href": "#portfolio" },
-      { "text": "Contact", "href": "#contact" }
-    ],
-    "github": "https://github.com/atishsharma"
-  }
+    },
+    "footer": { "text": "All The Rights Reserved By Atish Ak Sharma" },
+    "nav": {
+        "links": [
+            { "text": "Home", "href": "#home" },
+            { "text": "Portfolio", "href": "#portfolio" },
+            { "text": "Contact", "href": "#contact" }
+        ],
+        "github": "https://github.com/atishsharma"
+    }
 };
 
 // === MAIN LOADER ===

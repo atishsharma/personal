@@ -82,6 +82,16 @@
 </head>
 <body class="h-screen flex flex-col overflow-hidden antialiased selection:bg-amber-500 selection:text-white">
 
+    <!-- LOCK SCREEN -->
+    <div id="vault-overlay" class="fixed inset-0 z-[100] bg-lab-900 flex flex-col items-center justify-center font-mono text-center px-4 transition-opacity duration-500 pointer-events-auto">
+        <div class="glass-panel p-12 flex flex-col items-center w-full max-w-md bg-lab-800/80 border-lab-700/50 rounded-xl shadow-2xl">
+            <h1 class="text-amber-500 text-3xl mb-2 tracking-[0.4em] font-extrabold uppercase">LAB VAULT</h1>
+            <p class="text-lab-300 text-[10px] mb-8 tracking-widest uppercase">Restricted Access Environment</p>
+            <input type="password" id="vault-password" placeholder="ENTER KEY" maxlength="4" class="bg-lab-900/80 border border-amber-800/50 text-amber-400 px-4 py-4 text-center tracking-[0.8em] focus:outline-none focus:border-amber-500 mb-4 w-full uppercase transition-all rounded shadow-inner font-mono text-lg placeholder-lab-600">
+            <p class="text-lab-400 text-[9px] mt-2 uppercase tracking-widest">System unlocks automatically on valid sequence</p>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="glass-panel z-10 px-4 sm:px-6 py-4 flex items-center justify-between shadow-sm relative border-b border-lab-200">
         
@@ -993,8 +1003,26 @@
             updateEnvironmentBadges(appData.currentDay);
             updateOverallProgress();
         }
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
 
-        document.addEventListener('DOMContentLoaded', init);
+            // Vault Logic
+            const vaultInput = document.getElementById('vault-password');
+            const vaultOverlay = document.getElementById('vault-overlay');
+            if (vaultInput && vaultOverlay) {
+                setTimeout(() => vaultInput.focus(), 100);
+                vaultInput.addEventListener('input', (e) => {
+                    if (e.target.value === '0000') {
+                        vaultOverlay.style.opacity = '0';
+                        vaultOverlay.style.pointerEvents = 'none';
+                        setTimeout(() => { 
+                            vaultOverlay.classList.add('hidden'); 
+                            e.target.value = ''; 
+                        }, 500);
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>

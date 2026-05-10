@@ -154,27 +154,7 @@
         </div>
     </div>
 
-    <div id="vault-overlay" class="absolute inset-0 z-[100] bg-[#03060a] flex flex-col items-center justify-center font-mono transition-opacity duration-500">
-        <div class="scanlines"></div>
-        <div class="glass-panel p-12 flex flex-col items-center z-10 max-w-lg w-full text-center relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400"></div>
-            <div class="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyan-400"></div>
-            <div class="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-400"></div>
-            <div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400"></div>
 
-            <svg class="w-16 h-16 text-cyan-500 mb-6 drop-shadow-[0_0_10px_rgba(0,255,255,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
-            
-            <h1 class="text-cyan-400 text-2xl md:text-3xl mb-2 tracking-[0.3em] hud-text">ATS DESIGN STUDIO</h1>
-            <h2 class="text-cyan-600/80 text-xs md:text-sm mb-8 tracking-[0.5em]">SECURE VAULT ACCESS</h2>
-            
-            <div class="flex flex-col items-center gap-4 w-full">
-                <input type="password" id="vault-password" placeholder="ENTER PASSCODE" class="w-full max-w-[250px] bg-black/60 border border-cyan-500/50 text-cyan-400 px-4 py-3 text-center tracking-[0.5em] focus:outline-none focus:border-cyan-300 focus:shadow-[0_0_15px_rgba(0,255,255,0.3)] transition-all placeholder-cyan-800/50">
-                <p class="text-cyan-800/70 text-[10px] tracking-widest uppercase">Hint: 0000</p>
-                <button id="btn-unlock" class="border border-cyan-500/50 px-10 py-3 text-cyan-400 hover:bg-cyan-900/80 transition-all tracking-[0.2em] mt-2 w-full max-w-[250px] text-sm hover:shadow-[0_0_15px_rgba(0,255,255,0.4)]">AUTHENTICATE</button>
-            </div>
-            <p id="vault-error" class="text-red-500 mt-4 text-xs tracking-widest opacity-0 transition-opacity">ACCESS DENIED - INVALID CODE</p>
-        </div>
-    </div>
 
     <div id="selector-overlay" class="absolute inset-0 z-[90] bg-[#03060a]/90 backdrop-blur-md hidden flex-col items-center justify-center font-mono p-4 transition-opacity duration-500 opacity-0">
         <h2 class="text-cyan-400 text-2xl md:text-3xl mb-8 tracking-[0.3em] hud-text text-center mt-10">SELECT PROTOTYPE</h2>
@@ -232,11 +212,6 @@
                 <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
                 <span id="rotate-text" class="hidden md:inline">AUTO-ROTATE: OFF</span>
             </button>
-
-            <button id="btn-close-vault" title="Close Vault" class="layer-btn border border-red-500/50 p-3 flex items-center justify-center text-xs tracking-widest text-red-400 hover:bg-red-900/60 transition-all duration-300 h-12 w-12 rounded-full md:h-auto md:w-40 md:rounded-none bg-black/80 md:mt-1 shadow-[0_0_10px_rgba(255,0,0,0.2)]">
-                <svg class="md:hidden w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                <span class="hidden md:inline">CLOSE VAULT</span>
-            </button>
         </div>
 
         <div id="tooltip" class="tooltip">BUTTON_NAME</div>
@@ -269,10 +244,7 @@
             "Oppo Find X9 Pro", "Xiaomi 17 Ultra", "Huawei Pura 80 Ultra"
         ];
 
-        const vaultOverlay = document.getElementById('vault-overlay');
         const selectorOverlay = document.getElementById('selector-overlay');
-        const passInput = document.getElementById('vault-password');
-        const errorMsg = document.getElementById('vault-error');
         const hudTitle = document.getElementById('hud-title');
         const projNameUI = document.getElementById('project-name');
         const dimTextUI = document.getElementById('dim-text');
@@ -306,37 +278,9 @@
             phoneGrid.appendChild(card);
         });
 
-        function unlockVault() {
-            if (passInput.value === '0000') {
-                errorMsg.style.opacity = '0';
-                vaultOverlay.style.opacity = '0';
-                setTimeout(() => {
-                    vaultOverlay.classList.add('hidden');
-                    selectorOverlay.classList.remove('hidden');
-                    selectorOverlay.classList.add('flex');
-                    setTimeout(() => selectorOverlay.style.opacity = '1', 50);
-                }, 500);
-            } else {
-                errorMsg.style.opacity = '1';
-                passInput.value = ''; passInput.focus();
-            }
-        }
-
-        document.getElementById('btn-unlock').addEventListener('click', unlockVault);
-        passInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') unlockVault(); });
-
         document.getElementById('btn-open-selector').addEventListener('click', () => {
             selectorOverlay.classList.remove('hidden'); selectorOverlay.classList.add('flex');
             setTimeout(() => selectorOverlay.style.opacity = '1', 50);
-        });
-
-        document.getElementById('btn-close-vault').addEventListener('click', () => {
-            vaultOverlay.classList.remove('hidden');
-            setTimeout(() => {
-                vaultOverlay.style.opacity = '1';
-                passInput.value = '';
-                errorMsg.style.opacity = '0';
-            }, 50);
         });
 
         const container = document.getElementById('canvas-container');
@@ -925,7 +869,7 @@
         });
 
         function onPointerMove(event) {
-            if (!vaultOverlay.classList.contains('hidden') || !selectorOverlay.classList.contains('hidden')) return;
+            if (!selectorOverlay.classList.contains('hidden')) return;
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1; mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects(raycastTargets, false);
@@ -980,7 +924,6 @@
         setTimeout(() => {
             document.getElementById('loading').style.opacity = '0';
             setTimeout(() => document.getElementById('loading').remove(), 500);
-            document.getElementById('vault-password').focus();
         }, 1500); 
 
         animate();
