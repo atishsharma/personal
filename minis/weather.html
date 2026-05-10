@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light" data-color="blue">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- SEO & Meta Tags -->
     <title>Atish's Weather Station - Real-Time Vibrant Weather</title>
-    <meta name="description" content="Real-time vibrant weather station by Atish Ak Sharma featuring 7-day forecast, AQI, UV Index, and a beautifully colored glassmorphism UI.">
-    <meta name="keywords" content="Atish's Weather Station, live weather app, AQI, 7-day forecast, Atish Ak Sharma, weather dashboard">
+    <meta name="description"
+        content="Real-time vibrant weather station by Atish Ak Sharma featuring 7-day forecast, AQI, UV Index, and a beautifully colored glassmorphism UI.">
+    <meta name="keywords"
+        content="Atish's Weather Station, live weather app, AQI, 7-day forecast, Atish Ak Sharma, weather dashboard">
     <meta name="author" content="Atish Ak Sharma">
-    
+
     <meta property="og:title" content="Atish's Weather Station">
-    <meta property="og:description" content="Check live weather, AQI, and weekly forecasts on this vibrant, colourful weather dashboard.">
+    <meta property="og:description"
+        content="Check live weather, AQI, and weekly forecasts on this vibrant, colourful weather dashboard.">
     <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <meta property="og:type" content="website">
 
-    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
-    
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    
+
     <style>
         /* Base Theme Variables */
         :root[data-theme="light"] {
             --text-primary: #0f172a;
             --text-secondary: #475569;
-            --bg-base: #e0e7ff; 
+            --bg-base: #e0e7ff;
             --glass-bg: rgba(255, 255, 255, 0.5);
             --modal-bg: rgba(255, 255, 255, 0.98);
             --glass-border-light: rgba(255, 255, 255, 0.8);
@@ -52,19 +58,42 @@
         }
 
         /* Accent Color Selection Maps */
-        :root[data-color="pink"] { --c-main: 236, 72, 153; }
-        :root[data-color="blue"] { --c-main: 59, 130, 246; }
-        :root[data-color="purple"] { --c-main: 168, 85, 247; }
-        :root[data-color="orange"] { --c-main: 249, 115, 22; }
-        :root[data-color="cyan"] { --c-main: 6, 182, 212; }
-        :root[data-color="red"] { --c-main: 239, 68, 68; }
-        :root[data-color="teal"] { --c-main: 20, 184, 166; }
+        :root[data-color="pink"] {
+            --c-main: 236, 72, 153;
+        }
+
+        :root[data-color="blue"] {
+            --c-main: 59, 130, 246;
+        }
+
+        :root[data-color="purple"] {
+            --c-main: 168, 85, 247;
+        }
+
+        :root[data-color="orange"] {
+            --c-main: 249, 115, 22;
+        }
+
+        :root[data-color="cyan"] {
+            --c-main: 6, 182, 212;
+        }
+
+        :root[data-color="red"] {
+            --c-main: 239, 68, 68;
+        }
+
+        :root[data-color="teal"] {
+            --c-main: 20, 184, 166;
+        }
 
         /* Secondary Fixed Logical Palette */
         :root {
-            --c-warm: 249, 115, 22;   /* Orange */
-            --c-cool: 14, 165, 233;   /* Sky Blue */
-            --c-earth: 16, 185, 129;  /* Emerald */
+            --c-warm: 249, 115, 22;
+            /* Orange */
+            --c-cool: 14, 165, 233;
+            /* Sky Blue */
+            --c-earth: 16, 185, 129;
+            /* Emerald */
         }
 
         body {
@@ -84,37 +113,84 @@
             animation: flipOutLeft 0.5s ease-in forwards;
             transform-origin: left center;
         }
+
         .card-flip-in-right {
             animation: flipInRight 0.5s ease-out forwards;
             transform-origin: right center;
         }
+
         .card-flip-out-right {
             animation: flipOutRight 0.5s ease-in forwards;
             transform-origin: right center;
         }
+
         .card-flip-in-left {
             animation: flipInLeft 0.5s ease-out forwards;
             transform-origin: left center;
         }
+
         @keyframes flipOutLeft {
-            0% { transform: perspective(2000px) rotateY(0deg); opacity: 1; }
-            50% { opacity: 1; }
-            100% { transform: perspective(2000px) rotateY(-90deg); opacity: 0; }
+            0% {
+                transform: perspective(2000px) rotateY(0deg);
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: perspective(2000px) rotateY(-90deg);
+                opacity: 0;
+            }
         }
+
         @keyframes flipInRight {
-            0% { transform: perspective(2000px) rotateY(90deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: perspective(2000px) rotateY(0deg); opacity: 1; }
+            0% {
+                transform: perspective(2000px) rotateY(90deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: perspective(2000px) rotateY(0deg);
+                opacity: 1;
+            }
         }
+
         @keyframes flipOutRight {
-            0% { transform: perspective(2000px) rotateY(0deg); opacity: 1; }
-            50% { opacity: 1; }
-            100% { transform: perspective(2000px) rotateY(90deg); opacity: 0; }
+            0% {
+                transform: perspective(2000px) rotateY(0deg);
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: perspective(2000px) rotateY(90deg);
+                opacity: 0;
+            }
         }
+
         @keyframes flipInLeft {
-            0% { transform: perspective(2000px) rotateY(-90deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: perspective(2000px) rotateY(0deg); opacity: 1; }
+            0% {
+                transform: perspective(2000px) rotateY(-90deg);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: perspective(2000px) rotateY(0deg);
+                opacity: 1;
+            }
         }
 
         /* Swipe notch indicators */
@@ -130,15 +206,30 @@
             transition: opacity 0.3s;
             pointer-events: none;
         }
-        .swipe-notch-left { left: 8px; }
-        .swipe-notch-right { right: 8px; }
+
+        .swipe-notch-left {
+            left: 8px;
+        }
+
+        .swipe-notch-right {
+            right: 8px;
+        }
 
         /* Animated Locate Button Outline */
         @keyframes locatePulse {
-            0% { box-shadow: 0 0 0 0 rgba(var(--c-cool), 0.5); }
-            70% { box-shadow: 0 0 0 6px rgba(var(--c-cool), 0); }
-            100% { box-shadow: 0 0 0 0 rgba(var(--c-cool), 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(var(--c-cool), 0.5);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(var(--c-cool), 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(var(--c-cool), 0);
+            }
         }
+
         .locate-animated {
             animation: locatePulse 2s ease-in-out infinite;
         }
@@ -152,33 +243,52 @@
             background-size: 200% 200%;
             animation: flowAir 15s ease-in-out infinite;
         }
-        .bg-air-flow::before, .bg-air-flow::after {
+
+        .bg-air-flow::before,
+        .bg-air-flow::after {
             content: '';
             position: absolute;
-            width: 200vw; height: 200vh;
-            top: -50%; left: -50%;
+            width: 200vw;
+            height: 200vh;
+            top: -50%;
+            left: -50%;
             background: radial-gradient(ellipse at center, rgba(var(--c-cool), 0.08) 0%, transparent 50%);
             animation: rotateAir 40s linear infinite;
         }
+
         .bg-air-flow::after {
             background: radial-gradient(ellipse at center, rgba(var(--c-main), 0.1) 0%, transparent 50%);
             animation: rotateAir 30s linear infinite reverse;
         }
 
         @keyframes flowAir {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
+
         @keyframes rotateAir {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Water-Drop Glassmorphism Styles */
         .glass {
             background: var(--glass-bg);
-            background-image: linear-gradient(135deg, rgba(var(--card-color, 255,255,255), 0.1) 0%, transparent 100%);
+            background-image: linear-gradient(135deg, rgba(var(--card-color, 255, 255, 255), 0.1) 0%, transparent 100%);
             backdrop-filter: blur(28px) saturate(150%);
             -webkit-backdrop-filter: blur(28px) saturate(150%);
             border-top: 1px solid var(--glass-border-light);
@@ -190,21 +300,32 @@
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .glass-header { border-radius: 2rem; }
+        .glass-header {
+            border-radius: 2rem;
+        }
 
         .modal-glass {
             background: var(--modal-bg) !important;
             backdrop-filter: blur(40px) saturate(200%) !important;
             -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 4px 6px var(--inner-glow);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 4px 6px var(--inner-glow);
         }
 
         /* Animated 2px Outline using mask */
         @keyframes outlineGlow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
+
         .animated-outline::after {
             content: '';
             position: absolute;
@@ -241,14 +362,14 @@
             background: var(--input-bg);
             border: 1px solid var(--glass-border-light);
             color: var(--text-primary);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
-        
+
         .glass-input:focus {
             outline: none;
             border-color: rgb(var(--c-main));
-            box-shadow: 0 0 0 3px rgba(var(--c-main), 0.2), inset 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 0 0 3px rgba(var(--c-main), 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .glass-btn {
@@ -265,14 +386,20 @@
             background: var(--overlay-bg);
         }
 
-        .glass-btn:active { transform: translateY(1px); }
+        .glass-btn:active {
+            transform: translateY(1px);
+        }
 
         /* Color Picker Buttons */
         .color-btn {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             cursor: pointer;
         }
-        .color-btn:hover { transform: scale(1.1); }
+
+        .color-btn:hover {
+            transform: scale(1.1);
+        }
+
         .color-btn.active {
             border-color: var(--text-primary);
             transform: scale(1.2);
@@ -281,13 +408,30 @@
 
         /* Floating Animation */
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
         }
-        .floating { animation: float 6s ease-in-out infinite; }
-        .floating-delay-1 { animation-delay: 1s; }
-        .floating-delay-2 { animation-delay: 2s; }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-delay-1 {
+            animation-delay: 1s;
+        }
+
+        .floating-delay-2 {
+            animation-delay: 2s;
+        }
 
         .loader {
             border: 4px solid rgba(var(--c-main), 0.2);
@@ -299,8 +443,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         #toast {
@@ -312,135 +461,288 @@
             transition: all 0.3s ease-out;
             z-index: 90;
         }
+
         #toast.show {
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
-        
-        .search-scroll::-webkit-scrollbar { width: 6px; }
-        .search-scroll::-webkit-scrollbar-track { background: transparent; }
-        .search-scroll::-webkit-scrollbar-thumb { background: rgba(var(--c-main), 0.3); border-radius: 10px; }
-        
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .panel-clickable { cursor: pointer; }
-        .panel-clickable:hover { transform: scale(1.03); box-shadow: 0 25px 50px var(--glass-shadow), inset 0 4px 6px var(--inner-glow); }
-        .panel-clickable:active { transform: scale(0.98); }
+        .search-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .search-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .search-scroll::-webkit-scrollbar-thumb {
+            background: rgba(var(--c-main), 0.3);
+            border-radius: 10px;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .panel-clickable {
+            cursor: pointer;
+        }
+
+        .panel-clickable:hover {
+            transform: scale(1.03);
+            box-shadow: 0 25px 50px var(--glass-shadow), inset 0 4px 6px var(--inner-glow);
+        }
+
+        .panel-clickable:active {
+            transform: scale(0.98);
+        }
 
         /* Icon Animations */
-        @keyframes animSpinSlow { 100% { transform: rotate(360deg); } }
-        .anim-spin-slow { animation: animSpinSlow 12s linear infinite; }
+        @keyframes animSpinSlow {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
 
-        @keyframes animRock { 0%, 100% { transform: rotate(-10deg); } 50% { transform: rotate(10deg); } }
-        .anim-rock { animation: animRock 3s ease-in-out infinite; }
+        .anim-spin-slow {
+            animation: animSpinSlow 12s linear infinite;
+        }
 
-        @keyframes animFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-        .anim-float { animation: animFloat 3s ease-in-out infinite; }
+        @keyframes animRock {
 
-        @keyframes animPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .anim-pulse { animation: animPulse 2s ease-in-out infinite; }
+            0%,
+            100% {
+                transform: rotate(-10deg);
+            }
 
-        @keyframes animSlideX { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); } }
-        .anim-slide-x { animation: animSlideX 2s ease-in-out infinite; }
+            50% {
+                transform: rotate(10deg);
+            }
+        }
+
+        .anim-rock {
+            animation: animRock 3s ease-in-out infinite;
+        }
+
+        @keyframes animFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .anim-float {
+            animation: animFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes animPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .anim-pulse {
+            animation: animPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes animSlideX {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(5px);
+            }
+        }
+
+        .anim-slide-x {
+            animation: animSlideX 2s ease-in-out infinite;
+        }
 
         /* High-End Weather Background Animations for Main Card */
         .weather-fx-layer {
             transition: all 1s ease;
         }
+
         .weather-anim-sun {
-            background: linear-gradient(105deg, transparent 15%, rgba(255,255,255,0.6) 20%, transparent 25%);
+            background: linear-gradient(105deg, transparent 15%, rgba(255, 255, 255, 0.6) 20%, transparent 25%);
             background-size: 300% 300%;
             animation: fxSweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
+
         .weather-anim-lightning {
-            background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.9) 0%, transparent 50%);
+            background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.9) 0%, transparent 50%);
             opacity: 0;
             animation: fxLightning 6s infinite;
         }
+
         .weather-anim-rain {
-            background-image: repeating-linear-gradient(-25deg, transparent 0%, rgba(255,255,255,0.2) 2%, transparent 4%, transparent 10%);
+            background-image: repeating-linear-gradient(-25deg, transparent 0%, rgba(255, 255, 255, 0.2) 2%, transparent 4%, transparent 10%);
             background-size: 200% 200%;
             animation: fxRain 0.7s linear infinite;
         }
+
         .weather-anim-snow {
-            background-image: radial-gradient(circle, rgba(255,255,255,0.8) 10%, transparent 20%);
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 10%, transparent 20%);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
             animation: fxSnow 3s linear infinite;
         }
+
         .weather-anim-cloud {
-            background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.2) 0%, transparent 40%),
-                        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.15) 0%, transparent 40%);
+            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
             animation: fxCloud 10s alternate infinite ease-in-out;
         }
+
         .weather-anim-moon {
-            background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 40%);
+            background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
             animation: fxMoon 4s alternate infinite ease-in-out;
         }
 
         @keyframes fxSweep {
-            0%, 20% { background-position: 200% 0; }
-            100% { background-position: -100% 0; }
+
+            0%,
+            20% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -100% 0;
+            }
         }
+
         @keyframes fxLightning {
-            0%, 91%, 95%, 98%, 100% { opacity: 0; }
-            92%, 96% { opacity: 1; transform: scale(1.05); }
+
+            0%,
+            91%,
+            95%,
+            98%,
+            100% {
+                opacity: 0;
+            }
+
+            92%,
+            96% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
         }
+
         @keyframes fxRain {
-            0% { background-position: 0 0; }
-            100% { background-position: -50px 100px; }
+            0% {
+                background-position: 0 0;
+            }
+
+            100% {
+                background-position: -50px 100px;
+            }
         }
+
         @keyframes fxSnow {
-            0% { background-position: 0 0, 10px 10px; }
-            100% { background-position: 20px 40px, 30px 50px; }
+            0% {
+                background-position: 0 0, 10px 10px;
+            }
+
+            100% {
+                background-position: 20px 40px, 30px 50px;
+            }
         }
+
         @keyframes fxCloud {
-            0% { transform: scale(1) translate(0,0); }
-            100% { transform: scale(1.1) translate(5%, 5%); }
+            0% {
+                transform: scale(1) translate(0, 0);
+            }
+
+            100% {
+                transform: scale(1.1) translate(5%, 5%);
+            }
         }
+
         @keyframes fxMoon {
-            0% { opacity: 0.5; filter: blur(2px); }
-            100% { opacity: 1; filter: blur(0px); }
+            0% {
+                opacity: 0.5;
+                filter: blur(2px);
+            }
+
+            100% {
+                opacity: 1;
+                filter: blur(0px);
+            }
         }
     </style>
 </head>
+
 <body class="p-2 md:p-6 lg:p-8 items-center flex-grow" id="app-body">
 
     <!-- Animated Flowing Air Background -->
     <div class="bg-air-flow"></div>
 
     <!-- Mobile Bottom Navigation Bar -->
-    <div id="mobile-bottom-bar" class="fixed bottom-0 left-0 right-0 z-50 lg:hidden hidden" style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="glass glass-header mx-2 mb-2 p-2 flex items-center gap-2 rounded-2xl" style="--card-color: var(--c-main); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);">
+    <div id="mobile-bottom-bar" class="fixed bottom-0 left-0 right-0 z-50 lg:hidden hidden"
+        style="padding-bottom: env(safe-area-inset-bottom);">
+        <div class="glass glass-header mx-2 mb-2 p-2 flex items-center gap-2 rounded-2xl"
+            style="--card-color: var(--c-main); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);">
             <!-- Search -->
             <div class="relative flex-1 rounded-full animated-outline" style="--out-w: 2px; --out-c: var(--c-cool);">
                 <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50"></i>
-                <input type="text" id="city-search-mobile" placeholder="Search city..." autocomplete="off" class="glass-input w-full pl-9 pr-10 py-2.5 rounded-full font-bold text-sm">
-                <button id="locate-btn-mobile" class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 rounded-full border-2 border-[rgb(var(--c-cool))] hover:bg-black/5 dark:hover:bg-white/10 transition-colors locate-animated" title="Use Current Location">
+                <input type="text" id="city-search-mobile" placeholder="Search city..." autocomplete="off"
+                    class="glass-input w-full pl-9 pr-10 py-2.5 rounded-full font-bold text-sm">
+                <button id="locate-btn-mobile"
+                    class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 rounded-full border-2 border-[rgb(var(--c-cool))] hover:bg-black/5 dark:hover:bg-white/10 transition-colors locate-animated"
+                    title="Use Current Location">
                     <i data-lucide="map-pin" class="w-4 h-4 text-[rgb(var(--c-cool))]"></i>
                 </button>
-                <div id="search-results-mobile" class="absolute bottom-[110%] left-0 right-0 !rounded-2xl hidden flex-col overflow-y-auto max-h-64 search-scroll z-50 bg-[#f8fafc] dark:bg-[#0f172a] backdrop-blur-3xl border border-black/10 dark:border-white/10 shadow-2xl"></div>
+                <div id="search-results-mobile"
+                    class="absolute bottom-[110%] left-0 right-0 !rounded-2xl hidden flex-col overflow-y-auto max-h-64 search-scroll z-50 bg-[#f8fafc] dark:bg-[#0f172a] backdrop-blur-3xl border border-black/10 dark:border-white/10 shadow-2xl">
+                </div>
             </div>
             <!-- Theme Toggle -->
-            <button id="theme-btn-mobile" class="glass-btn flex items-center justify-center p-2.5 rounded-full relative animated-outline" title="Toggle Theme" style="--out-w: 2px; --out-c: var(--c-warm);">
-                <span id="theme-icon-wrapper-mobile"><i data-lucide="moon" class="w-5 h-5 text-[rgb(var(--c-main))]"></i></span>
+            <button id="theme-btn-mobile"
+                class="glass-btn flex items-center justify-center p-2.5 rounded-full relative animated-outline"
+                title="Toggle Theme" style="--out-w: 2px; --out-c: var(--c-warm);">
+                <span id="theme-icon-wrapper-mobile"><i data-lucide="moon"
+                        class="w-5 h-5 text-[rgb(var(--c-main))]"></i></span>
             </button>
             <!-- Settings -->
-            <button id="settings-btn-mobile" class="glass-btn flex items-center justify-center p-2.5 rounded-full relative animated-outline" title="Settings" style="--out-w: 2px; --out-c: var(--c-earth);">
+            <button id="settings-btn-mobile"
+                class="glass-btn flex items-center justify-center p-2.5 rounded-full relative animated-outline"
+                title="Settings" style="--out-w: 2px; --out-c: var(--c-earth);">
                 <i data-lucide="settings" class="w-5 h-5 text-[rgb(var(--c-main))]"></i>
             </button>
         </div>
     </div>
 
     <!-- Header / Controls -->
-    <div id="header-bar" class="glass glass-header animated-outline-1px w-full max-w-7xl mt-1 md:mt-0 p-3 md:p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-3 md:gap-4 mx-auto" style="--card-color: var(--c-main);">
-        
+    <div id="header-bar"
+        class="glass glass-header animated-outline-1px w-full max-w-7xl mt-1 md:mt-0 p-3 md:p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-3 md:gap-4 mx-auto"
+        style="--card-color: var(--c-main);">
+
         <!-- Logo -->
-        <div class="flex items-center gap-3 w-full lg:w-auto justify-center lg:justify-start flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity" onclick="window.location.reload()" title="Reload Station">
-            <i data-lucide="cloud-lightning" class="w-8 h-8 md:w-10 md:h-10 text-[rgb(var(--c-main))] drop-shadow-md transition-colors duration-300 anim-pulse"></i>
+        <div class="flex items-center gap-3 w-full lg:w-auto justify-center lg:justify-start flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+            onclick="window.location.reload()" title="Reload Station">
+            <i data-lucide="cloud-lightning"
+                class="w-8 h-8 md:w-10 md:h-10 text-[rgb(var(--c-main))] drop-shadow-md transition-colors duration-300 anim-pulse"></i>
             <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold tracking-tight whitespace-nowrap">
-                <span>Atish's</span> 
+                <span>Atish's</span>
                 <span class="inline">
                     <span class="text-[rgb(var(--c-main))] transition-colors duration-300">Weather</span>
                     <span class="text-[rgb(var(--c-cool))]">Station</span>
@@ -450,28 +752,42 @@
 
         <!-- Right Controls Container: Search + Buttons in Single Row -->
         <div id="header-controls" class="flex flex-row items-center gap-2 md:gap-3 w-full lg:w-auto lg:ml-auto">
-            
+
             <!-- Search Bar with integrated Location Button -->
-            <div class="relative w-full flex-1 lg:w-96 rounded-full animated-outline" style="--out-w: 2px; --out-c: var(--c-cool);">
-                <i data-lucide="search" class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-50 text-secondary"></i>
-                <input type="text" id="city-search" placeholder="Search any city..." autocomplete="off" class="glass-input w-full pl-9 md:pl-12 pr-10 md:pr-12 py-2.5 md:py-3.5 rounded-full font-bold text-sm md:text-base">
-                
-                <button id="locate-btn" class="absolute right-1.5 md:right-2 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full border-2 border-[rgb(var(--c-cool))] shadow-sm hover:bg-black/5 dark:hover:bg-white/10 transition-colors group locate-animated" title="Use Current Location">
-                    <i data-lucide="map-pin" class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-cool))] group-hover:scale-110 transition-transform"></i>
+            <div class="relative w-full flex-1 lg:w-96 rounded-full animated-outline"
+                style="--out-w: 2px; --out-c: var(--c-cool);">
+                <i data-lucide="search"
+                    class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-50 text-secondary"></i>
+                <input type="text" id="city-search" placeholder="Search any city..." autocomplete="off"
+                    class="glass-input w-full pl-9 md:pl-12 pr-10 md:pr-12 py-2.5 md:py-3.5 rounded-full font-bold text-sm md:text-base">
+
+                <button id="locate-btn"
+                    class="absolute right-1.5 md:right-2 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full border-2 border-[rgb(var(--c-cool))] shadow-sm hover:bg-black/5 dark:hover:bg-white/10 transition-colors group locate-animated"
+                    title="Use Current Location">
+                    <i data-lucide="map-pin"
+                        class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-cool))] group-hover:scale-110 transition-transform"></i>
                 </button>
 
                 <!-- Dynamic Search Results -->
-                <div id="search-results" class="absolute top-[110%] left-0 right-0 !rounded-2xl hidden flex-col overflow-y-auto max-h-64 search-scroll z-50 bg-[#f8fafc] dark:bg-[#0f172a] backdrop-blur-3xl border border-black/10 dark:border-white/10 shadow-2xl"></div>
+                <div id="search-results"
+                    class="absolute top-[110%] left-0 right-0 !rounded-2xl hidden flex-col overflow-y-auto max-h-64 search-scroll z-50 bg-[#f8fafc] dark:bg-[#0f172a] backdrop-blur-3xl border border-black/10 dark:border-white/10 shadow-2xl">
+                </div>
             </div>
 
             <!-- Utility Buttons -->
             <div class="flex items-center gap-2 shrink-0">
-                <button id="theme-btn" class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold relative animated-outline" title="Toggle Theme" style="--out-w: 2px; --out-c: var(--c-warm);">
-                    <span id="theme-icon-wrapper"><i data-lucide="moon" class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i></span>
+                <button id="theme-btn"
+                    class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold relative animated-outline"
+                    title="Toggle Theme" style="--out-w: 2px; --out-c: var(--c-warm);">
+                    <span id="theme-icon-wrapper"><i data-lucide="moon"
+                            class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i></span>
                 </button>
 
-                <button id="settings-btn" class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold relative animated-outline" title="Settings" style="--out-w: 2px; --out-c: var(--c-earth);">
-                    <i data-lucide="settings" class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i>
+                <button id="settings-btn"
+                    class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold relative animated-outline"
+                    title="Settings" style="--out-w: 2px; --out-c: var(--c-earth);">
+                    <i data-lucide="settings"
+                        class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i>
                 </button>
             </div>
         </div>
@@ -479,43 +795,56 @@
 
     <!-- Pinned Cities Carousel -->
     <div id="pinned-wrapper" class="w-full max-w-7xl mx-auto relative hidden z-20 mb-4 md:mb-6 px-12 group">
-        <button id="scroll-left-btn" onclick="scrollPinned(-1)" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 glass rounded-full opacity-100 transition-transform hover:scale-110 hidden">
+        <button id="scroll-left-btn" onclick="scrollPinned(-1)"
+            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 glass rounded-full opacity-100 transition-transform hover:scale-110 hidden">
             <i data-lucide="chevron-left" class="w-6 h-6 text-[rgb(var(--c-main))]"></i>
         </button>
-        
-        <div id="pinned-cities-container" class="flex gap-3 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar py-6 -my-4 md:py-10 md:-my-8 px-4 -mx-4">
+
+        <div id="pinned-cities-container"
+            class="flex gap-3 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar py-6 -my-4 md:py-10 md:-my-8 px-4 -mx-4">
             <!-- Pinned items dynamically injected -->
         </div>
 
-        <button id="scroll-right-btn" onclick="scrollPinned(1)" class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 glass rounded-full opacity-100 transition-transform hover:scale-110 hidden">
+        <button id="scroll-right-btn" onclick="scrollPinned(1)"
+            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 glass rounded-full opacity-100 transition-transform hover:scale-110 hidden">
             <i data-lucide="chevron-right" class="w-6 h-6 text-[rgb(var(--c-main))]"></i>
         </button>
     </div>
 
     <!-- Confirm Remove Modal -->
-    <div id="confirm-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
+    <div id="confirm-modal"
+        class="fixed inset-0 z-[80] hidden flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
         <div class="glass modal-glass w-full max-w-sm p-6 m-4 relative flex flex-col gap-4 text-center">
-            <div class="w-14 h-14 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center mx-auto mb-2 border border-red-500/30">
+            <div
+                class="w-14 h-14 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center mx-auto mb-2 border border-red-500/30">
                 <i data-lucide="trash-2" class="w-7 h-7"></i>
             </div>
             <h3 class="text-2xl font-extrabold text-[rgb(var(--text-primary))]">Remove City?</h3>
             <p class="font-bold opacity-80 text-lg text-[rgb(var(--c-main))]" id="confirm-city-name"></p>
             <div class="flex gap-3 mt-4 w-full">
                 <button onclick="cancelRemove()" class="glass-btn flex-1 py-3 rounded-xl font-bold">No, Keep</button>
-                <button onclick="confirmRemove()" class="glass-btn flex-1 py-3 rounded-xl font-bold !bg-red-500 !text-white !border-red-500 hover:!bg-red-600 shadow-[0_4px_15px_rgba(239,68,68,0.4)]">Yes, Remove</button>
+                <button onclick="confirmRemove()"
+                    class="glass-btn flex-1 py-3 rounded-xl font-bold !bg-red-500 !text-white !border-red-500 hover:!bg-red-600 shadow-[0_4px_15px_rgba(239,68,68,0.4)]">Yes,
+                    Remove</button>
             </div>
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settings-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
-        <div class="glass modal-glass w-full max-w-3xl p-5 md:p-6 relative flex flex-col gap-4 lg:gap-5 max-h-[90vh] overflow-y-auto hide-scrollbar" style="--card-color: var(--c-main);">
-            <button id="close-settings" class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors z-10">
+    <div id="settings-modal"
+        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
+        <div class="glass modal-glass w-full max-w-3xl p-5 md:p-6 relative flex flex-col gap-4 lg:gap-5 max-h-[90vh] overflow-y-auto hide-scrollbar"
+            style="--card-color: var(--c-main);">
+            <button id="close-settings"
+                class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors z-10">
                 <i data-lucide="x" class="w-5 h-5 lg:w-6 lg:h-6"></i>
             </button>
-            
-            <h2 class="text-xl lg:text-2xl font-extrabold flex items-center gap-2 lg:gap-3 text-[rgb(var(--c-main))] transition-colors duration-300 pr-8">
-                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Icon" loading="lazy" class="w-7 h-7 lg:w-8 lg:h-8 rounded-full border-2 border-[rgb(var(--c-main))] shadow-md">
+
+            <h2
+                class="text-xl lg:text-2xl font-extrabold flex items-center gap-2 lg:gap-3 text-[rgb(var(--c-main))] transition-colors duration-300 pr-8">
+                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Icon"
+                    loading="lazy"
+                    class="w-7 h-7 lg:w-8 lg:h-8 rounded-full border-2 border-[rgb(var(--c-main))] shadow-md">
                 Atish's Weather Station
             </h2>
 
@@ -525,19 +854,25 @@
                         <i data-lucide="sliders-horizontal" class="w-4 h-4 lg:w-5 lg:h-5 text-[rgb(var(--c-main))]"></i>
                         Customizations
                     </h3>
-                    <button id="clear-data-btn" class="glass-btn p-2 md:px-3 md:py-1.5 rounded-full text-[11px] font-bold text-red-500 dark:text-red-400 border border-red-500/20 hover:bg-red-500/10 flex items-center gap-1.5 transition-all duration-300" title="Clear Cached City Data">
+                    <button id="clear-data-btn"
+                        class="glass-btn p-2 md:px-3 md:py-1.5 rounded-full text-[11px] font-bold text-red-500 dark:text-red-400 border border-red-500/20 hover:bg-red-500/10 flex items-center gap-1.5 transition-all duration-300"
+                        title="Clear Cached City Data">
                         <i data-lucide="trash-2" class="w-4 h-4 md:w-3.5 md:h-3.5"></i>
                         <span class="hidden md:inline">Clear Data</span>
                     </button>
                 </div>
                 <div class="flex items-center gap-2">
                     <!-- Mobile Layout Toggle -->
-                    <button id="layout-toggle-btn" class="lg:hidden glass-btn px-3 py-1.5 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all duration-300" title="Toggle controls position">
+                    <button id="layout-toggle-btn"
+                        class="lg:hidden glass-btn px-3 py-1.5 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all duration-300"
+                        title="Toggle controls position">
                         <i data-lucide="search" class="w-3 h-3"></i>
                         <span id="layout-toggle-label">App Like</span>
                     </button>
                     <!-- Desktop Zoom Toggle -->
-                    <button id="zoom-toggle-btn" class="hidden lg:flex glass-btn px-3 py-1.5 rounded-full text-[11px] font-bold items-center gap-1.5 transition-all duration-300" title="Toggle page zoom">
+                    <button id="zoom-toggle-btn"
+                        class="hidden lg:flex glass-btn px-3 py-1.5 rounded-full text-[11px] font-bold items-center gap-1.5 transition-all duration-300"
+                        title="Toggle page zoom">
                         <i data-lucide="maximize-2" class="w-3 h-3"></i>
                         <span id="zoom-toggle-label">100%</span>
                     </button>
@@ -545,24 +880,32 @@
             </div>
 
             <!-- Hidden selects for internal use -->
-            <select id="country-input" class="hidden"><option value="India">India</option></select>
-            <select id="timezone-input" class="hidden"><option value="Asia/Kolkata">Asia/Kolkata (IST)</option></select>
+            <select id="country-input" class="hidden">
+                <option value="India">India</option>
+            </select>
+            <select id="timezone-input" class="hidden">
+                <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
+            </select>
 
             <!-- 2-column grid layout -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-5">
-                
+
                 <!-- Column 1 -->
                 <div class="flex flex-col gap-3">
                     <div class="flex flex-col gap-1.5">
                         <label class="font-bold text-xs lg:text-sm opacity-80">Weather Provider</label>
                         <div class="relative">
-                            <select id="provider-select" class="glass-input w-full pl-3 pr-8 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm cursor-pointer appearance-none">
+                            <select id="provider-select"
+                                class="glass-input w-full pl-3 pr-8 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm cursor-pointer appearance-none">
                                 <!-- Populated by JS -->
                             </select>
-                            <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-60"></i>
+                            <i data-lucide="chevron-down"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-60"></i>
                         </div>
-                        <input type="text" id="api-key-input" placeholder="Enter Private API Key" class="glass-input w-full px-3 py-2 rounded-xl text-xs md:text-sm font-medium hidden mt-1">
-                        <p id="api-hint" class="text-[10px] opacity-70 hidden font-medium">Using secure built-in key for WeatherAPI.</p>
+                        <input type="text" id="api-key-input" placeholder="Enter Private API Key"
+                            class="glass-input w-full px-3 py-2 rounded-xl text-xs md:text-sm font-medium hidden mt-1">
+                        <p id="api-hint" class="text-[10px] opacity-70 hidden font-medium">Using secure built-in key for
+                            WeatherAPI.</p>
                     </div>
                 </div>
 
@@ -571,11 +914,13 @@
                     <div class="flex flex-col gap-1.5">
                         <label class="font-bold text-xs lg:text-sm opacity-80">Measurement Units</label>
                         <div class="relative">
-                            <select id="unit-select" class="glass-input w-full pl-3 pr-8 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm cursor-pointer appearance-none">
+                            <select id="unit-select"
+                                class="glass-input w-full pl-3 pr-8 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm cursor-pointer appearance-none">
                                 <option value="metric">Metric (°C, km/h, hPa)</option>
                                 <option value="imperial">Imperial (°F, mph, inHg)</option>
                             </select>
-                            <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-60"></i>
+                            <i data-lucide="chevron-down"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-60"></i>
                         </div>
                     </div>
                 </div>
@@ -587,34 +932,58 @@
                         <div class="flex flex-col gap-2 flex-1">
                             <label class="font-bold text-xs lg:text-sm opacity-80">Glass Accent Color</label>
                             <div class="flex gap-2 flex-wrap lg:flex-nowrap w-full">
-                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-blue-500 active" data-color="blue" title="Blue"></button>
-                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-teal-500" data-color="teal" title="Teal"></button>
-                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-pink-500" data-color="pink" title="Pink"></button>
-                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-purple-500" data-color="purple" title="Purple"></button>
-                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-orange-500" data-color="orange" title="Orange"></button>
-                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-cyan-500" data-color="cyan" title="Cyan"></button>
-                                <button class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-red-500" data-color="red" title="Red"></button>
+                                <button
+                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-blue-500 active"
+                                    data-color="blue" title="Blue"></button>
+                                <button
+                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-teal-500"
+                                    data-color="teal" title="Teal"></button>
+                                <button
+                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-pink-500"
+                                    data-color="pink" title="Pink"></button>
+                                <button
+                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-purple-500"
+                                    data-color="purple" title="Purple"></button>
+                                <button
+                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-orange-500"
+                                    data-color="orange" title="Orange"></button>
+                                <button
+                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-cyan-500"
+                                    data-color="cyan" title="Cyan"></button>
+                                <button
+                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-red-500"
+                                    data-color="red" title="Red"></button>
                             </div>
                         </div>
                         <!-- Developer (right side on desktop) -->
-                        <div class="p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-between shrink-0 gap-4 lg:self-end">
+                        <div
+                            class="p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-between shrink-0 gap-4 lg:self-end">
                             <div class="flex items-center gap-2">
-                                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg" alt="Atish Ak Sharma" loading="lazy" class="w-8 h-8 rounded-full border border-[rgb(var(--c-main))]">
+                                <img src="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg"
+                                    alt="Atish Ak Sharma" loading="lazy"
+                                    class="w-8 h-8 rounded-full border border-[rgb(var(--c-main))]">
                                 <div class="flex flex-col">
-                                    <span class="text-[10px] opacity-70 font-bold leading-tight">Developer Portfolio</span>
-                                    <span class="text-xs font-extrabold text-[rgb(var(--c-main))] leading-tight">Atish Ak Sharma</span>
+                                    <span class="text-[10px] opacity-70 font-bold leading-tight">Developer
+                                        Portfolio</span>
+                                    <span class="text-xs font-extrabold text-[rgb(var(--c-main))] leading-tight">Atish
+                                        Ak Sharma</span>
                                 </div>
                             </div>
-                            <a href="https://atishaksharma.com" target="_blank" rel="noopener noreferrer" class="glass-btn p-1.5 rounded-full flex items-center justify-center" title="Visit Portfolio">
+                            <a href="https://atishaksharma.com" target="_blank" rel="noopener noreferrer"
+                                class="glass-btn p-1.5 rounded-full flex items-center justify-center"
+                                title="Visit Portfolio">
                                 <i data-lucide="external-link" class="w-3.5 h-3.5 text-[rgb(var(--c-main))]"></i>
                             </a>
                         </div>
                     </div>
 
-                    <button id="save-settings-btn" class="w-full py-3 px-6 rounded-xl font-extrabold text-sm md:text-base text-white transition-all hover:scale-[1.02] active:scale-[0.98] duration-300" style="background-color: rgb(var(--c-main)); box-shadow: 0 4px 15px rgba(var(--c-main), 0.3);">
+                    <button id="save-settings-btn"
+                        class="w-full py-3 px-6 rounded-xl font-extrabold text-sm md:text-base text-white transition-all hover:scale-[1.02] active:scale-[0.98] duration-300"
+                        style="background-color: rgb(var(--c-main)); box-shadow: 0 4px 15px rgba(var(--c-main), 0.3);">
                         Save & Apply
                     </button>
-                    <p class="text-center text-[11px] font-bold opacity-50 -mt-1">&copy; <span class="settings-year"></span> Atish's Weather Station.</p>
+                    <p class="text-center text-[11px] font-bold opacity-50 -mt-1">&copy; <span
+                            class="settings-year"></span> Atish's Weather Station.</p>
                 </div>
 
             </div>
@@ -622,12 +991,16 @@
     </div>
 
     <!-- Info/Details Modal -->
-    <div id="info-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
-        <div class="glass modal-glass w-full max-w-lg p-6 relative flex flex-col gap-4 max-h-[90vh] overflow-y-auto" style="--card-color: var(--c-main);">
-            <button id="close-info" class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors z-10">
+    <div id="info-modal"
+        class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
+        <div class="glass modal-glass w-full max-w-lg p-6 relative flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
+            style="--card-color: var(--c-main);">
+            <button id="close-info"
+                class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors z-10">
                 <i data-lucide="x" class="w-6 h-6"></i>
             </button>
-            <h2 id="info-title" class="text-2xl font-extrabold flex items-center gap-2 pr-8 transition-colors duration-300">
+            <h2 id="info-title"
+                class="text-2xl font-extrabold flex items-center gap-2 pr-8 transition-colors duration-300">
                 <!-- Dynamically injected -->
             </h2>
             <div id="info-content" class="flex flex-col gap-4 mt-2">
@@ -637,40 +1010,60 @@
     </div>
 
     <!-- Main Content Area -->
-    <div id="weather-container" class="w-full max-w-7xl mx-auto flex flex-col gap-4 lg:gap-6 opacity-0 transition-opacity duration-500 z-10 mb-8">
-        
+    <div id="weather-container"
+        class="w-full max-w-7xl mx-auto flex flex-col gap-4 lg:gap-6 opacity-0 transition-opacity duration-500 z-10 mb-8">
+
         <div class="grid grid-cols-1 lg:grid-cols-[31%_1fr] gap-4 lg:gap-6 items-stretch">
             <!-- Primary Weather Card (MAIN) - Swipeable -->
-            <div id="main-weather-card" class="glass animated-outline floating w-full p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden group shrink-0 select-none" style="--card-color: var(--c-main); touch-action: pan-y;">
-                
-                <!-- High-End Weather Effect Layer -->
-                <div id="weather-fx-layer" class="absolute inset-0 z-0 pointer-events-none opacity-60 mix-blend-overlay weather-fx-layer"></div>
+            <div id="main-weather-card"
+                class="glass animated-outline floating w-full p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden group shrink-0 select-none"
+                style="--card-color: var(--c-main); touch-action: pan-y;">
 
-                <div class="absolute -top-20 -right-20 w-64 h-64 opacity-20 rounded-full blur-3xl pointer-events-none mix-blend-overlay transition-colors duration-300 z-0" style="background-color: rgb(var(--c-main));"></div>
-                
+                <!-- High-End Weather Effect Layer -->
+                <div id="weather-fx-layer"
+                    class="absolute inset-0 z-0 pointer-events-none opacity-60 mix-blend-overlay weather-fx-layer">
+                </div>
+
+                <div class="absolute -top-20 -right-20 w-64 h-64 opacity-20 rounded-full blur-3xl pointer-events-none mix-blend-overlay transition-colors duration-300 z-0"
+                    style="background-color: rgb(var(--c-main));"></div>
+
                 <div class="relative z-10">
                     <div class="flex justify-between items-start mb-6">
                         <div class="flex flex-col max-w-[80%]">
-                            <h2 id="location-name" class="text-3xl lg:text-4xl font-extrabold mb-1 tracking-tight truncate w-full">Loading...</h2>
-                            <p id="location-region" class="text-lg font-bold text-[rgb(var(--c-main))] mb-1 transition-colors duration-300 truncate w-full"></p>
+                            <h2 id="location-name"
+                                class="text-3xl lg:text-4xl font-extrabold mb-1 tracking-tight truncate w-full">
+                                Loading...</h2>
+                            <p id="location-region"
+                                class="text-lg font-bold text-[rgb(var(--c-main))] mb-1 transition-colors duration-300 truncate w-full">
+                            </p>
                         </div>
                     </div>
 
-                    <div id="main-icon-wrapper" class="flex items-center justify-center my-6 lg:my-8 transition-transform group-hover:scale-110 duration-500">
-                        <i data-lucide="loader" class="w-32 h-32 lg:w-40 lg:h-40 drop-shadow-2xl text-[rgb(var(--c-main))] transition-colors duration-300 anim-spin-slow"></i>
+                    <div id="main-icon-wrapper"
+                        class="flex items-center justify-center my-6 lg:my-8 transition-transform group-hover:scale-110 duration-500">
+                        <i data-lucide="loader"
+                            class="w-32 h-32 lg:w-40 lg:h-40 drop-shadow-2xl text-[rgb(var(--c-main))] transition-colors duration-300 anim-spin-slow"></i>
                     </div>
                 </div>
 
                 <div class="relative z-10">
                     <div class="flex items-start gap-1 mb-1">
-                        <span id="temperature" class="text-6xl lg:text-7xl font-extrabold tracking-tighter text-[rgb(var(--c-main))] drop-shadow-sm transition-colors duration-300">--</span>
-                        <span class="text-2xl lg:text-3xl font-bold mt-2 text-[rgb(var(--c-main))] temp-unit-label transition-colors duration-300">°C</span>
+                        <span id="temperature"
+                            class="text-6xl lg:text-7xl font-extrabold tracking-tighter text-[rgb(var(--c-main))] drop-shadow-sm transition-colors duration-300">--</span>
+                        <span
+                            class="text-2xl lg:text-3xl font-bold mt-2 text-[rgb(var(--c-main))] temp-unit-label transition-colors duration-300">°C</span>
                     </div>
                     <div class="flex items-center gap-4 text-sm font-bold opacity-80 mt-2 mb-1">
-                        <span class="flex items-center gap-1" title="Rain Probability"><i data-lucide="cloud-rain" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i> <span id="current-rain-prob">--</span>%</span>
-                        <span class="flex items-center gap-1" title="Cloud Cover"><i data-lucide="cloud" class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i> <span id="current-cloud-cover">--</span>%</span>
+                        <span class="flex items-center gap-1" title="Rain Probability"><i data-lucide="cloud-rain"
+                                class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i>
+                            <span id="current-rain-prob">--</span>%</span>
+                        <span class="flex items-center gap-1" title="Cloud Cover"><i data-lucide="cloud"
+                                class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i>
+                            <span id="current-cloud-cover">--</span>%</span>
                     </div>
-                    <p class="text-2xl font-bold capitalize tracking-wide mb-1"><span id="condition-desc">--</span> <span class="text-lg text-[rgb(var(--c-main))] font-bold opacity-80" id="feels-like-inline">(Feels Like --)</span></p>
+                    <p class="text-2xl font-bold capitalize tracking-wide mb-1"><span id="condition-desc">--</span>
+                        <span class="text-lg text-[rgb(var(--c-main))] font-bold opacity-80"
+                            id="feels-like-inline">(Feels Like --)</span></p>
                     <p id="date-time" class="text-base font-bold opacity-70 mt-2"></p>
                 </div>
                 <!-- Swipe notch indicators (shown when multiple cities) -->
@@ -680,12 +1073,14 @@
 
             <!-- Right Side: Details Grid + Forecast -->
             <div class="w-full flex flex-col gap-3 md:gap-4 lg:gap-5 h-full">
-                
+
                 <!-- Details Grid 1: Top 4 cards -->
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 shrink-0">
                     <!-- UV Index (WARM) -->
-                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between panel-clickable" onclick="showInfo('uv')" style="--card-color: var(--c-warm);" title="Click for UV Table">
-                        <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
+                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between panel-clickable"
+                        onclick="showInfo('uv')" style="--card-color: var(--c-warm);" title="Click for UV Table">
+                        <div
+                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
                             <i data-lucide="sun" class="w-5 h-5 lg:w-6 lg:h-6 anim-spin-slow"></i>
                             <span>UV Index</span>
                         </div>
@@ -696,20 +1091,30 @@
                     </div>
 
                     <!-- High/Low Temp (WARM) -->
-                    <div class="glass floating floating-delay-2 p-4 flex flex-col justify-between panel-clickable" onclick="showInfo('extremes')" style="--card-color: var(--c-warm);" title="Click for details">
-                        <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
+                    <div class="glass floating floating-delay-2 p-4 flex flex-col justify-between panel-clickable"
+                        onclick="showInfo('extremes')" style="--card-color: var(--c-warm);" title="Click for details">
+                        <div
+                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
                             <i data-lucide="thermometer-sun" class="w-5 h-5 lg:w-6 lg:h-6 anim-rock"></i>
                             <span>Min/Max Temp</span>
                         </div>
                         <div class="flex flex-col gap-1">
-                            <div class="flex items-center gap-2"><i data-lucide="arrow-up" class="w-4 h-4 lg:w-5 lg:h-5 text-red-500 anim-float"></i> <span class="text-xl lg:text-2xl font-extrabold" id="temp-high">--</span><span class="font-bold opacity-70 temp-unit-label">°C</span></div>
-                            <div class="flex items-center gap-2"><i data-lucide="arrow-down" class="w-4 h-4 lg:w-5 lg:h-5 text-blue-500 anim-float"></i> <span class="text-lg lg:text-xl font-bold opacity-80" id="temp-low">--</span><span class="font-bold opacity-50 temp-unit-label">°C</span></div>
+                            <div class="flex items-center gap-2"><i data-lucide="arrow-up"
+                                    class="w-4 h-4 lg:w-5 lg:h-5 text-red-500 anim-float"></i> <span
+                                    class="text-xl lg:text-2xl font-extrabold" id="temp-high">--</span><span
+                                    class="font-bold opacity-70 temp-unit-label">°C</span></div>
+                            <div class="flex items-center gap-2"><i data-lucide="arrow-down"
+                                    class="w-4 h-4 lg:w-5 lg:h-5 text-blue-500 anim-float"></i> <span
+                                    class="text-lg lg:text-xl font-bold opacity-80" id="temp-low">--</span><span
+                                    class="font-bold opacity-50 temp-unit-label">°C</span></div>
                         </div>
                     </div>
 
                     <!-- Humidity (COOL) -->
-                    <div class="glass floating p-4 flex flex-col justify-between panel-clickable" onclick="showInfo('humidity')" style="--card-color: var(--c-cool);" title="Click for details">
-                        <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-cool))] mb-2 lg:mb-3 text-sm lg:text-base">
+                    <div class="glass floating p-4 flex flex-col justify-between panel-clickable"
+                        onclick="showInfo('humidity')" style="--card-color: var(--c-cool);" title="Click for details">
+                        <div
+                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-cool))] mb-2 lg:mb-3 text-sm lg:text-base">
                             <i data-lucide="droplets" class="w-5 h-5 lg:w-6 lg:h-6 anim-pulse"></i>
                             <span>Humidity</span>
                         </div>
@@ -720,14 +1125,17 @@
                     </div>
 
                     <!-- Wind (COOL) -->
-                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between panel-clickable" onclick="showInfo('wind')" style="--card-color: var(--c-cool);" title="Click for details">
-                        <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-cool))] mb-2 lg:mb-3 text-sm lg:text-base">
+                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between panel-clickable"
+                        onclick="showInfo('wind')" style="--card-color: var(--c-cool);" title="Click for details">
+                        <div
+                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-cool))] mb-2 lg:mb-3 text-sm lg:text-base">
                             <i data-lucide="wind" class="w-5 h-5 lg:w-6 lg:h-6 anim-slide-x"></i>
                             <span>Wind</span>
                         </div>
                         <div>
                             <div class="text-3xl font-extrabold mb-0.5"><span id="wind-speed">--</span></div>
-                            <div class="flex items-center gap-2 text-xs lg:text-sm font-bold opacity-80"><span id="wind-unit-label">km/h</span> • <span id="wind-dir">--</span></div>
+                            <div class="flex items-center gap-2 text-xs lg:text-sm font-bold opacity-80"><span
+                                    id="wind-unit-label">km/h</span> • <span id="wind-dir">--</span></div>
                         </div>
                     </div>
                 </div>
@@ -735,20 +1143,26 @@
                 <!-- Details Grid 2: Bottom 3 cards (Equal width on LG) -->
                 <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 shrink-0">
                     <!-- AQI (EARTH) -->
-                    <div class="glass floating floating-delay-2 p-4 flex flex-col justify-between panel-clickable" onclick="showInfo('aqi')" style="--card-color: var(--c-earth);" title="Click for AQI Table">
-                        <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-earth))] mb-2 lg:mb-3 text-sm lg:text-base">
-                            <span id="aqi-icon-wrapper"><i data-lucide="leaf" class="w-5 h-5 lg:w-6 lg:h-6 anim-rock"></i></span>
+                    <div class="glass floating floating-delay-2 p-4 flex flex-col justify-between panel-clickable"
+                        onclick="showInfo('aqi')" style="--card-color: var(--c-earth);" title="Click for AQI Table">
+                        <div
+                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-earth))] mb-2 lg:mb-3 text-sm lg:text-base">
+                            <span id="aqi-icon-wrapper"><i data-lucide="leaf"
+                                    class="w-5 h-5 lg:w-6 lg:h-6 anim-rock"></i></span>
                             <span>AQI</span>
                         </div>
                         <div>
                             <div class="text-3xl font-extrabold mb-0.5" id="aqi">--</div>
-                            <div id="aqi-desc" class="text-xs lg:text-sm font-bold opacity-80 leading-tight mt-1">Air Quality</div>
+                            <div id="aqi-desc" class="text-xs lg:text-sm font-bold opacity-80 leading-tight mt-1">Air
+                                Quality</div>
                         </div>
                     </div>
 
                     <!-- Pressure (EARTH) -->
-                    <div class="glass floating p-4 flex flex-col justify-between panel-clickable" onclick="showInfo('pressure')" style="--card-color: var(--c-earth);" title="Click for details">
-                        <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-earth))] mb-2 lg:mb-3 text-sm lg:text-base">
+                    <div class="glass floating p-4 flex flex-col justify-between panel-clickable"
+                        onclick="showInfo('pressure')" style="--card-color: var(--c-earth);" title="Click for details">
+                        <div
+                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-earth))] mb-2 lg:mb-3 text-sm lg:text-base">
                             <i data-lucide="gauge" class="w-5 h-5 lg:w-6 lg:h-6 anim-pulse"></i>
                             <span>Pressure</span>
                         </div>
@@ -759,8 +1173,10 @@
                     </div>
 
                     <!-- Sunrise / Sunset (WARM) - centered on mobile with padding -->
-                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between col-span-2 lg:col-span-1 panel-clickable max-w-[220px] sm:max-w-none mx-auto w-full px-6 sm:px-4" onclick="showInfo('sun')" style="--card-color: var(--c-warm);" title="Click for details">
-                        <div class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
+                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between col-span-2 lg:col-span-1 panel-clickable max-w-[220px] sm:max-w-none mx-auto w-full px-6 sm:px-4"
+                        onclick="showInfo('sun')" style="--card-color: var(--c-warm);" title="Click for details">
+                        <div
+                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
                             <i data-lucide="sun" class="w-4 h-4 lg:w-5 lg:h-5"></i>
                             <span>Sun Cycle</span>
                         </div>
@@ -768,1532 +1184,106 @@
                             <!-- Sunrise -->
                             <div class="flex items-center justify-start gap-3 w-full">
                                 <div class="flex items-center gap-2 lg:gap-3 w-[75px]">
-                                    <i data-lucide="sunrise" class="w-5 h-5 lg:w-6 lg:h-6 text-orange-400 drop-shadow-md anim-float"></i>
+                                    <i data-lucide="sunrise"
+                                        class="w-5 h-5 lg:w-6 lg:h-6 text-orange-400 drop-shadow-md anim-float"></i>
                                     <span class="text-xs lg:text-sm font-bold opacity-70">Rise</span>
                                 </div>
-                                <span class="text-sm md:text-base lg:text-lg font-extrabold leading-none whitespace-nowrap" id="sunrise">--:--</span>
+                                <span
+                                    class="text-sm md:text-base lg:text-lg font-extrabold leading-none whitespace-nowrap"
+                                    id="sunrise">--:--</span>
                             </div>
                             <!-- Sunset -->
                             <div class="flex items-center justify-start gap-3 w-full">
                                 <div class="flex items-center gap-2 lg:gap-3 w-[75px]">
-                                    <i data-lucide="sunset" class="w-5 h-5 lg:w-6 lg:h-6 text-orange-500 drop-shadow-md anim-float" style="animation-delay: 1s"></i>
+                                    <i data-lucide="sunset"
+                                        class="w-5 h-5 lg:w-6 lg:h-6 text-orange-500 drop-shadow-md anim-float"
+                                        style="animation-delay: 1s"></i>
                                     <span class="text-xs lg:text-sm font-bold opacity-70">Set</span>
                                 </div>
-                                <span class="text-sm md:text-base lg:text-lg font-extrabold leading-none whitespace-nowrap" id="sunset">--:--</span>
+                                <span
+                                    class="text-sm md:text-base lg:text-lg font-extrabold leading-none whitespace-nowrap"
+                                    id="sunset">--:--</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- 7-Day Forecast (MAIN) -->
-                <div class="glass floating floating-delay-2 p-4 lg:p-6 w-full panel-clickable flex flex-col flex-grow" onclick="showInfo('forecast')" style="--card-color: var(--c-main);" title="Click for details">
-                    <div class="flex items-center gap-2 lg:gap-3 font-bold mb-3 lg:mb-4 text-lg lg:text-xl text-[rgb(var(--c-main))] transition-colors duration-300 shrink-0">
+                <div class="glass floating floating-delay-2 p-4 lg:p-6 w-full panel-clickable flex flex-col flex-grow"
+                    onclick="showInfo('forecast')" style="--card-color: var(--c-main);" title="Click for details">
+                    <div
+                        class="flex items-center gap-2 lg:gap-3 font-bold mb-3 lg:mb-4 text-lg lg:text-xl text-[rgb(var(--c-main))] transition-colors duration-300 shrink-0">
                         <i data-lucide="calendar-days" class="w-5 h-5 lg:w-7 lg:h-7 anim-rock"></i>
                         <h3>7-Day Forecast</h3>
                     </div>
-                    
-                    <div id="forecast-container" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 lg:gap-4 w-full flex-grow content-start lg:content-between pointer-events-none">
-                        <div class="flex items-center justify-center w-full col-span-full font-bold italic opacity-70">Loading forecast...</div>
+
+                    <div id="forecast-container"
+                        class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 lg:gap-4 w-full flex-grow content-start lg:content-between pointer-events-none">
+                        <div class="flex items-center justify-center w-full col-span-full font-bold italic opacity-70">
+                            Loading forecast...</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Accent End-of-Page Bar -->
-    <div class="flex justify-center py-[2px] z-10">
-        <div class="h-[4px] w-[90px] rounded-full overflow-hidden relative" style="background: rgba(var(--c-main), 0.2);">
-            <div class="absolute inset-0 rounded-full" style="background: rgb(var(--c-main)); animation: accentBarSlide 2s ease-in-out infinite;"></div>
+    <!-- Status & Accent End-of-Page Bar -->
+    <div class="flex flex-col items-center justify-center py-2 z-10 w-full mb-2">
+        <div
+            class="flex items-center gap-2 px-3 py-1 mb-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-[10px] font-bold opacity-80 text-[rgb(var(--c-main))] w-auto max-w-[95vw]">
+            <div class="flex items-center gap-1 shrink-0"><i data-lucide="refresh-cw" class="w-3 h-3" id="update-spinner"></i>
+                <span id="update-status-text" class="whitespace-nowrap">Updated On (--:-- + 1200s)</span></div>
+            <span class="opacity-50 shrink-0">|</span>
+            <span id="current-provider-name" class="whitespace-nowrap truncate text-ellipsis">Open-Meteo</span>
+        </div>
+        <div class="h-[4px] w-[90px] rounded-full overflow-hidden relative mt-1"
+            style="background: rgba(var(--c-main), 0.2);">
+            <div class="absolute inset-0 rounded-full"
+                style="background: rgb(var(--c-main)); animation: accentBarSlide 2s ease-in-out infinite;"></div>
         </div>
     </div>
     <style>
         @keyframes accentBarSlide {
-            0% { transform: translateX(-100%); }
-            50% { transform: translateX(0%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50% {
+                transform: translateX(0%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
+
         /* Bottom bar spacing on mobile */
         @media (max-width: 1023px) {
-            body.bottom-bar-active { padding-bottom: 80px !important; }
+            body.bottom-bar-active {
+                padding-bottom: 80px !important;
+            }
         }
     </style>
 
     <!-- Loading State -->
-    <div id="loading-state" class="fixed inset-0 backdrop-blur-2xl flex flex-col items-center justify-center z-50 hidden bg-white/20 dark:bg-black/40">
+    <div id="loading-state"
+        class="fixed inset-0 backdrop-blur-2xl flex flex-col items-center justify-center z-50 hidden bg-white/20 dark:bg-black/40">
         <div class="loader mb-4 transition-colors duration-300"></div>
-        <p class="text-xl font-extrabold tracking-wide text-[rgb(var(--c-main))] drop-shadow-md transition-colors duration-300">Gathering data...</p>
+        <p
+            class="text-xl font-extrabold tracking-wide text-[rgb(var(--c-main))] drop-shadow-md transition-colors duration-300">
+            Gathering data...</p>
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="glass modal-glass px-6 py-4 rounded-full flex items-center gap-3 font-bold text-md border-0 whitespace-nowrap max-w-none w-max" style="--card-color: var(--c-main);">
-        <span id="toast-icon-wrapper"><i data-lucide="info" class="w-6 h-6 text-[rgb(var(--c-main))] transition-colors duration-300"></i></span>
+    <div id="toast"
+        class="glass modal-glass px-6 py-4 rounded-full flex items-center gap-3 font-bold text-md border-0 whitespace-nowrap max-w-none w-max"
+        style="--card-color: var(--c-main);">
+        <span id="toast-icon-wrapper"><i data-lucide="info"
+                class="w-6 h-6 text-[rgb(var(--c-main))] transition-colors duration-300"></i></span>
         <span id="toast-msg">Message</span>
     </div>
 
-    <script>
-        lucide.createIcons();
-        document.querySelectorAll('.settings-year').forEach(el => el.textContent = new Date().getFullYear());
-
-        // Obfuscated API Key Logic
-        const _kPart1 = 'NzE2MThkMGE2';
-        const _kPart2 = 'YjM0NDUzNDk4';
-        const _kPart3 = 'ZjEwNDUzMDI2MDkwNQ==';
-        function getBuiltInKey() { return atob(_kPart1 + _kPart2 + _kPart3); }
-
-        // LocalStorage keys and state
-        const savedSettings = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
-
-        const state = {
-            // Nullified defaults here to detect first-time visitors
-            lat: savedSettings.lat || null, 
-            lon: savedSettings.lon || null,
-            locationName: savedSettings.locationName || null,
-            stateRegion: savedSettings.stateRegion || null, 
-            country: savedSettings.country || null, 
-            timezone: savedSettings.timezone || null, 
-            provider: savedSettings.provider || "open-meteo", 
-            apiKey: savedSettings.apiKey || "",
-            theme: savedSettings.theme || "light", 
-            color: savedSettings.color || "blue", 
-            units: savedSettings.units || "metric",
-            pinnedCities: savedSettings.pinnedCities || [],
-            weatherData: null,
-            isLoading: false
-        };
-
-        const PROVIDERS = [
-            { id: "open-meteo", name: "Open-Meteo (Default)", requiresKey: false },
-            { id: "weatherapi", name: "WeatherAPI.com (Premium)", requiresKey: true },
-            { id: "openweathermap", name: "OpenWeatherMap (Custom API Key)", requiresKey: true }
-        ];
-
-        const els = {
-            citySearch: document.getElementById('city-search'),
-            searchResults: document.getElementById('search-results'),
-            providerSelect: document.getElementById('provider-select'),
-            apiKeyInput: document.getElementById('api-key-input'),
-            apiHint: document.getElementById('api-hint'),
-            unitSelect: document.getElementById('unit-select'),
-            countryInput: document.getElementById('country-input'), 
-            timezoneInput: document.getElementById('timezone-input'), 
-            colorBtns: document.querySelectorAll('.color-btn'),
-            locateBtn: document.getElementById('locate-btn'),
-            themeBtn: document.getElementById('theme-btn'),
-            settingsBtn: document.getElementById('settings-btn'),
-            closeSettingsBtn: document.getElementById('close-settings'),
-            saveSettingsBtn: document.getElementById('save-settings-btn'),
-            clearDataBtn: document.getElementById('clear-data-btn'),
-            settingsModal: document.getElementById('settings-modal'),
-            infoModal: document.getElementById('info-modal'),
-            closeInfoBtn: document.getElementById('close-info'),
-            infoTitle: document.getElementById('info-title'),
-            infoContent: document.getElementById('info-content'),
-            themeIconWrapper: document.getElementById('theme-icon-wrapper'),
-            weatherContainer: document.getElementById('weather-container'),
-            loadingState: document.getElementById('loading-state'),
-            toast: document.getElementById('toast'),
-            toastMsg: document.getElementById('toast-msg'),
-            toastIconWrapper: document.getElementById('toast-icon-wrapper'),
-            pinnedWrapper: document.getElementById('pinned-wrapper'),
-            pinnedContainer: document.getElementById('pinned-cities-container'),
-            
-            locationName: document.getElementById('location-name'),
-            locationRegion: document.getElementById('location-region'), 
-            dateTime: document.getElementById('date-time'),
-            mainIconWrapper: document.getElementById('main-icon-wrapper'),
-            temperature: document.getElementById('temperature'),
-            tempUnitLabels: document.querySelectorAll('.temp-unit-label'),
-            windUnitLabel: document.getElementById('wind-unit-label'),
-            conditionDesc: document.getElementById('condition-desc'),
-            feelsLikeInline: document.getElementById('feels-like-inline'),
-            currentRainProb: document.getElementById('current-rain-prob'),
-            currentCloudCover: document.getElementById('current-cloud-cover'),
-            tempHigh: document.getElementById('temp-high'),
-            tempLow: document.getElementById('temp-low'),
-            humidity: document.getElementById('humidity'),
-            humidityDesc: document.getElementById('humidity-desc'),
-            windSpeed: document.getElementById('wind-speed'),
-            windDir: document.getElementById('wind-dir'),
-            pressure: document.getElementById('pressure'),
-            uvIndex: document.getElementById('uv-index'),
-            uvDesc: document.getElementById('uv-desc'),
-            aqi: document.getElementById('aqi'),
-            aqiDesc: document.getElementById('aqi-desc'),
-            aqiIconWrapper: document.getElementById('aqi-icon-wrapper'),
-            sunrise: document.getElementById('sunrise'),
-            sunset: document.getElementById('sunset'),
-            forecastContainer: document.getElementById('forecast-container'),
-            // Mobile bottom bar
-            mobileBottomBar: document.getElementById('mobile-bottom-bar'),
-            headerBar: document.getElementById('header-bar'),
-            headerControls: document.getElementById('header-controls'),
-            citySearchMobile: document.getElementById('city-search-mobile'),
-            searchResultsMobile: document.getElementById('search-results-mobile'),
-            locateBtnMobile: document.getElementById('locate-btn-mobile'),
-            themeBtnMobile: document.getElementById('theme-btn-mobile'),
-            settingsBtnMobile: document.getElementById('settings-btn-mobile'),
-            themeIconWrapperMobile: document.getElementById('theme-icon-wrapper-mobile'),
-            layoutToggleBtn: document.getElementById('layout-toggle-btn'),
-            layoutToggleLabel: document.getElementById('layout-toggle-label')
-        };
-
-        let searchTimeout;
-        let pressTimer;
-        let isDragging = false;
-        let startX = 0;
-        let cityToRemoveIndex = -1;
-
-        // Helper to smoothly add options dynamically if they don't exist
-        function updateSelectOption(selectEl, value) {
-            if (!value) return;
-            let exists = Array.from(selectEl.options).some(opt => opt.value === value);
-            if (!exists && value) selectEl.add(new Option(value, value));
-            selectEl.value = value;
-        }
-
-        function init() {
-            // Apply saved zoom or default 90% on desktop
-            const savedZoom = localStorage.getItem('atish_weather_zoom');
-            const isDesktop = window.innerWidth >= 1024;
-            if (isDesktop) {
-                document.body.style.zoom = savedZoom || '0.9';
-            } else {
-                document.body.style.zoom = '1';
-            }
-
-            const zoomBtn = document.getElementById('zoom-toggle-btn');
-            const zoomLabel = document.getElementById('zoom-toggle-label');
-            function updateZoomBtnState() {
-                const current = parseFloat(document.body.style.zoom) || 0.9;
-                if (current >= 1) {
-                    zoomLabel.textContent = '90%';
-                    zoomBtn.style.background = 'rgb(var(--c-main))';
-                    zoomBtn.style.color = '#fff';
-                    zoomBtn.style.borderColor = 'rgb(var(--c-main))';
-                } else {
-                    zoomLabel.textContent = '100%';
-                    zoomBtn.style.background = '';
-                    zoomBtn.style.color = '';
-                    zoomBtn.style.borderColor = '';
-                }
-            }
-            updateZoomBtnState();
-
-            zoomBtn.addEventListener('click', () => {
-                const current = parseFloat(document.body.style.zoom) || 0.9;
-                const newZoom = current >= 1 ? '0.9' : '1';
-                document.body.style.zoom = newZoom;
-                localStorage.setItem('atish_weather_zoom', newZoom);
-                updateZoomBtnState();
-            });
-
-            document.documentElement.setAttribute('data-theme', state.theme);
-            document.documentElement.setAttribute('data-color', state.color);
-            updateThemeIcon();
-
-            PROVIDERS.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.id;
-                opt.textContent = p.name;
-                els.providerSelect.appendChild(opt);
-            });
-
-            els.providerSelect.value = state.provider;
-            els.apiKeyInput.value = state.apiKey;
-            els.unitSelect.value = state.units;
-            if (state.country) updateSelectOption(els.countryInput, state.country);
-            if (state.timezone) updateSelectOption(els.timezoneInput, state.timezone);
-            
-            els.colorBtns.forEach(btn => {
-                if(btn.dataset.color === state.color) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
-            
-            checkApiFieldVisibility();
-
-            els.locateBtn.addEventListener('click', () => getUserLocation(false));
-            els.themeBtn.addEventListener('click', toggleTheme);
-            
-            els.settingsBtn.addEventListener('click', () => els.settingsModal.classList.remove('hidden'));
-            els.closeSettingsBtn.addEventListener('click', () => els.settingsModal.classList.add('hidden'));
-            els.closeInfoBtn.addEventListener('click', () => els.infoModal.classList.add('hidden'));
-
-            // Mobile bottom bar wiring
-            els.locateBtnMobile.addEventListener('click', () => getUserLocation(false));
-            els.themeBtnMobile.addEventListener('click', toggleTheme);
-            els.settingsBtnMobile.addEventListener('click', () => els.settingsModal.classList.remove('hidden'));
-
-            // Sync mobile search
-            els.citySearchMobile.addEventListener('input', (e) => {
-                clearTimeout(searchTimeout);
-                const query = e.target.value.trim();
-                if (query.length < 3) { els.searchResultsMobile.classList.add('hidden'); return; }
-                searchTimeout = setTimeout(() => fetchCitySuggestionsMobile(query), 400);
-            });
-
-            // Mobile layout toggle
-            const savedLayout = localStorage.getItem('atish_weather_layout') || 'app';
-            applyMobileLayout(savedLayout);
-
-            els.layoutToggleBtn.addEventListener('click', () => {
-                const current = localStorage.getItem('atish_weather_layout') || 'app';
-                const next = current === 'app' ? 'header' : 'app';
-                localStorage.setItem('atish_weather_layout', next);
-                applyMobileLayout(next);
-            });
-            
-            els.colorBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const color = e.target.dataset.color;
-                    state.color = color;
-                    document.documentElement.setAttribute('data-color', color);
-                    els.colorBtns.forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                });
-            });
-
-            els.providerSelect.addEventListener('change', checkApiFieldVisibility);
-            els.saveSettingsBtn.addEventListener('click', saveSettings);
-            
-            if (els.clearDataBtn) {
-                els.clearDataBtn.addEventListener('click', () => {
-                    if (confirm("Are you sure you want to clear all cached data and pinned cities? This will reload the application.")) {
-                        localStorage.removeItem('atish_weather_v5');
-                        localStorage.removeItem('atish_weather_cache');
-                        window.location.reload();
-                    }
-                });
-            }
-
-            // Dynamic City Search
-            els.citySearch.addEventListener('input', (e) => {
-                clearTimeout(searchTimeout);
-                const query = e.target.value.trim();
-                if (query.length < 3) {
-                    els.searchResults.classList.add('hidden');
-                    return;
-                }
-                searchTimeout = setTimeout(() => fetchCitySuggestions(query), 400);
-            });
-
-            document.addEventListener('click', (e) => {
-                if(!els.citySearch.contains(e.target) && !els.searchResults.contains(e.target)) {
-                    els.searchResults.classList.add('hidden');
-                }
-                if(!els.citySearchMobile.contains(e.target) && !els.searchResultsMobile.contains(e.target)) {
-                    els.searchResultsMobile.classList.add('hidden');
-                }
-                if(e.target === els.infoModal) els.infoModal.classList.add('hidden');
-                if(e.target === els.settingsModal) els.settingsModal.classList.add('hidden');
-            });
-
-            updateClock();
-            setInterval(updateClock, 1000);
-            window.addEventListener('resize', updatePinnedArrows);
-
-            // ---- BOOT & LOCATION LOGIC ----
-            if (state.lat === null || state.lon === null) {
-                // First start: Ask for Location Permission Automatically
-                getUserLocation(true);
-            } else {
-                // Future visits: Load saved location seamlessly
-                fetchWeather();
-                renderPinnedCities();
-            }
-        }
-
-        function applyMobileLayout(mode) {
-            const isMobile = window.innerWidth < 1024;
-            if (!isMobile) { 
-                els.mobileBottomBar.classList.add('hidden');
-                els.headerControls.classList.remove('hidden');
-                document.body.classList.remove('bottom-bar-active');
-                return;
-            }
-            if (mode === 'app') {
-                els.mobileBottomBar.classList.remove('hidden');
-                els.headerControls.classList.add('hidden');
-                document.body.classList.add('bottom-bar-active');
-                els.layoutToggleBtn.style.background = 'rgb(var(--c-main))';
-                els.layoutToggleBtn.style.color = '#fff';
-                els.layoutToggleBtn.style.borderColor = 'rgb(var(--c-main))';
-                els.layoutToggleLabel.textContent = 'In Header';
-            } else {
-                els.mobileBottomBar.classList.add('hidden');
-                els.headerControls.classList.remove('hidden');
-                document.body.classList.remove('bottom-bar-active');
-                els.layoutToggleBtn.style.background = '';
-                els.layoutToggleBtn.style.color = '';
-                els.layoutToggleBtn.style.borderColor = '';
-                els.layoutToggleLabel.textContent = 'App Like';
-            }
-        }
-
-        window.addEventListener('resize', () => {
-            const layout = localStorage.getItem('atish_weather_layout') || 'app';
-            applyMobileLayout(layout);
-        });
-
-        async function fetchCitySuggestionsMobile(query) {
-            try {
-                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`);
-                const data = await res.json();
-                if (data.results && data.results.length > 0) {
-                    renderSearchResultsMobile(data.results);
-                } else {
-                    els.searchResultsMobile.innerHTML = '<div class="p-4 text-center text-sm font-bold opacity-70">No cities found</div>';
-                    els.searchResultsMobile.classList.remove('hidden');
-                }
-            } catch(e) { console.error(e); }
-        }
-
-        function renderSearchResultsMobile(results) {
-            els.searchResultsMobile.innerHTML = '';
-            results.forEach(city => {
-                const div = document.createElement('div');
-                div.className = 'p-4 hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer flex flex-col transition-colors border-b border-black/5 dark:border-white/5 last:border-0';
-                div.innerHTML = `<span class="font-extrabold text-[rgb(var(--c-main))]">${city.name}</span><span class="text-xs font-bold text-gray-500 dark:text-gray-400 mt-1">${city.admin1 ? city.admin1 + ', ' : ''}${city.country}</span>`;
-                div.addEventListener('click', () => {
-                    if (state.pinnedCities.length === 0 && state.locationName) {
-                        state.pinnedCities.push({ name: state.locationName, lat: state.lat, lon: state.lon, isHome: true, stateRegion: state.stateRegion, country: state.country });
-                    }
-                    state.lat = city.latitude;
-                    state.lon = city.longitude;
-                    state.locationName = city.name;
-                    state.stateRegion = city.admin1 || '';
-                    state.country = city.country || 'India';
-                    state.timezone = city.timezone || 'Asia/Kolkata';
-                    updateSelectOption(els.countryInput, state.country);
-                    updateSelectOption(els.timezoneInput, state.timezone);
-                    const newCity = { name: city.name, lat: city.latitude, lon: city.longitude, stateRegion: city.admin1 || '', country: city.country || 'India' };
-                    const existingIndex = state.pinnedCities.findIndex(c => c.name === city.name && !c.isHome);
-                    if (existingIndex > 0) state.pinnedCities.splice(existingIndex, 1);
-                    state.pinnedCities.splice(1, 0, newCity);
-                    if(state.pinnedCities.length > 6) state.pinnedCities.pop();
-                    els.citySearchMobile.value = '';
-                    els.searchResultsMobile.classList.add('hidden');
-                    saveLocationToStorage();
-                    updateClock();
-                    fetchWeather();
-                    renderPinnedCities();
-                });
-                els.searchResultsMobile.appendChild(div);
-            });
-            els.searchResultsMobile.classList.remove('hidden');
-        }
-
-
-        function checkApiFieldVisibility() {
-            const provider = PROVIDERS.find(p => p.id === els.providerSelect.value);
-            if (provider.requiresKey) {
-                els.apiKeyInput.classList.remove('hidden');
-                if(els.providerSelect.value === 'weatherapi') {
-                    els.apiHint.classList.remove('hidden');
-                } else {
-                    els.apiHint.classList.add('hidden');
-                }
-            } else {
-                els.apiKeyInput.classList.add('hidden');
-                els.apiHint.classList.add('hidden');
-            }
-        }
-
-        async function fetchCitySuggestions(query) {
-            try {
-                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`);
-                const data = await res.json();
-                if (data.results && data.results.length > 0) {
-                    renderSearchResults(data.results);
-                } else {
-                    els.searchResults.innerHTML = '<div class="p-4 text-center text-sm font-bold opacity-70">No cities found</div>';
-                    els.searchResults.classList.remove('hidden');
-                }
-            } catch(e) {
-                console.error(e);
-            }
-        }
-
-        function renderSearchResults(results) {
-            els.searchResults.innerHTML = '';
-            results.forEach(city => {
-                const div = document.createElement('div');
-                div.className = 'p-4 hover:bg-black/5 dark:hover:bg-white/10 cursor-pointer flex flex-col transition-colors border-b border-black/5 dark:border-white/5 last:border-0';
-                div.innerHTML = `<span class="font-extrabold text-[rgb(var(--c-main))] transition-colors duration-300">${city.name}</span><span class="text-xs font-bold text-gray-500 dark:text-gray-400 mt-1">${city.admin1 ? city.admin1 + ', ' : ''}${city.country}</span>`;
-                
-                div.addEventListener('click', () => {
-                    if (state.pinnedCities.length === 0 && state.locationName) {
-                        state.pinnedCities.push({ name: state.locationName, lat: state.lat, lon: state.lon, isHome: true, stateRegion: state.stateRegion, country: state.country });
-                    }
-
-                    state.lat = city.latitude;
-                    state.lon = city.longitude;
-                    state.locationName = city.name;
-                    state.stateRegion = city.admin1 || "";
-                    state.country = city.country || "India";
-                    state.timezone = city.timezone || "Asia/Kolkata";
-                    
-                    updateSelectOption(els.countryInput, state.country);
-                    updateSelectOption(els.timezoneInput, state.timezone);
-                    
-                    const newCity = { name: city.name, lat: city.latitude, lon: city.longitude, stateRegion: city.admin1 || '', country: city.country || 'India' };
-                    const existingIndex = state.pinnedCities.findIndex(c => c.name === city.name && !c.isHome);
-                    if (existingIndex > 0) state.pinnedCities.splice(existingIndex, 1);
-                    
-                    state.pinnedCities.splice(1, 0, newCity);
-                    if(state.pinnedCities.length > 6) state.pinnedCities.pop(); 
-
-                    els.citySearch.value = '';
-                    els.searchResults.classList.add('hidden');
-                    saveLocationToStorage();
-                    updateClock();
-                    fetchWeather();
-                    renderPinnedCities();
-                });
-                els.searchResults.appendChild(div);
-            });
-            els.searchResults.classList.remove('hidden');
-        }
-
-        function saveLocationToStorage() {
-            const saved = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
-            saved.lat = state.lat;
-            saved.lon = state.lon;
-            saved.locationName = state.locationName;
-            saved.stateRegion = state.stateRegion;
-            saved.country = state.country;
-            saved.timezone = state.timezone;
-            saved.pinnedCities = state.pinnedCities;
-            localStorage.setItem('atish_weather_v5', JSON.stringify(saved));
-        }
-
-        function saveSettings() {
-            state.provider = els.providerSelect.value;
-            state.apiKey = els.apiKeyInput.value;
-            state.units = els.unitSelect.value;
-            state.country = els.countryInput.value || "India";
-            state.timezone = els.timezoneInput.value || "Asia/Kolkata";
-
-            localStorage.setItem('atish_weather_v5', JSON.stringify({
-                lat: state.lat,
-                lon: state.lon,
-                locationName: state.locationName,
-                stateRegion: state.stateRegion,
-                country: state.country,
-                timezone: state.timezone,
-                provider: state.provider,
-                apiKey: state.apiKey,
-                theme: state.theme,
-                color: state.color,
-                units: state.units,
-                pinnedCities: state.pinnedCities
-            }));
-
-            els.settingsModal.classList.add('hidden');
-            updateClock();
-            fetchWeather();
-            renderPinnedCities();
-        }
-
-        function toggleTheme() {
-            state.theme = state.theme === 'light' ? 'dark' : 'light';
-            document.documentElement.setAttribute('data-theme', state.theme);
-            updateThemeIcon();
-            localStorage.setItem('atish_weather_theme_manual', '1');
-            
-            const saved = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
-            saved.theme = state.theme;
-            localStorage.setItem('atish_weather_v5', JSON.stringify(saved));
-        }
-
-        function updateThemeIcon() {
-            const iconName = state.theme === 'light' ? 'moon' : 'sun';
-            updateLucideIconWrapper(els.themeIconWrapper, iconName, "w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300");
-            updateLucideIconWrapper(els.themeIconWrapperMobile, iconName, "w-5 h-5 text-[rgb(var(--c-main))] transition-colors duration-300");
-        }
-
-        function updatePinnedArrows() {
-            const lBtn = document.getElementById('scroll-left-btn');
-            const rBtn = document.getElementById('scroll-right-btn');
-            const isDesktop = window.innerWidth >= 768; 
-            const total = state.pinnedCities.length;
-            
-            const needsScroll = isDesktop ? total > 3 : total > 1;
-            
-            if(needsScroll) {
-                lBtn.classList.remove('hidden');
-                rBtn.classList.remove('hidden');
-            } else {
-                lBtn.classList.add('hidden');
-                rBtn.classList.add('hidden');
-            }
-        }
-
-        window.scrollPinned = function(direction) {
-            const container = els.pinnedContainer;
-            const cardWidth = container.querySelector('.glass')?.offsetWidth || 0;
-            const scrollAmount = cardWidth + 16; 
-            container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-        }
-
-        window.handleTouchStart = function(index, e) {
-            isDragging = false;
-            startX = e.touches ? e.touches[0].clientX : e.clientX;
-            pressTimer = window.setTimeout(() => {
-                if (!isDragging) {
-                    isDragging = true;
-                    showConfirmModal(index);
-                }
-            }, 800);
-        }
-        
-        window.handleTouchMove = function(e) {
-            const currentX = e.touches ? e.touches[0].clientX : e.clientX;
-            if (Math.abs(currentX - startX) > 10) {
-                isDragging = true;
-                clearTimeout(pressTimer);
-            }
-        }
-
-        window.handleTouchEnd = function() {
-            clearTimeout(pressTimer);
-        }
-        
-        window.handlePinnedClick = function(index) {
-            if (!isDragging) {
-                const c = state.pinnedCities[index];
-                state.lat = c.lat;
-                state.lon = c.lon;
-                state.locationName = c.name;
-                state.stateRegion = c.stateRegion || '';
-                state.country = c.country || '';
-                saveLocationToStorage();
-                fetchWeather();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                els.pinnedContainer.scrollTo({ left: 0, behavior: 'smooth' });
-            }
-        }
-
-        window.showConfirmModal = function(index) {
-            cityToRemoveIndex = index;
-            document.getElementById('confirm-city-name').textContent = state.pinnedCities[index].name;
-            document.getElementById('confirm-modal').classList.remove('hidden');
-        }
-
-        window.confirmRemove = function() {
-            if (cityToRemoveIndex > -1) {
-                const removed = state.pinnedCities[cityToRemoveIndex].name;
-                state.pinnedCities.splice(cityToRemoveIndex, 1);
-
-                saveLocationToStorage();
-                renderPinnedCities();
-                showToast(`${removed} removed`, "trash-2", "red");
-                document.getElementById('confirm-modal').classList.add('hidden');
-                cityToRemoveIndex = -1;
-            }
-        }
-
-        window.cancelRemove = function() {
-            document.getElementById('confirm-modal').classList.add('hidden');
-            cityToRemoveIndex = -1;
-        }
-
-        async function renderPinnedCities() {
-            if (state.pinnedCities.length === 0) {
-                els.pinnedWrapper.classList.add('hidden');
-                return;
-            }
-            els.pinnedWrapper.classList.remove('hidden');
-            
-            const lats = state.pinnedCities.map(c => c.lat).join(',');
-            const lons = state.pinnedCities.map(c => c.lon).join(',');
-            const unitParams = state.units === 'imperial' ? '&temperature_unit=fahrenheit' : '';
-            
-            const wUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}&current=temperature_2m,relative_humidity_2m,weather_code&daily=precipitation_probability_max,temperature_2m_min&timezone=auto${unitParams}`;
-            const aUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lats}&longitude=${lons}&current=us_aqi&timezone=auto`;
-            
-            try {
-                const [wRes, aRes] = await Promise.all([
-                    fetch(wUrl),
-                    fetch(aUrl).catch(() => null)
-                ]);
-
-                const wData = await wRes.json();
-                const aData = aRes && aRes.ok ? await aRes.json() : null;
-
-                const results = Array.isArray(wData) ? wData : [wData];
-                const aqiResults = aData ? (Array.isArray(aData) ? aData : [aData]) : [];
-                
-                els.pinnedContainer.innerHTML = '';
-                results.forEach((d, i) => {
-                    const c = state.pinnedCities[i];
-                    const { icon } = mapWMOCode(d.current.weather_code, d.current.is_day || 1);
-                    const temp = Math.round(d.current.temperature_2m);
-                    const minTemp = Math.round(d.daily?.temperature_2m_min?.[0] || 0);
-                    const rain = d.daily?.precipitation_probability_max?.[0] || 0;
-                    const humidity = d.current.relative_humidity_2m || 0;
-                    
-                    const aqiObj = aqiResults[i];
-                    const aqi = aqiObj && aqiObj.current && aqiObj.current.us_aqi ? aqiObj.current.us_aqi : "--";
-                    const aqiCol = getAqiColorClass(parseFloat(aqi));
-                    
-                    const item = document.createElement('div');
-                    item.className = 'glass flex flex-col p-4 shrink-0 snap-center w-[64vw] md:w-[30%] cursor-pointer hover:bg-white/10 transition-colors group/card select-none !shadow-none';
-                    item.style.setProperty('--card-color', 'var(--c-main)');
-                    
-                    item.onmousedown = (e) => handleTouchStart(i, e);
-                    item.onmousemove = handleTouchMove;
-                    item.onmouseup = handleTouchEnd;
-                    item.onmouseleave = handleTouchEnd;
-                    item.ontouchstart = (e) => handleTouchStart(i, e);
-                    item.ontouchmove = handleTouchMove;
-                    item.ontouchend = handleTouchEnd;
-                    item.onclick = () => handlePinnedClick(i);
-
-                    item.innerHTML = `
-                        <div class="flex justify-between items-start w-full mb-1">
-                            <span class="font-extrabold text-base md:text-lg text-[rgb(var(--c-main))] truncate pr-2 group-hover/card:scale-[1.02] transition-transform origin-left flex items-center gap-1">${c.isHome ? '<i data-lucide="map-pin" class="w-4 h-4"></i>' : ''} ${c.name}</span>
-                            <i data-lucide="${icon}" class="w-8 h-8 md:w-10 md:h-10 text-[rgb(var(--c-main))] shrink-0 drop-shadow-md ${getIconAnimClass(icon)}"></i>
-                        </div>
-                        <div class="flex items-end gap-2 w-full mt-1">
-                            <span class="text-3xl font-extrabold text-[rgb(var(--c-main))] leading-none">${temp}°</span>
-                            <span class="text-xs font-bold text-blue-500 dark:text-blue-400 opacity-80 mb-1">Min: ${minTemp}°</span>
-                        </div>
-                        <div class="flex justify-between items-center text-[10px] sm:text-xs font-bold opacity-80 mt-3 w-full bg-black/5 dark:bg-white/5 px-2 py-1.5 rounded-lg border border-black/5 dark:border-white/10">
-                            <span title="Rain Probability" class="flex items-center gap-1"><i data-lucide="cloud-rain" class="w-3 h-3 text-blue-500 dark:text-blue-400"></i> ${rain}%</span>
-                            <span title="Humidity" class="flex items-center gap-1"><i data-lucide="droplets" class="w-3 h-3 text-[rgb(var(--c-cool))]"></i> ${humidity}%</span>
-                            <span title="AQI" class="flex items-center gap-1 ${aqiCol}"><i data-lucide="leaf" class="w-3 h-3"></i> ${aqi}</span>
-                        </div>
-                    `;
-                    els.pinnedContainer.appendChild(item);
-                });
-                lucide.createIcons();
-                updatePinnedArrows();
-            } catch (e) {
-                console.error("Failed fetching pinned cities", e);
-            }
-        }
-
-        // Updated getUserLocation with an `isInitialSetup` flag
-        function getUserLocation(isInitialSetup = false) {
-            if (!navigator.geolocation) {
-                showToast("Geolocation is not supported by your browser", "x-circle", "red");
-                if (isInitialSetup) applyFallbackLocation();
-                return;
-            }
-
-            setLoading(true, isInitialSetup ? "Asking for location access..." : "Locating you...");
-            
-            navigator.geolocation.getCurrentPosition(
-                async (position) => {
-                    state.lat = position.coords.latitude;
-                    state.lon = position.coords.longitude;
-                    await reverseGeocode();
-                    
-                    state.pinnedCities[0] = {
-                        name: state.locationName,
-                        lat: state.lat,
-                        lon: state.lon,
-                        isHome: true,
-                        stateRegion: state.stateRegion,
-                        country: state.country
-                    };
-
-                    saveLocationToStorage();
-                    fetchWeather();
-                    renderPinnedCities();
-                },
-                (error) => {
-                    setLoading(false);
-                    if (isInitialSetup) {
-                        showToast("Location denied. Showing default city.", "alert-circle", "red");
-                        applyFallbackLocation();
-                    } else {
-                        showToast("Location access denied or unavailable.", "alert-circle", "red");
-                    }
-                },
-                { timeout: 10000 }
-            );
-        }
-
-        // Added graceful fallback for users who deny permission on first load
-        function applyFallbackLocation() {
-            state.lat = 30.7333; // Chandigarh default
-            state.lon = 76.7794;
-            state.locationName = "Chandigarh";
-            state.stateRegion = "Chandigarh";
-            state.country = "India";
-            state.timezone = "Asia/Kolkata";
-            
-            if (state.pinnedCities.length === 0) {
-                state.pinnedCities.push({
-                    name: state.locationName,
-                    lat: state.lat,
-                    lon: state.lon,
-                    isHome: true,
-                    stateRegion: state.stateRegion,
-                    country: state.country
-                });
-            } else {
-                state.pinnedCities[0] = { name: state.locationName, lat: state.lat, lon: state.lon, isHome: true, stateRegion: state.stateRegion, country: state.country };
-            }
-            
-            saveLocationToStorage();
-            fetchWeather();
-            renderPinnedCities();
-        }
-
-        async function reverseGeocode() {
-            try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${state.lat}&lon=${state.lon}&zoom=10`);
-                const data = await res.json();
-                if (data && data.address) {
-                    const city = data.address.city || data.address.town || data.address.village || data.address.county;
-                    state.locationName = city || `${state.lat.toFixed(2)}, ${state.lon.toFixed(2)}`;
-                    state.stateRegion = data.address.state || "";
-                    state.country = data.address.country || "India";
-                } else {
-                    state.locationName = `${state.lat.toFixed(2)}, ${state.lon.toFixed(2)}`;
-                }
-
-                const tzRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${state.lat}&longitude=${state.lon}&current=temperature_2m&timezone=auto`);
-                const tzData = await tzRes.json();
-                if (tzData.timezone) {
-                    state.timezone = tzData.timezone;
-                }
-
-                updateSelectOption(els.countryInput, state.country);
-                updateSelectOption(els.timezoneInput, state.timezone);
-                updateClock();
-
-            } catch (err) {
-                state.locationName = `${state.lat.toFixed(2)}, ${state.lon.toFixed(2)}`;
-            }
-        }
-
-        // --- Info Modal Logic ---
-        function showInfo(type) {
-            if (!state.weatherData) return;
-            const w = state.weatherData;
-            const isImp = state.units === 'imperial';
-            const tu = isImp ? '°F' : '°C';
-            
-            let title = '', icon = '', content = '', colorCls = '';
-
-            switch(type) {
-                case 'main': {
-                    title = 'Current Weather'; icon = 'cloud-lightning'; colorCls = 'text-[rgb(var(--c-main))]';
-                    content = `<p class="font-bold opacity-80 leading-relaxed">Currently <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${w.temp}${tu}</span> in <span class="font-extrabold text-lg text-[rgb(var(--c-main))]">${state.locationName}</span> with <span class="capitalize font-extrabold text-[rgb(var(--c-main))]">${w.conditionText}</span> skies, feels like <span class="font-extrabold text-[rgb(var(--c-main))]">${w.feelsLike}${tu}</span>. Rain probability is <span class="font-extrabold text-[rgb(var(--c-cool))]">${w.rainProb}%</span> and cloud cover is <span class="font-extrabold opacity-70">${w.cloudCover}%</span>.</p>`;
-                    break;
-                }
-                case 'uv': {
-                    title = 'UV Index'; icon = 'sun'; colorCls = 'text-[rgb(var(--c-warm))]';
-                    const showUv = w.uvIndex.current !== "--" ? w.uvIndex.current : w.uvIndex.max;
-                    const uv = parseFloat(showUv) || 0;
-                    content = `
-                        <p class="opacity-80 font-medium">The Ultraviolet (UV) Index indicates the risk of harm from unprotected sun exposure.</p>
-                        <div class="w-full rounded-xl overflow-hidden border border-black/10 dark:border-white/10 mt-3">
-                            <table class="w-full text-sm text-left">
-                                <thead class="bg-black/5 dark:bg-white/5"><tr><th class="p-3">Index</th><th class="p-3">Risk Level</th></tr></thead>
-                                <tbody>
-                                    <tr class="${uv <= 2 ? 'bg-green-500/20 text-green-700 dark:text-green-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">0 - 2</td><td class="p-3">Low</td></tr>
-                                    <tr class="${uv > 2 && uv <= 5 ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">3 - 5</td><td class="p-3">Moderate</td></tr>
-                                    <tr class="${uv > 5 && uv <= 7 ? 'bg-orange-500/20 text-orange-700 dark:text-orange-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">6 - 7</td><td class="p-3">High</td></tr>
-                                    <tr class="${uv > 7 && uv <= 10 ? 'bg-red-500/20 text-red-700 dark:text-red-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">8 - 10</td><td class="p-3">Very High</td></tr>
-                                    <tr class="${uv > 10 ? 'bg-purple-500/20 text-purple-700 dark:text-purple-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">11+</td><td class="p-3">Extreme</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="p-4 rounded-xl border border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5 mt-3 flex justify-between items-center">
-                            <span class="font-bold">Your Location:</span>
-                            <span class="font-extrabold text-lg">${showUv} (${getUvDescription(showUv)})</span>
-                        </div>`;
-                    break;
-                }
-                case 'aqi': {
-                    title = 'Air Quality Index'; icon = 'leaf'; colorCls = 'text-[rgb(var(--c-earth))]';
-                    const aqi = parseFloat(w.aqi) || 0;
-                    content = `
-                        <p class="opacity-80 font-medium">AQI measures the density of pollutants in the air. Higher values indicate poorer air quality.</p>
-                        <div class="w-full rounded-xl overflow-hidden border border-black/10 dark:border-white/10 mt-3">
-                            <table class="w-full text-sm text-left">
-                                <thead class="bg-black/5 dark:bg-white/5"><tr><th class="p-3">AQI Range</th><th class="p-3">Health Concern</th></tr></thead>
-                                <tbody>
-                                    <tr class="${aqi >= 0 && aqi <= 50 ? 'bg-green-500/20 text-green-700 dark:text-green-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">0 - 50</td><td class="p-3">Good</td></tr>
-                                    <tr class="${aqi > 50 && aqi <= 100 ? 'bg-yellow-500/20 text-yellow-700 dark:text-yellow-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">51 - 100</td><td class="p-3">Moderate</td></tr>
-                                    <tr class="${aqi > 100 && aqi <= 150 ? 'bg-orange-500/20 text-orange-700 dark:text-orange-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">101 - 150</td><td class="p-3">Unhealthy (Sensitive)</td></tr>
-                                    <tr class="${aqi > 150 && aqi <= 200 ? 'bg-red-500/20 text-red-700 dark:text-red-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">151 - 200</td><td class="p-3">Unhealthy</td></tr>
-                                    <tr class="${aqi > 200 && aqi <= 300 ? 'bg-purple-500/20 text-purple-700 dark:text-purple-300 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">201 - 300</td><td class="p-3">Very Unhealthy</td></tr>
-                                    <tr class="${aqi > 300 ? 'bg-red-900/20 text-red-900 dark:text-red-500 font-bold' : ''} border-t border-black/5 dark:border-white/5"><td class="p-3">301+</td><td class="p-3">Hazardous</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="p-4 rounded-xl border border-black/5 dark:border-white/10 bg-black/5 dark:bg-white/5 mt-3 flex justify-between items-center">
-                            <span class="font-bold">Your Location:</span>
-                            <span class="font-extrabold text-lg">${w.aqi === "--" ? "N/A" : w.aqi + " (" + getAqiDescription(w.aqi) + ")"}</span>
-                        </div>`;
-                    break;
-                }
-                case 'humidity': {
-                    title = 'Humidity'; icon = 'droplets'; colorCls = 'text-[rgb(var(--c-cool))]';
-                    content = `<p class="font-bold opacity-80">Relative humidity is <span class="font-extrabold text-lg text-[rgb(var(--c-cool))]">${w.humidity}%</span>.</p>
-                               <p class="font-medium opacity-70 mt-2">Humidity measures the amount of water vapor in the air. Levels between 30% and 60% are generally considered comfortable. Above 60% feels muggy, and below 30% can feel dry to the skin.</p>`;
-                    break;
-                }
-                case 'wind': {
-                    title = 'Wind'; icon = 'wind'; colorCls = 'text-[rgb(var(--c-cool))]';
-                    const wu = isImp ? 'mph' : 'km/h';
-                    content = `<p class="font-bold opacity-80">Wind is currently blowing at <span class="font-extrabold text-lg text-[rgb(var(--c-cool))]">${w.windSpeed} ${wu}</span> from the <span class="font-extrabold text-lg text-[rgb(var(--c-cool))]">${getWindDirection(w.windDir)}</span>.</p>
-                               <p class="font-medium opacity-70 mt-2">Wind direction indicates where the wind is coming <em>from</em>. Higher wind speeds can significantly lower the "Feels Like" temperature.</p>`;
-                    break;
-                }
-                case 'pressure': {
-                    title = 'Atmospheric Pressure'; icon = 'gauge'; colorCls = 'text-[rgb(var(--c-earth))]';
-                    content = `<p class="font-bold opacity-80">Current pressure is <span class="font-extrabold text-lg text-[rgb(var(--c-earth))]">${w.pressure} hPa</span>.</p>
-                               <p class="font-medium opacity-70 mt-2">High pressure generally brings clear skies and calm weather, while low pressure is often associated with clouds, wind, and precipitation.</p>`;
-                    break;
-                }
-                case 'extremes': {
-                    title = 'Temperature Extremes'; icon = 'thermometer-sun'; colorCls = 'text-[rgb(var(--c-warm))]';
-                    content = `<p class="font-bold opacity-80">Today's High: <span class="font-extrabold text-lg text-red-500">${w.high}${tu}</span></p>
-                               <p class="font-bold opacity-80 mt-1">Today's Low: <span class="font-extrabold text-lg text-blue-500">${w.low}${tu}</span></p>
-                               <p class="font-medium opacity-70 mt-3">These are the maximum and minimum forecasted temperatures for the entire 24-hour day in your area.</p>`;
-                    break;
-                }
-                case 'sun': {
-                    title = 'Sun Cycle'; icon = 'sunrise'; colorCls = 'text-[rgb(var(--c-warm))]';
-                    content = `<p class="font-bold opacity-80">Sunrise: <span class="font-extrabold text-lg text-[rgb(var(--c-warm))]">${w.sunrise}</span></p>
-                               <p class="font-bold opacity-80 mt-1">Sunset: <span class="font-extrabold text-lg text-[rgb(var(--c-warm))]">${w.sunset}</span></p>
-                               <p class="font-medium opacity-70 mt-3">Times are displayed in your device's local timezone based on the geographic coordinates of the selected city.</p>`;
-                    break;
-                }
-                case 'forecast': {
-                    title = '7-Day Forecast'; icon = 'calendar-days'; colorCls = 'text-[rgb(var(--c-main))]';
-                    const header = `
-                        <div class="flex justify-between items-center px-4 py-2 border-b border-black/10 dark:border-white/20 bg-black/5 dark:bg-white/5 text-[10px] md:text-xs font-bold uppercase tracking-widest opacity-80">
-                            <span class="w-1/4">Day</span>
-                            <div class="flex items-center justify-center w-2/4 gap-2 md:gap-4">
-                                <span class="w-12 md:w-16 flex justify-center" title="Rain Probability"><i data-lucide="cloud-rain" class="w-3.5 h-3.5"></i></span>
-                                <span class="w-6 md:w-8 shrink-0 flex justify-center text-[rgb(var(--c-main))]" title="Weather"><i data-lucide="cloud-sun" class="w-4 h-4"></i></span>
-                                <span class="w-12 md:w-16 flex justify-center" title="Cloud Cover"><i data-lucide="cloud" class="w-3.5 h-3.5"></i></span>
-                            </div>
-                            <div class="w-1/4 text-right pr-1">
-                                <span class="md:hidden">H</span><span class="hidden md:inline">High</span>
-                                <span class="md:hidden ml-1">L</span><span class="hidden md:inline ml-2">Low</span>
-                            </div>
-                        </div>
-                    `;
-                    const list = w.forecast.map(f => `
-                        <div class="flex justify-between items-center py-2.5 px-4 border-b border-black/5 dark:border-white/10 last:border-0 hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
-                            <span class="font-extrabold w-1/4 text-xs md:text-sm">${f.day}</span>
-                            <div class="flex items-center justify-center w-2/4 gap-2 md:gap-4">
-                                <span class="flex items-center justify-center gap-1 text-[rgb(var(--c-cool))] text-[10px] md:text-xs font-bold w-12 md:w-16" title="Rain Probability"><i data-lucide="cloud-rain" class="w-3 h-3"></i> ${f.rainProb}%</span>
-                                <i data-lucide="${f.icon}" class="w-6 h-6 md:w-8 md:h-8 text-[rgb(var(--c-main))] ${getIconAnimClass(f.icon)} shrink-0 drop-shadow-md"></i>
-                                <span class="flex items-center justify-center gap-1 opacity-60 text-[10px] md:text-xs font-bold w-12 md:w-16" title="Cloud Cover"><i data-lucide="cloud" class="w-3 h-3"></i> ${f.cloudCover}%</span>
-                            </div>
-                            <div class="font-extrabold w-1/4 text-right text-xs md:text-sm"><span class="text-[rgb(var(--c-warm))]">${f.max}°</span> <span class="text-[rgb(var(--c-cool))] opacity-80 ml-1">${f.min}°</span></div>
-                        </div>
-                    `).join('');
-                    content = `<div class="w-full rounded-xl border border-black/5 dark:border-white/10 mt-2 bg-black/5 dark:bg-white/5 overflow-hidden">${header}${list}</div>`;
-                    break;
-                }
-            }
-
-            els.infoTitle.innerHTML = `<i data-lucide="${icon}" class="w-7 h-7 ${colorCls} transition-colors duration-300 ${getIconAnimClass(icon)}"></i> <span class="${colorCls} transition-colors duration-300">${title}</span>`;
-            els.infoContent.innerHTML = content;
-            lucide.createIcons();
-            els.infoModal.classList.remove('hidden');
-        }
-
-        // Weather cache: keyed by lat+lon, 20-min TTL, max 6 entries
-        const CACHE_KEY = 'atish_weather_cache';
-        const CACHE_TTL = 20 * 60 * 1000; // 20 minutes
-        const CACHE_MAX = 6;
-
-        function getWeatherCache(lat, lon) {
-            try {
-                const cache = JSON.parse(localStorage.getItem(CACHE_KEY)) || {};
-                const key = `${parseFloat(lat).toFixed(2)}_${parseFloat(lon).toFixed(2)}`;
-                const entry = cache[key];
-                if (entry && Date.now() - entry.ts < CACHE_TTL) return entry.data;
-            } catch(e) {}
-            return null;
-        }
-
-        function setWeatherCache(lat, lon, data) {
-            try {
-                let cache = JSON.parse(localStorage.getItem(CACHE_KEY)) || {};
-                const key = `${parseFloat(lat).toFixed(2)}_${parseFloat(lon).toFixed(2)}`;
-                cache[key] = { data, ts: Date.now() };
-                // Enforce max 6 entries - remove oldest
-                const keys = Object.keys(cache);
-                if (keys.length > CACHE_MAX) {
-                    keys.sort((a, b) => cache[a].ts - cache[b].ts);
-                    while (Object.keys(cache).length > CACHE_MAX) {
-                        delete cache[keys.shift()];
-                    }
-                }
-                localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
-            } catch(e) {}
-        }
-
-        async function fetchWeather() {
-            // Check cache first
-            const cached = getWeatherCache(state.lat, state.lon);
-            if (cached) {
-                state.weatherData = cached;
-                updateWeatherUI();
-                autoThemeByTime(cached);
-                return;
-            }
-
-            let activeKey = state.apiKey;
-            
-            if (state.provider === 'weatherapi' && !activeKey) {
-                activeKey = getBuiltInKey();
-            }
-
-            const providerInfo = PROVIDERS.find(p => p.id === state.provider);
-            if (providerInfo.requiresKey && !activeKey) {
-                showToast(`Please enter an API Key for ${providerInfo.name} in Settings`, "alert-circle", "red");
-                return;
-            }
-
-            setLoading(true);
-
-            try {
-                let data;
-                switch (state.provider) {
-                    case "open-meteo": data = await fetchOpenMeteo(); break;
-                    case "openweathermap": data = await fetchOpenWeatherMap(activeKey); break;
-                    case "weatherapi": data = await fetchWeatherAPI(activeKey); break;
-                }
-                
-                // DATA COMBINATION: Force combine Open-Meteo & WeatherAPI for optimal Real-Time vs Max data
-                try {
-                    const fallbackKey = getBuiltInKey();
-                    
-                    const [wApiData, omData] = await Promise.all([
-                        state.provider !== 'weatherapi' ? fetchWeatherAPI(fallbackKey).catch(()=>null) : Promise.resolve(data),
-                        state.provider !== 'open-meteo' ? fetchOpenMeteo().catch(()=>null) : Promise.resolve(data)
-                    ]);
-
-                    // Inject Real-Time AQI from WeatherAPI and Max AQI from Open-Meteo
-                    if (wApiData && wApiData.aqi !== "--") data.aqi = wApiData.aqi;
-                    if (omData && omData.aqiMax !== "--") data.aqiMax = omData.aqiMax;
-
-                    // UV Index: combine current from WeatherAPI + max from Open-Meteo
-                    if (wApiData && wApiData.uvIndex && wApiData.uvIndex.current !== "--") {
-                        data.uvIndex.current = wApiData.uvIndex.current;
-                    }
-                    if (omData && omData.uvIndex && omData.uvIndex.max !== "--") {
-                        data.uvIndex.max = omData.uvIndex.max;
-                    }
-
-                    // Standard augmentation for missing elements
-                    if (omData) {
-                        if (data.rainProb === "--") data.rainProb = omData.rainProb;
-                        if (data.windSpeed === "--" || data.windSpeed === undefined) {
-                            data.windSpeed = omData.windSpeed;
-                            data.windDir = omData.windDir;
-                        }
-                        if (data.cloudCover === "--") data.cloudCover = omData.cloudCover;
-                        
-                        if (data.forecast && omData.forecast) {
-                            data.forecast.forEach((day, i) => {
-                                if (omData.forecast[i]) {
-                                    if (day.rainProb === "--") day.rainProb = omData.forecast[i].rainProb;
-                                    if (day.cloudCover === "--") day.cloudCover = omData.forecast[i].cloudCover;
-                                }
-                            });
-                        }
-                    }
-                } catch (fallbackErr) {
-                    console.warn("Augmentation failed", fallbackErr);
-                }
-
-                state.weatherData = data;
-                setWeatherCache(state.lat, state.lon, data);
-                updateWeatherUI();
-                autoThemeByTime(data);
-                showToast("Weather updated successfully!", "check-circle", "green");
-
-            } catch (err) {
-                console.error(err);
-                showToast(err.message || "Failed to fetch weather data.", "alert-circle", "red");
-                els.weatherContainer.style.opacity = '0.5';
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        function autoThemeByTime(data) {
-            if (localStorage.getItem('atish_weather_theme_manual')) return;
-            try {
-                const now = new Date();
-                const sunriseStr = data.sunrise;
-                const sunsetStr = data.sunset;
-                if (!sunriseStr || !sunsetStr || sunriseStr === '--:--' || sunsetStr === '--:--') return;
-                
-                const parseTime = (str) => {
-                    const match = str.match(/(\d+):(\d+)\s*(AM|PM)/i);
-                    if (!match) return null;
-                    let h = parseInt(match[1]);
-                    const m = parseInt(match[2]);
-                    const ampm = match[3].toUpperCase();
-                    if (ampm === 'PM' && h !== 12) h += 12;
-                    if (ampm === 'AM' && h === 12) h = 0;
-                    return h * 60 + m;
-                };
-                
-                const sunriseMin = parseTime(sunriseStr);
-                const sunsetMin = parseTime(sunsetStr);
-                if (sunriseMin === null || sunsetMin === null) return;
-                
-                let nowOpts = {};
-                if (state.timezone) { try { nowOpts.timeZone = state.timezone; } catch(e){} }
-                const nowH = parseInt(now.toLocaleString('en-US', { ...nowOpts, hour: 'numeric', hour12: false }));
-                const nowM = parseInt(now.toLocaleString('en-US', { ...nowOpts, minute: 'numeric' }));
-                const nowMin = nowH * 60 + nowM;
-                
-                const shouldBeDark = nowMin >= sunsetMin || nowMin < sunriseMin;
-                const newTheme = shouldBeDark ? 'dark' : 'light';
-                
-                if (state.theme !== newTheme) {
-                    state.theme = newTheme;
-                    document.documentElement.setAttribute('data-theme', newTheme);
-                    updateThemeIcon();
-                    const saved = JSON.parse(localStorage.getItem('atish_weather_v5')) || {};
-                    saved.theme = newTheme;
-                    localStorage.setItem('atish_weather_v5', JSON.stringify(saved));
-                }
-            } catch(e) { console.warn('Auto-theme failed', e); }
-        }
-
-        // Swipe on main weather card to change pinned city - 3D book flip
-        (function() {
-            let swipeStartX = 0, swipeDelta = 0, swiping = false, flipping = false;
-            const card = document.getElementById('main-weather-card');
-            if (!card) return;
-            
-            function handleSwipeEnd() {
-                if (!swiping || flipping) return;
-                swiping = false;
-                if (state.pinnedCities.length < 2 || Math.abs(swipeDelta) < 60) return;
-                flipping = true;
-                
-                let curIdx = state.pinnedCities.findIndex(c => c.name === state.locationName);
-                if (curIdx === -1) curIdx = 0;
-                const nextIdx = swipeDelta < 0
-                    ? (curIdx + 1) % state.pinnedCities.length
-                    : (curIdx - 1 + state.pinnedCities.length) % state.pinnedCities.length;
-                
-                const c = state.pinnedCities[nextIdx];
-                const outClass = swipeDelta < 0 ? 'card-flip-out-left' : 'card-flip-out-right';
-                const inClass = swipeDelta < 0 ? 'card-flip-in-right' : 'card-flip-in-left';
-                
-                card.classList.add(outClass);
-                
-                setTimeout(() => {
-                    state.lat = c.lat;
-                    state.lon = c.lon;
-                    state.locationName = c.name;
-                    state.stateRegion = c.stateRegion || '';
-                    state.country = c.country || '';
-                    saveLocationToStorage();
-                    card.classList.remove(outClass);
-                    card.classList.add(inClass);
-                    fetchWeather();
-                    updateSwipeNotches();
-                    
-                    setTimeout(() => {
-                        card.classList.remove(inClass);
-                        flipping = false;
-                    }, 500);
-                }, 500);
-            }
-
-            card.addEventListener('touchstart', e => { if (!flipping) { swipeStartX = e.touches[0].clientX; swiping = true; swipeDelta = 0; } }, { passive: true });
-            card.addEventListener('touchmove', e => { if (swiping) swipeDelta = e.touches[0].clientX - swipeStartX; }, { passive: true });
-            card.addEventListener('touchend', handleSwipeEnd);
-            card.addEventListener('mousedown', e => { if (!flipping) { swipeStartX = e.clientX; swiping = true; swipeDelta = 0; } });
-            card.addEventListener('mousemove', e => { if (swiping) swipeDelta = e.clientX - swipeStartX; });
-            card.addEventListener('mouseup', handleSwipeEnd);
-            card.addEventListener('mouseleave', () => { swiping = false; });
-        })();
-
-        async function fetchOpenMeteo() {
-            const unitParams = state.units === 'imperial' ? '&temperature_unit=fahrenheit&wind_speed_unit=mph' : '';
-            const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${state.lat}&longitude=${state.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,surface_pressure,wind_speed_10m,wind_direction_10m,cloud_cover&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max,precipitation_probability_max&timezone=auto${unitParams}`;
-            const aqiUrl = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${state.lat}&longitude=${state.lon}&current=us_aqi&hourly=us_aqi&timezone=auto`;
-            
-            const [wRes, aRes] = await Promise.all([
-                fetch(weatherUrl),
-                fetch(aqiUrl).catch(() => null)
-            ]);
-
-            if (!wRes.ok) throw new Error("Open-Meteo request failed");
-            
-            const wData = await wRes.json();
-            const aData = aRes && aRes.ok ? await aRes.json() : null;
-
-            let aqiCur = "--";
-            let aqiMax = "--";
-            if (aData) {
-                if (aData.current && aData.current.us_aqi) aqiCur = aData.current.us_aqi;
-                if (aData.hourly && aData.hourly.us_aqi) {
-                    const todayAqi = aData.hourly.us_aqi.slice(0, 24).filter(x => x !== null);
-                    if (todayAqi.length > 0) aqiMax = Math.max(...todayAqi);
-                }
-            }
-
-            const curr = wData.current;
-            const daily = wData.daily;
-            const { desc, icon } = mapWMOCode(curr.weather_code, curr.is_day);
-
-            const forecast = [];
-            for(let i = 0; i < 7; i++) {
-                const dateObj = new Date(daily.time[i]);
-                const dayName = i === 0 ? 'Today' : dateObj.toLocaleDateString('en-US', { weekday: 'short' });
-                forecast.push({
-                    day: dayName,
-                    max: Math.round(daily.temperature_2m_max[i]),
-                    min: Math.round(daily.temperature_2m_min[i]),
-                    icon: mapWMOCode(daily.weather_code[i], 1).icon,
-                    rainProb: daily.precipitation_probability_max && daily.precipitation_probability_max[i] !== null ? daily.precipitation_probability_max[i] : "--",
-                    cloudCover: i === 0 ? (curr.cloud_cover !== null ? curr.cloud_cover : "--") : "--"
-                });
-            }
-
-            return {
-                temp: Math.round(curr.temperature_2m),
-                feelsLike: Math.round(curr.apparent_temperature),
-                high: Math.round(daily.temperature_2m_max[0]),
-                low: Math.round(daily.temperature_2m_min[0]),
-                humidity: curr.relative_humidity_2m,
-                windSpeed: Math.round(curr.wind_speed_10m),
-                windDir: curr.wind_direction_10m,
-                pressure: Math.round(curr.surface_pressure),
-                uvIndex: { current: "--", max: daily.uv_index_max && daily.uv_index_max[0] ? daily.uv_index_max[0].toFixed(1) : "--" },
-                aqi: aqiCur,
-                aqiMax: aqiMax,
-                sunrise: formatTime(daily.sunrise[0]),
-                sunset: formatTime(daily.sunset[0]),
-                conditionText: desc,
-                iconType: icon,
-                rainProb: daily.precipitation_probability_max && daily.precipitation_probability_max[0] !== null ? daily.precipitation_probability_max[0] : "--",
-                cloudCover: curr.cloud_cover !== null ? curr.cloud_cover : "--",
-                forecast: forecast
-            };
-        }
-
-        async function fetchOpenWeatherMap(key) {
-            const unitType = state.units === 'imperial' ? 'imperial' : 'metric';
-            const url = `https://api.openweathermap.org/data/2.5/weather?lat=${state.lat}&lon=${state.lon}&appid=${key}&units=${unitType}`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error("Invalid OpenWeatherMap API Key or request failed");
-            const data = await res.json();
-            
-            let iconType = "cloud";
-            const id = data.weather[0].id;
-            if (id >= 200 && id < 300) iconType = "cloud-lightning";
-            else if (id >= 300 && id < 600) iconType = "cloud-rain";
-            else if (id >= 600 && id < 700) iconType = "snowflake";
-            else if (id === 800) iconType = "sun";
-            else if (id > 800) iconType = "cloud";
-
-            const mockForecast = Array.from({length: 7}, (_, i) => ({
-                day: i === 0 ? 'Today' : `Day ${i+1}`,
-                max: Math.round(data.main.temp_max),
-                min: Math.round(data.main.temp_min),
-                icon: iconType,
-                rainProb: "--",
-                cloudCover: "--"
-            }));
-
-            const wSpeed = state.units === 'imperial' ? Math.round(data.wind.speed) : Math.round(data.wind.speed * 3.6);
-
-            return {
-                temp: Math.round(data.main.temp),
-                feelsLike: Math.round(data.main.feels_like),
-                high: Math.round(data.main.temp_max),
-                low: Math.round(data.main.temp_min),
-                humidity: data.main.humidity,
-                windSpeed: wSpeed,
-                windDir: data.wind.deg,
-                pressure: data.main.pressure,
-                uvIndex: { current: "--", max: "--" }, 
-                aqi: "--",
-                aqiMax: "--",
-                sunrise: formatTime(data.sys.sunrise * 1000, true),
-                sunset: formatTime(data.sys.sunset * 1000, true),
-                conditionText: data.weather[0].description,
-                iconType: iconType,
-                rainProb: "--",
-                cloudCover: data.clouds && data.clouds.all !== undefined ? data.clouds.all : "--",
-                forecast: mockForecast
-            };
-        }
-
-        async function fetchWeatherAPI(key) {
-            const url = `https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${state.lat},${state.lon}&days=7&aqi=yes`;
-            const res = await fetch(url);
-            if (!res.ok) throw new Error("Invalid WeatherAPI Key or request failed");
-            const data = await res.json();
-            const curr = data.current;
-            const today = data.forecast.forecastday[0].day;
-
-            let iconType = "cloud";
-            const code = curr.condition.code;
-            if (code === 1000) iconType = curr.is_day ? "sun" : "moon";
-            else if ([1063, 1180, 1183, 1186, 1189, 1192, 1195, 1240].includes(code)) iconType = "cloud-rain";
-            else if ([1066, 1114, 1210, 1213, 1219, 1222, 1225].includes(code)) iconType = "snowflake";
-            else if ([1087, 1273, 1276].includes(code)) iconType = "cloud-lightning";
-
-            const forecast = data.forecast.forecastday.map((day, i) => {
-                const dateObj = new Date(day.date);
-                return {
-                    day: i === 0 ? 'Today' : dateObj.toLocaleDateString('en-US', { weekday: 'short' }),
-                    max: Math.round(state.units === 'imperial' ? day.day.maxtemp_f : day.day.maxtemp_c),
-                    min: Math.round(state.units === 'imperial' ? day.day.mintemp_f : day.day.mintemp_c),
-                    icon: day.day.condition.text.toLowerCase().includes('rain') ? 'cloud-rain' : 'cloud',
-                    rainProb: day.day.daily_chance_of_rain !== undefined ? day.day.daily_chance_of_rain : "--",
-                    cloudCover: "--"
-                };
-            });
-
-            return {
-                temp: Math.round(state.units === 'imperial' ? curr.temp_f : curr.temp_c),
-                feelsLike: Math.round(state.units === 'imperial' ? curr.feelslike_f : curr.feelslike_c),
-                high: Math.round(state.units === 'imperial' ? today.maxtemp_f : today.maxtemp_c),
-                low: Math.round(state.units === 'imperial' ? today.mintemp_f : today.mintemp_c),
-                humidity: curr.humidity,
-                windSpeed: Math.round(state.units === 'imperial' ? curr.wind_mph : curr.wind_kph),
-                windDir: curr.wind_degree,
-                pressure: curr.pressure_mb,
-                uvIndex: { 
-                    current: curr.uv !== undefined ? curr.uv.toFixed(1) : "--", 
-                    max: today.uv !== undefined ? today.uv.toFixed(1) : "--" 
-                },
-                aqi: curr.air_quality && curr.air_quality['us-epa-index'] ? Math.round((curr.air_quality['us-epa-index'] * 50) - 20) : "--",
-                aqiMax: "--",
-                sunrise: data.forecast.forecastday[0].astro.sunrise,
-                sunset: data.forecast.forecastday[0].astro.sunset,
-                conditionText: curr.condition.text,
-                iconType: iconType,
-                rainProb: data.forecast.forecastday[0].day.daily_chance_of_rain !== undefined ? data.forecast.forecastday[0].day.daily_chance_of_rain : "--",
-                cloudCover: curr.cloud !== undefined ? curr.cloud : "--",
-                forecast: forecast
-            };
-        }
-
-        function formatTime(dateStringOrTimestamp, isTimestamp = false) {
-            if(!dateStringOrTimestamp) return "--:--";
-            const d = isTimestamp ? new Date(dateStringOrTimestamp) : new Date(dateStringOrTimestamp);
-            return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-        }
-
-        function getAqiDescription(aqi) {
-            if (aqi === "--") return "Unavailable";
-            if (aqi <= 50) return "Good";
-            if (aqi <= 100) return "Moderate";
-            if (aqi <= 150) return "Sensitive";
-            if (aqi <= 200) return "Unhealthy";
-            if (aqi <= 300) return "Very Unhealthy";
-            return "Hazardous";
-        }
-
-        function getAqiColorClass(aqi) {
-            if (isNaN(aqi)) return 'text-[rgb(var(--c-earth))]';
-            if (aqi <= 50) return 'text-green-500';
-            if (aqi <= 100) return 'text-yellow-500';
-            if (aqi <= 150) return 'text-orange-500';
-            if (aqi <= 200) return 'text-red-500';
-            return 'text-purple-500';
-        }
-
-        function getUvDescription(uv) {
-            if (uv === "--") return "Unavailable";
-            if (uv <= 2) return "Low";
-            if (uv <= 5) return "Moderate";
-            if (uv <= 7) return "High";
-            if (uv <= 10) return "Very High";
-            return "Extreme";
-        }
-
-        function mapWMOCode(code, isDay) {
-            const map = {
-                0: { desc: "Clear sky", icon: isDay ? "sun" : "moon" },
-                1: { desc: "Mainly clear", icon: isDay ? "cloud-sun" : "cloud-moon" },
-                2: { desc: "Partly cloudy", icon: "cloud" },
-                3: { desc: "Overcast", icon: "cloud" },
-                45: { desc: "Fog", icon: "cloud-fog" },
-                48: { desc: "Depositing rime fog", icon: "cloud-fog" },
-                51: { desc: "Light drizzle", icon: "cloud-drizzle" },
-                53: { desc: "Moderate drizzle", icon: "cloud-drizzle" },
-                61: { desc: "Slight rain", icon: "cloud-rain" },
-                63: { desc: "Moderate rain", icon: "cloud-rain" },
-                65: { desc: "Heavy rain", icon: "cloud-rain" },
-                71: { desc: "Slight snow fall", icon: "snowflake" },
-                75: { desc: "Heavy snow fall", icon: "snowflake" },
-                95: { desc: "Thunderstorm", icon: "cloud-lightning" }
-            };
-            return map[code] || { desc: "Unknown", icon: "cloud" };
-        }
-
-        function getWindDirection(degree) {
-            if(degree === undefined || degree === null) return "Var";
-            const val = Math.floor((degree / 22.5) + 0.5);
-            const arr = ["N", "N-NE", "NE", "E-NE", "E", "E-SE", "SE", "S-SE", "S", "S-SW", "SW", "W-SW", "W", "W-NW", "NW", "N-NW"];
-            return arr[(val % 16)];
-        }
-
-        function getIconAnimClass(iconName) {
-            if(!iconName) return 'anim-float';
-            if(iconName === 'sun') return 'anim-spin-slow';
-            if(iconName === 'moon' || iconName === 'leaf' || iconName === 'calendar-days') return 'anim-rock';
-            if(iconName.includes('wind')) return 'anim-slide-x';
-            if(iconName.includes('droplet') || iconName === 'gauge') return 'anim-pulse';
-            return 'anim-float';
-        }
-
-        function updateWeatherUI() {
-            const w = state.weatherData;
-            const isImp = state.units === 'imperial';
-            
-            els.tempUnitLabels.forEach(el => el.textContent = isImp ? '°F' : '°C');
-            els.windUnitLabel.textContent = isImp ? 'mph' : 'km/h';
-
-            els.locationName.textContent = state.locationName;
-            
-            const regionDetails = [];
-            if(state.stateRegion && state.stateRegion !== state.locationName) regionDetails.push(state.stateRegion);
-            if(state.country) regionDetails.push(state.country);
-            els.locationRegion.textContent = regionDetails.length ? regionDetails.join(', ') : '';
-
-            els.temperature.textContent = w.temp;
-            els.conditionDesc.textContent = w.conditionText;
-            const tu = isImp ? '°F' : '°C';
-            els.feelsLikeInline.textContent = `(Feels Like ${w.feelsLike}${tu})`;
-            els.currentRainProb.textContent = w.rainProb;
-            els.currentCloudCover.textContent = w.cloudCover;
-            els.tempHigh.textContent = `${w.high}`;
-            els.tempLow.textContent = `${w.low}`;
-            
-            const uvCur = w.uvIndex.current;
-            const uvMax = w.uvIndex.max;
-            const showUv = uvCur !== "--" ? uvCur : uvMax;
-            
-            els.uvIndex.textContent = showUv;
-            els.uvDesc.textContent = uvCur !== "--" ? `Max today: ${uvMax}` : `Daily Max`;
-
-            const aqiVal = parseFloat(w.aqi);
-            els.aqi.textContent = w.aqi;
-            els.aqiDesc.textContent = w.aqiMax !== "--" ? `Max: ${w.aqiMax} • ${getAqiDescription(w.aqi)}` : getAqiDescription(w.aqi);
-            updateLucideIconWrapper(els.aqiIconWrapper, 'leaf', `w-6 h-6 anim-rock ${getAqiColorClass(aqiVal)}`);
-            
-            els.humidity.textContent = w.humidity;
-            els.humidityDesc.textContent = w.humidity > 60 ? "High moisture" : w.humidity < 30 ? "Dry air" : "Comfortable";
-            
-            els.windSpeed.textContent = w.windSpeed;
-            els.windDir.textContent = getWindDirection(w.windDir);
-            
-            els.pressure.textContent = w.pressure;
-            els.sunrise.textContent = w.sunrise;
-            els.sunset.textContent = w.sunset;
-
-            const fxLayer = document.getElementById('weather-fx-layer');
-            fxLayer.className = 'absolute inset-0 z-0 pointer-events-none opacity-60 mix-blend-overlay weather-fx-layer transition-all duration-1000';
-            
-            if(w.iconType.includes('lightning')) fxLayer.classList.add('weather-anim-lightning');
-            else if(w.iconType.includes('rain') || w.iconType.includes('drizzle')) fxLayer.classList.add('weather-anim-rain');
-            else if(w.iconType.includes('snow')) fxLayer.classList.add('weather-anim-snow');
-            else if(w.iconType.includes('cloud')) fxLayer.classList.add('weather-anim-cloud');
-            else if(w.iconType === 'sun') fxLayer.classList.add('weather-anim-sun');
-            else if(w.iconType === 'moon') fxLayer.classList.add('weather-anim-moon');
-
-            const mainAnim = getIconAnimClass(w.iconType);
-            updateLucideIconWrapper(els.mainIconWrapper, w.iconType, `w-48 h-48 drop-shadow-2xl text-[rgb(var(--c-main))] transition-colors duration-300 ${mainAnim}`);
-
-            els.forecastContainer.innerHTML = '';
-            w.forecast.forEach((f) => {
-                const item = document.createElement('div');
-                item.className = 'glass flex flex-col items-center justify-center p-3 lg:p-4 w-full rounded-2xl lg:rounded-3xl transform transition hover:bg-white/10 shadow-none pointer-events-none last:col-span-2 sm:last:col-span-1 lg:last:col-span-1';
-                item.style.border = '1px solid rgba(var(--c-main), 0.5)';
-                
-                const fAnim = getIconAnimClass(f.icon);
-                item.innerHTML = `
-                    <span class="text-xs md:text-sm lg:text-base font-extrabold mb-1 lg:mb-2">${f.day}</span>
-                    <i data-lucide="${f.icon}" class="w-7 h-7 md:w-8 md:h-8 lg:w-10 lg:h-10 mb-2 lg:mb-3 drop-shadow-md text-[rgb(var(--c-main))] transition-colors duration-300 ${fAnim}"></i>
-                    <div class="flex gap-1.5 lg:gap-2 text-xs md:text-sm lg:text-base font-extrabold">
-                        <span class="text-[rgb(var(--c-warm))] transition-colors duration-300">${f.max}°</span>
-                        <span class="text-[rgb(var(--c-cool))] transition-colors duration-300">${f.min}°</span>
-                    </div>
-                `;
-                els.forecastContainer.appendChild(item);
-            });
-            lucide.createIcons();
-
-            els.weatherContainer.style.opacity = '1';
-            updateSwipeNotches();
-        }
-
-        function updateSwipeNotches() {
-            const leftNotch = document.getElementById('swipe-notch-left');
-            const rightNotch = document.getElementById('swipe-notch-right');
-            if (!leftNotch || !rightNotch) return;
-            
-            if (state.pinnedCities.length >= 2) {
-                leftNotch.classList.remove('hidden');
-                rightNotch.classList.remove('hidden');
-            } else {
-                leftNotch.classList.add('hidden');
-                rightNotch.classList.add('hidden');
-            }
-        }
-
-        function updateLucideIconWrapper(wrapperElement, iconName, classes) {
-            wrapperElement.innerHTML = `<i data-lucide="${iconName}" class="${classes}"></i>`;
-            lucide.createIcons();
-        }
-
-        function updateClock() {
-            const now = new Date();
-            const dayOpts = { weekday: 'long' };
-            const dateOpts = { year: 'numeric', month: 'long', day: 'numeric' };
-            
-            if (state.timezone) {
-                try {
-                    dayOpts.timeZone = state.timezone;
-                    dateOpts.timeZone = state.timezone;
-                } catch(e) {}
-            }
-            
-            const dayStr = now.toLocaleDateString('en-US', dayOpts);
-            const dateStr = now.toLocaleDateString('en-US', dateOpts);
-            els.dateTime.textContent = `${dayStr}, ${dateStr}`;
-        }
-
-        function setLoading(isLoading, text = "") {
-            state.isLoading = isLoading;
-            if (isLoading) {
-                els.loadingState.querySelector('p').textContent = text || "Gathering data...";
-                els.loadingState.classList.remove('hidden');
-            } else {
-                els.loadingState.classList.add('hidden');
-            }
-        }
-
-        let toastTimeout;
-        function showToast(msg, iconName, colorClass) {
-            els.toastMsg.textContent = msg;
-            updateLucideIconWrapper(els.toastIconWrapper, iconName, `w-6 h-6 text-${colorClass}-500`);
-            els.toast.classList.add('show');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => els.toast.classList.remove('show'), 3000);
-        }
-
-        init();
-
-    </script>
+    <script src="weather.js"></script>
 </body>
+
 </html>
