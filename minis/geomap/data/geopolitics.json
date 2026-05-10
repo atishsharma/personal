@@ -1,37 +1,2448 @@
 {
-  "United States of America": {
-    "allies": ["France", "Germany", "Japan", "United Kingdom", "Canada", "Australia", "India"],
-    "enemies": ["Russia", "Iran", "North Korea"],
-    "frenemies": ["China", "Saudi Arabia"]
+  "Afghanistan": {
+    "allies": [
+      "Pakistan",
+      "China"
+    ],
+    "enemies": [
+      "United States of America"
+    ],
+    "frenemies": [
+      "Iran",
+      "India"
+    ]
   },
-  "India": {
-    "allies": ["France", "Japan", "United States of America", "Russia", "Israel"],
-    "enemies": ["Pakistan"],
-    "frenemies": ["China", "Canada"]
+  "Albania": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "Turkey"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Republic of Serbia",
+      "Russia"
+    ]
+  },
+  "Algeria": {
+    "allies": [
+      "Russia",
+      "China",
+      "Tunisia"
+    ],
+    "enemies": [
+      "Morocco"
+    ],
+    "frenemies": [
+      "France",
+      "United States of America"
+    ]
+  },
+  "Angola": {
+    "allies": [
+      "China",
+      "Russia",
+      "Brazil"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "United States of America"
+    ]
+  },
+  "Argentina": {
+    "allies": [
+      "Brazil",
+      "Chile",
+      "Spain"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "United Kingdom",
+      "United States of America"
+    ]
+  },
+  "Armenia": {
+    "allies": [
+      "Russia",
+      "France",
+      "India"
+    ],
+    "enemies": [
+      "Azerbaijan",
+      "Turkey"
+    ],
+    "frenemies": [
+      "Georgia",
+      "Iran"
+    ]
+  },
+  "Australia": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "Japan",
+      "India",
+      "New Zealand"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China",
+      "Indonesia"
+    ]
+  },
+  "Austria": {
+    "allies": [
+      "Germany",
+      "Switzerland",
+      "France"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia",
+      "Turkey"
+    ]
+  },
+  "Azerbaijan": {
+    "allies": [
+      "Turkey",
+      "Israel",
+      "Pakistan"
+    ],
+    "enemies": [
+      "Armenia"
+    ],
+    "frenemies": [
+      "Russia",
+      "Iran"
+    ]
+  },
+  "Bangladesh": {
+    "allies": [
+      "China",
+      "India",
+      "Japan"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Myanmar",
+      "Pakistan"
+    ]
+  },
+  "Belarus": {
+    "allies": [
+      "Russia",
+      "China"
+    ],
+    "enemies": [
+      "United States of America",
+      "United Kingdom",
+      "Poland"
+    ],
+    "frenemies": [
+      "Ukraine"
+    ]
+  },
+  "Belgium": {
+    "allies": [
+      "France",
+      "Germany",
+      "Netherlands",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia"
+    ]
+  },
+  "Belize": {
+    "allies": [
+      "United Kingdom",
+      "United States of America",
+      "Mexico"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Guatemala"
+    ]
+  },
+  "Benin": {
+    "allies": [
+      "France",
+      "Nigeria"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Niger"
+    ]
+  },
+  "Bhutan": {
+    "allies": [
+      "India"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China"
+    ]
+  },
+  "Bolivia": {
+    "allies": [
+      "Venezuela",
+      "Cuba"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Chile",
+      "United States of America"
+    ]
+  },
+  "Bosnia and Herzegovina": {
+    "allies": [
+      "Turkey",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Republic of Serbia",
+      "Croatia"
+    ]
+  },
+  "Botswana": {
+    "allies": [
+      "South Africa",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Zimbabwe"
+    ]
+  },
+  "Brazil": {
+    "allies": [
+      "Argentina",
+      "India",
+      "South Africa"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "United States of America",
+      "China"
+    ]
+  },
+  "Brunei": {
+    "allies": [
+      "Malaysia",
+      "United Kingdom",
+      "Japan"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China"
+    ]
+  },
+  "Bulgaria": {
+    "allies": [
+      "United States of America",
+      "Germany",
+      "Greece"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia",
+      "Turkey"
+    ]
+  },
+  "Burkina Faso": {
+    "allies": [
+      "Russia",
+      "Mali",
+      "Niger"
+    ],
+    "enemies": [
+      "France"
+    ],
+    "frenemies": [
+      "Ivory Coast"
+    ]
+  },
+  "Burundi": {
+    "allies": [
+      "China",
+      "Russia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Rwanda",
+      "Democratic Republic of the Congo"
+    ]
+  },
+  "Cambodia": {
+    "allies": [
+      "China",
+      "Vietnam"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Thailand",
+      "United States of America"
+    ]
+  },
+  "Cameroon": {
+    "allies": [
+      "France",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Nigeria"
+    ]
+  },
+  "Canada": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "France",
+      "Australia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China",
+      "India",
+      "Russia"
+    ]
+  },
+  "Central African Republic": {
+    "allies": [
+      "Russia",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "France"
+    ]
+  },
+  "Chad": {
+    "allies": [
+      "France",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Libya",
+      "Sudan"
+    ]
+  },
+  "Chile": {
+    "allies": [
+      "United States of America",
+      "Argentina",
+      "Brazil"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Bolivia",
+      "Peru"
+    ]
   },
   "China": {
-    "allies": ["Russia", "Pakistan", "North Korea", "Iran"],
-    "enemies": ["United States of America", "Japan", "India"],
-    "frenemies": ["Australia", "South Korea"]
+    "allies": [
+      "Russia",
+      "Pakistan",
+      "North Korea",
+      "Iran",
+      "Cambodia"
+    ],
+    "enemies": [
+      "United States of America",
+      "Japan",
+      "India",
+      "Taiwan"
+    ],
+    "frenemies": [
+      "Australia",
+      "South Korea",
+      "United Kingdom"
+    ]
   },
-  "Japan": {
-    "allies": ["United States of America", "India", "Australia", "France", "Germany"],
-    "enemies": ["North Korea", "China", "Russia"],
-    "frenemies": ["South Korea"]
+  "Colombia": {
+    "allies": [
+      "United States of America",
+      "Brazil"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Venezuela",
+      "Ecuador"
+    ]
   },
-  "Russia": {
-    "allies": ["China", "Belarus", "Syria", "Iran", "North Korea"],
-    "enemies": ["United States of America", "United Kingdom", "France", "Germany", "Ukraine"],
-    "frenemies": ["India", "Turkey"]
+  "Costa Rica": {
+    "allies": [
+      "United States of America",
+      "Panama"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Nicaragua"
+    ]
+  },
+  "Croatia": {
+    "allies": [
+      "United States of America",
+      "Germany",
+      "Slovenia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Republic of Serbia",
+      "Bosnia and Herzegovina"
+    ]
+  },
+  "Cuba": {
+    "allies": [
+      "Russia",
+      "China",
+      "Venezuela",
+      "North Korea"
+    ],
+    "enemies": [
+      "United States of America"
+    ],
+    "frenemies": [
+      "Mexico",
+      "Canada"
+    ]
+  },
+  "Cyprus": {
+    "allies": [
+      "Greece",
+      "Israel",
+      "France"
+    ],
+    "enemies": [
+      "Turkey"
+    ],
+    "frenemies": []
+  },
+  "Czech Republic": {
+    "allies": [
+      "Germany",
+      "Poland",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia",
+      "China"
+    ]
+  },
+  "Denmark": {
+    "allies": [
+      "United States of America",
+      "Norway",
+      "Germany"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia",
+      "China"
+    ]
+  },
+  "Djibouti": {
+    "allies": [
+      "France",
+      "United States of America",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Eritrea",
+      "Ethiopia"
+    ]
+  },
+  "Dominican Republic": {
+    "allies": [
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Haiti"
+    ]
+  },
+  "East Timor": {
+    "allies": [
+      "Australia",
+      "Portugal"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Indonesia"
+    ]
+  },
+  "Ecuador": {
+    "allies": [
+      "United States of America",
+      "Colombia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Venezuela"
+    ]
+  },
+  "Egypt": {
+    "allies": [
+      "Saudi Arabia",
+      "United Arab Emirates",
+      "France",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Turkey",
+      "Iran",
+      "Ethiopia"
+    ]
+  },
+  "El Salvador": {
+    "allies": [
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Honduras",
+      "Guatemala"
+    ]
+  },
+  "Equatorial Guinea": {
+    "allies": [
+      "China",
+      "France"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Cameroon"
+    ]
+  },
+  "Eritrea": {
+    "allies": [
+      "Russia",
+      "China"
+    ],
+    "enemies": [
+      "Ethiopia"
+    ],
+    "frenemies": [
+      "Saudi Arabia"
+    ]
+  },
+  "Estonia": {
+    "allies": [
+      "United States of America",
+      "Finland",
+      "United Kingdom"
+    ],
+    "enemies": [
+      "Russia"
+    ],
+    "frenemies": []
+  },
+  "Ethiopia": {
+    "allies": [
+      "China",
+      "India",
+      "Russia"
+    ],
+    "enemies": [
+      "Eritrea"
+    ],
+    "frenemies": [
+      "Egypt",
+      "Sudan"
+    ]
+  },
+  "Fiji": {
+    "allies": [
+      "Australia",
+      "New Zealand",
+      "India"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China"
+    ]
+  },
+  "Finland": {
+    "allies": [
+      "Sweden",
+      "Estonia",
+      "United States of America",
+      "Norway"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia"
+    ]
   },
   "France": {
-    "allies": ["Germany", "United States of America", "United Kingdom", "Japan", "India"],
-    "enemies": ["Russia", "Syria"],
-    "frenemies": ["China", "Turkey"]
+    "allies": [
+      "Germany",
+      "United States of America",
+      "United Kingdom",
+      "Japan",
+      "India"
+    ],
+    "enemies": [
+      "Russia",
+      "Syria"
+    ],
+    "frenemies": [
+      "China",
+      "Turkey"
+    ]
+  },
+  "Gabon": {
+    "allies": [
+      "France",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Equatorial Guinea"
+    ]
+  },
+  "Gambia": {
+    "allies": [
+      "Senegal",
+      "Turkey"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Georgia": {
+    "allies": [
+      "United States of America",
+      "Ukraine",
+      "Turkey"
+    ],
+    "enemies": [
+      "Russia"
+    ],
+    "frenemies": [
+      "Azerbaijan",
+      "Armenia"
+    ]
   },
   "Germany": {
-    "allies": ["France", "United States of America", "United Kingdom", "Japan", "Italy"],
-    "enemies": ["Russia"],
-    "frenemies": ["China", "Turkey"]
+    "allies": [
+      "France",
+      "United States of America",
+      "United Kingdom",
+      "Japan",
+      "Italy",
+      "Poland"
+    ],
+    "enemies": [
+      "Russia"
+    ],
+    "frenemies": [
+      "China",
+      "Turkey"
+    ]
+  },
+  "Ghana": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Greece": {
+    "allies": [
+      "France",
+      "Cyprus",
+      "Israel",
+      "United States of America",
+      "Egypt"
+    ],
+    "enemies": [
+      "Turkey"
+    ],
+    "frenemies": [
+      "Macedonia"
+    ]
+  },
+  "Guatemala": {
+    "allies": [
+      "United States of America",
+      "Mexico"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Belize"
+    ]
+  },
+  "Guinea": {
+    "allies": [
+      "Russia",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "France"
+    ]
+  },
+  "Guyana": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "Brazil"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Venezuela"
+    ]
+  },
+  "Haiti": {
+    "allies": [
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Dominican Republic"
+    ]
+  },
+  "Honduras": {
+    "allies": [
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "El Salvador",
+      "Nicaragua"
+    ]
+  },
+  "Hungary": {
+    "allies": [
+      "Germany",
+      "Poland"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia",
+      "Ukraine",
+      "China"
+    ]
+  },
+  "Iceland": {
+    "allies": [
+      "United States of America",
+      "Norway",
+      "Denmark"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia"
+    ]
+  },
+  "India": {
+    "allies": [
+      "France",
+      "Japan",
+      "United States of America",
+      "Russia",
+      "Israel",
+      "United Kingdom",
+      "Australia"
+    ],
+    "enemies": [
+      "Pakistan"
+    ],
+    "frenemies": [
+      "China",
+      "Canada"
+    ]
+  },
+  "Indonesia": {
+    "allies": [
+      "Japan",
+      "South Korea",
+      "Australia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China",
+      "Malaysia"
+    ]
+  },
+  "Iran": {
+    "allies": [
+      "Russia",
+      "China",
+      "Syria",
+      "North Korea"
+    ],
+    "enemies": [
+      "United States of America",
+      "Israel",
+      "Saudi Arabia"
+    ],
+    "frenemies": [
+      "Turkey",
+      "India",
+      "Iraq"
+    ]
+  },
+  "Iraq": {
+    "allies": [
+      "United States of America",
+      "Iran"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Turkey",
+      "Saudi Arabia",
+      "Kuwait"
+    ]
+  },
+  "Ireland": {
+    "allies": [
+      "United Kingdom",
+      "United States of America",
+      "France"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Israel": {
+    "allies": [
+      "United States of America",
+      "India",
+      "United Kingdom",
+      "Germany",
+      "Azerbaijan"
+    ],
+    "enemies": [
+      "Iran",
+      "Syria",
+      "Lebanon"
+    ],
+    "frenemies": [
+      "Turkey",
+      "Saudi Arabia",
+      "Egypt"
+    ]
+  },
+  "Italy": {
+    "allies": [
+      "France",
+      "Germany",
+      "United States of America",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia",
+      "China",
+      "Libya"
+    ]
+  },
+  "Ivory Coast": {
+    "allies": [
+      "France",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Burkina Faso",
+      "Ghana"
+    ]
+  },
+  "Jamaica": {
+    "allies": [
+      "United States of America",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Japan": {
+    "allies": [
+      "United States of America",
+      "India",
+      "Australia",
+      "France",
+      "Germany",
+      "United Kingdom"
+    ],
+    "enemies": [
+      "North Korea",
+      "China"
+    ],
+    "frenemies": [
+      "South Korea",
+      "Russia"
+    ]
+  },
+  "Jordan": {
+    "allies": [
+      "United States of America",
+      "Saudi Arabia",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Israel",
+      "Iran",
+      "Iraq"
+    ]
+  },
+  "Kazakhstan": {
+    "allies": [
+      "Russia",
+      "China",
+      "Turkey"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "United States of America",
+      "Uzbekistan"
+    ]
+  },
+  "Kenya": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Somalia",
+      "Ethiopia"
+    ]
+  },
+  "Kuwait": {
+    "allies": [
+      "United States of America",
+      "Saudi Arabia",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Iraq",
+      "Iran"
+    ]
+  },
+  "Kyrgyzstan": {
+    "allies": [
+      "Russia",
+      "China",
+      "Turkey"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Tajikistan",
+      "Uzbekistan"
+    ]
+  },
+  "Laos": {
+    "allies": [
+      "China",
+      "Vietnam"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Thailand"
+    ]
+  },
+  "Latvia": {
+    "allies": [
+      "United States of America",
+      "Lithuania",
+      "Estonia"
+    ],
+    "enemies": [
+      "Russia"
+    ],
+    "frenemies": []
+  },
+  "Lebanon": {
+    "allies": [
+      "Iran",
+      "France"
+    ],
+    "enemies": [
+      "Israel"
+    ],
+    "frenemies": [
+      "Saudi Arabia",
+      "Syria"
+    ]
+  },
+  "Lesotho": {
+    "allies": [
+      "South Africa"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Liberia": {
+    "allies": [
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Libya": {
+    "allies": [
+      "Turkey",
+      "Russia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Egypt",
+      "France",
+      "Italy"
+    ]
+  },
+  "Lithuania": {
+    "allies": [
+      "United States of America",
+      "Poland",
+      "Latvia"
+    ],
+    "enemies": [
+      "Russia",
+      "Belarus"
+    ],
+    "frenemies": []
+  },
+  "Luxembourg": {
+    "allies": [
+      "France",
+      "Germany",
+      "Belgium"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Madagascar": {
+    "allies": [
+      "France",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Malawi": {
+    "allies": [
+      "United Kingdom",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Mozambique"
+    ]
+  },
+  "Malaysia": {
+    "allies": [
+      "China",
+      "Japan",
+      "Saudi Arabia",
+      "Turkey"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Indonesia",
+      "Philippines"
+    ]
+  },
+  "Mali": {
+    "allies": [
+      "Russia",
+      "Burkina Faso",
+      "Niger"
+    ],
+    "enemies": [
+      "France"
+    ],
+    "frenemies": []
+  },
+  "Malta": {
+    "allies": [
+      "Italy",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Libya"
+    ]
+  },
+  "Mauritania": {
+    "allies": [
+      "Saudi Arabia",
+      "France"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Morocco",
+      "Algeria"
+    ]
+  },
+  "Mexico": {
+    "allies": [
+      "United States of America",
+      "Canada",
+      "Spain"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Guatemala"
+    ]
+  },
+  "Moldova": {
+    "allies": [
+      "Romania",
+      "Ukraine"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia"
+    ]
+  },
+  "Mongolia": {
+    "allies": [
+      "Japan",
+      "South Korea",
+      "India"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China",
+      "Russia"
+    ]
+  },
+  "Montenegro": {
+    "allies": [
+      "United States of America",
+      "Italy"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Republic of Serbia",
+      "Russia"
+    ]
+  },
+  "Morocco": {
+    "allies": [
+      "France",
+      "United States of America",
+      "Saudi Arabia",
+      "Israel"
+    ],
+    "enemies": [
+      "Algeria"
+    ],
+    "frenemies": [
+      "Spain"
+    ]
+  },
+  "Mozambique": {
+    "allies": [
+      "China",
+      "India",
+      "South Africa"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Myanmar": {
+    "allies": [
+      "China",
+      "Russia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "India",
+      "Thailand"
+    ]
+  },
+  "Namibia": {
+    "allies": [
+      "South Africa",
+      "Germany",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Nepal": {
+    "allies": [
+      "India",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Netherlands": {
+    "allies": [
+      "United States of America",
+      "Germany",
+      "Belgium",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia",
+      "China"
+    ]
+  },
+  "New Zealand": {
+    "allies": [
+      "Australia",
+      "United States of America",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China"
+    ]
+  },
+  "Nicaragua": {
+    "allies": [
+      "Russia",
+      "Venezuela",
+      "Cuba",
+      "Iran"
+    ],
+    "enemies": [
+      "United States of America"
+    ],
+    "frenemies": [
+      "Honduras"
+    ]
+  },
+  "Niger": {
+    "allies": [
+      "Russia",
+      "Mali",
+      "Burkina Faso"
+    ],
+    "enemies": [
+      "France"
+    ],
+    "frenemies": [
+      "Nigeria"
+    ]
+  },
+  "Nigeria": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Cameroon",
+      "South Africa"
+    ]
+  },
+  "North Korea": {
+    "allies": [
+      "China",
+      "Russia",
+      "Iran"
+    ],
+    "enemies": [
+      "United States of America",
+      "South Korea",
+      "Japan"
+    ],
+    "frenemies": []
+  },
+  "Norway": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "Sweden",
+      "Denmark"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia"
+    ]
+  },
+  "Oman": {
+    "allies": [
+      "United Kingdom",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Iran",
+      "Saudi Arabia"
+    ]
+  },
+  "Pakistan": {
+    "allies": [
+      "China",
+      "Turkey",
+      "Saudi Arabia"
+    ],
+    "enemies": [
+      "India"
+    ],
+    "frenemies": [
+      "United States of America",
+      "Afghanistan",
+      "Iran"
+    ]
+  },
+  "Panama": {
+    "allies": [
+      "United States of America",
+      "Colombia"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Papua New Guinea": {
+    "allies": [
+      "Australia",
+      "Japan"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Indonesia",
+      "China"
+    ]
+  },
+  "Paraguay": {
+    "allies": [
+      "Brazil",
+      "Argentina",
+      "Taiwan"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Peru": {
+    "allies": [
+      "United States of America",
+      "Brazil",
+      "Chile"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Bolivia",
+      "Ecuador"
+    ]
+  },
+  "Philippines": {
+    "allies": [
+      "United States of America",
+      "Japan",
+      "Australia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China"
+    ]
+  },
+  "Poland": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "Germany",
+      "Lithuania"
+    ],
+    "enemies": [
+      "Russia",
+      "Belarus"
+    ],
+    "frenemies": []
+  },
+  "Portugal": {
+    "allies": [
+      "Spain",
+      "United States of America",
+      "United Kingdom",
+      "Brazil"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Qatar": {
+    "allies": [
+      "United States of America",
+      "Turkey",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Saudi Arabia",
+      "United Arab Emirates"
+    ]
+  },
+  "Republic of the Congo": {
+    "allies": [
+      "France",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Democratic Republic of the Congo"
+    ]
+  },
+  "Romania": {
+    "allies": [
+      "United States of America",
+      "France",
+      "Germany",
+      "Moldova"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia",
+      "Hungary"
+    ]
+  },
+  "Russia": {
+    "allies": [
+      "China",
+      "Belarus",
+      "Syria",
+      "Iran",
+      "North Korea"
+    ],
+    "enemies": [
+      "United States of America",
+      "United Kingdom",
+      "Ukraine",
+      "Poland"
+    ],
+    "frenemies": [
+      "India",
+      "Turkey"
+    ]
+  },
+  "Rwanda": {
+    "allies": [
+      "United Kingdom",
+      "United States of America"
+    ],
+    "enemies": [
+      "Democratic Republic of the Congo"
+    ],
+    "frenemies": [
+      "Uganda"
+    ]
+  },
+  "Saudi Arabia": {
+    "allies": [
+      "United States of America",
+      "United Arab Emirates",
+      "Egypt",
+      "Pakistan"
+    ],
+    "enemies": [
+      "Iran"
+    ],
+    "frenemies": [
+      "Turkey",
+      "Qatar",
+      "Israel",
+      "Russia"
+    ]
+  },
+  "Senegal": {
+    "allies": [
+      "France",
+      "United States of America",
+      "Gambia"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Sierra Leone": {
+    "allies": [
+      "United Kingdom",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Slovakia": {
+    "allies": [
+      "Czech Republic",
+      "Poland",
+      "Germany"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Hungary",
+      "Russia"
+    ]
+  },
+  "Slovenia": {
+    "allies": [
+      "Italy",
+      "Austria",
+      "Germany"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Croatia"
+    ]
+  },
+  "Solomon Islands": {
+    "allies": [
+      "China",
+      "Australia"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Somalia": {
+    "allies": [
+      "Turkey",
+      "United Arab Emirates"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Ethiopia",
+      "Kenya"
+    ]
+  },
+  "South Africa": {
+    "allies": [
+      "India",
+      "Brazil",
+      "China",
+      "Russia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "United States of America",
+      "United Kingdom"
+    ]
+  },
+  "South Korea": {
+    "allies": [
+      "United States of America",
+      "Japan",
+      "Australia"
+    ],
+    "enemies": [
+      "North Korea"
+    ],
+    "frenemies": [
+      "China",
+      "Russia"
+    ]
+  },
+  "South Sudan": {
+    "allies": [
+      "China",
+      "Uganda"
+    ],
+    "enemies": [
+      "Sudan"
+    ],
+    "frenemies": []
+  },
+  "Spain": {
+    "allies": [
+      "France",
+      "Portugal",
+      "United States of America",
+      "Germany"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Morocco",
+      "United Kingdom"
+    ]
+  },
+  "Sri Lanka": {
+    "allies": [
+      "India",
+      "China",
+      "Japan"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Sudan": {
+    "allies": [
+      "Russia",
+      "Egypt",
+      "Saudi Arabia"
+    ],
+    "enemies": [
+      "South Sudan"
+    ],
+    "frenemies": [
+      "Ethiopia",
+      "Chad"
+    ]
+  },
+  "Suriname": {
+    "allies": [
+      "Netherlands",
+      "Brazil"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Guyana"
+    ]
+  },
+  "Sweden": {
+    "allies": [
+      "Finland",
+      "Norway",
+      "United States of America",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia"
+    ]
+  },
+  "Switzerland": {
+    "allies": [
+      "Germany",
+      "France",
+      "Austria"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Syria": {
+    "allies": [
+      "Russia",
+      "Iran"
+    ],
+    "enemies": [
+      "Israel",
+      "United States of America",
+      "Turkey"
+    ],
+    "frenemies": []
+  },
+  "Taiwan": {
+    "allies": [
+      "United States of America",
+      "Japan",
+      "Australia"
+    ],
+    "enemies": [
+      "China"
+    ],
+    "frenemies": []
+  },
+  "Tajikistan": {
+    "allies": [
+      "Russia",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Kyrgyzstan",
+      "Afghanistan"
+    ]
+  },
+  "Thailand": {
+    "allies": [
+      "United States of America",
+      "Japan",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Myanmar",
+      "Cambodia"
+    ]
+  },
+  "The Bahamas": {
+    "allies": [
+      "United States of America",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Togo": {
+    "allies": [
+      "France",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Ghana"
+    ]
+  },
+  "Trinidad and Tobago": {
+    "allies": [
+      "United States of America",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Venezuela"
+    ]
+  },
+  "Tunisia": {
+    "allies": [
+      "France",
+      "United States of America"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Algeria",
+      "Libya"
+    ]
+  },
+  "Turkey": {
+    "allies": [
+      "Azerbaijan",
+      "Pakistan",
+      "Qatar",
+      "United Kingdom"
+    ],
+    "enemies": [
+      "Syria",
+      "Cyprus"
+    ],
+    "frenemies": [
+      "Russia",
+      "United States of America",
+      "Greece",
+      "Israel"
+    ]
+  },
+  "Turkmenistan": {
+    "allies": [
+      "China",
+      "Turkey"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Russia",
+      "Iran"
+    ]
+  },
+  "Uganda": {
+    "allies": [
+      "United States of America",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Rwanda",
+      "Democratic Republic of the Congo"
+    ]
+  },
+  "Ukraine": {
+    "allies": [
+      "United States of America",
+      "United Kingdom",
+      "Poland",
+      "France",
+      "Germany"
+    ],
+    "enemies": [
+      "Russia",
+      "Belarus"
+    ],
+    "frenemies": []
+  },
+  "United Arab Emirates": {
+    "allies": [
+      "United States of America",
+      "Saudi Arabia",
+      "India",
+      "France"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Iran",
+      "Qatar",
+      "Turkey"
+    ]
+  },
+  "United Kingdom": {
+    "allies": [
+      "United States of America",
+      "France",
+      "Japan",
+      "Australia",
+      "India",
+      "Germany"
+    ],
+    "enemies": [
+      "Russia"
+    ],
+    "frenemies": [
+      "China",
+      "Argentina"
+    ]
+  },
+  "Uruguay": {
+    "allies": [
+      "Argentina",
+      "Brazil"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Uzbekistan": {
+    "allies": [
+      "Russia",
+      "China",
+      "South Korea"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Kyrgyzstan",
+      "Tajikistan"
+    ]
+  },
+  "Vanuatu": {
+    "allies": [
+      "Australia",
+      "New Zealand"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China"
+    ]
+  },
+  "Venezuela": {
+    "allies": [
+      "Russia",
+      "China",
+      "Cuba",
+      "Iran"
+    ],
+    "enemies": [
+      "United States of America"
+    ],
+    "frenemies": [
+      "Colombia",
+      "Brazil"
+    ]
+  },
+  "Vietnam": {
+    "allies": [
+      "Russia",
+      "India",
+      "Japan",
+      "South Korea"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "China",
+      "United States of America"
+    ]
+  },
+  "Yemen": {
+    "allies": [
+      "Saudi Arabia",
+      "United Arab Emirates"
+    ],
+    "enemies": [
+      "Iran"
+    ],
+    "frenemies": []
+  },
+  "Zambia": {
+    "allies": [
+      "China",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Zimbabwe"
+    ]
+  },
+  "Zimbabwe": {
+    "allies": [
+      "China",
+      "Russia"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "South Africa",
+      "United Kingdom",
+      "United States of America"
+    ]
+  },
+  "DR Congo": {
+    "allies": [
+      "China",
+      "India"
+    ],
+    "enemies": [
+      "Rwanda"
+    ],
+    "frenemies": [
+      "Uganda",
+      "France"
+    ]
+  },
+  "Guinea-Bissau": {
+    "allies": [
+      "Portugal",
+      "Senegal"
+    ],
+    "enemies": [],
+    "frenemies": []
+  },
+  "North Macedonia": {
+    "allies": [
+      "United States of America",
+      "Bulgaria"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Greece",
+      "Republic of Serbia"
+    ]
+  },
+  "Serbia": {
+    "allies": [
+      "Russia",
+      "China"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Croatia",
+      "Albania",
+      "United States of America"
+    ]
+  },
+  "Eswatini": {
+    "allies": [
+      "South Africa"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Mozambique"
+    ]
+  },
+  "Tanzania": {
+    "allies": [
+      "China",
+      "India",
+      "United Kingdom"
+    ],
+    "enemies": [],
+    "frenemies": [
+      "Kenya",
+      "Rwanda"
+    ]
+  },
+  "United States": {
+    "allies": [
+      "United Kingdom",
+      "France",
+      "Germany",
+      "Japan",
+      "Canada",
+      "Australia",
+      "India",
+      "South Korea",
+      "Israel"
+    ],
+    "enemies": [
+      "Russia",
+      "Iran",
+      "North Korea"
+    ],
+    "frenemies": [
+      "China",
+      "Saudi Arabia",
+      "Turkey"
+    ]
+  },
+  "Dhekelia Sovereign Base Area": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Palestine": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "United Republic of Tanzania": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Somaliland": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Western Sahara": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Saint Martin": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Sint Maarten": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Czechia": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Kosovo": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Liechtenstein": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Republic of Serbia": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "San Marino": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Monaco": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "eSwatini": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Andorra": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "US Naval Base Guantanamo Bay": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Brazilian Island": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Gibraltar": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Hong Kong S.A.R.": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Vatican": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Northern Cyprus": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Cyprus No Mans Area": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Siachen Glacier": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Baykonur Cosmodrome": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Akrotiri Sovereign Base Area": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Southern Patagonian Ice Field": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Bir Tawil": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Antarctica": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Greenland": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "New Caledonia": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Cura\u00e7ao": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Aruba": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Bahamas": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Turks and Caicos Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Saint Pierre and Miquelon": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Pitcairn Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "French Polynesia": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "French Southern and Antarctic Lands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Seychelles": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Kiribati": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Marshall Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Grenada": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Saint Vincent and the Grenadines": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Barbados": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Saint Lucia": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Dominica": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "United States Minor Outlying Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Montserrat": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Antigua and Barbuda": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Saint Kitts and Nevis": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "United States Virgin Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Saint Barthelemy": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Puerto Rico": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Anguilla": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "British Virgin Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Cayman Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Bermuda": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Heard Island and McDonald Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Saint Helena": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Mauritius": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Comoros": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "S\u00e3o Tom\u00e9 and Principe": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Cabo Verde": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Jersey": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Guernsey": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Isle of Man": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Aland": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Faroe Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Indian Ocean Territories": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "British Indian Ocean Territory": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Singapore": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Norfolk Island": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Cook Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Tonga": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Wallis and Futuna": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Samoa": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Tuvalu": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Maldives": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Nauru": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Federated States of Micronesia": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "South Georgia and the Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Falkland Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Niue": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "American Samoa": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Palau": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Guam": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Northern Mariana Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Bahrain": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Coral Sea Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Spratly Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Clipperton Island": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Macao S.A.R": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Ashmore and Cartier Islands": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Bajo Nuevo Bank (Petrel Is.)": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Serranilla Bank": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
+  },
+  "Scarborough Reef": {
+    "allies": [],
+    "enemies": [],
+    "frenemies": []
   }
 }

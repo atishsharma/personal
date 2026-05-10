@@ -97,9 +97,9 @@ const MapEngine = {
       let highlightList = [];
       let hColor = '';
       if (p) {
-        if (this.currentVisaFocus === 'free') { highlightList = p.free_countries || []; hColor = 'var(--accent-green)'; }
-        else if (this.currentVisaFocus === 'voa') { highlightList = p.voa_countries || []; hColor = 'var(--accent-orange)'; }
-        else if (this.currentVisaFocus === 'req') { highlightList = p.req_countries || []; hColor = 'var(--accent-red)'; }
+        if (this.currentVisaFocus === 'free') { highlightList = p.visa_free_list || []; hColor = 'var(--accent-green)'; }
+        else if (this.currentVisaFocus === 'voa') { highlightList = p.visa_on_arrival_list || []; hColor = 'var(--accent-orange)'; }
+        else if (this.currentVisaFocus === 'req') { highlightList = p.visa_required_list || []; hColor = 'var(--accent-red)'; }
       }
       
       if (highlightList.includes(id)) {

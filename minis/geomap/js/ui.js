@@ -159,7 +159,9 @@ const UI = {
 
     // Links
     document.getElementById('link-wiki').href = `https://en.wikipedia.org/wiki/${encodeURIComponent(id)}`;
-    document.getElementById('link-gov').href = `https://www.google.com/search?q=Ministry+of+Foreign+Affairs+Official+Website+${encodeURIComponent(id)}`;
+    const govLink = document.getElementById('link-gov');
+    govLink.href = `https://www.passportindex.org/passport/${id.replace(/ /g, '-').toLowerCase()}/`;
+    govLink.textContent = "Visa Rules";
 
     // Right Panel - Geopolitics
     const createBadge = (name, type) => `<span class="badge ${type}">${name}</span>`;
