@@ -1,0 +1,37 @@
+{
+  "United States of America": {
+    "allies": ["France", "Germany", "Japan", "United Kingdom", "Canada", "Australia", "India"],
+    "enemies": ["Russia", "Iran", "North Korea"],
+    "frenemies": ["China", "Saudi Arabia"]
+  },
+  "India": {
+    "allies": ["France", "Japan", "United States of America", "Russia", "Israel"],
+    "enemies": ["Pakistan"],
+    "frenemies": ["China", "Canada"]
+  },
+  "China": {
+    "allies": ["Russia", "Pakistan", "North Korea", "Iran"],
+    "enemies": ["United States of America", "Japan", "India"],
+    "frenemies": ["Australia", "South Korea"]
+  },
+  "Japan": {
+    "allies": ["United States of America", "India", "Australia", "France", "Germany"],
+    "enemies": ["North Korea", "China", "Russia"],
+    "frenemies": ["South Korea"]
+  },
+  "Russia": {
+    "allies": ["China", "Belarus", "Syria", "Iran", "North Korea"],
+    "enemies": ["United States of America", "United Kingdom", "France", "Germany", "Ukraine"],
+    "frenemies": ["India", "Turkey"]
+  },
+  "France": {
+    "allies": ["Germany", "United States of America", "United Kingdom", "Japan", "India"],
+    "enemies": ["Russia", "Syria"],
+    "frenemies": ["China", "Turkey"]
+  },
+  "Germany": {
+    "allies": ["France", "United States of America", "United Kingdom", "Japan", "Italy"],
+    "enemies": ["Russia"],
+    "frenemies": ["China", "Turkey"]
+  }
+}

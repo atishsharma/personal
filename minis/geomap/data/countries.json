@@ -1,0 +1,9 @@
+[
+  {"id": "United States of America", "name": "United States", "region": "Americas"},
+  {"id": "India", "name": "India", "region": "Asia"},
+  {"id": "China", "name": "China", "region": "Asia"},
+  {"id": "Japan", "name": "Japan", "region": "Asia"},
+  {"id": "Russia", "name": "Russia", "region": "Europe/Asia"},
+  {"id": "France", "name": "France", "region": "Europe"},
+  {"id": "Germany", "name": "Germany", "region": "Europe"}
+]

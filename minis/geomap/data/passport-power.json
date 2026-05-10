@@ -1,0 +1,57 @@
+{
+  "United States of America": {
+    "rank": 6,
+    "visa_free": 143,
+    "visa_on_arrival": 46,
+    "visa_required": 38,
+    "score": 189,
+    "free_countries": ["Canada", "Mexico", "United Kingdom", "France", "Germany", "Japan", "South Korea", "Australia", "New Zealand", "Italy", "Spain", "Switzerland", "Netherlands", "Sweden", "Norway"],
+    "voa_countries": ["Egypt", "Jordan", "Lebanon", "Maldives", "Nepal", "Sri Lanka", "Cambodia", "Laos", "Indonesia", "Bahrain", "Kuwait", "Oman", "Qatar", "Saudi Arabia", "UAE"],
+    "req_countries": ["China", "Russia", "Iran", "North Korea", "Syria", "Cuba", "Venezuela", "Afghanistan", "Yemen", "Somalia", "Sudan", "Libya", "Mali", "Niger", "Chad"]
+  },
+  "India": {
+    "rank": 82,
+    "visa_free": 24,
+    "visa_on_arrival": 36,
+    "visa_required": 167,
+    "score": 60,
+    "free_countries": ["Bhutan", "Nepal", "Maldives", "Mauritius", "Seychelles", "Barbados", "Dominica", "Grenada", "Haiti", "Jamaica", "Montserrat", "St. Kitts and Nevis", "St. Vincent and the Grenadines", "Trinidad and Tobago", "Vanuatu", "Micronesia", "Niue", "Cook Islands", "Fiji", "Samoa", "Senegal", "Tunisia", "Macao", "Palestine"],
+    "voa_countries": ["Thailand", "Indonesia", "Sri Lanka", "Cambodia", "Laos", "Myanmar", "Vietnam", "Bolivia", "Cape Verde", "Comoros", "Djibouti", "Ethiopia", "Gabon", "Guinea-Bissau", "Iran", "Jordan", "Kenya", "Madagascar", "Mauritania", "Mozambique", "Rwanda", "Somalia", "Tanzania", "Togo", "Uganda", "Zimbabwe"],
+    "req_countries": ["United States of America", "United Kingdom", "Canada", "Australia", "Japan", "South Korea", "China", "Russia", "Germany", "France", "Italy", "Spain", "Brazil", "Argentina", "Mexico", "South Africa", "Saudi Arabia", "UAE", "Egypt", "Turkey", "And 147 other nations..."]
+  },
+  "China": {
+    "rank": 62,
+    "visa_free": 38,
+    "visa_on_arrival": 49,
+    "visa_required": 140,
+    "score": 87
+  },
+  "Japan": {
+    "rank": 1,
+    "visa_free": 154,
+    "visa_on_arrival": 40,
+    "visa_required": 33,
+    "score": 194
+  },
+  "Russia": {
+    "rank": 51,
+    "visa_free": 82,
+    "visa_on_arrival": 37,
+    "visa_required": 108,
+    "score": 119
+  },
+  "France": {
+    "rank": 1,
+    "visa_free": 155,
+    "visa_on_arrival": 39,
+    "visa_required": 33,
+    "score": 194
+  },
+  "Germany": {
+    "rank": 1,
+    "visa_free": 155,
+    "visa_on_arrival": 39,
+    "visa_required": 33,
+    "score": 194
+  }
+}
