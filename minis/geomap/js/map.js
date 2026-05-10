@@ -2,6 +2,8 @@
 const MapEngine = {
   map: null,
   geoLayer: null,
+  baseLayer: null,
+  currentTheme: 'dark',
   currentMode: 'geopolitics', // 'geopolitics', 'passport', 'gdp', 'visa-focus', 'border-focus'
   currentVisaFocus: null,
   selectedCountryId: null,
@@ -9,23 +11,40 @@ const MapEngine = {
   init() {
     const isMobile = window.innerWidth <= 768;
     this.map = L.map('map', {
-      center: isMobile ? [22, 78] : [40, 0],
-      zoom: isMobile ? 3 : 2,
+      center: [22, 78], // Centered over India as requested
+      zoom: isMobile ? 2 : 3,
       minZoom: 2,
       maxBounds: [[-90, -180], [90, 180]],
       zoomControl: false,
-      attributionControl: false
+      attributionControl: false,
+      zoomSnap: 0.5
     });
 
     L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
-    // Dark minimalist basemap
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-      attribution: "&copy; Atish's Geopolitics Atlas",
+    const isLight = document.body.classList.contains('light-theme');
+    const url = isLight 
+      ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+
+    this.baseLayer = L.tileLayer(url, {
+      attribution: "&copy; Atish's Atlas",
       maxZoom: 17
     }).addTo(this.map);
+    this.currentTheme = isLight ? 'light' : 'dark';
 
     this.renderLayer();
+  },
+
+  updateTheme(isLight) {
+    this.currentTheme = isLight ? 'light' : 'dark';
+    const url = isLight 
+      ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
+      : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+    
+    if (this.baseLayer) {
+      this.baseLayer.setUrl(url);
+    }
   },
 
   renderLayer() {
@@ -86,7 +105,7 @@ const MapEngine = {
         if (gdp > 10000000000000) fillColor = 'var(--accent-cyan)';
         else if (gdp > 2000000000000) fillColor = 'var(--accent-blue)';
         else if (gdp > 500000000000) fillColor = 'var(--accent-green)';
-        else { fillColor = '#ffffff'; fillOpacity = 0.35; }
+        else { fillColor = 'var(--accent-red)'; fillOpacity = 0.3; }
         fillOpacity = fillOpacity || 0.8;
       } else {
         fillOpacity = 0.2;

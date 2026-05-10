@@ -1,8 +1,24 @@
 // js/ui.js
 const UI = {
   init() {
+    this.checkAutoTheme();
     this.bindEvents();
     this.updateLegend('geopolitics');
+  },
+
+  checkAutoTheme() {
+    // Typical Chandigarh sunrise/sunset (approx 6 AM to 7 PM)
+    const hour = new Date().getHours();
+    const isDay = hour >= 6 && hour < 19;
+    if (isDay) {
+      document.body.classList.add('light-theme');
+      document.getElementById('theme-toggle').textContent = '🌙';
+      // MapEngine.init is usually called after UI.init in app.js
+      // So we might need to handle the initial theme in MapEngine.init
+    } else {
+      document.body.classList.remove('light-theme');
+      document.getElementById('theme-toggle').textContent = '☀️';
+    }
   },
 
   bindEvents() {
@@ -69,7 +85,9 @@ const UI = {
 
     // Close panels
     document.getElementById('close-left').addEventListener('click', () => {
-      document.getElementById('left-panel').classList.add('hidden-left');
+      const lp = document.getElementById('left-panel');
+      lp.classList.add('hidden-left');
+      lp.classList.remove('fullscreen');
       const toggleBtn = document.getElementById('btn-view-profile');
       if (toggleBtn) {
         toggleBtn.style.background = 'var(--accent-blue)';
@@ -77,8 +95,12 @@ const UI = {
       }
     });
     document.getElementById('close-right').addEventListener('click', () => {
-      document.getElementById('right-panel').classList.add('hidden-right');
-      document.getElementById('left-panel').classList.add('hidden-left');
+      const rp = document.getElementById('right-panel');
+      const lp = document.getElementById('left-panel');
+      rp.classList.add('hidden-right');
+      rp.classList.remove('fullscreen');
+      lp.classList.add('hidden-left');
+      lp.classList.remove('fullscreen');
       MapEngine.selectedCountryId = null;
       // Reset to geopolitics mode
       MapEngine.setMode('geopolitics');
@@ -86,6 +108,16 @@ const UI = {
       const geoBtn = document.querySelector('.mode-btn[data-mode="geopolitics"]');
       if (geoBtn) geoBtn.classList.add('active');
     });
+
+    // Theme toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const isLight = document.body.classList.toggle('light-theme');
+        themeBtn.textContent = isLight ? '🌙' : '☀️';
+        MapEngine.updateTheme(isLight);
+      });
+    }
 
     // Mobile back button
     document.getElementById('back-to-right').addEventListener('click', () => {
@@ -97,10 +129,6 @@ const UI = {
         toggleBtn.textContent = 'View Country Profile';
       }
     });
-
-    // Header Title Reload
-    document.querySelector('#header-brand h1').style.cursor = 'pointer';
-    document.querySelector('#header-brand h1').addEventListener('click', () => location.reload());
 
     // Compare button — toggle inline section in right panel
     document.getElementById('btn-compare').addEventListener('click', () => {
@@ -198,7 +226,7 @@ const UI = {
         <div style="display:flex; align-items:center; gap:4px;"><div class="legend-color" style="width:10px; height:10px; background:var(--accent-cyan)"></div> Superpower</div>
         <div style="display:flex; align-items:center; gap:4px;"><div class="legend-color" style="width:10px; height:10px; background:var(--accent-blue)"></div> Major</div>
         <div style="display:flex; align-items:center; gap:4px;"><div class="legend-color" style="width:10px; height:10px; background:var(--accent-green)"></div> Emerging</div>
-        <div style="display:flex; align-items:center; gap:4px;"><div class="legend-color" style="width:10px; height:10px; background:#ffffff"></div> Developing</div>
+        <div style="display:flex; align-items:center; gap:4px;"><div class="legend-color" style="width:10px; height:10px; background:var(--accent-red)"></div> Developing</div>
       `;
     } else if (mode === 'visa-focus') {
       html = `

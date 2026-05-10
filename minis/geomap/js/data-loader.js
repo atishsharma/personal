@@ -7,23 +7,11 @@ const DataLoader = {
     countries: [],
     geopolitics: {},
     passport: {},
-    profiles: {},
-    flags: {},
-    passportCovers: {}
+    profiles: {}
   },
 
   async loadAll() {
     try {
-      const optionalJson = async (url, fallback) => {
-        try {
-          const res = await fetch(url);
-          if (!res.ok) return fallback;
-          return await res.json();
-        } catch {
-          return fallback;
-        }
-      };
-
       const v = Date.now();
       const [geomapIndexRes, countriesRes, geopoliticsRes, passportRes, profilesRes] = await Promise.all([
         fetch('data/geomap_index.json?v=' + v),
@@ -94,8 +82,6 @@ const DataLoader = {
   getCountryProfile(id) { return this.data.profiles[id] || null; },
   getGeopolitics(id) { return this.data.geopolitics[id] || { allies: [], enemies: [], frenemies: [] }; },
   getPassportPower(id) { return this.data.passport[id] || null; },
-  getCountryFlag(id) { return this.data.flags[id] || null; },
-  getPassportCover(id) { return this.data.passportCovers[id] || null; },
   
   searchCountries(query) {
     if(!query) return [];
