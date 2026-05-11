@@ -11,67 +11,87 @@ const MapEngine = {
   init() {
     const isMobile = window.innerWidth <= 768;
     this.map = L.map('map', {
-      center: [22, 78], // Centered over India as requested
+      center: [22, 78],
       zoom: isMobile ? 2 : 3,
       minZoom: 2,
-      maxBounds: [[-90, -180], [90, 180]],
+      worldCopyJump: false, // Disabled because we now use triple-buffered GeoJSON features for manual seamless panning
       zoomControl: false,
       attributionControl: false,
-      zoomSnap: 0.5
+      zoomSnap: 0.5,
+      renderer: L.canvas()
     });
 
     L.control.zoom({ position: 'bottomright' }).addTo(this.map);
 
-    const isLight = document.body.classList.contains('light-theme');
-    const url = isLight 
-      ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+    this.layers = {
+      dark: L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: "&copy; CARTO",
+        maxZoom: 17
+      }),
+      light: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+        attribution: "&copy; CARTO",
+        maxZoom: 17
+      })
+    };
 
-    this.baseLayer = L.tileLayer(url, {
-      attribution: "Leaflet, CARTO, AmCharts &copy;",
-      maxZoom: 17
-    }).addTo(this.map);
+    const isLight = document.body.classList.contains('light-theme');
     this.currentTheme = isLight ? 'light' : 'dark';
+    this.baseLayer = this.layers[this.currentTheme].addTo(this.map);
 
     this.renderLayer();
   },
 
   updateTheme(isLight) {
-    this.currentTheme = isLight ? 'light' : 'dark';
-    const url = isLight 
-      ? 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
-      : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+    const newTheme = isLight ? 'light' : 'dark';
+    if (this.currentTheme === newTheme) return;
+
+    // Remove old base layer and add new one for a cleaner transition
+    if (this.baseLayer) this.map.removeLayer(this.baseLayer);
+    this.baseLayer = this.layers[newTheme].addTo(this.map);
     
-    if (this.baseLayer) {
-      this.baseLayer.setUrl(url);
-    }
+    this.currentTheme = newTheme;
     
-    // Re-render layer to ensure theme variables are correctly applied to the SVG paths
+    // Redraw the canvas layer
     if (this.geoLayer) {
       this.renderLayer();
     }
   },
 
   renderLayer() {
-    if (this.geoLayer) this.map.removeLayer(this.geoLayer);
-
-    this.geoLayer = L.geoJSON(DataLoader.data.geomapFeatures, {
-      style: (feature) => this.getFeatureStyle(feature),
-      onEachFeature: (feature, layer) => {
-        layer.on({
-          mouseover: (e) => this.handleMouseOver(e),
-          mouseout: (e) => this.handleMouseOut(e),
-          click: (e) => this.handleClick(e)
-        });
-        
-        // Add tooltip
-        layer.bindTooltip(() => this.getTooltipContent(feature.properties.name), {
-          className: 'custom-tooltip',
-          direction: 'auto',
-          sticky: true
+    if (!this.geoLayer) {
+      this.geoLayer = L.geoJSON(DataLoader.data.geomapFeatures, {
+        style: (feature) => this.getFeatureStyle(feature),
+        onEachFeature: (feature, layer) => {
+          layer.on({
+            mouseover: (e) => this.handleMouseOver(e),
+            mouseout: (e) => this.handleMouseOut(e),
+            click: (e) => this.handleClick(e)
+          });
+          
+          layer.bindTooltip(() => this.getTooltipContent(feature.properties.name), {
+            className: 'custom-tooltip',
+            direction: 'auto',
+            sticky: true
+          });
+        }
+      }).addTo(this.map);
+    } else {
+      this.geoLayer.setStyle((feature) => this.getFeatureStyle(feature));
+      
+      // Ensure selected country is on top after style update
+      if (this.selectedCountryId) {
+        this.geoLayer.eachLayer(layer => {
+          if (layer.feature.properties.name === this.selectedCountryId) {
+            layer.bringToFront();
+          }
         });
       }
-    }).addTo(this.map);
+    }
+  },
+
+  getStyleValue(varName) {
+    // Helper to get computed CSS variable values for Canvas renderer
+    return getComputedStyle(document.body).getPropertyValue(varName).trim();
   },
 
   getFeatureStyle(feature) {
@@ -79,27 +99,27 @@ const MapEngine = {
     const isSelected = this.selectedCountryId === id;
     const isLight = this.currentTheme === 'light';
     
-    let fillColor = 'var(--map-land)';
+    let fillColor = this.getStyleValue('--map-land');
     let fillOpacity = isLight ? 0.9 : 0.8;
     let className = isSelected ? 'blink-path' : '';
     let weight = isSelected ? 3 : (isLight ? 1.5 : 1);
-    let color = isSelected ? 'var(--accent-cyan)' : 'var(--map-border)';
+    let color = isSelected ? this.getStyleValue('--accent-cyan') : this.getStyleValue('--map-border');
 
     if (this.currentMode === 'geopolitics') {
       if (this.selectedCountryId && !isSelected) {
         const relations = DataLoader.getGeopolitics(this.selectedCountryId);
-        if (relations.allies.includes(id)) { fillColor = 'var(--accent-green)'; fillOpacity = 0.7; }
-        else if (relations.enemies.includes(id)) { fillColor = 'var(--accent-red)'; fillOpacity = 0.7; }
-        else if (relations.frenemies.includes(id)) { fillColor = 'var(--accent-orange)'; fillOpacity = 0.7; }
+        if (relations.allies.includes(id)) { fillColor = this.getStyleValue('--accent-green'); fillOpacity = 0.7; }
+        else if (relations.enemies.includes(id)) { fillColor = this.getStyleValue('--accent-red'); fillOpacity = 0.7; }
+        else if (relations.frenemies.includes(id)) { fillColor = this.getStyleValue('--accent-orange'); fillOpacity = 0.7; }
         else { fillOpacity = 0.2; }
       }
     } else if (this.currentMode === 'passport') {
       const p = DataLoader.getPassportPower(id);
       if (p) {
-        if (p.rank <= 10) fillColor = 'var(--accent-cyan)';
-        else if (p.rank <= 50) fillColor = 'var(--accent-green)';
-        else if (p.rank <= 80) fillColor = 'var(--accent-orange)';
-        else fillColor = 'var(--accent-red)';
+        if (p.rank <= 10) fillColor = this.getStyleValue('--accent-cyan');
+        else if (p.rank <= 50) fillColor = this.getStyleValue('--accent-green');
+        else if (p.rank <= 80) fillColor = this.getStyleValue('--accent-orange');
+        else fillColor = this.getStyleValue('--accent-red');
         fillOpacity = 0.8;
       } else {
         fillOpacity = 0.2;
@@ -108,10 +128,10 @@ const MapEngine = {
       const profile = DataLoader.getCountryProfile(id);
       if (profile && profile.gdp_nominal_usd) {
         const gdp = profile.gdp_nominal_usd;
-        if (gdp > 10000000000000) fillColor = 'var(--accent-cyan)';
-        else if (gdp > 2000000000000) fillColor = 'var(--accent-blue)';
-        else if (gdp > 500000000000) fillColor = 'var(--accent-green)';
-        else { fillColor = 'var(--accent-red)'; fillOpacity = 0.5; }
+        if (gdp > 10000000000000) fillColor = this.getStyleValue('--accent-cyan');
+        else if (gdp > 2000000000000) fillColor = this.getStyleValue('--accent-blue');
+        else if (gdp > 500000000000) fillColor = this.getStyleValue('--accent-green');
+        else { fillColor = this.getStyleValue('--accent-red'); fillOpacity = 0.5; }
         fillOpacity = fillOpacity || 0.8;
       } else {
         fillOpacity = 0.2;
@@ -121,9 +141,9 @@ const MapEngine = {
       let highlightList = [];
       let hColor = '';
       if (p) {
-        if (this.currentVisaFocus === 'free') { highlightList = p.visa_free_list || []; hColor = 'var(--accent-green)'; }
-        else if (this.currentVisaFocus === 'voa') { highlightList = p.visa_on_arrival_list || []; hColor = 'var(--accent-orange)'; }
-        else if (this.currentVisaFocus === 'req') { highlightList = p.visa_required_list || []; hColor = 'var(--accent-red)'; }
+        if (this.currentVisaFocus === 'free') { highlightList = p.visa_free_list || []; hColor = this.getStyleValue('--accent-green'); }
+        else if (this.currentVisaFocus === 'voa') { highlightList = p.visa_on_arrival_list || []; hColor = this.getStyleValue('--accent-orange'); }
+        else if (this.currentVisaFocus === 'req') { highlightList = p.visa_required_list || []; hColor = this.getStyleValue('--accent-red'); }
       }
       
       if (highlightList.includes(id)) {
@@ -134,7 +154,7 @@ const MapEngine = {
       }
     } else if (this.currentMode === 'border-focus') {
       if (isSelected) {
-        fillColor = 'var(--accent-cyan)';
+        fillColor = this.getStyleValue('--accent-cyan');
         fillOpacity = 0.8;
       } else {
         fillColor = 'transparent';

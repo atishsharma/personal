@@ -47,17 +47,37 @@ const DataLoader = {
         'Bouvet Island', 'Gibraltar', 'Bonair, Saint Eustachius and Saba'
       ]);
 
-      this.data.geomapFeatures = rawGeo.features
+      const baseFeatures = rawGeo.features
         .filter(f => !skipCountries.has(f.properties.name))
         .map(f => {
           f.properties.name = nameMap[f.properties.name] || f.properties.name;
           return f;
         });
 
+      // Create wrapped clones for seamless 360 scrolling
+      const eastClones = JSON.parse(JSON.stringify(baseFeatures)).map(f => {
+          this.shiftCoordinates(f.geometry.coordinates, 360);
+          return f;
+      });
+      const westClones = JSON.parse(JSON.stringify(baseFeatures)).map(f => {
+          this.shiftCoordinates(f.geometry.coordinates, -360);
+          return f;
+      });
+
+      this.data.geomapFeatures = [...westClones, ...baseFeatures, ...eastClones];
+
       return true;
     } catch (error) {
       console.error("Error loading datasets:", error);
       return false;
+    }
+  },
+
+  shiftCoordinates(coords, shift) {
+    if (typeof coords[0] === 'number') {
+      coords[0] += shift;
+    } else {
+      coords.forEach(c => this.shiftCoordinates(c, shift));
     }
   },
 

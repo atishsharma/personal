@@ -31,6 +31,7 @@
     "neighboring_countries": [],
     "region": "Asia",
     "subregion": "Southern Asia",
+    "gdp_ppp_per_capita_usd": null,
     "data_sources": {
       "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
       "population": "Worldometer Population by Country 2026 - UN estimates",
@@ -67,6 +68,7 @@
     "neighboring_countries": [],
     "region": "Europe",
     "subregion": "Southeast Europe",
+    "gdp_ppp_per_capita_usd": null,
     "data_sources": {
       "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
       "population": "Worldometer Population by Country 2026 - UN estimates",

@@ -496,12 +496,32 @@
                             <input type="number" value="${profile.gdp_nominal_usd || ''}" class="input-field" onchange="updateProfile('${id}', 'gdp_nominal_usd', parseInt(this.value))">
                         </div>
                         <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">GDP Rank</label>
+                            <input type="number" value="${profile.gdp_rank || ''}" class="input-field" onchange="updateProfile('${id}', 'gdp_rank', parseInt(this.value))">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">GDP Growth (%)</label>
+                            <input type="number" step="0.01" value="${profile.gdp_growth_percent || ''}" class="input-field" onchange="updateProfile('${id}', 'gdp_growth_percent', parseFloat(this.value))">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">GDP Per Capita (USD)</label>
+                            <input type="number" value="${profile.gdp_per_capita_usd || ''}" class="input-field" onchange="updateProfile('${id}', 'gdp_per_capita_usd', parseInt(this.value))">
+                        </div>
+                        <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">GDP PPP (USD)</label>
                             <input type="number" value="${profile.gdp_ppp_usd || ''}" class="input-field" onchange="updateProfile('${id}', 'gdp_ppp_usd', parseInt(this.value))">
                         </div>
                         <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">GDP PPP Per Capita (USD)</label>
+                            <input type="number" value="${profile.gdp_ppp_per_capita_usd || ''}" class="input-field" onchange="updateProfile('${id}', 'gdp_ppp_per_capita_usd', parseInt(this.value))">
+                        </div>
+                        <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Currency</label>
                             <input type="text" value="${profile.currency || ''}" class="input-field" onchange="updateProfile('${id}', 'currency', this.value)">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Sub-region</label>
+                            <input type="text" value="${profile.subregion || ''}" class="input-field" onchange="updateProfile('${id}', 'subregion', this.value)">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Military Spending (USD)</label>

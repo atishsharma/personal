@@ -1,24 +1,8 @@
 // js/ui.js
 const UI = {
   init() {
-    this.checkAutoTheme();
     this.bindEvents();
     this.updateLegend('geopolitics');
-  },
-
-  checkAutoTheme() {
-    // Typical Chandigarh sunrise/sunset (approx 6 AM to 7 PM)
-    const hour = new Date().getHours();
-    const isDay = hour >= 6 && hour < 19;
-    if (isDay) {
-      document.body.classList.add('light-theme');
-      document.getElementById('theme-toggle').textContent = '🌙';
-      // MapEngine.init is usually called after UI.init in app.js
-      // So we might need to handle the initial theme in MapEngine.init
-    } else {
-      document.body.classList.remove('light-theme');
-      document.getElementById('theme-toggle').textContent = '☀️';
-    }
   },
 
   bindEvents() {
@@ -33,6 +17,18 @@ const UI = {
           MapEngine.setMode(mode);
         }, 10);
       });
+    });
+
+    // Add global listener to force external links out of PWA standalone mode
+    document.addEventListener('click', (e) => {
+      const anchor = e.target.closest('a');
+      if (anchor && anchor.target === '_blank') {
+        // If it's a PWA in standalone mode, window.open often triggers the system browser
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+          e.preventDefault();
+          window.open(anchor.href, '_blank', 'noopener,noreferrer');
+        }
+      }
     });
 
     const searchInput = document.getElementById('search-input');
@@ -341,17 +337,35 @@ const UI = {
           document.getElementById('stat-gdp').textContent = 'N/A';
       }
 
+      // New GDP Stats
+      document.getElementById('stat-gdp-rank').textContent = profile.gdp_rank ? '#' + profile.gdp_rank : 'N/A';
+      document.getElementById('stat-gdp-per-capita').textContent = profile.gdp_per_capita_usd ? '$' + profile.gdp_per_capita_usd.toLocaleString() : 'N/A';
+      
+      const growthElem = document.getElementById('stat-gdp-growth');
+      if (profile.gdp_growth_percent != null) {
+          const growth = profile.gdp_growth_percent;
+          growthElem.textContent = (growth > 0 ? '+' : '') + growth + '%';
+          growthElem.style.color = growth > 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+      } else {
+          growthElem.textContent = 'N/A';
+          growthElem.style.color = 'inherit';
+      }
+
       if (profile.gdp_ppp_usd) {
           let gdp = profile.gdp_ppp_usd;
+          let gdpStr = '';
           if (gdp >= 1e12) {
-              document.getElementById('stat-gdp-ppp').textContent = '$' + (gdp / 1e12).toFixed(2) + 'T';
+              gdpStr = '$' + (gdp / 1e12).toFixed(2) + 'T';
           } else if (gdp >= 1e9) {
-              document.getElementById('stat-gdp-ppp').textContent = '$' + (gdp / 1e9).toFixed(2) + 'B';
+              gdpStr = '$' + (gdp / 1e9).toFixed(2) + 'B';
           } else if (gdp >= 1e6) {
-              document.getElementById('stat-gdp-ppp').textContent = '$' + (gdp / 1e6).toFixed(2) + 'M';
+              gdpStr = '$' + (gdp / 1e6).toFixed(2) + 'M';
           } else {
-              document.getElementById('stat-gdp-ppp').textContent = '$' + gdp.toLocaleString();
+              gdpStr = '$' + gdp.toLocaleString();
           }
+          
+          let pppPerCapita = profile.gdp_ppp_per_capita_usd ? ` ($${profile.gdp_ppp_per_capita_usd.toLocaleString()})` : '';
+          document.getElementById('stat-gdp-ppp').textContent = gdpStr + pppPerCapita;
       } else {
           document.getElementById('stat-gdp-ppp').textContent = 'N/A';
       }
@@ -361,7 +375,7 @@ const UI = {
       
       let cInfoFull = DataLoader.data.countries.find(c => c.id === id) || {};
       let regionStr = cInfoFull.region || profile.region || 'N/A';
-      let subregionStr = profile.subregion ? ' / ' + profile.subregion : '';
+      let subregionStr = profile.subregion ? ' (' + profile.subregion + ')' : '';
       document.getElementById('stat-region').textContent = regionStr + subregionStr;
       
       let unStatus = cInfoFull.unStatus || 'N/A';
