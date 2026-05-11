@@ -7,6 +7,7 @@ const MapEngine = {
   currentMode: 'geopolitics', // 'geopolitics', 'passport', 'gdp', 'visa-focus', 'border-focus'
   currentVisaFocus: null,
   selectedCountryId: null,
+  capitalMarker: null,
 
   init() {
     const isMobile = window.innerWidth <= 768;
@@ -189,6 +190,12 @@ const MapEngine = {
   async selectCountry(id) {
     this.selectedCountryId = id;
     
+    // Clear previous capital marker
+    if (this.capitalMarker) {
+      this.map.removeLayer(this.capitalMarker);
+      this.capitalMarker = null;
+    }
+
     this.renderLayer(); // Re-render to show update colors
     
     let targetLayer = null;
@@ -213,6 +220,15 @@ const MapEngine = {
        this.map.flyToBounds(targetLayer.getBounds(), { padding: [50, 50], duration: 1 });
     }
     UI.updateCountryProfile(id);
+  },
+
+  clearSelection() {
+    this.selectedCountryId = null;
+    if (this.capitalMarker) {
+      this.map.removeLayer(this.capitalMarker);
+      this.capitalMarker = null;
+    }
+    this.setMode('geopolitics');
   },
 
   setMode(mode) {
@@ -280,5 +296,29 @@ const MapEngine = {
       html += `<div style="margin-top:4px; color: var(--accent-cyan)">Passport Rank: #${pass.rank}</div>`;
     }
     return html;
+  },
+
+  showCapital(lat, lng, name) {
+    if (this.capitalMarker) {
+      this.map.removeLayer(this.capitalMarker);
+    }
+    
+    this.capitalMarker = L.circleMarker([lat, lng], {
+      radius: 6,
+      fillColor: "#ff0000",
+      color: "#ffffff",
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 1,
+      pane: 'markerPane'
+    }).addTo(this.map);
+    
+    this.capitalMarker.bindTooltip(`Capital: ${name}`, {
+      permanent: false,
+      direction: 'top'
+    });
+    
+    // Bring to front
+    this.capitalMarker.bringToFront();
   }
 };

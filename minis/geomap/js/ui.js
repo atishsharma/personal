@@ -103,9 +103,7 @@ const UI = {
         rp.classList.remove('fullscreen');
         lp.classList.add('hidden-left');
         lp.classList.remove('fullscreen');
-        MapEngine.selectedCountryId = null;
-        // Reset to geopolitics mode
-        MapEngine.setMode('geopolitics');
+        MapEngine.clearSelection();
         document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
         const geoBtn = document.querySelector('.mode-btn[data-mode="geopolitics"]');
         if (geoBtn) geoBtn.classList.add('active');
@@ -290,13 +288,22 @@ const UI = {
         fetch(`https://restcountries.com/v3.1/name/${encodeURIComponent(id)}?fullText=true`)
           .then(res => res.json())
           .then(data => {
-            if (data && data.length > 0 && data[0].name.official) {
-              const officialName = data[0].name.official;
-              if (officialName.toLowerCase() === id.toLowerCase() || 
-                  (data[0].name.common && officialName.toLowerCase() === data[0].name.common.toLowerCase())) {
-                  officialNameDiv.textContent = '';
-              } else {
-                  officialNameDiv.textContent = officialName;
+            if (data && data.length > 0) {
+              const countryData = data[0];
+              if (countryData.name.official) {
+                const officialName = countryData.name.official;
+                if (officialName.toLowerCase() === id.toLowerCase() || 
+                    (countryData.name.common && officialName.toLowerCase() === countryData.name.common.toLowerCase())) {
+                    officialNameDiv.textContent = '';
+                } else {
+                    officialNameDiv.textContent = officialName;
+                }
+              }
+
+              // Capital Marker
+              if (countryData.capitalInfo && countryData.capitalInfo.latlng) {
+                const [lat, lng] = countryData.capitalInfo.latlng;
+                MapEngine.showCapital(lat, lng, countryData.capital ? countryData.capital[0] : 'Capital');
               }
             } else {
               officialNameDiv.textContent = '';
@@ -390,13 +397,20 @@ const UI = {
       
       let unStatus = cInfoFull.unStatus || 'N/A';
       let unElem = document.getElementById('stat-un-status');
-      unElem.textContent = unStatus;
+      const unSlug = id.toLowerCase().replace(/ /g, '-');
+      unElem.innerHTML = `<a href="https://${unSlug}.un.org/en" target="_blank" style="color:inherit; text-decoration:underline;">${unStatus}</a>`;
       if (unStatus === 'UN Member State') unElem.style.color = 'var(--accent-green)';
       else if (unStatus === 'UN Observer State') unElem.style.color = 'var(--accent-blue)';
       else if (unStatus === 'Non-UN Member') unElem.style.color = 'var(--accent-red)';
       else unElem.style.color = '';
       
-      document.getElementById('stat-gov').textContent = profile.government_type || 'N/A';
+      const govType = profile.government_type || 'N/A';
+      const govElem = document.getElementById('stat-gov');
+      if (govType !== 'N/A') {
+          govElem.innerHTML = `<a href="https://en.wikipedia.org/wiki/Government_of_${encodeURIComponent(id)}" target="_blank" style="color:var(--accent-blue); text-decoration:underline;">${govType}</a>`;
+      } else {
+          govElem.textContent = govType;
+      }
       document.getElementById('stat-head').textContent = profile.head_of_state || 'N/A';
       
       let hdiVal = profile.hdi;
