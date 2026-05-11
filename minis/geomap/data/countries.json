@@ -3,7 +3,8 @@
     "id": "Indonesia",
     "name": "Indonesia",
     "region": "Asia",
-    "unStatus": "UN Member State"
+    "unStatus": "UN Member State",
+    "flag_colors": ["#FF0000", "#FFFFFF", "#FF0000"]
   },
   {
     "id": "Malaysia",
@@ -51,13 +52,15 @@
     "id": "India",
     "name": "India",
     "region": "Asia",
-    "unStatus": "UN Member State"
+    "unStatus": "UN Member State",
+    "flag_colors": ["#FF9933", "#FFFFFF", "#128807"]
   },
   {
     "id": "China",
     "name": "China",
     "region": "Asia",
-    "unStatus": "UN Member State"
+    "unStatus": "UN Member State",
+    "flag_colors": ["#EE1C25", "#FFFF00", "#EE1C25"]
   },
   {
     "id": "Israel",
@@ -129,7 +132,8 @@
     "id": "France",
     "name": "France",
     "region": "Europe",
-    "unStatus": "UN Member State"
+    "unStatus": "UN Member State",
+    "flag_colors": ["#002395", "#FFFFFF", "#ED2939"]
   },
   {
     "id": "Suriname",
@@ -267,7 +271,8 @@
     "id": "Brazil",
     "name": "Brazil",
     "region": "Americas",
-    "unStatus": "UN Member State"
+    "unStatus": "UN Member State",
+    "flag_colors": ["#009739", "#FEDD00", "#012169"]
   },
   {
     "id": "Uruguay",
@@ -285,7 +290,8 @@
     "id": "Russia",
     "name": "Russia",
     "region": "Europe",
-    "unStatus": "UN Member State"
+    "unStatus": "UN Member State",
+    "flag_colors": ["#FFFFFF", "#0039A6", "#D52B1E"]
   },
   {
     "id": "Czechia",
@@ -297,7 +303,8 @@
     "id": "Germany",
     "name": "Germany",
     "region": "Europe",
-    "unStatus": "UN Member State"
+    "unStatus": "UN Member State",
+    "flag_colors": ["#000000", "#DD0000", "#FFCE00"]
   },
   {
     "id": "Estonia",
@@ -471,7 +478,8 @@
     "id": "United Kingdom",
     "name": "United Kingdom",
     "region": "Europe",
-    "unStatus": "UN Member State"
+    "unStatus": "UN Member State",
+    "flag_colors": ["#012169", "#FFFFFF", "#C8102E"]
   },
   {
     "id": "Greece",

@@ -193,9 +193,18 @@ const MapEngine = {
     
     let targetLayer = null;
     if (this.geoLayer) {
+        const mapCenter = this.map.getCenter();
+        let minDistance = Infinity;
+        
         this.geoLayer.eachLayer(layer => {
           if (layer.feature.properties.name === id) {
-            targetLayer = layer;
+            const layerCenter = layer.getBounds().getCenter();
+            // Use simple horizontal longitude distance for visual proximity
+            const dist = Math.abs(mapCenter.lng - layerCenter.lng);
+            if (dist < minDistance) {
+                minDistance = dist;
+                targetLayer = layer;
+            }
           }
         });
     }
@@ -221,9 +230,17 @@ const MapEngine = {
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
 
     let targetLayer = null;
+    const mapCenter = this.map.getCenter();
+    let minDistance = Infinity;
+
     this.geoLayer.eachLayer(layer => {
       if (layer.feature.properties.name === this.selectedCountryId) {
-        targetLayer = layer;
+        const layerCenter = layer.getBounds().getCenter();
+        const dist = Math.abs(mapCenter.lng - layerCenter.lng);
+        if (dist < minDistance) {
+            minDistance = dist;
+            targetLayer = layer;
+        }
       }
     });
     if (targetLayer) {

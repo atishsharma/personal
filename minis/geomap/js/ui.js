@@ -59,7 +59,7 @@ const UI = {
     document.getElementById('btn-view-profile').addEventListener('click', (e) => {
       const leftPanel = document.getElementById('left-panel');
       const rightPanel = document.getElementById('right-panel');
-      const isMobile = window.innerWidth <= 768;
+      const isMobile = window.innerWidth <= 1024;
       const isVisible = !leftPanel.classList.contains('hidden-left');
 
       if (isVisible) {
@@ -80,30 +80,37 @@ const UI = {
     });
 
     // Close panels
-    document.getElementById('close-left').addEventListener('click', () => {
-      const lp = document.getElementById('left-panel');
-      lp.classList.add('hidden-left');
-      lp.classList.remove('fullscreen');
-      const toggleBtn = document.getElementById('btn-view-profile');
-      if (toggleBtn) {
-        toggleBtn.style.background = 'var(--accent-blue)';
-        toggleBtn.textContent = 'View Country Profile';
-      }
-    });
-    document.getElementById('close-right').addEventListener('click', () => {
-      const rp = document.getElementById('right-panel');
-      const lp = document.getElementById('left-panel');
-      rp.classList.add('hidden-right');
-      rp.classList.remove('fullscreen');
-      lp.classList.add('hidden-left');
-      lp.classList.remove('fullscreen');
-      MapEngine.selectedCountryId = null;
-      // Reset to geopolitics mode
-      MapEngine.setMode('geopolitics');
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      const geoBtn = document.querySelector('.mode-btn[data-mode="geopolitics"]');
-      if (geoBtn) geoBtn.classList.add('active');
-    });
+    const closeLeft = document.getElementById('close-left');
+    if (closeLeft) {
+      closeLeft.addEventListener('click', () => {
+        const lp = document.getElementById('left-panel');
+        lp.classList.add('hidden-left');
+        lp.classList.remove('fullscreen');
+        const toggleBtn = document.getElementById('btn-view-profile');
+        if (toggleBtn) {
+          toggleBtn.style.background = 'var(--accent-blue)';
+          toggleBtn.textContent = 'View Country Profile';
+        }
+      });
+    }
+
+    const closeRight = document.getElementById('close-right');
+    if (closeRight) {
+      closeRight.addEventListener('click', () => {
+        const rp = document.getElementById('right-panel');
+        const lp = document.getElementById('left-panel');
+        rp.classList.add('hidden-right');
+        rp.classList.remove('fullscreen');
+        lp.classList.add('hidden-left');
+        lp.classList.remove('fullscreen');
+        MapEngine.selectedCountryId = null;
+        // Reset to geopolitics mode
+        MapEngine.setMode('geopolitics');
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+        const geoBtn = document.querySelector('.mode-btn[data-mode="geopolitics"]');
+        if (geoBtn) geoBtn.classList.add('active');
+      });
+    }
 
     // Theme toggle
     const themeBtn = document.getElementById('theme-toggle');
@@ -116,15 +123,18 @@ const UI = {
     }
 
     // Mobile back button
-    document.getElementById('back-to-right').addEventListener('click', () => {
-      document.getElementById('left-panel').classList.add('hidden-left');
-      document.getElementById('right-panel').classList.remove('hidden-right');
-      const toggleBtn = document.getElementById('btn-view-profile');
-      if (toggleBtn) {
-        toggleBtn.style.background = 'var(--accent-blue)';
-        toggleBtn.textContent = 'View Country Profile';
-      }
-    });
+    const backToRight = document.getElementById('back-to-right');
+    if (backToRight) {
+        backToRight.addEventListener('click', () => {
+            document.getElementById('left-panel').classList.add('hidden-left');
+            document.getElementById('right-panel').classList.remove('hidden-right');
+            const toggleBtn = document.getElementById('btn-view-profile');
+            if (toggleBtn) {
+              toggleBtn.style.background = 'var(--accent-blue)';
+              toggleBtn.textContent = 'View Country Profile';
+            }
+        });
+    }
 
     // Compare button — toggle inline section in right panel
     document.getElementById('btn-compare').addEventListener('click', () => {
@@ -251,7 +261,7 @@ const UI = {
 
     // Show right panel
     document.getElementById('right-panel').classList.remove('hidden-right');
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= 1024;
     const leftPanel = document.getElementById('left-panel');
     const leftWasOpen = !leftPanel.classList.contains('hidden-left');
     
@@ -632,5 +642,27 @@ const UI = {
 
     // Show first tab
     document.getElementById('compare-table').innerHTML = this._compareRenderGrid(tabs[tabNames[0]]);
+  },
+
+  previewImage(src) {
+    if (!src || src.includes('noflag') || src.includes('nopassport')) return;
+    const overlay = document.getElementById('image-preview-overlay');
+    const img = document.getElementById('preview-img');
+    img.src = src;
+    overlay.classList.remove('compare-overlay-hidden');
+    overlay.classList.add('compare-overlay-visible');
+  },
+
+  closePreview() {
+    const overlay = document.getElementById('image-preview-overlay');
+    overlay.classList.remove('compare-overlay-visible');
+    overlay.classList.add('compare-overlay-hidden');
+  },
+
+  toggleMinimize(panelId) {
+    const panel = document.getElementById(panelId);
+    if (panel) {
+        panel.classList.toggle('minimized');
+    }
   }
 };
