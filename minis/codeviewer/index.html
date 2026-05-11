@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atish's Codeviewer | Interactive Project Topology Map</title>
-    <meta name="description" content="Atish's Codeviewer - A visual mind map of your project's architecture, dependencies, and asset relationships. Explore codebase topology with dynamic graph visualization.">
-    <meta name="keywords" content="Code Viewer, Project Topology, Software Architecture, Code Visualization, Mind Map, Developer Tools, Atish's Codeviewer">
+    <meta name="description"
+        content="Atish's Codeviewer - A visual mind map of your project's architecture, dependencies, and asset relationships. Explore codebase topology with dynamic graph visualization.">
+    <meta name="keywords"
+        content="Code Viewer, Project Topology, Software Architecture, Code Visualization, Mind Map, Developer Tools, Atish's Codeviewer">
     <meta property="og:title" content="Atish's Codeviewer | Project Topology Map">
-    <meta property="og:description" content="Visualize your codebase architecture with a dynamic, interactive mind map.">
+    <meta property="og:description"
+        content="Visualize your codebase architecture with a dynamic, interactive mind map.">
     <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png"
+        href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&family=Pinyon+Script&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --bg: #030712;
@@ -24,7 +32,11 @@
             --text-secondary: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Outfit', sans-serif;
@@ -101,8 +113,15 @@
         }
 
         @keyframes slideDown {
-            from { transform: translateY(-100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .logo {
@@ -202,12 +221,14 @@
         #viewport {
             flex: 1;
             cursor: grab;
-            background-image: 
-                radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
             background-size: 40px 40px;
         }
 
-        #viewport:active { cursor: grabbing; }
+        #viewport:active {
+            cursor: grabbing;
+        }
 
         /* Sidebar Info */
         #info-panel {
@@ -311,7 +332,11 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
         /* Welcome Screen */
         #welcome {
@@ -353,7 +378,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             transform: translateX(-100%);
             transition: transform 0.6s;
         }
@@ -369,7 +394,7 @@
         }
 
         .node:hover {
-            filter: brightness(1.3) drop-shadow(0 0 8px rgba(255,255,255,0.4));
+            filter: brightness(1.3) drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
         }
 
         .link {
@@ -399,7 +424,7 @@
         }
 
         .close-modal {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
             width: 32px;
@@ -465,7 +490,9 @@
 
 
         /* Modals */
-        #file-modal, #project-modal, #legend-modal {
+        #file-modal,
+        #project-modal,
+        #legend-modal {
             position: fixed;
             inset: 0;
             background: rgba(3, 7, 18, 0.85);
@@ -478,7 +505,15 @@
             animation: fadeIn 0.3s ease;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
 
         .modal-container {
             background: #111827;
@@ -591,6 +626,7 @@
             #mobile-warning {
                 display: flex !important;
             }
+
             #app {
                 display: none;
             }
@@ -611,11 +647,11 @@
 
         /* Professional Architectural Report Styles */
         @media print {
-            @page { 
-                size: portrait; 
-                margin: 1.5cm; 
+            @page {
+                size: portrait;
+                margin: 1.5cm;
             }
-            
+
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
@@ -623,14 +659,23 @@
             }
 
             /* Hide everything but the core certificate content */
-            body > *:not(#project-modal),
-            header, footer, #app, #mobile-warning, #file-modal, #legend-modal, 
-            .modal-header, .close-modal, .print-btn, .custom-field-group label,
-            #project-stats-container > div:first-child {
+            body>*:not(#project-modal),
+            header,
+            footer,
+            #app,
+            #mobile-warning,
+            #file-modal,
+            #legend-modal,
+            .modal-header,
+            .close-modal,
+            .print-btn,
+            .custom-field-group label,
+            #project-stats-container>div:first-child {
                 display: none !important;
             }
 
-            html, body {
+            html,
+            body {
                 background: white !important;
                 color: black !important;
                 width: 100% !important;
@@ -690,15 +735,15 @@
                 line-height: 1.2 !important;
             }
 
-            #input-project-title { 
-                font-size: clamp(2rem, 5vw, 3rem) !important; 
+            #input-project-title {
+                font-size: clamp(2rem, 5vw, 3rem) !important;
                 margin-bottom: 0.2rem !important;
             }
 
-            #input-project-url { 
-                font-size: clamp(0.9rem, 2vw, 1.1rem) !important; 
-                color: #64748b !important; 
-                font-weight: 500 !important; 
+            #input-project-url {
+                font-size: clamp(0.9rem, 2vw, 1.1rem) !important;
+                color: #64748b !important;
+                font-weight: 500 !important;
                 word-break: break-all !important;
                 max-width: 90% !important;
                 margin: 0 auto !important;
@@ -721,8 +766,17 @@
                 text-align: center !important;
             }
 
-            .stat-value { font-size: 1.6rem !important; color: #0f172a !important; font-weight: 800 !important; }
-            .stat-label-small { font-size: 0.7rem !important; color: #64748b !important; text-transform: uppercase !important; }
+            .stat-value {
+                font-size: 1.6rem !important;
+                color: #0f172a !important;
+                font-weight: 800 !important;
+            }
+
+            .stat-label-small {
+                font-size: 0.7rem !important;
+                color: #64748b !important;
+                text-transform: uppercase !important;
+            }
 
             .bar-container {
                 width: 100% !important;
@@ -753,23 +807,28 @@
                 width: 100% !important;
             }
 
-            .stat-item { 
-                border-bottom: 1px solid #f1f5f9 !important; 
+            .stat-item {
+                border-bottom: 1px solid #f1f5f9 !important;
                 font-size: 0.85rem !important;
                 padding: 0.4rem 0 !important;
                 display: flex !important;
                 justify-content: space-between !important;
             }
 
-            .stat-item span { font-weight: 700 !important; color: #0f172a !important; }
+            .stat-item span {
+                font-weight: 700 !important;
+                color: #0f172a !important;
+            }
         }
     </style>
 </head>
+
 <body>
     <div id="mobile-warning">
         <div class="warning-icon">💻</div>
         <h2 style="font-size: 2rem; margin-bottom: 1rem;">Desktop Only Mode</h2>
-        <p style="color: var(--text-secondary); max-width: 400px;">CodeViewer's complex topology mapping requires a larger screen to provide an optimal experience. Please switch to a desktop or laptop device.</p>
+        <p style="color: var(--text-secondary); max-width: 400px;">CodeViewer's complex topology mapping requires a
+            larger screen to provide an optimal experience. Please switch to a desktop or laptop device.</p>
     </div>
 
     <div id="app">
@@ -793,7 +852,8 @@
 
         <div id="welcome">
             <h2>Map Your Codebase</h2>
-            <p>Select a project folder to visualize the intricate connections between your files, scripts, and assets in a dynamic mind map.</p>
+            <p>Select a project folder to visualize the intricate connections between your files, scripts, and assets in
+                a dynamic mind map.</p>
             <button onclick="pickFolder()" class="primary glow-btn">
                 <span>🚀</span> Initialize Mapping
             </button>
@@ -810,7 +870,7 @@
             <div class="panel-header" style="border: none; margin-bottom: 0;">
                 <div id="panel-file-name" class="file-name">file_name.js</div>
             </div>
-            
+
             <div class="stat-group" style="margin-top: 1.5rem;">
                 <div class="stat-label">Connections</div>
                 <ul id="panel-links" class="stat-list">
@@ -862,14 +922,30 @@
             </div>
             <div class="modal-body">
                 <div class="legend-grid">
-                    <div class="legend-modal-item"><div class="legend-dot" style="background: #fb923c"></div> HTML</div>
-                    <div class="legend-modal-item"><div class="legend-dot" style="background: #facc15"></div> JavaScript</div>
-                    <div class="legend-modal-item"><div class="legend-dot" style="background: #38bdf8"></div> CSS</div>
-                    <div class="legend-modal-item"><div class="legend-dot" style="background: #3776ab"></div> Python</div>
-                    <div class="legend-modal-item"><div class="legend-dot" style="background: #0891b2"></div> Markdown</div>
-                    <div class="legend-modal-item"><div class="legend-dot" style="background: #a78bfa"></div> Assets</div>
-                    <div class="legend-modal-item"><div class="legend-dot" style="background: #4ade80"></div> JSON</div>
-                    <div class="legend-modal-item"><div class="legend-dot" style="background: #94a3b8"></div> Directories</div>
+                    <div class="legend-modal-item">
+                        <div class="legend-dot" style="background: #fb923c"></div> HTML
+                    </div>
+                    <div class="legend-modal-item">
+                        <div class="legend-dot" style="background: #facc15"></div> JavaScript
+                    </div>
+                    <div class="legend-modal-item">
+                        <div class="legend-dot" style="background: #38bdf8"></div> CSS
+                    </div>
+                    <div class="legend-modal-item">
+                        <div class="legend-dot" style="background: #3776ab"></div> Python
+                    </div>
+                    <div class="legend-modal-item">
+                        <div class="legend-dot" style="background: #0891b2"></div> Markdown
+                    </div>
+                    <div class="legend-modal-item">
+                        <div class="legend-dot" style="background: #a78bfa"></div> Assets
+                    </div>
+                    <div class="legend-modal-item">
+                        <div class="legend-dot" style="background: #4ade80"></div> JSON
+                    </div>
+                    <div class="legend-modal-item">
+                        <div class="legend-dot" style="background: #94a3b8"></div> Directories
+                    </div>
                 </div>
             </div>
         </div>
@@ -938,11 +1014,11 @@
         function initGraph() {
             width = window.innerWidth;
             height = window.innerHeight;
-            
+
             svg = d3.select("#viewport")
                 .attr("width", width)
                 .attr("height", height);
-            
+
             svg.selectAll("*").remove();
             g = svg.append("g");
 
@@ -1051,7 +1127,7 @@
                 const dirHandle = await window.showDirectoryPicker();
                 document.getElementById('welcome').style.display = 'none';
                 document.getElementById('loader').style.display = 'flex';
-                
+
                 graphData = { nodes: [], links: [] };
                 projectStats = {
                     name: dirHandle.name,
@@ -1062,11 +1138,11 @@
                     locByLang: {},
                     distribution: {}
                 };
-                
+
                 const files = [];
                 await scanDirectory(dirHandle, '', files);
                 await analyzeConnections(files);
-                
+
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('btn-project-info').style.display = 'flex';
                 initGraph();
@@ -1079,7 +1155,7 @@
 
         async function scanDirectory(handle, path, files) {
             const currentPath = path ? `${path}/${handle.name}` : handle.name;
-            
+
             graphData.nodes.push({
                 id: currentPath,
                 name: handle.name,
@@ -1098,7 +1174,7 @@
                 } else {
                     const entryNameLower = entry.name.toLowerCase();
                     const ext = entryNameLower.split('.').pop();
-                    
+
                     const codeExts = ['js', 'ts', 'jsx', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'php', 'py', 'rb', 'pl', 'lua', 'sh', 'bash', 'zsh', 'ps1', 'c', 'h', 'cpp', 'hpp', 'cc', 'cs', 'java', 'go', 'rs', 'swift', 'kt', 'dart', 'scala', 'json', 'xml', 'yaml', 'yml', 'toml', 'sql', 'md', 'txt', 'csv', 'r', 'hs', 'erl', 'ex', 'exs', 'clj', 'fs', 'vhd', 'v', 'ada', 'pas', 'bas', 'lisp', 'scm', 'fs', 'ml', 'f', 'f90'];
                     const imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg', 'ico', 'bmp', 'tiff', 'tif', 'avif', 'heic'];
                     const audioExts = ['mp3', 'wav', 'ogg', 'm4a', 'flac', 'aac', 'wma'];
@@ -1106,18 +1182,18 @@
                     const fontExts = ['ttf', 'otf', 'woff', 'woff2', 'eot'];
                     const docExts = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'rtf'];
                     const archiveExts = ['zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'xz'];
-                    
+
                     const allValidExts = [...codeExts, ...imageExts, ...audioExts, ...videoExts, ...fontExts, ...docExts, ...archiveExts];
-                    
+
                     if (allValidExts.includes(ext)) {
                         const file = await entry.getFile();
                         const isImage = imageExts.includes(ext);
                         const isText = codeExts.includes(ext) || ['txt', 'md', 'json', 'xml', 'yaml', 'yml', 'toml', 'sql', 'csv'].includes(ext);
-                        
+
                         let content = '';
                         if (isImage) content = URL.createObjectURL(file);
                         else if (isText && file.size < 1024 * 1024) content = await file.text(); // Max 1MB for text
-                        
+
                         const fileNode = {
                             id: entryPath,
                             name: entry.name,
@@ -1134,12 +1210,12 @@
                         projectStats.totalFiles++;
                         projectStats.totalSize += file.size;
                         projectStats.distribution[ext] = (projectStats.distribution[ext] || 0) + 1;
-                        
+
                         if (!isImage && content) {
                             const loc = content.split('\n').length;
                             projectStats.locByLang[ext] = (projectStats.locByLang[ext] || 0) + loc;
                         }
-                        
+
                         graphData.nodes.push(fileNode);
                         graphData.links.push({ source: currentPath, target: entryPath });
                         files.push(fileNode);
@@ -1162,7 +1238,7 @@
                     jsx: [/import\s+.*\s+from\s+['"](.*)['"]/g],
                     tsx: [/import\s+.*\s+from\s+['"](.*)['"]/g],
                     vue: [/src=['"](.*?)['"]/g, /@import\s+['"](.*?)['"]/g],
-                    
+
                     // Web Markup & Styles
                     html: [/src=['"](.*?)['"]/g, /href=['"](.*?)['"]/g, /url\(['"]?(.*?)['"]?\)/g],
                     htm: [/src=['"](.*?)['"]/g, /href=['"](.*?)['"]/g],
@@ -1170,11 +1246,11 @@
                     scss: [/@import\s+['"](.*?)['"]/g, /@use\s+['"](.*?)['"]/g],
                     sass: [/@import\s+['"](.*?)['"]/g, /@use\s+['"](.*?)['"]/g],
                     less: [/@import\s+['"](.*?)['"]/g],
-                    
+
                     // Python
                     py: [/import\s+([\w\.]+)/g, /from\s+([\w\.]+)\s+import/g],
                     pyw: [/import\s+([\w\.]+)/g, /from\s+([\w\.]+)\s+import/g],
-                    
+
                     // C-Style (C, C++, C#, Java, PHP, Go, etc.)
                     c: [/#include\s*['"<](.*?)['">]/g],
                     h: [/#include\s*['"<](.*?)['">]/g],
@@ -1186,14 +1262,14 @@
                     php: [/require\s*['"](.*?)['"]/g, /include\s*['"](.*?)['"]/g, /require_once\s*['"](.*?)['"]/g],
                     go: [/import\s+\(?\s*['"](.*?)['"]/g],
                     rs: [/use\s+([\w\:]+);/g, /mod\s+(\w+);/g],
-                    
+
                     // Ruby & Others
                     rb: [/require\s*['"](.*?)['"]/g, /load\s*['"](.*?)['"]/g],
                     swift: [/import\s+(\w+)/g],
                     dart: [/import\s+['"](.*?)['"]/g, /export\s+['"](.*?)['"]/g, /part\s+['"](.*?)['"]/g],
                     sh: [/source\s+(.*?)\s/g, /\.\s+(.*?)\s/g],
                     bash: [/source\s+(.*?)\s/g],
-                    
+
                     // Documentation & Config
                     md: [/\[.*?\]\((.*?)\)/g, /src=['"](.*?)['"]/g, /href=['"](.*?)['"]/g],
                     json: [/['"]path['"]\s*:\s*['"](.*?)['"]/g]
@@ -1201,16 +1277,16 @@
 
                 const ext = file.extension;
                 const rules = patterns[ext] || [];
-                
+
                 rules.forEach(regex => {
                     let match;
                     while ((match = regex.exec(file.content)) !== null) {
                         let targetPath = match[1];
                         if (!targetPath || targetPath.startsWith('http') || targetPath.startsWith('data:')) continue;
-                        
+
                         const resolved = resolvePath(file.path, targetPath);
                         const targetNode = graphData.nodes.find(n => n.id === resolved || n.id.endsWith(targetPath));
-                        
+
                         if (targetNode && targetNode.id !== file.id) {
                             graphData.links.push({
                                 source: file.id,
@@ -1237,14 +1313,14 @@
         function showFileInfo(d) {
             const panel = document.getElementById('info-panel');
             panel.classList.add('visible');
-            
+
             document.getElementById('panel-file-name').textContent = d.name;
-            
+
             const linksList = document.getElementById('panel-links');
             linksList.innerHTML = '';
-            
-            const connections = graphData.links.filter(l => 
-                (typeof l.source === 'string' ? l.source === d.id : l.source.id === d.id) || 
+
+            const connections = graphData.links.filter(l =>
+                (typeof l.source === 'string' ? l.source === d.id : l.source.id === d.id) ||
                 (typeof l.target === 'string' ? l.target === d.id : l.target.id === d.id)
             );
 
@@ -1252,11 +1328,11 @@
                 const other = (typeof l.source === 'string' ? l.source === d.id : l.source.id === d.id) ? l.target : l.source;
                 const otherNode = typeof other === 'string' ? graphData.nodes.find(n => n.id === other) : other;
                 const otherName = otherNode.name;
-                
+
                 const li = document.createElement('li');
                 li.className = 'stat-item';
-                
-                const openBtn = otherNode.type === 'file' ? 
+
+                const openBtn = otherNode.type === 'file' ?
                     `<button onclick="event.stopPropagation(); openFileById('${otherNode.id}')" style="padding: 4px 10px; font-size: 0.75rem; background: var(--accent-blue);">Open</button>` : '';
 
                 li.innerHTML = `
@@ -1269,7 +1345,7 @@
             if (d.type === 'file') {
                 const existingBtn = panel.querySelector('.primary-view-btn');
                 if (existingBtn) existingBtn.remove();
-                
+
                 const viewBtn = document.createElement('button');
                 viewBtn.className = 'primary primary-view-btn';
                 viewBtn.style.width = '100%';
@@ -1280,8 +1356,8 @@
             }
 
             node.classed("active", n => n.id === d.id);
-            link.classed("active", l => 
-                (typeof l.source === 'string' ? l.source === d.id : l.source.id === d.id) || 
+            link.classed("active", l =>
+                (typeof l.source === 'string' ? l.source === d.id : l.source.id === d.id) ||
                 (typeof l.target === 'string' ? l.target === d.id : l.target.id === d.id)
             );
         }
@@ -1296,10 +1372,10 @@
             const modal = document.getElementById('file-modal');
             const contentArea = document.getElementById('modal-content');
             const titleArea = document.getElementById('modal-title');
-            
+
             titleArea.textContent = d.path;
             contentArea.innerHTML = '';
-            
+
             if (d.isImage) {
                 contentArea.classList.add('is-image');
                 const img = document.createElement('img');
@@ -1310,25 +1386,25 @@
                 contentArea.appendChild(img);
             } else {
                 contentArea.classList.remove('is-image');
-                
+
                 const container = document.createElement('div');
                 container.className = 'code-container';
-                
+
                 const lineNums = document.createElement('div');
                 lineNums.className = 'line-numbers';
-                
+
                 const codeBody = document.createElement('div');
                 codeBody.className = 'code-content';
-                
+
                 const lines = (d.content || '').split('\n');
                 lineNums.innerHTML = lines.map((_, i) => i + 1).join('\n');
                 codeBody.textContent = d.content;
-                
+
                 container.appendChild(lineNums);
                 container.appendChild(codeBody);
                 contentArea.appendChild(container);
             }
-            
+
             modal.style.display = 'flex';
         }
 
@@ -1336,7 +1412,7 @@
             const modal = document.getElementById('project-modal');
             const container = document.getElementById('project-stats-container');
             modal.style.display = 'flex';
-            
+
             // Title Case Project Name
             const titleCasedName = projectStats.name
                 .toLowerCase()
@@ -1353,7 +1429,7 @@
             let distHtml = '';
             let barHtml = '';
             const total = projectStats.totalFiles;
-            
+
             // Sort extensions by count
             const sortedExts = Object.entries(projectStats.distribution)
                 .sort((a, b) => b[1] - a[1]);
@@ -1361,7 +1437,7 @@
             sortedExts.forEach(([ext, count]) => {
                 const percentage = (count / total * 100).toFixed(1);
                 const color = getNodeColor(ext);
-                
+
                 barHtml += `<div class="bar-segment" style="width: ${percentage}%; background: ${color};" title="${ext.toUpperCase()}: ${percentage}%"></div>`;
                 distHtml += `<span style="color: ${color}; font-size: 0.8rem;">● ${ext.toUpperCase()} (${percentage}%)</span>`;
             });
@@ -1453,18 +1529,18 @@
 
         function resetView() {
             if (!graphData.nodes.length) return;
-            
+
             const nodes = graphData.nodes;
             const xExtent = d3.extent(nodes, d => d.x);
             const yExtent = d3.extent(nodes, d => d.y);
-            
+
             const graphWidth = xExtent[1] - xExtent[0];
             const graphHeight = yExtent[1] - yExtent[0];
             const centerX = (xExtent[0] + xExtent[1]) / 2;
             const centerY = (yExtent[0] + yExtent[1]) / 2;
-            
+
             const scale = 0.8 / Math.max(graphWidth / width, graphHeight / height);
-            
+
             svg.transition().duration(750).call(
                 d3.zoom().transform,
                 d3.zoomIdentity.translate(width / 2, height / 2).scale(scale).translate(-centerX, -centerY)
@@ -1476,7 +1552,7 @@
         }
 
         // Close dropdown when clicking outside
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (!event.target.closest('.dropdown')) {
                 document.getElementById('legend-dropdown').style.display = 'none';
             }
@@ -1490,4 +1566,5 @@
         });
     </script>
 </body>
+
 </html>
