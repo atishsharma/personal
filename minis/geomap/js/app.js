@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const success = await DataLoader.loadAll();
   
   if (success) {
-    MapEngine.init();
     UI.init();
+    MapEngine.init();
     
     // Hide loader
     const loader = document.getElementById('loader');

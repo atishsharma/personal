@@ -45,6 +45,11 @@ const MapEngine = {
     if (this.baseLayer) {
       this.baseLayer.setUrl(url);
     }
+    
+    // Re-render layer to ensure theme variables are correctly applied to the SVG paths
+    if (this.geoLayer) {
+      this.renderLayer();
+    }
   },
 
   renderLayer() {
@@ -73,11 +78,11 @@ const MapEngine = {
     const id = feature.properties.name;
     const isSelected = this.selectedCountryId === id;
     
-    let fillColor = 'var(--bg-land)';
+    let fillColor = 'var(--map-land)';
     let fillOpacity = 0.8;
     let className = isSelected ? 'blink-path' : '';
     let weight = isSelected ? 3 : 1;
-    let color = isSelected ? 'var(--accent-cyan)' : 'var(--border-country)';
+    let color = isSelected ? 'var(--accent-cyan)' : 'var(--map-border)';
 
     if (this.currentMode === 'geopolitics') {
       if (this.selectedCountryId && !isSelected) {
