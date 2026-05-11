@@ -9,8 +9,9 @@
     <meta property="og:title" content="Atish's Codeviewer | Project Topology Map">
     <meta property="og:description" content="Visualize your codebase architecture with a dynamic, interactive mind map.">
     <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
-    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=JetBrains+Mono:wght@400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #030712;
@@ -543,8 +544,8 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
             margin-bottom: 2.5rem;
         }
 
@@ -571,12 +572,13 @@
         }
 
         .bar-container {
-            height: 10px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 5px;
-            display: flex;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
             overflow: hidden;
-            margin-top: 1rem;
+            display: flex;
+            margin: 1rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .bar-segment {
@@ -607,28 +609,25 @@
             text-align: center;
         }
 
-        /* Robust Print Report Styles */
+        /* Professional Architectural Report Styles */
         @media print {
             @page { 
-                size: landscape; 
-                margin: 1cm; 
+                size: portrait; 
+                margin: 1.5cm; 
             }
             
-            /* Aggressive Reset */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                box-sizing: border-box !important;
             }
 
-            /* Hide everything but the statistics */
+            /* Hide everything but the core certificate content */
             body > *:not(#project-modal),
             header, footer, #app, #mobile-warning, #file-modal, #legend-modal, 
-            .close-modal, .print-btn, .custom-field-group label {
+            .modal-header, .close-modal, .print-btn, .custom-field-group label,
+            #project-stats-container > div:first-child {
                 display: none !important;
-                visibility: hidden !important;
-                height: 0 !important;
-                margin: 0 !important;
-                padding: 0 !important;
             }
 
             html, body {
@@ -636,103 +635,133 @@
                 color: black !important;
                 width: 100% !important;
                 height: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
                 overflow: visible !important;
             }
 
             #project-modal {
                 display: block !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
+                position: static !important;
                 width: 100% !important;
-                height: auto !important;
                 background: white !important;
                 padding: 0 !important;
                 margin: 0 !important;
-                visibility: visible !important;
-                z-index: 9999 !important;
             }
 
             .modal-container {
                 background: white !important;
                 border: none !important;
-                box-shadow: none !important;
+                padding: 0 !important;
                 width: 100% !important;
-                max-width: none !important;
-                max-height: none !important;
-                position: relative !important;
-                transform: none !important;
-                top: 0 !important;
-                left: 0 !important;
+                height: auto !important;
                 display: block !important;
+                position: static !important;
+                transform: none !important;
+                box-shadow: none !important;
             }
 
             .modal-body {
-                padding: 20px !important;
-                overflow: visible !important;
-            }
-
-            /* Custom Fields as Static Bold Text */
-            .custom-input {
-                border: none !important;
-                background: transparent !important;
-                color: black !important;
-                font-size: 1.5rem !important;
-                font-weight: 800 !important;
-                text-align: center !important;
                 width: 100% !important;
-                margin: 5px 0 !important;
+                text-align: center !important;
                 padding: 0 !important;
             }
 
+            /* Main Certificate Title & Website */
             .custom-field-group {
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: center !important;
-                margin-bottom: 30px !important;
+                margin-bottom: 40px !important;
+                gap: 5px !important;
             }
 
-            /* Report Layout */
+            .custom-input {
+                border: none !important;
+                background: transparent !important;
+                color: #0f172a !important;
+                font-weight: 800 !important;
+                text-align: center !important;
+                width: 100% !important;
+                padding: 0 !important;
+                font-family: 'Outfit', sans-serif !important;
+                white-space: normal !important;
+                overflow: visible !important;
+                line-height: 1.2 !important;
+            }
+
+            #input-project-title { 
+                font-size: clamp(2rem, 5vw, 3rem) !important; 
+                margin-bottom: 0.2rem !important;
+            }
+
+            #input-project-url { 
+                font-size: clamp(0.9rem, 2vw, 1.1rem) !important; 
+                color: #64748b !important; 
+                font-weight: 500 !important; 
+                word-break: break-all !important;
+                max-width: 90% !important;
+                margin: 0 auto !important;
+            }
+
+            /* Statistics Grid Layout */
             .stats-grid {
                 display: grid !important;
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 20px !important;
-                margin-bottom: 30px !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 1rem !important;
+                margin-bottom: 2.5rem !important;
+                width: 100% !important;
             }
 
             .stat-card {
                 background: #f8fafc !important;
                 border: 1px solid #e2e8f0 !important;
-                padding: 20px !important;
+                padding: 1.2rem !important;
                 border-radius: 12px !important;
+                text-align: center !important;
             }
 
-            .stat-value {
-                color: #0f172a !important;
-                font-size: 2.5rem !important;
-                font-weight: 800 !important;
-            }
+            .stat-value { font-size: 1.6rem !important; color: #0f172a !important; font-weight: 800 !important; }
+            .stat-label-small { font-size: 0.7rem !important; color: #64748b !important; text-transform: uppercase !important; }
 
             .bar-container {
+                width: 100% !important;
                 height: 16px !important;
-                background: #f1f5f9 !important;
-                border: 1px solid #e2e8f0 !important;
+                margin: 1.5rem 0 !important;
                 border-radius: 8px !important;
+                background: #f1f5f9 !important;
+                border: 1px solid #cbd5e1 !important;
+                overflow: hidden !important;
             }
 
-            h2 {
-                font-size: 3rem !important;
-                margin-bottom: 10px !important;
-                color: black !important;
+            .stat-group .stat-label {
+                font-size: 0.9rem !important;
+                font-weight: 800 !important;
+                margin-bottom: 1rem !important;
+                color: #1e293b !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.05em !important;
+                border-bottom: 1px solid #e2e8f0 !important;
+                padding-bottom: 0.5rem !important;
             }
 
-            .stat-list .stat-item {
-                border-bottom: 1px solid #f1f5f9 !important;
-                padding: 10px 0 !important;
-                color: black !important;
+            .stat-list {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 0.5rem 2.5rem !important;
+                text-align: left !important;
+                width: 100% !important;
+            }
+
+            .stat-item { 
+                border-bottom: 1px solid #f1f5f9 !important; 
+                font-size: 0.85rem !important;
+                padding: 0.4rem 0 !important;
                 display: flex !important;
                 justify-content: space-between !important;
             }
+
+            .stat-item span { font-weight: 700 !important; color: #0f172a !important; }
         }
     </style>
 </head>
@@ -790,60 +819,60 @@
             </div>
         </div>
 
-        <div id="file-modal" onclick="if(event.target === this) closeModal()">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <div id="modal-title" class="modal-title">File Content</div>
-                    <button class="close-modal" onclick="closeModal()">✕</button>
-                </div>
-                <div class="modal-body">
-                    <div id="modal-content"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="project-modal" onclick="if(event.target === this) closeModal()">
-            <div class="modal-container">
-                <div class="modal-header">
-                    <div class="modal-title">Project Statistics</div>
-                    <div style="display: flex; align-items: center; margin-left: auto;">
-                        <button class="print-btn" onclick="printStats()">
-                            <span>🖨️</span> Print / PDF
-                        </button>
-                        <button class="close-modal" onclick="closeModal()">✕</button>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <div id="project-stats-container"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="legend-modal" onclick="if(event.target === this) closeModal()">
-            <div class="modal-container" style="max-width: 500px;">
-                <div class="modal-header">
-                    <div class="modal-title">Map Legend</div>
-                    <button class="close-modal" onclick="closeModal()">✕</button>
-                </div>
-                <div class="modal-body">
-                    <div class="legend-grid">
-                        <div class="legend-modal-item"><div class="legend-dot" style="background: #fb923c"></div> HTML</div>
-                        <div class="legend-modal-item"><div class="legend-dot" style="background: #facc15"></div> JavaScript</div>
-                        <div class="legend-modal-item"><div class="legend-dot" style="background: #38bdf8"></div> CSS</div>
-                        <div class="legend-modal-item"><div class="legend-dot" style="background: #3776ab"></div> Python</div>
-                        <div class="legend-modal-item"><div class="legend-dot" style="background: #0891b2"></div> Markdown</div>
-                        <div class="legend-modal-item"><div class="legend-dot" style="background: #a78bfa"></div> Assets</div>
-                        <div class="legend-modal-item"><div class="legend-dot" style="background: #4ade80"></div> JSON</div>
-                        <div class="legend-modal-item"><div class="legend-dot" style="background: #94a3b8"></div> Directories</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <footer>
             <div>&copy; 2026 Atish's Codeviewer &bull; Mapping Intelligence</div>
             <div>Designed By <a href="http://atishaksharma.com" target="_blank">Ats Design Studio</a></div>
         </footer>
+    </div>
+
+    <div id="file-modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div id="modal-title" class="modal-title">File Content</div>
+                <button class="close-modal" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="project-modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal-container">
+            <div class="modal-header">
+                <div class="modal-title">Project Statistics</div>
+                <div style="display: flex; align-items: center; margin-left: auto;">
+                    <button class="print-btn" onclick="printStats()">
+                        <span>🖨️</span> Print / PDF
+                    </button>
+                    <button class="close-modal" onclick="closeModal()">✕</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="project-stats-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="legend-modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal-container" style="max-width: 500px;">
+            <div class="modal-header">
+                <div class="modal-title">Map Legend</div>
+                <button class="close-modal" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="legend-grid">
+                    <div class="legend-modal-item"><div class="legend-dot" style="background: #fb923c"></div> HTML</div>
+                    <div class="legend-modal-item"><div class="legend-dot" style="background: #facc15"></div> JavaScript</div>
+                    <div class="legend-modal-item"><div class="legend-dot" style="background: #38bdf8"></div> CSS</div>
+                    <div class="legend-modal-item"><div class="legend-dot" style="background: #3776ab"></div> Python</div>
+                    <div class="legend-modal-item"><div class="legend-dot" style="background: #0891b2"></div> Markdown</div>
+                    <div class="legend-modal-item"><div class="legend-dot" style="background: #a78bfa"></div> Assets</div>
+                    <div class="legend-modal-item"><div class="legend-dot" style="background: #4ade80"></div> JSON</div>
+                    <div class="legend-modal-item"><div class="legend-dot" style="background: #94a3b8"></div> Directories</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -1368,6 +1397,10 @@
                     <div class="stat-card">
                         <div class="stat-value">${Object.keys(projectStats.locByLang).length}</div>
                         <div class="stat-label-small">Languages</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${totalLoc.toLocaleString()}</div>
+                        <div class="stat-label-small">Total LOC</div>
                     </div>
                 </div>
 
