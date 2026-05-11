@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeViewer | Project Topology Map</title>
+    <meta name="description" content="A visual mind map of your project's architecture, dependencies, and asset relationships.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030712;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* Glassmorphism Header */
+        header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 100;
+            padding: 1rem 2rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button.primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border: none;
+        }
+
+        button.primary:hover {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Graph Canvas */
+        #viewport {
+            flex: 1;
+            cursor: grab;
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        #viewport:active { cursor: grabbing; }
+
+        /* Sidebar Info */
+        #info-panel {
+            position: absolute;
+            right: 20px;
+            top: 100px;
+            width: 320px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            transform: translateX(400px);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 90;
+            max-height: calc(100vh - 140px);
+            overflow-y: auto;
+        }
+
+        #info-panel.visible {
+            transform: translateX(0);
+        }
+
+        .panel-header {
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .file-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            word-break: break-all;
+        }
+
+        .file-type {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .stat-group {
+            margin-bottom: 1rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .stat-item {
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-item span {
+            color: var(--accent-blue);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        /* Loading Overlay */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            display: none;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Welcome Screen */
+        #welcome {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            z-index: 10;
+        }
+
+        #welcome h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to bottom, #fff, #64748b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #welcome p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .glow-btn {
+            position: relative;
+            padding: 1.2rem 2.5rem;
+            font-size: 1.1rem;
+            overflow: hidden;
+        }
+
+        .glow-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .glow-btn:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* SVG Graph Styles */
+        .node {
+            cursor: pointer;
+            transition: filter 0.3s;
+        }
+
+        .node:hover {
+            filter: brightness(1.3) drop-shadow(0 0 8px rgba(255,255,255,0.4));
+        }
+
+        .link {
+            stroke: rgba(148, 163, 184, 0.15);
+            stroke-width: 1.5;
+            transition: stroke 0.3s, stroke-width 0.3s;
+        }
+
+        .link.active {
+            stroke: var(--accent-blue);
+            stroke-width: 3;
+            stroke-opacity: 0.8;
+        }
+
+        .node-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            fill: var(--text-secondary);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .node.active circle {
+            stroke: #fff;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+        }
+
+        .close-modal {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        /* Desktop Only Overlay */
+        @media (max-width: 768px) {
+            #mobile-warning {
+                display: flex !important;
+            }
+            #app {
+                display: none;
+            }
+        }
+
+        #mobile-warning {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #030712;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="mobile-warning">
+        <div class="warning-icon">💻</div>
+        <h2 style="font-size: 2rem; margin-bottom: 1rem;">Desktop Only Mode</h2>
+        <p style="color: var(--text-secondary); max-width: 400px;">CodeViewer's complex topology mapping requires a larger screen to provide an optimal experience. Please switch to a desktop or laptop device.</p>
+    </div>
+
+    <div id="app">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                <h1>CodeViewer</h1>
+            </div>
+            <div class="controls">
+                <button onclick="pickFolder()" class="primary">
+                    <span>📂</span> Open Project
+                </button>
+                <button onclick="showProjectInfo()" id="btn-project-info" style="display: none;">
+                    <span>📊</span> Project Info
+                </button>
+                <button onclick="resetView()">
+                    <span>🎯</span> Fit View
+                </button>
+                <div class="dropdown">
+                    <button onclick="toggleLegend()">
+                        <span>💡</span> Legend
+                    </button>
+                    <div id="legend-dropdown">
+                        <div class="legend-item"><div class="legend-color" style="background: #fb923c"></div> HTML</div>
+                        <div class="legend-item"><div class="legend-color" style="background: #facc15"></div> JavaScript</div>
+                        <div class="legend-item"><div class="legend-color" style="background: #38bdf8"></div> CSS</div>
+                        <div class="legend-item"><div class="legend-color" style="background: #3776ab"></div> Python</div>
+                        <div class="legend-item"><div class="legend-color" style="background: #0891b2"></div> Markdown</div>
+                        <div class="legend-item"><div class="legend-color" style="background: #a78bfa"></div> Assets (Images)</div>
+                        <div class="legend-item"><div class="legend-color" style="background: #94a3b8"></div> Directories</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div id="welcome">
+            <h2>Map Your Codebase</h2>
+            <p>Select a project folder to visualize the intricate connections between your files, scripts, and assets in a dynamic mind map.</p>
+            <button onclick="pickFolder()" class="primary glow-btn">
+                <span>🚀</span> Initialize Mapping
+            </button>
+        </div>
+
+        <div id="loader">
+            <div class="spinner"></div>
+            <p id="loader-text">Analyzing project architecture...</p>
+        </div>
+
+        <svg id="viewport"></svg>
+
+        <div id="info-panel">
+            <div class="panel-header">
+                <div id="panel-file-name" class="file-name">file_name.js</div>
+                <div id="panel-file-type" class="file-type">JavaScript Source</div>
+            </div>
+            
+            <div class="stat-group">
+                <div class="stat-label">Connections</div>
+                <ul id="panel-links" class="stat-list">
+                    <!-- Dynamic -->
+                </ul>
+            </div>
+
+            <div class="stat-group">
+                <div class="stat-label">File Info</div>
+                <div class="stat-list">
+                    <div class="stat-item">Size <span id="panel-size">0 KB</span></div>
+                    <div class="stat-item">Path <span id="panel-path">/root/file.js</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="file-modal" onclick="if(event.target === this) closeModal()">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <div id="modal-title" class="modal-title">File Content</div>
+                    <button class="close-modal" onclick="closeModal()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="project-modal" onclick="if(event.target === this) closeModal()">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <div class="modal-title">Project Statistics</div>
+                    <button class="close-modal" onclick="closeModal()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div id="project-stats-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        let graphData = { nodes: [], links: [] };
+        let simulation;
+        let svg, g, link, node;
+        let width, height;
+        let projectStats = {
+            name: '',
+            totalFiles: 0,
+            totalSize: 0,
+            locByLang: {},
+            resources: {}
+        };
+
+        function initGraph() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            
+            svg = d3.select("#viewport")
+                .attr("width", width)
+                .attr("height", height);
+            
+            svg.selectAll("*").remove();
+            g = svg.append("g");
+
+            const zoom = d3.zoom()
+                .scaleExtent([0.05, 5])
+                .on("zoom", (event) => {
+                    g.attr("transform", event.transform);
+                });
+
+            svg.call(zoom);
+
+            simulation = d3.forceSimulation()
+                .force("link", d3.forceLink().id(d => d.id).distance(150))
+                .force("charge", d3.forceManyBody().strength(-500))
+                .force("center", d3.forceCenter(width / 2, height / 2))
+                .force("collision", d3.forceCollide().radius(60));
+
+            updateGraph();
+            // Initial fit after a short delay for simulation to settle
+            setTimeout(resetView, 1000);
+        }
+
+        function updateGraph() {
+            if (!g) return;
+
+            link = g.selectAll(".link")
+                .data(graphData.links)
+                .join("line")
+                .attr("class", "link");
+
+            node = g.selectAll(".node")
+                .data(graphData.nodes)
+                .join("g")
+                .attr("class", "node")
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended))
+                .on("click", (event, d) => showFileInfo(d));
+
+            node.selectAll("circle").remove();
+            node.append("circle")
+                .attr("r", d => d.type === 'folder' ? 12 : 8)
+                .attr("fill", d => getNodeColor(d.extension || d.type));
+
+            node.selectAll("text").remove();
+            node.append("text")
+                .attr("class", "node-label")
+                .attr("dx", 15)
+                .attr("dy", 4)
+                .text(d => d.name);
+
+            simulation.nodes(graphData.nodes);
+            simulation.force("link").links(graphData.links);
+            simulation.alpha(1).restart();
+
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node
+                    .attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+        }
+
+        function getNodeColor(type) {
+            const colors = {
+                'folder': '#94a3b8',
+                'js': '#facc15',
+                'html': '#fb923c',
+                'css': '#38bdf8',
+                'jpg': '#a78bfa',
+                'png': '#a78bfa',
+                'webp': '#a78bfa',
+                'py': '#3776ab',
+                'md': '#0891b2',
+                'json': '#4ade80'
+            };
+            return colors[type.toLowerCase()] || '#64748b';
+        }
+
+        async function pickFolder() {
+            try {
+                const dirHandle = await window.showDirectoryPicker();
+                document.getElementById('welcome').style.display = 'none';
+                document.getElementById('loader').style.display = 'flex';
+                
+                graphData = { nodes: [], links: [] };
+                projectStats = {
+                    name: dirHandle.name,
+                    totalFiles: 0,
+                    totalSize: 0,
+                    locByLang: {},
+                    resources: { code: 0, assets: 0, other: 0 }
+                };
+                
+                const files = [];
+                await scanDirectory(dirHandle, '', files);
+                await analyzeConnections(files);
+                
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('btn-project-info').style.display = 'flex';
+                initGraph();
+            } catch (err) {
+                console.error(err);
+                if (err.name !== 'AbortError') alert("Error accessing folder: " + err.message);
+            }
+        }
+
+        async function scanDirectory(handle, path, files) {
+            const currentPath = path ? `${path}/${handle.name}` : handle.name;
+            
+            graphData.nodes.push({
+                id: currentPath,
+                name: handle.name,
+                type: 'folder',
+                path: currentPath
+            });
+
+            if (path) {
+                graphData.links.push({ source: path, target: currentPath });
+            }
+
+            for await (const entry of handle.values()) {
+                const entryPath = `${currentPath}/${entry.name}`;
+                if (entry.kind === 'directory') {
+                    await scanDirectory(entry, currentPath, files);
+                } else {
+                    const ext = entry.name.split('.').pop().toLowerCase();
+                    const validExts = ['js', 'html', 'css', 'jpg', 'png', 'webp', 'json', 'py', 'md'];
+                    
+                    if (validExts.includes(ext)) {
+                        const file = await entry.getFile();
+                        const isImage = ['jpg', 'png', 'webp'].includes(ext);
+                        const content = isImage ? URL.createObjectURL(file) : await file.text();
+                        
+                        const fileNode = {
+                            id: entryPath,
+                            name: entry.name,
+                            type: 'file',
+                            extension: ext,
+                            path: entryPath,
+                            size: file.size,
+                            content: content,
+                            isImage: isImage
+                        };
+
+                        // Update stats
+                        projectStats.totalFiles++;
+                        projectStats.totalSize += file.size;
+                        if (isImage) projectStats.resources.assets++;
+                        else projectStats.resources.code++;
+                        
+                        if (!isImage && content) {
+                            const loc = content.split('\n').length;
+                            projectStats.locByLang[ext] = (projectStats.locByLang[ext] || 0) + loc;
+                        }
+                        
+                        graphData.nodes.push(fileNode);
+                        graphData.links.push({ source: currentPath, target: entryPath });
+                        files.push(fileNode);
+                    } else {
+                        projectStats.resources.other++;
+                    }
+                }
+            }
+        }
+
+        async function analyzeConnections(files) {
+            files.forEach(file => {
+                if (file.isImage || !file.content) return;
+
+                const patterns = {
+                    js: [
+                        /import\s+.*\s+from\s+['"](.*)['"]/g,
+                        /require\(['"](.*)['"]\)/g,
+                        /fetch\(['"](.*)['"]\)/g
+                    ],
+                    html: [
+                        /src=['"](.*?)['"]/g,
+                        /href=['"](.*?)['"]/g
+                    ],
+                    css: [
+                        /url\(['"]?(.*?)['"]?\)/g,
+                        /@import\s+['"](.*?)['"]/g
+                    ],
+                    py: [
+                        /import\s+(\w+)/g,
+                        /from\s+(\w+)\s+import/g
+                    ],
+                    md: [
+                        /\[.*?\]\((.*?)\)/g,
+                        /src=['"](.*?)['"]/g
+                    ]
+                };
+
+                const ext = file.extension;
+                const rules = patterns[ext] || [];
+                
+                rules.forEach(regex => {
+                    let match;
+                    while ((match = regex.exec(file.content)) !== null) {
+                        let targetPath = match[1];
+                        if (!targetPath || targetPath.startsWith('http') || targetPath.startsWith('data:')) continue;
+                        
+                        const resolved = resolvePath(file.path, targetPath);
+                        const targetNode = graphData.nodes.find(n => n.id === resolved || n.id.endsWith(targetPath));
+                        
+                        if (targetNode && targetNode.id !== file.id) {
+                            graphData.links.push({
+                                source: file.id,
+                                target: targetNode.id,
+                                type: 'dependency'
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+        function resolvePath(base, relative) {
+            const parts = base.split('/');
+            parts.pop();
+            const relParts = relative.split('/');
+            for (const p of relParts) {
+                if (p === '..') parts.pop();
+                else if (p !== '.') parts.push(p);
+            }
+            return parts.join('/');
+        }
+
+        function showFileInfo(d) {
+            const panel = document.getElementById('info-panel');
+            panel.classList.add('visible');
+            
+            document.getElementById('panel-file-name').textContent = d.name;
+            document.getElementById('panel-file-type').textContent = d.type === 'folder' ? 'Directory' : d.extension.toUpperCase() + ' Source';
+            document.getElementById('panel-size').textContent = d.size ? (d.size / 1024).toFixed(2) + ' KB' : '--';
+            document.getElementById('panel-path').textContent = d.path;
+
+            const linksList = document.getElementById('panel-links');
+            linksList.innerHTML = '';
+            
+            const connections = graphData.links.filter(l => 
+                (typeof l.source === 'string' ? l.source === d.id : l.source.id === d.id) || 
+                (typeof l.target === 'string' ? l.target === d.id : l.target.id === d.id)
+            );
+
+            connections.forEach(l => {
+                const other = (typeof l.source === 'string' ? l.source === d.id : l.source.id === d.id) ? l.target : l.source;
+                const otherNode = typeof other === 'string' ? graphData.nodes.find(n => n.id === other) : other;
+                const otherName = otherNode.name;
+                
+                const li = document.createElement('li');
+                li.className = 'stat-item';
+                
+                const openBtn = otherNode.type === 'file' ? 
+                    `<button onclick="event.stopPropagation(); openFileById('${otherNode.id}')" style="padding: 2px 8px; font-size: 0.7rem; background: var(--accent-blue);">Open</button>` : '';
+
+                li.innerHTML = `
+                    <div style="flex:1">${otherName} <span style="font-size:0.7rem; opacity:0.6">${l.type || 'structure'}</span></div>
+                    ${openBtn}
+                `;
+                linksList.appendChild(li);
+            });
+
+            if (d.type === 'file') {
+                const existingBtn = panel.querySelector('.primary-view-btn');
+                if (existingBtn) existingBtn.remove();
+                
+                const viewBtn = document.createElement('button');
+                viewBtn.className = 'primary primary-view-btn';
+                viewBtn.style.width = '100%';
+                viewBtn.style.marginTop = '1rem';
+                viewBtn.innerHTML = '<span>👁️</span> View File Content';
+                viewBtn.onclick = () => openFile(d);
+                panel.appendChild(viewBtn);
+            }
+
+            node.classed("active", n => n.id === d.id);
+            link.classed("active", l => 
+                (typeof l.source === 'string' ? l.source === d.id : l.source.id === d.id) || 
+                (typeof l.target === 'string' ? l.target === d.id : l.target.id === d.id)
+            );
+        }
+
+        function openFileById(id) {
+            const d = graphData.nodes.find(n => n.id === id);
+            if (d && d.type === 'file') openFile(d);
+            else if (d && d.type === 'folder') alert("Folders cannot be viewed as code.");
+        }
+
+        function openFile(d) {
+            const modal = document.getElementById('file-modal');
+            const contentArea = document.getElementById('modal-content');
+            const titleArea = document.getElementById('modal-title');
+            
+            titleArea.textContent = d.path;
+            contentArea.innerHTML = '';
+            
+            if (d.isImage) {
+                contentArea.classList.add('is-image');
+                const img = document.createElement('img');
+                img.src = d.content;
+                img.style.maxWidth = '100%';
+                img.style.maxHeight = '70vh';
+                img.style.borderRadius = '8px';
+                contentArea.appendChild(img);
+            } else {
+                contentArea.classList.remove('is-image');
+                const pre = document.createElement('pre');
+                pre.textContent = d.content;
+                contentArea.appendChild(pre);
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        function showProjectInfo() {
+            const modal = document.getElementById('project-modal');
+            const container = document.getElementById('project-stats-container');
+            modal.style.display = 'flex';
+            
+            const totalRes = projectStats.resources.code + projectStats.resources.assets + projectStats.resources.other;
+            const codeP = (projectStats.resources.code / totalRes * 100).toFixed(1);
+            const assetP = (projectStats.resources.assets / totalRes * 100).toFixed(1);
+            const otherP = (projectStats.resources.other / totalRes * 100).toFixed(1);
+
+            let locHtml = '';
+            for (const [lang, loc] of Object.entries(projectStats.locByLang)) {
+                locHtml += `<div class="stat-item">${lang.toUpperCase()} <span>${loc} Lines</span></div>`;
+            }
+
+            container.innerHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <h2 style="font-size: 2.5rem; font-weight: 800;">${projectStats.name}</h2>
+                    <p style="color: var(--text-secondary)">Project Architecture Overview</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">${projectStats.totalFiles}</div>
+                        <div class="stat-label-small">Total Files</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${(projectStats.totalSize / 1024).toFixed(1)}</div>
+                        <div class="stat-label-small">Size (KB)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${Object.keys(projectStats.locByLang).length}</div>
+                        <div class="stat-label-small">Languages</div>
+                    </div>
+                </div>
+
+                <div class="stat-group">
+                    <div class="stat-label">Resource Distribution</div>
+                    <div class="bar-container">
+                        <div class="bar-segment" style="width: ${codeP}%; background: var(--accent-blue);" title="Code: ${codeP}%"></div>
+                        <div class="bar-segment" style="width: ${assetP}%; background: var(--accent-purple);" title="Assets: ${assetP}%"></div>
+                        <div class="bar-segment" style="width: ${otherP}%; background: var(--text-secondary);" title="Other: ${otherP}%"></div>
+                    </div>
+                    <div style="display: flex; gap: 20px; font-size: 0.8rem; margin-top: 5px;">
+                        <span style="color: var(--accent-blue)">● Code (${codeP}%)</span>
+                        <span style="color: var(--accent-purple)">● Assets (${assetP}%)</span>
+                        <span style="color: var(--text-secondary)">● Other (${otherP}%)</span>
+                    </div>
+                </div>
+
+                <div class="stat-group" style="margin-top: 2rem;">
+                    <div class="stat-label">Lines of Code</div>
+                    <div class="stat-list">
+                        ${locHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function closeModal() {
+            document.querySelectorAll('#file-modal, #project-modal').forEach(m => m.style.display = 'none');
+        }
+
+        function dragstarted(event) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+        }
+
+        function dragged(event) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
+        }
+
+        function dragended(event) {
+            if (!event.active) simulation.alphaTarget(0);
+            event.subject.fx = null;
+            event.subject.fy = null;
+        }
+
+        function resetView() {
+            if (!graphData.nodes.length) return;
+            
+            const nodes = graphData.nodes;
+            const xExtent = d3.extent(nodes, d => d.x);
+            const yExtent = d3.extent(nodes, d => d.y);
+            
+            const graphWidth = xExtent[1] - xExtent[0];
+            const graphHeight = yExtent[1] - yExtent[0];
+            const centerX = (xExtent[0] + xExtent[1]) / 2;
+            const centerY = (yExtent[0] + yExtent[1]) / 2;
+            
+            const scale = 0.8 / Math.max(graphWidth / width, graphHeight / height);
+            
+            svg.transition().duration(750).call(
+                d3.zoom().transform,
+                d3.zoomIdentity.translate(width / 2, height / 2).scale(scale).translate(-centerX, -centerY)
+            );
+        }
+
+        function toggleLegend() {
+            const dropdown = document.getElementById('legend-dropdown');
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.getElementById('legend-dropdown').style.display = 'none';
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            if (svg) svg.attr("width", width).attr("height", height);
+            if (simulation) simulation.force("center", d3.forceCenter(width / 2, height / 2));
+        });
+    </script>
+</body>
+</html>

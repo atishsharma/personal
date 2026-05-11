@@ -28,7 +28,7 @@ const MapEngine = {
       : 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
 
     this.baseLayer = L.tileLayer(url, {
-      attribution: "&copy; Atish's Atlas",
+      attribution: "Leaflet, CARTO, AmCharts &copy;",
       maxZoom: 17
     }).addTo(this.map);
     this.currentTheme = isLight ? 'light' : 'dark';
@@ -77,11 +77,12 @@ const MapEngine = {
   getFeatureStyle(feature) {
     const id = feature.properties.name;
     const isSelected = this.selectedCountryId === id;
+    const isLight = this.currentTheme === 'light';
     
     let fillColor = 'var(--map-land)';
-    let fillOpacity = 0.8;
+    let fillOpacity = isLight ? 0.9 : 0.8;
     let className = isSelected ? 'blink-path' : '';
-    let weight = isSelected ? 3 : 1;
+    let weight = isSelected ? 3 : (isLight ? 1.5 : 1);
     let color = isSelected ? 'var(--accent-cyan)' : 'var(--map-border)';
 
     if (this.currentMode === 'geopolitics') {
@@ -148,7 +149,9 @@ const MapEngine = {
 
   handleMouseOver(e) {
     const layer = e.target;
-    layer.setStyle({ fillOpacity: 1, weight: 2, color: 'white' });
+    const isLight = this.currentTheme === 'light';
+    const hoverColor = isLight ? '#ff1493' : 'white'; // bright pink for light theme
+    layer.setStyle({ fillOpacity: 1, weight: 2, color: hoverColor });
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
       layer.bringToFront();
     }
@@ -166,8 +169,7 @@ const MapEngine = {
   async selectCountry(id) {
     this.selectedCountryId = id;
     
-    await DataLoader.loadChunkForCountry(id);
-    this.renderLayer(); // Re-render to show newly loaded chunk and update colors
+    this.renderLayer(); // Re-render to show update colors
     
     let targetLayer = null;
     if (this.geoLayer) {

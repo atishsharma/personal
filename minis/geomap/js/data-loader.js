@@ -1,9 +1,7 @@
 // js/data-loader.js
 const DataLoader = {
   data: {
-    geomapIndex: {},
     geomapFeatures: [],
-    loadedChunks: new Set(),
     countries: [],
     geopolitics: {},
     passport: {},
@@ -13,69 +11,53 @@ const DataLoader = {
   async loadAll() {
     try {
       const v = Date.now();
-      const [geomapIndexRes, countriesRes, geopoliticsRes, passportRes, profilesRes] = await Promise.all([
-        fetch('data/geomap_index.json?v=' + v),
+      const [amchartsRes, countriesRes, geopoliticsRes, passportRes, profilesRes] = await Promise.all([
+        fetch('data/amcharts_worldIndiaHigh.json?v=' + v),
         fetch('data/countries.json?v=' + v),
         fetch('data/geopolitics.json?v=' + v),
         fetch('data/passport-rank.json?v=' + v),
         fetch('data/country-profiles.json?v=' + v)
       ]);
 
-      this.data.geomapIndex = await geomapIndexRes.json();
+      const rawGeo = await amchartsRes.json();
       this.data.countries = await countriesRes.json();
       this.data.geopolitics = await geopoliticsRes.json();
       this.data.passport = await passportRes.json();
       this.data.profiles = await profilesRes.json();
 
-      this.loadAllChunksBackground();
+      const nameMap = {
+        'Democratic Republic of Congo': 'DR Congo',
+        'Republic of Congo': 'Republic of the Congo',
+        'Tanzania': 'United Republic of Tanzania',
+        'Czech Republic': 'Czechia',
+        "C\u00f4te d'Ivoire": 'Ivory Coast',
+        'Eswatini': 'eSwatini',
+        'Timor-Leste': 'East Timor',
+        'Macedonia': 'North Macedonia',
+        'Palestinian Territories': 'Palestine',
+        'Serbia': 'Republic of Serbia',
+        'Vatican City': 'Vatican',
+        'T\u00fcrkiye': 'Turkey',
+        'Cape Verde': 'Cabo Verde'
+      };
+
+      const skipCountries = new Set([
+        'Baker Island', 'Howland Island', 'Jarvis Island', 'Johnston Atoll',
+        'Midway Islands', 'Wake Island', 'Glorioso Islands', 'Juan De Nova Island',
+        'Bouvet Island', 'Gibraltar', 'Bonair, Saint Eustachius and Saba'
+      ]);
+
+      this.data.geomapFeatures = rawGeo.features
+        .filter(f => !skipCountries.has(f.properties.name))
+        .map(f => {
+          f.properties.name = nameMap[f.properties.name] || f.properties.name;
+          return f;
+        });
+
       return true;
     } catch (error) {
       console.error("Error loading datasets:", error);
       return false;
-    }
-  },
-
-  async fetchWithCache(url) {
-    if (!window.caches) return (await fetch(url)).json();
-    const cache = await caches.open('geomap-cache-v1');
-    const cachedRes = await cache.match(url);
-    if (cachedRes) return cachedRes.json();
-    const res = await fetch(url);
-    if (res.ok) cache.put(url, res.clone());
-    return res.json();
-  },
-
-  async loadChunkForCountry(id) {
-    const chunkFile = this.data.geomapIndex[id];
-    if (!chunkFile || this.data.loadedChunks.has(chunkFile)) return;
-    
-    try {
-      const chunkData = await this.fetchWithCache('data/geomap_chunks/' + chunkFile);
-      this.data.loadedChunks.add(chunkFile);
-      this.data.geomapFeatures.push(...chunkData.features);
-      if (typeof MapEngine !== 'undefined' && MapEngine.geoLayer) {
-        MapEngine.geoLayer.addData(chunkData.features);
-      }
-    } catch (e) {
-      console.error('Failed to load chunk for', id, e);
-    }
-  },
-
-  async loadAllChunksBackground() {
-    const uniqueChunks = new Set(Object.values(this.data.geomapIndex));
-    for (const chunkFile of uniqueChunks) {
-      if (!this.data.loadedChunks.has(chunkFile)) {
-        try {
-          const chunkData = await this.fetchWithCache('data/geomap_chunks/' + chunkFile);
-          this.data.loadedChunks.add(chunkFile);
-          this.data.geomapFeatures.push(...chunkData.features);
-          if (typeof MapEngine !== 'undefined' && MapEngine.geoLayer) {
-            MapEngine.geoLayer.addData(chunkData.features);
-          }
-        } catch (e) {
-          console.error("Failed background load", chunkFile, e);
-        }
-      }
     }
   },
 

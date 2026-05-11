@@ -130,9 +130,7 @@
                 </button>
             </div>
             <div class="flex gap-3">
-                <button onclick="standardizeAssets()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-semibold flex items-center gap-2 transition-all border border-amber-500 shadow-lg" title="Fix missing flags/passports across all countries">
-                    🛠️ Standardize Assets
-                </button>
+
                 <button onclick="loadAllData()" class="px-4 py-2 bg-slate-900 hover:bg-black text-white rounded-lg font-semibold flex items-center gap-2 transition-all border border-slate-800">
                     📂 Load Data Folder
                 </button>
@@ -379,34 +377,7 @@
             saveToCache();
         }
 
-        function standardizeAssets() {
-            if (datasets.countries.length === 0) {
-                alert("Please load data first.");
-                return;
-            }
-            
-            let count = 0;
-            datasets.countries.forEach(c => {
-                const id = c.id;
-                
-                // Fix Profile (Flags)
-                if (!datasets.profiles[id]) datasets.profiles[id] = {};
-                if (!datasets.profiles[id].flag_path) {
-                    datasets.profiles[id].flag_path = 'assets/flags/noflag.jpg';
-                    count++;
-                }
 
-                // Fix Passport (Photos)
-                if (!datasets.passport[id]) datasets.passport[id] = {};
-                if (!datasets.passport[id].passport_img) {
-                    datasets.passport[id].passport_img = 'assets/passpics/nopassport.jpg';
-                    count++;
-                }
-            });
-
-            alert(`Standardized ${count} missing asset entries. Remember to click "Save All Changes" to persist!`);
-            if (currentCountryId) renderTab();
-        }
 
         function filterCountries() {
             const q = document.getElementById('country-search').value.toLowerCase();
@@ -426,13 +397,18 @@
             document.getElementById('edit-country-id').textContent = id;
             
             const flag = document.getElementById('edit-flag');
-            flag.src = 'assets/flags/' + id.replace(/ /g, '_').replace(/\//g, '_') + '.webp';
+            const profile = datasets.profiles[id];
+            
+            // Prioritize stored path
+            if (profile && profile.flag_path) {
+                flag.src = profile.flag_path;
+            } else {
+                flag.src = 'assets/flags/' + id.replace(/ /g, '_').replace(/\//g, '_') + '.webp';
+            }
+            
             flag.classList.remove('hidden');
             flag.onerror = () => {
-                const profile = datasets.profiles[id];
-                if (profile && profile.flag_path && !profile.flag_path.includes('noflag.jpg')) {
-                    flag.src = profile.flag_path;
-                } else {
+                if (flag.src !== 'assets/flags/noflag.jpg') {
                     flag.src = 'assets/flags/noflag.jpg';
                 }
             };
@@ -485,13 +461,11 @@
                         <div class="col-span-2 mt-6"><h3 class="text-emerald-400 font-bold border-b border-slate-700 pb-2 mb-4">Assets & Media</h3></div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Flag Filename / URL</label>
-                            <input type="text" value="${profile.flag_path || 'assets/flags/noflag.jpg'}" class="input-field" onchange="updateProfile('${id}', 'flag_path', this.value)">
-                            <p class="text-[10px] text-slate-500 mt-1">Default placeholder: assets/flags/noflag.jpg</p>
+                            <input type="text" value="${profile.flag_path || ''}" class="input-field" onchange="updateProfile('${id}', 'flag_path', this.value)">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Passport Cover Filename / URL</label>
-                            <input type="text" value="${passport.passport_img || 'assets/passpics/nopassport.jpg'}" class="input-field" onchange="updatePassport('${id}', 'passport_img', this.value)">
-                            <p class="text-[10px] text-slate-500 mt-1">Default placeholder: assets/passpics/nopassport.jpg</p>
+                            <input type="text" value="${passport.passport_img || ''}" class="input-field" onchange="updatePassport('${id}', 'passport_img', this.value)">
                         </div>
                     </div>
                 `;
