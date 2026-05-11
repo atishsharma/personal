@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeViewer | Project Topology Map</title>
-    <meta name="description" content="A visual mind map of your project's architecture, dependencies, and asset relationships.">
+    <title>Atish's Codeviewer | Interactive Project Topology Map</title>
+    <meta name="description" content="Atish's Codeviewer - A visual mind map of your project's architecture, dependencies, and asset relationships. Explore codebase topology with dynamic graph visualization.">
+    <meta name="keywords" content="Code Viewer, Project Topology, Software Architecture, Code Visualization, Mind Map, Developer Tools, Atish's Codeviewer">
+    <meta property="og:title" content="Atish's Codeviewer | Project Topology Map">
+    <meta property="og:description" content="Visualize your codebase architecture with a dynamic, interactive mind map.">
+    <meta property="og:image" content="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
+    <link rel="icon" type="image/png" href="https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -56,6 +61,44 @@
             animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        #modal-content.is-image {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .code-container {
+            display: flex;
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            border: 1px solid var(--border);
+            max-height: 70vh;
+        }
+
+        .line-numbers {
+            padding: 1rem 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-right: 1px solid var(--border);
+            color: #475569;
+            text-align: right;
+            user-select: none;
+            min-width: 3.5rem;
+            white-space: pre;
+        }
+
+        .code-content {
+            padding: 1rem;
+            color: #cbd5e1;
+            white-space: pre;
+            overflow-x: auto;
+            overflow-y: auto;
+            flex: 1;
+        }
+
         @keyframes slideDown {
             from { transform: translateY(-100px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -87,6 +130,35 @@
             background: linear-gradient(to right, #fff, #94a3b8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            z-index: 100;
+            padding: 0.75rem 2rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            pointer-events: auto;
+        }
+
+        footer a {
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
 
         .controls {
@@ -344,6 +416,174 @@
             color: #ef4444;
         }
 
+        .print-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .print-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-cyan);
+        }
+
+        .custom-field-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+
+        .custom-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: white;
+            width: 100%;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .custom-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+
+
+        /* Modals */
+        #file-modal, #project-modal, #legend-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .modal-container {
+            background: #111827;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-body {
+            padding: 2rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        #modal-content pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .legend-modal-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .legend-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+            margin-bottom: 4px;
+        }
+
+        .stat-label-small {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .bar-container {
+            height: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 5px;
+            display: flex;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .bar-segment {
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
         /* Desktop Only Overlay */
         @media (max-width: 768px) {
             #mobile-warning {
@@ -367,6 +607,133 @@
             text-align: center;
         }
 
+        /* Robust Print Report Styles */
+        @media print {
+            @page { 
+                size: landscape; 
+                margin: 1cm; 
+            }
+            
+            /* Aggressive Reset */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Hide everything but the statistics */
+            body > *:not(#project-modal),
+            header, footer, #app, #mobile-warning, #file-modal, #legend-modal, 
+            .close-modal, .print-btn, .custom-field-group label {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            html, body {
+                background: white !important;
+                color: black !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+
+            #project-modal {
+                display: block !important;
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                visibility: visible !important;
+                z-index: 9999 !important;
+            }
+
+            .modal-container {
+                background: white !important;
+                border: none !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                max-width: none !important;
+                max-height: none !important;
+                position: relative !important;
+                transform: none !important;
+                top: 0 !important;
+                left: 0 !important;
+                display: block !important;
+            }
+
+            .modal-body {
+                padding: 20px !important;
+                overflow: visible !important;
+            }
+
+            /* Custom Fields as Static Bold Text */
+            .custom-input {
+                border: none !important;
+                background: transparent !important;
+                color: black !important;
+                font-size: 1.5rem !important;
+                font-weight: 800 !important;
+                text-align: center !important;
+                width: 100% !important;
+                margin: 5px 0 !important;
+                padding: 0 !important;
+            }
+
+            .custom-field-group {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                margin-bottom: 30px !important;
+            }
+
+            /* Report Layout */
+            .stats-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 20px !important;
+                margin-bottom: 30px !important;
+            }
+
+            .stat-card {
+                background: #f8fafc !important;
+                border: 1px solid #e2e8f0 !important;
+                padding: 20px !important;
+                border-radius: 12px !important;
+            }
+
+            .stat-value {
+                color: #0f172a !important;
+                font-size: 2.5rem !important;
+                font-weight: 800 !important;
+            }
+
+            .bar-container {
+                height: 16px !important;
+                background: #f1f5f9 !important;
+                border: 1px solid #e2e8f0 !important;
+                border-radius: 8px !important;
+            }
+
+            h2 {
+                font-size: 3rem !important;
+                margin-bottom: 10px !important;
+                color: black !important;
+            }
+
+            .stat-list .stat-item {
+                border-bottom: 1px solid #f1f5f9 !important;
+                padding: 10px 0 !important;
+                color: black !important;
+                display: flex !important;
+                justify-content: space-between !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -379,8 +746,8 @@
     <div id="app">
         <header>
             <div class="logo">
-                <div class="logo-icon">C</div>
-                <h1>CodeViewer</h1>
+                <div class="logo-icon">A</div>
+                <h1>Atish's Codeviewer</h1>
             </div>
             <div class="controls">
                 <button onclick="pickFolder()" class="primary">
@@ -389,23 +756,9 @@
                 <button onclick="showProjectInfo()" id="btn-project-info" style="display: none;">
                     <span>📊</span> Project Info
                 </button>
-                <button onclick="resetView()">
-                    <span>🎯</span> Fit View
+                <button onclick="showLegend()">
+                    <span>💡</span> Legend
                 </button>
-                <div class="dropdown">
-                    <button onclick="toggleLegend()">
-                        <span>💡</span> Legend
-                    </button>
-                    <div id="legend-dropdown">
-                        <div class="legend-item"><div class="legend-color" style="background: #fb923c"></div> HTML</div>
-                        <div class="legend-item"><div class="legend-color" style="background: #facc15"></div> JavaScript</div>
-                        <div class="legend-item"><div class="legend-color" style="background: #38bdf8"></div> CSS</div>
-                        <div class="legend-item"><div class="legend-color" style="background: #3776ab"></div> Python</div>
-                        <div class="legend-item"><div class="legend-color" style="background: #0891b2"></div> Markdown</div>
-                        <div class="legend-item"><div class="legend-color" style="background: #a78bfa"></div> Assets (Images)</div>
-                        <div class="legend-item"><div class="legend-color" style="background: #94a3b8"></div> Directories</div>
-                    </div>
-                </div>
             </div>
         </header>
 
@@ -425,24 +778,15 @@
         <svg id="viewport"></svg>
 
         <div id="info-panel">
-            <div class="panel-header">
+            <div class="panel-header" style="border: none; margin-bottom: 0;">
                 <div id="panel-file-name" class="file-name">file_name.js</div>
-                <div id="panel-file-type" class="file-type">JavaScript Source</div>
             </div>
             
-            <div class="stat-group">
+            <div class="stat-group" style="margin-top: 1.5rem;">
                 <div class="stat-label">Connections</div>
                 <ul id="panel-links" class="stat-list">
                     <!-- Dynamic -->
                 </ul>
-            </div>
-
-            <div class="stat-group">
-                <div class="stat-label">File Info</div>
-                <div class="stat-list">
-                    <div class="stat-item">Size <span id="panel-size">0 KB</span></div>
-                    <div class="stat-item">Path <span id="panel-path">/root/file.js</span></div>
-                </div>
             </div>
         </div>
 
@@ -462,13 +806,44 @@
             <div class="modal-container">
                 <div class="modal-header">
                     <div class="modal-title">Project Statistics</div>
-                    <button class="close-modal" onclick="closeModal()">✕</button>
+                    <div style="display: flex; align-items: center; margin-left: auto;">
+                        <button class="print-btn" onclick="printStats()">
+                            <span>🖨️</span> Print / PDF
+                        </button>
+                        <button class="close-modal" onclick="closeModal()">✕</button>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <div id="project-stats-container"></div>
                 </div>
             </div>
         </div>
+
+        <div id="legend-modal" onclick="if(event.target === this) closeModal()">
+            <div class="modal-container" style="max-width: 500px;">
+                <div class="modal-header">
+                    <div class="modal-title">Map Legend</div>
+                    <button class="close-modal" onclick="closeModal()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="legend-grid">
+                        <div class="legend-modal-item"><div class="legend-dot" style="background: #fb923c"></div> HTML</div>
+                        <div class="legend-modal-item"><div class="legend-dot" style="background: #facc15"></div> JavaScript</div>
+                        <div class="legend-modal-item"><div class="legend-dot" style="background: #38bdf8"></div> CSS</div>
+                        <div class="legend-modal-item"><div class="legend-dot" style="background: #3776ab"></div> Python</div>
+                        <div class="legend-modal-item"><div class="legend-dot" style="background: #0891b2"></div> Markdown</div>
+                        <div class="legend-modal-item"><div class="legend-dot" style="background: #a78bfa"></div> Assets</div>
+                        <div class="legend-modal-item"><div class="legend-dot" style="background: #4ade80"></div> JSON</div>
+                        <div class="legend-modal-item"><div class="legend-dot" style="background: #94a3b8"></div> Directories</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div>&copy; 2026 Atish's Codeviewer &bull; Mapping Intelligence</div>
+            <div>Designed By <a href="http://atishaksharma.com" target="_blank">Ats Design Studio</a></div>
+        </footer>
     </div>
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -479,11 +854,57 @@
         let width, height;
         let projectStats = {
             name: '',
+            title: '',
+            website: '',
             totalFiles: 0,
             totalSize: 0,
             locByLang: {},
-            resources: {}
+            distribution: {}
         };
+
+        // Cache Logic using IndexedDB
+        const DB_NAME = 'CodeViewerCache';
+        const STORE_NAME = 'ProjectStore';
+
+        async function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, 1);
+                request.onupgradeneeded = () => request.result.createObjectStore(STORE_NAME);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        async function saveToCache() {
+            try {
+                const db = await initDB();
+                const tx = db.transaction(STORE_NAME, 'readwrite');
+                tx.objectStore(STORE_NAME).put({ graphData, projectStats }, 'currentProject');
+                console.log('Project cached successfully');
+            } catch (err) { console.error('Cache save failed:', err); }
+        }
+
+        async function loadFromCache() {
+            try {
+                const db = await initDB();
+                const tx = db.transaction(STORE_NAME, 'readonly');
+                const data = await new Promise(r => {
+                    const req = tx.objectStore(STORE_NAME).get('currentProject');
+                    req.onsuccess = () => r(req.result);
+                });
+
+                if (data) {
+                    graphData = data.graphData;
+                    projectStats = data.projectStats;
+                    document.getElementById('welcome').style.display = 'none';
+                    document.getElementById('btn-project-info').style.display = 'flex';
+                    initGraph();
+                    console.log('Project restored from cache');
+                }
+            } catch (err) { console.log('No cache found or failed to load'); }
+        }
+
+        window.onload = loadFromCache;
 
         function initGraph() {
             width = window.innerWidth;
@@ -564,15 +985,34 @@
         function getNodeColor(type) {
             const colors = {
                 'folder': '#94a3b8',
-                'js': '#facc15',
-                'html': '#fb923c',
-                'css': '#38bdf8',
-                'jpg': '#a78bfa',
-                'png': '#a78bfa',
-                'webp': '#a78bfa',
-                'py': '#3776ab',
-                'md': '#0891b2',
-                'json': '#4ade80'
+                // Web
+                'html': '#fb923c', 'htm': '#fb923c', 'php': '#777bb4', 'asp': '#0078d7', 'jsp': '#ea2d2e',
+                'js': '#facc15', 'ts': '#3178c6', 'jsx': '#61dafb', 'tsx': '#3178c6', 'vue': '#42b883',
+                'css': '#38bdf8', 'scss': '#c6538c', 'sass': '#c6538c', 'less': '#1d365d',
+                // Scripting & Logic
+                'py': '#3776ab', 'pyw': '#3776ab', 'rb': '#cc342d', 'pl': '#0098ff', 'lua': '#000080',
+                'sh': '#4ead20', 'bash': '#4ead20', 'zsh': '#4ead20', 'ps1': '#012456',
+                // System & Compiled
+                'c': '#a8b9cc', 'h': '#a8b9cc', 'cpp': '#00599c', 'hpp': '#00599c', 'cc': '#00599c',
+                'cs': '#178600', 'java': '#b07219', 'go': '#00add8', 'rs': '#dea584',
+                'swift': '#f05138', 'kt': '#a97bff', 'dart': '#00d2b8', 'scala': '#c22d40',
+                // Data & Config
+                'json': '#4ade80', 'xml': '#ff6600', 'yaml': '#cb171e', 'yml': '#cb171e', 'toml': '#9c4221',
+                'sql': '#e38c00', 'db': '#e38c00', 'sqlite': '#e38c00', 'csv': '#217346',
+                // Documentation
+                'md': '#0891b2', 'txt': '#94a3b8', 'pdf': '#ff0000', 'doc': '#2b579a', 'docx': '#2b579a',
+                // Assets - Images (Purples)
+                'jpg': '#a78bfa', 'jpeg': '#a78bfa', 'png': '#c084fc', 'webp': '#d8b4fe', 'gif': '#f0abfc',
+                'svg': '#ffb13b', 'ico': '#818cf8', 'bmp': '#6366f1',
+                // Assets - Video (Reds/Pinks)
+                'mp4': '#f43f5e', 'mov': '#fb7185', 'avi': '#fda4af', 'webm': '#e11d48',
+                // Assets - Audio (Pinks/Violets)
+                'mp3': '#ec4899', 'wav': '#f472b6', 'ogg': '#f9a8d4', 'm4a': '#db2777',
+                // Assets - Fonts (Emerald/Teal)
+                'ttf': '#10b981', 'otf': '#34d399', 'woff': '#6ee7b7', 'woff2': '#059669',
+                // Assets - Archives (Amber/Stone)
+                'zip': '#f59e0b', 'rar': '#d97706', '7z': '#b45309', 'tar': '#78350f',
+                'gz': '#44403c'
             };
             return colors[type.toLowerCase()] || '#64748b';
         }
@@ -586,10 +1026,12 @@
                 graphData = { nodes: [], links: [] };
                 projectStats = {
                     name: dirHandle.name,
+                    title: '',
+                    website: '',
                     totalFiles: 0,
                     totalSize: 0,
                     locByLang: {},
-                    resources: { code: 0, assets: 0, other: 0 }
+                    distribution: {}
                 };
                 
                 const files = [];
@@ -599,6 +1041,7 @@
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('btn-project-info').style.display = 'flex';
                 initGraph();
+                saveToCache();
             } catch (err) {
                 console.error(err);
                 if (err.name !== 'AbortError') alert("Error accessing folder: " + err.message);
@@ -624,13 +1067,27 @@
                 if (entry.kind === 'directory') {
                     await scanDirectory(entry, currentPath, files);
                 } else {
-                    const ext = entry.name.split('.').pop().toLowerCase();
-                    const validExts = ['js', 'html', 'css', 'jpg', 'png', 'webp', 'json', 'py', 'md'];
+                    const entryNameLower = entry.name.toLowerCase();
+                    const ext = entryNameLower.split('.').pop();
                     
-                    if (validExts.includes(ext)) {
+                    const codeExts = ['js', 'ts', 'jsx', 'tsx', 'html', 'htm', 'css', 'scss', 'sass', 'less', 'php', 'py', 'rb', 'pl', 'lua', 'sh', 'bash', 'zsh', 'ps1', 'c', 'h', 'cpp', 'hpp', 'cc', 'cs', 'java', 'go', 'rs', 'swift', 'kt', 'dart', 'scala', 'json', 'xml', 'yaml', 'yml', 'toml', 'sql', 'md', 'txt', 'csv', 'r', 'hs', 'erl', 'ex', 'exs', 'clj', 'fs', 'vhd', 'v', 'ada', 'pas', 'bas', 'lisp', 'scm', 'fs', 'ml', 'f', 'f90'];
+                    const imageExts = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg', 'ico', 'bmp', 'tiff', 'tif', 'avif', 'heic'];
+                    const audioExts = ['mp3', 'wav', 'ogg', 'm4a', 'flac', 'aac', 'wma'];
+                    const videoExts = ['mp4', 'mov', 'avi', 'mkv', 'webm', 'flv', 'wmv', 'm4v'];
+                    const fontExts = ['ttf', 'otf', 'woff', 'woff2', 'eot'];
+                    const docExts = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'odt', 'rtf'];
+                    const archiveExts = ['zip', 'rar', '7z', 'tar', 'gz', 'bz2', 'xz'];
+                    
+                    const allValidExts = [...codeExts, ...imageExts, ...audioExts, ...videoExts, ...fontExts, ...docExts, ...archiveExts];
+                    
+                    if (allValidExts.includes(ext)) {
                         const file = await entry.getFile();
-                        const isImage = ['jpg', 'png', 'webp'].includes(ext);
-                        const content = isImage ? URL.createObjectURL(file) : await file.text();
+                        const isImage = imageExts.includes(ext);
+                        const isText = codeExts.includes(ext) || ['txt', 'md', 'json', 'xml', 'yaml', 'yml', 'toml', 'sql', 'csv'].includes(ext);
+                        
+                        let content = '';
+                        if (isImage) content = URL.createObjectURL(file);
+                        else if (isText && file.size < 1024 * 1024) content = await file.text(); // Max 1MB for text
                         
                         const fileNode = {
                             id: entryPath,
@@ -640,14 +1097,14 @@
                             path: entryPath,
                             size: file.size,
                             content: content,
-                            isImage: isImage
+                            isImage: isImage,
+                            category: isImage ? 'image' : (audioExts.includes(ext) ? 'audio' : (videoExts.includes(ext) ? 'video' : (fontExts.includes(ext) ? 'font' : 'code')))
                         };
 
                         // Update stats
                         projectStats.totalFiles++;
                         projectStats.totalSize += file.size;
-                        if (isImage) projectStats.resources.assets++;
-                        else projectStats.resources.code++;
+                        projectStats.distribution[ext] = (projectStats.distribution[ext] || 0) + 1;
                         
                         if (!isImage && content) {
                             const loc = content.split('\n').length;
@@ -658,7 +1115,8 @@
                         graphData.links.push({ source: currentPath, target: entryPath });
                         files.push(fileNode);
                     } else {
-                        projectStats.resources.other++;
+                        const otherExt = entry.name.split('.').pop().toLowerCase() || 'other';
+                        projectStats.distribution[otherExt] = (projectStats.distribution[otherExt] || 0) + 1;
                     }
                 }
             }
@@ -669,27 +1127,47 @@
                 if (file.isImage || !file.content) return;
 
                 const patterns = {
-                    js: [
-                        /import\s+.*\s+from\s+['"](.*)['"]/g,
-                        /require\(['"](.*)['"]\)/g,
-                        /fetch\(['"](.*)['"]\)/g
-                    ],
-                    html: [
-                        /src=['"](.*?)['"]/g,
-                        /href=['"](.*?)['"]/g
-                    ],
-                    css: [
-                        /url\(['"]?(.*?)['"]?\)/g,
-                        /@import\s+['"](.*?)['"]/g
-                    ],
-                    py: [
-                        /import\s+(\w+)/g,
-                        /from\s+(\w+)\s+import/g
-                    ],
-                    md: [
-                        /\[.*?\]\((.*?)\)/g,
-                        /src=['"](.*?)['"]/g
-                    ]
+                    // JavaScript / TypeScript / React / Vue
+                    js: [/import\s+.*\s+from\s+['"](.*)['"]/g, /require\(['"](.*)['"]\)/g, /fetch\(['"](.*)['"]\)/g],
+                    ts: [/import\s+.*\s+from\s+['"](.*)['"]/g, /require\(['"](.*)['"]\)/g],
+                    jsx: [/import\s+.*\s+from\s+['"](.*)['"]/g],
+                    tsx: [/import\s+.*\s+from\s+['"](.*)['"]/g],
+                    vue: [/src=['"](.*?)['"]/g, /@import\s+['"](.*?)['"]/g],
+                    
+                    // Web Markup & Styles
+                    html: [/src=['"](.*?)['"]/g, /href=['"](.*?)['"]/g, /url\(['"]?(.*?)['"]?\)/g],
+                    htm: [/src=['"](.*?)['"]/g, /href=['"](.*?)['"]/g],
+                    css: [/url\(['"]?(.*?)['"]?\)/g, /@import\s+['"](.*?)['"]/g],
+                    scss: [/@import\s+['"](.*?)['"]/g, /@use\s+['"](.*?)['"]/g],
+                    sass: [/@import\s+['"](.*?)['"]/g, /@use\s+['"](.*?)['"]/g],
+                    less: [/@import\s+['"](.*?)['"]/g],
+                    
+                    // Python
+                    py: [/import\s+([\w\.]+)/g, /from\s+([\w\.]+)\s+import/g],
+                    pyw: [/import\s+([\w\.]+)/g, /from\s+([\w\.]+)\s+import/g],
+                    
+                    // C-Style (C, C++, C#, Java, PHP, Go, etc.)
+                    c: [/#include\s*['"<](.*?)['">]/g],
+                    h: [/#include\s*['"<](.*?)['">]/g],
+                    cpp: [/#include\s*['"<](.*?)['">]/g],
+                    hpp: [/#include\s*['"<](.*?)['">]/g],
+                    cs: [/using\s+([\w\.]+);/g],
+                    java: [/import\s+([\w\.]+);/g],
+                    kt: [/import\s+([\w\.]+)/g],
+                    php: [/require\s*['"](.*?)['"]/g, /include\s*['"](.*?)['"]/g, /require_once\s*['"](.*?)['"]/g],
+                    go: [/import\s+\(?\s*['"](.*?)['"]/g],
+                    rs: [/use\s+([\w\:]+);/g, /mod\s+(\w+);/g],
+                    
+                    // Ruby & Others
+                    rb: [/require\s*['"](.*?)['"]/g, /load\s*['"](.*?)['"]/g],
+                    swift: [/import\s+(\w+)/g],
+                    dart: [/import\s+['"](.*?)['"]/g, /export\s+['"](.*?)['"]/g, /part\s+['"](.*?)['"]/g],
+                    sh: [/source\s+(.*?)\s/g, /\.\s+(.*?)\s/g],
+                    bash: [/source\s+(.*?)\s/g],
+                    
+                    // Documentation & Config
+                    md: [/\[.*?\]\((.*?)\)/g, /src=['"](.*?)['"]/g, /href=['"](.*?)['"]/g],
+                    json: [/['"]path['"]\s*:\s*['"](.*?)['"]/g]
                 };
 
                 const ext = file.extension;
@@ -732,10 +1210,7 @@
             panel.classList.add('visible');
             
             document.getElementById('panel-file-name').textContent = d.name;
-            document.getElementById('panel-file-type').textContent = d.type === 'folder' ? 'Directory' : d.extension.toUpperCase() + ' Source';
-            document.getElementById('panel-size').textContent = d.size ? (d.size / 1024).toFixed(2) + ' KB' : '--';
-            document.getElementById('panel-path').textContent = d.path;
-
+            
             const linksList = document.getElementById('panel-links');
             linksList.innerHTML = '';
             
@@ -753,10 +1228,10 @@
                 li.className = 'stat-item';
                 
                 const openBtn = otherNode.type === 'file' ? 
-                    `<button onclick="event.stopPropagation(); openFileById('${otherNode.id}')" style="padding: 2px 8px; font-size: 0.7rem; background: var(--accent-blue);">Open</button>` : '';
+                    `<button onclick="event.stopPropagation(); openFileById('${otherNode.id}')" style="padding: 4px 10px; font-size: 0.75rem; background: var(--accent-blue);">Open</button>` : '';
 
                 li.innerHTML = `
-                    <div style="flex:1">${otherName} <span style="font-size:0.7rem; opacity:0.6">${l.type || 'structure'}</span></div>
+                    <div style="flex:1">${otherName}</div>
                     ${openBtn}
                 `;
                 linksList.appendChild(li);
@@ -770,7 +1245,7 @@
                 viewBtn.className = 'primary primary-view-btn';
                 viewBtn.style.width = '100%';
                 viewBtn.style.marginTop = '1rem';
-                viewBtn.innerHTML = '<span>👁️</span> View File Content';
+                viewBtn.innerHTML = 'Open';
                 viewBtn.onclick = () => openFile(d);
                 panel.appendChild(viewBtn);
             }
@@ -806,9 +1281,23 @@
                 contentArea.appendChild(img);
             } else {
                 contentArea.classList.remove('is-image');
-                const pre = document.createElement('pre');
-                pre.textContent = d.content;
-                contentArea.appendChild(pre);
+                
+                const container = document.createElement('div');
+                container.className = 'code-container';
+                
+                const lineNums = document.createElement('div');
+                lineNums.className = 'line-numbers';
+                
+                const codeBody = document.createElement('div');
+                codeBody.className = 'code-content';
+                
+                const lines = (d.content || '').split('\n');
+                lineNums.innerHTML = lines.map((_, i) => i + 1).join('\n');
+                codeBody.textContent = d.content;
+                
+                container.appendChild(lineNums);
+                container.appendChild(codeBody);
+                contentArea.appendChild(container);
             }
             
             modal.style.display = 'flex';
@@ -819,20 +1308,52 @@
             const container = document.getElementById('project-stats-container');
             modal.style.display = 'flex';
             
-            const totalRes = projectStats.resources.code + projectStats.resources.assets + projectStats.resources.other;
-            const codeP = (projectStats.resources.code / totalRes * 100).toFixed(1);
-            const assetP = (projectStats.resources.assets / totalRes * 100).toFixed(1);
-            const otherP = (projectStats.resources.other / totalRes * 100).toFixed(1);
+            // Title Case Project Name
+            const titleCasedName = projectStats.name
+                .toLowerCase()
+                .split(/[\s-_]+/)
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
 
             let locHtml = '';
             for (const [lang, loc] of Object.entries(projectStats.locByLang)) {
                 locHtml += `<div class="stat-item">${lang.toUpperCase()} <span>${loc} Lines</span></div>`;
             }
 
+            // Resource Distribution by Type
+            let distHtml = '';
+            let barHtml = '';
+            const total = projectStats.totalFiles;
+            
+            // Sort extensions by count
+            const sortedExts = Object.entries(projectStats.distribution)
+                .sort((a, b) => b[1] - a[1]);
+
+            sortedExts.forEach(([ext, count]) => {
+                const percentage = (count / total * 100).toFixed(1);
+                const color = getNodeColor(ext);
+                
+                barHtml += `<div class="bar-segment" style="width: ${percentage}%; background: ${color};" title="${ext.toUpperCase()}: ${percentage}%"></div>`;
+                distHtml += `<span style="color: ${color}; font-size: 0.8rem;">● ${ext.toUpperCase()} (${percentage}%)</span>`;
+            });
+
+            const totalLoc = Object.values(projectStats.locByLang).reduce((a, b) => a + b, 0);
+
             container.innerHTML = `
                 <div style="text-align: center; margin-bottom: 2rem;">
-                    <h2 style="font-size: 2.5rem; font-weight: 800;">${projectStats.name}</h2>
+                    <h2 style="font-size: 2.5rem; font-weight: 800;">${titleCasedName}</h2>
                     <p style="color: var(--text-secondary)">Project Architecture Overview</p>
+                </div>
+
+                <div class="custom-field-group">
+                    <div>
+                        <label class="stat-label-small" style="display:block; margin-bottom: 8px;">Project Title</label>
+                        <input type="text" class="custom-input" id="input-project-title" value="${projectStats.title}" placeholder="Project Title" oninput="projectStats.title = this.value">
+                    </div>
+                    <div>
+                        <label class="stat-label-small" style="display:block; margin-bottom: 8px;">Website URL</label>
+                        <input type="text" class="custom-input" id="input-project-url" value="${projectStats.website}" placeholder="Website URL" oninput="projectStats.website = this.value">
+                    </div>
                 </div>
 
                 <div class="stats-grid">
@@ -851,16 +1372,12 @@
                 </div>
 
                 <div class="stat-group">
-                    <div class="stat-label">Resource Distribution</div>
+                    <div class="stat-label">Resource Distribution (By Type)</div>
                     <div class="bar-container">
-                        <div class="bar-segment" style="width: ${codeP}%; background: var(--accent-blue);" title="Code: ${codeP}%"></div>
-                        <div class="bar-segment" style="width: ${assetP}%; background: var(--accent-purple);" title="Assets: ${assetP}%"></div>
-                        <div class="bar-segment" style="width: ${otherP}%; background: var(--text-secondary);" title="Other: ${otherP}%"></div>
+                        ${barHtml}
                     </div>
-                    <div style="display: flex; gap: 20px; font-size: 0.8rem; margin-top: 5px;">
-                        <span style="color: var(--accent-blue)">● Code (${codeP}%)</span>
-                        <span style="color: var(--accent-purple)">● Assets (${assetP}%)</span>
-                        <span style="color: var(--text-secondary)">● Other (${otherP}%)</span>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 10px;">
+                        ${distHtml}
                     </div>
                 </div>
 
@@ -868,13 +1385,20 @@
                     <div class="stat-label">Lines of Code</div>
                     <div class="stat-list">
                         ${locHtml}
+                        <div class="stat-item" style="margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; font-weight: 800;">
+                            TOTAL LOC <span>${totalLoc.toLocaleString()} Lines</span>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
+        function printStats() {
+            window.print();
+        }
+
         function closeModal() {
-            document.querySelectorAll('#file-modal, #project-modal').forEach(m => m.style.display = 'none');
+            document.querySelectorAll('#file-modal, #project-modal, #legend-modal').forEach(m => m.style.display = 'none');
         }
 
         function dragstarted(event) {
@@ -914,9 +1438,8 @@
             );
         }
 
-        function toggleLegend() {
-            const dropdown = document.getElementById('legend-dropdown');
-            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        function showLegend() {
+            document.getElementById('legend-modal').style.display = 'flex';
         }
 
         // Close dropdown when clicking outside
