@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="../master/servetailwind.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../master/indiaHigh.js"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: { sans: ['Outfit', 'sans-serif'] },
@@ -37,14 +37,7 @@
             border-radius: 24px;
             transition: all 0.3s ease;
         }
-
-        .dark .glass-card {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7) 0%, rgba(2, 6, 23, 0.7) 100%);
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        html:not(.dark) .glass-card {
+        .glass-card {
             background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
             border: 1px solid rgba(0,0,0,0.05);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
@@ -74,15 +67,16 @@
         ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.5); }
 
         /* Dropdown Styling */
-        select option {
-            background-color: #1e293b;
-            color: white;
-        }
-        html:not(.dark) select option {
-            background-color: #f8fafc;
-            color: #0f172a;
-        }
         
+        /* Selected route pink pulse */
+        @keyframes routePulse {
+            0%, 100% { stroke-opacity: 1; }
+            50% { stroke-opacity: 0.25; }
+        }
+        .selected-route-pulse {
+            animation: routePulse 1.2s ease-in-out infinite;
+        }
+
         /* Expand/Collapse Animation */
         .expand-transition {
             transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in-out, padding 0.3s ease;
@@ -102,7 +96,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-[radial-gradient(circle_at_50%_0%,#1e293b_0%,#020617_100%)] dark:text-slate-50 p-4 md:p-8 min-h-screen">
+<body class="bg-slate-50 text-slate-900 p-4 md:p-8 min-h-screen">
 
     <div class="max-w-7xl mx-auto">
         <!-- Header -->
@@ -111,8 +105,8 @@
                 <div class="flex items-start gap-3 md:gap-5">
                     <!-- Fancy Logo -->
                     <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-emerald-500 p-[2px] shadow-[0_0_20px_rgba(16,185,129,0.3)] shrink-0">
-                        <div class="w-full h-full bg-slate-50 dark:bg-[#020617] rounded-2xl flex items-center justify-center transition-colors">
-                            <svg class="w-7 h-7 md:w-10 md:h-10 text-slate-900 dark:text-white" viewBox="0 0 24 24" fill="none" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <div class="w-full h-full bg-slate-50 rounded-2xl flex items-center justify-center transition-colors">
+                            <svg class="w-7 h-7 md:w-10 md:h-10 text-slate-900" viewBox="0 0 24 24" fill="none" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <defs>
                                     <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
                                         <stop offset="0%" stop-color="#60a5fa" />
@@ -128,8 +122,8 @@
                     <!-- Title & Details -->
                     <div class="flex flex-col mt-[-4px]">
                         <!-- Line 1: Title & Desktop Superscript -->
-                        <h1 class="text-2xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center flex-wrap">
-                            India's Expressways&nbsp;<span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-emerald-500 to-teal-400 dark:from-blue-400 dark:via-emerald-400 dark:to-teal-300">2026</span>
+                        <h1 class="text-2xl md:text-5xl font-extrabold tracking-tight text-slate-900 flex items-center flex-wrap">
+                            India's Expressways&nbsp;<span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-emerald-500 to-teal-400">2026</span>
                             <sup class="hidden md:inline-block text-[10px] md:text-sm font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400 ml-1 mt-[-10px] md:mt-[-20px]">Designed By Atish</sup>
                         </h1>
                         
@@ -138,26 +132,18 @@
                         
                         <!-- Line 3 Mobile / Line 2 Desktop: Status Badge -->
                         <div class="mb-3 mt-1 md:mt-3">
-                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:border dark:border-blue-500/20 dark:text-blue-400 text-xs font-bold tracking-widest uppercase">
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold tracking-widest uppercase">
                                 <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
                                 April 2026 Live Status
                             </div>
                         </div>
 
                         <!-- Paragraph (Visible on both) -->
-                        <p class="text-slate-600 dark:text-slate-400 text-sm md:text-lg max-w-xl leading-relaxed">
+                        <p class="text-slate-600 text-sm md:text-lg max-w-xl leading-relaxed">
                             Mapping the exponential infrastructure growth. From ~3,600 km in 2024 to over 6,000+ km of high-speed operational corridors today.
                         </p>
                     </div>
                 </div>
-                
-                <!-- Theme Toggle Button -->
-                <button id="themeToggle" class="shrink-0 p-2 md:p-3 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all">
-                    <!-- Sun icon for light mode (visible in dark mode) -->
-                    <svg id="icon-sun" class="w-5 h-5 md:w-6 md:h-6 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    <!-- Moon icon for dark mode (visible in light mode) -->
-                    <svg id="icon-moon" class="w-5 h-5 md:w-6 md:h-6 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
-                </button>
             </div>
         </header>
 
@@ -165,7 +151,7 @@
             
             <!-- Main Map Area -->
             <main class="lg:col-span-8 order-1 lg:order-1 flex flex-col">
-                <div class="map-container glass-card flex-grow w-full relative border border-slate-200 dark:border-slate-800">
+                <div class="map-container glass-card flex-grow w-full relative border border-slate-200">
                     <!-- Leaflet OSM Map Container -->
                     <div id="map" class="rounded-[24px]"></div>
                 </div>
@@ -174,14 +160,14 @@
             <!-- Sidebar -->
             <aside class="lg:col-span-4 space-y-6 flex flex-col order-2 lg:order-2">
                 <!-- Explorer Block -->
-                <div class="glass-card p-6 flex flex-col transition-all duration-500 relative z-20 shadow-sm border border-slate-200 dark:border-white/10" id="explorerBlock">
-                    <h3 class="text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold mb-4 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <div class="glass-card p-6 flex flex-col transition-all duration-500 relative z-20 shadow-sm border border-slate-200" id="explorerBlock">
+                    <h3 class="text-sm text-slate-500 uppercase tracking-widest font-bold mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                         Explore Network
                     </h3>
                     
                     <div class="relative w-full">
-                        <select id="routeSelect" class="w-full bg-white dark:bg-[#0f172a]/80 border border-slate-300 dark:border-white/10 text-slate-800 dark:text-white text-base rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block p-4 appearance-none outline-none backdrop-blur-md cursor-pointer transition-all shadow-sm hover:bg-slate-50 dark:hover:bg-[#1e293b]/90 font-medium">
+                        <select id="routeSelect" class="w-full bg-white border border-slate-300 text-slate-800 text-base rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent block p-4 appearance-none outline-none backdrop-blur-md cursor-pointer transition-all shadow-sm hover:bg-slate-50 font-medium">
                             <option value="" disabled selected>Select an Expressway to view...</option>
                             <!-- Options injected by JS -->
                         </select>
@@ -191,16 +177,16 @@
                     </div>
                     
                     <!-- Dynamic Details Block (Expands here) -->
-                    <div id="detailsBlock" class="expand-transition border-t border-slate-200 dark:border-white/10">
+                    <div id="detailsBlock" class="expand-transition border-t border-slate-200">
                         <div class="flex justify-between items-start mb-4">
                             <div class="pr-2">
                                 <span id="detailTag" class="text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full mb-2 inline-flex items-center gap-2">
                                     <span class="w-2 h-2 rounded-full bg-white" id="detailStatusDot"></span>
                                     <span id="detailTagText">Category</span>
                                 </span>
-                                <h2 id="detailTitle" class="text-2xl font-extrabold text-slate-900 dark:text-white leading-tight">Route Name</h2>
+                                <h2 id="detailTitle" class="text-2xl font-extrabold text-slate-900 leading-tight">Route Name</h2>
                             </div>
-                            <button onclick="clearSelection()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-full min-w-[36px] h-9 flex items-center justify-center transition-colors">
+                            <button onclick="clearSelection()" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-full min-w-[36px] h-9 flex items-center justify-center transition-colors">
                                 <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 1L1 13M1 1L13 13"/></svg>
                             </button>
                         </div>
@@ -208,66 +194,66 @@
                         <!-- Expanded Project Info Grid -->
                         <div class="grid grid-cols-2 gap-4 mb-4">
                             <!-- Length -->
-                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
-                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/20 dark:text-indigo-400 flex items-center justify-center text-lg shrink-0">📏</div>
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg shrink-0">📏</div>
                                 <div>
-                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Length</p>
-                                    <p class="text-sm md:text-base font-black text-slate-800 dark:text-white" id="detailLength">0 km</p>
+                                    <p class="text-slate-500 text-[9px] uppercase tracking-wider font-bold mb-0.5">Length</p>
+                                    <p class="text-sm md:text-base font-black text-slate-800" id="detailLength">0 km</p>
                                 </div>
                             </div>
                             <!-- Agency -->
-                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
-                                <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400 flex items-center justify-center text-lg shrink-0">🏗️</div>
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-lg shrink-0">🏗️</div>
                                 <div>
-                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Agency</p>
-                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white line-clamp-2" id="detailAgency">NHAI</p>
+                                    <p class="text-slate-500 text-[9px] uppercase tracking-wider font-bold mb-0.5">Agency</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800 line-clamp-2" id="detailAgency">NHAI</p>
                                 </div>
                             </div>
                             <!-- Lanes -->
-                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
-                                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400 flex items-center justify-center text-lg shrink-0">🛣️</div>
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-lg shrink-0">🛣️</div>
                                 <div>
-                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Lanes</p>
-                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white" id="detailLanes">6 Lanes</p>
+                                    <p class="text-slate-500 text-[9px] uppercase tracking-wider font-bold mb-0.5">Lanes</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800" id="detailLanes">6 Lanes</p>
                                 </div>
                             </div>
                             <!-- Road Width -->
-                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
-                                <div class="w-8 h-8 rounded-full bg-cyan-100 text-cyan-600 dark:bg-cyan-500/20 dark:text-cyan-400 flex items-center justify-center text-lg shrink-0">↔️</div>
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-cyan-100 text-cyan-600 flex items-center justify-center text-lg shrink-0">↔️</div>
                                 <div>
-                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Row Width</p>
-                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white" id="detailWidth">120m</p>
+                                    <p class="text-slate-500 text-[9px] uppercase tracking-wider font-bold mb-0.5">Row Width</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800" id="detailWidth">120m</p>
                                 </div>
                             </div>
                             <!-- Tolls -->
-                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
-                                <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-500/20 dark:text-purple-400 flex items-center justify-center text-lg shrink-0">🎫</div>
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-lg shrink-0">🎫</div>
                                 <div>
-                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Toll Plazas</p>
-                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white" id="detailTolls">Closed Loop</p>
+                                    <p class="text-slate-500 text-[9px] uppercase tracking-wider font-bold mb-0.5">Toll Plazas</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800" id="detailTolls">Closed Loop</p>
                                 </div>
                             </div>
                             <!-- Completion Progress -->
-                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/5">
-                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 flex items-center justify-center text-lg shrink-0">📈</div>
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded-xl bg-slate-100 border border-slate-200">
+                                <div class="w-8 h-8 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg shrink-0">📈</div>
                                 <div>
-                                    <p class="text-slate-500 dark:text-slate-400 text-[9px] uppercase tracking-wider font-bold mb-0.5">Completed</p>
-                                    <p class="text-xs md:text-sm font-bold text-slate-800 dark:text-white" id="detailProgress">100% (0km)</p>
+                                    <p class="text-slate-500 text-[9px] uppercase tracking-wider font-bold mb-0.5">Completed</p>
+                                    <p class="text-xs md:text-sm font-bold text-slate-800" id="detailProgress">100% (0km)</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="p-4 rounded-xl bg-slate-100 dark:bg-[#020617]/50 border border-slate-200 dark:border-white/5 mb-4 shadow-inner">
-                            <p class="text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider font-bold mb-2 flex items-center gap-2">
+                        <div class="p-4 rounded-xl bg-slate-100 border border-slate-200 mb-4 shadow-inner">
+                            <p class="text-slate-500 text-[10px] uppercase tracking-wider font-bold mb-2 flex items-center gap-2">
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                 Major Cities Covered
                             </p>
-                            <p class="text-xs text-slate-700 dark:text-slate-200 font-semibold leading-relaxed" id="detailCities">City A ➔ City B</p>
+                            <p class="text-xs text-slate-700 font-semibold leading-relaxed" id="detailCities">City A ➔ City B</p>
                         </div>
 
-                        <div class="p-4 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-white/5 shadow-sm">
-                            <p class="text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider font-bold mb-2">Project Details</p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-4" id="detailDesc">Details will appear here.</p>
+                        <div class="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
+                            <p class="text-slate-500 text-[10px] uppercase tracking-wider font-bold mb-2">Project Details</p>
+                            <p class="text-sm text-slate-600 leading-relaxed mb-4" id="detailDesc">Details will appear here.</p>
                             
                             <a id="detailLink" href="#" target="_blank" class="inline-flex items-center gap-2 w-full justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-all shadow-md">
                                 Project Info / Wiki
@@ -278,50 +264,50 @@
                 </div>
 
                 <!-- 2026 Stats Widget -->
-                <div class="glass-card p-6 flex-grow flex flex-col justify-center border border-slate-200 dark:border-white/10 shadow-sm" id="statsBlock">
-                    <h3 class="text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-bold mb-6">Network Snapshot (2026)</h3>
+                <div class="glass-card p-6 flex-grow flex flex-col justify-center border border-slate-200 shadow-sm" id="statsBlock">
+                    <h3 class="text-sm text-slate-500 uppercase tracking-widest font-bold mb-6">Network Snapshot (2026)</h3>
                     
                     <div class="space-y-5">
                         <!-- Restored Operational Stat -->
                         <div>
                             <div class="flex justify-between items-end mb-1">
-                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Operational</span>
-                                <span class="text-lg font-bold text-emerald-600 dark:text-emerald-400">~6,269 km</span>
+                                <span class="text-slate-600 text-sm font-medium">Operational</span>
+                                <span class="text-lg font-bold text-emerald-600">~6,269 km</span>
                             </div>
-                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
-                                <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 dark:from-emerald-600 dark:to-emerald-400 h-full rounded-full relative" style="width: 25%"></div>
+                            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden border border-transparent">
+                                <div class="bg-gradient-to-r from-emerald-500 to-emerald-400 h-full rounded-full relative" style="width: 25%"></div>
                             </div>
                         </div>
 
                         <div>
                             <div class="flex justify-between items-end mb-1">
-                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Under-Construction</span>
-                                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">~10,990 km</span>
+                                <span class="text-slate-600 text-sm font-medium">Under-Construction</span>
+                                <span class="text-lg font-bold text-blue-600">~10,990 km</span>
                             </div>
-                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
-                                <div class="bg-gradient-to-r from-blue-500 to-blue-400 dark:from-blue-600 dark:to-blue-400 h-full rounded-full relative" style="width: 44%">
-                                    <div class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.2)_10px,rgba(255,255,255,0.2)_20px)] dark:bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.1)_10px,rgba(255,255,255,0.1)_20px)] w-[200%] animate-[dashMove_5s_linear_infinite]"></div>
+                            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden border border-transparent">
+                                <div class="bg-gradient-to-r from-blue-500 to-blue-400 h-full rounded-full relative" style="width: 44%">
+                                    <div class="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,rgba(255,255,255,0.2)_10px,rgba(255,255,255,0.2)_20px)] w-[200%] animate-[dashMove_5s_linear_infinite]"></div>
                                 </div>
                             </div>
                         </div>
 
                         <div>
                             <div class="flex justify-between items-end mb-1">
-                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Approved</span>
-                                <span class="text-lg font-bold text-orange-600 dark:text-orange-400">~4,500 km</span>
+                                <span class="text-slate-600 text-sm font-medium">Approved</span>
+                                <span class="text-lg font-bold text-orange-600">~4,500 km</span>
                             </div>
-                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
-                                <div class="bg-gradient-to-r from-orange-500 to-orange-400 dark:from-orange-600 dark:to-orange-400 h-full rounded-full relative" style="width: 18%"></div>
+                            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden border border-transparent">
+                                <div class="bg-gradient-to-r from-orange-500 to-orange-400 h-full rounded-full relative" style="width: 18%"></div>
                             </div>
                         </div>
 
                         <div>
                             <div class="flex justify-between items-end mb-1">
-                                <span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Future Projects</span>
-                                <span class="text-lg font-bold text-purple-600 dark:text-purple-400">~3,000 km</span>
+                                <span class="text-slate-600 text-sm font-medium">Future Projects</span>
+                                <span class="text-lg font-bold text-purple-600">~3,000 km</span>
                             </div>
-                            <div class="w-full bg-slate-200 dark:bg-slate-800/50 rounded-full h-2 overflow-hidden border border-transparent dark:border-white/5">
-                                <div class="bg-gradient-to-r from-purple-500 to-purple-400 dark:from-purple-600 dark:to-purple-400 h-full rounded-full relative" style="width: 13%"></div>
+                            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden border border-transparent">
+                                <div class="bg-gradient-to-r from-purple-500 to-purple-400 h-full rounded-full relative" style="width: 13%"></div>
                             </div>
                         </div>
                     </div>
@@ -330,12 +316,12 @@
         </div>
 
         <!-- Footer Section -->
-        <footer class="mt-12 text-center pt-8 border-t border-slate-200 dark:border-white/10 pb-4">
-            <p class="text-slate-500 dark:text-slate-400 text-sm">
+        <footer class="mt-12 text-center pt-8 border-t border-slate-200 pb-4">
+            <p class="text-slate-500 text-sm">
                 &copy; 2026 India Expressways Project. All data mapped according to NHAI and respective state agencies.
             </p>
-            <p class="text-slate-600 dark:text-slate-500 text-sm mt-2 font-medium tracking-wide">
-                Designed By <a href="https://atishaksharma.com" target="_blank" class="text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 hover:underline transition-all font-bold">Atish AK Sharma</a>
+            <p class="text-slate-600 text-sm mt-2 font-medium tracking-wide">
+                Designed By <a href="https://atishaksharma.com" target="_blank" class="text-blue-600 hover:text-blue-500 hover:underline transition-all font-bold">Atish AK Sharma</a>
             </p>
         </footer>
     </div>
@@ -458,11 +444,11 @@
             link: 'https://en.wikipedia.org/wiki/Delhi%E2%80%93Mumbai_Expressway',
             coords: [[28.40, 77.05], [27.55, 76.63], [25.21, 75.86], [23.33, 75.05], [22.30, 73.18], [21.17, 72.83], [19.80, 72.90], [19.07, 72.87]]
         },
-        'route-ganga': { 
-            name: 'Ganga Expressway', len: '594 km', status: 'Opening April 29, 2026', color: 'blue', hex: '#3b82f6', category: 'Under-Construction',
+        'route-ganga': {
+            name: 'Ganga Expressway', len: '594 km', status: 'Operational', color: 'emerald', hex: '#10b981', category: 'Operational',
             agency: 'UPEIDA', cities: 'Meerut ➔ Bulandshahr ➔ Budaun ➔ Shahjahanpur ➔ Hardoi ➔ Unnao ➔ Prayagraj',
-            lanes: '6 Lanes (Exp to 8)', width: '120m ROW', tolls: '12 Toll Plazas', progress: '~95% (560 km)',
-            desc: 'Uttar Pradesh’s mega corridor connecting West to East. Set to be formally inaugurated by the PM in April 2026.',
+            lanes: '6 Lanes (Exp to 8)', width: '120m ROW', tolls: '12 Toll Plazas', progress: '100% (594 km)',
+            desc: 'Uttar Pradesh\'s mega corridor connecting West to East. Inaugurated by PM Modi in April 2026, making it one of India\'s longest operational expressways.',
             link: 'https://en.wikipedia.org/wiki/Ganga_Expressway',
             coords: [[28.98, 77.70], [28.05, 78.40], [27.88, 79.08], [27.38, 79.98], [26.50, 80.80], [25.43, 81.84]]
         },
@@ -555,60 +541,45 @@
     
     const dCities = document.getElementById('detailCities');
     const dLink = document.getElementById('detailLink');
-    const themeToggleBtn = document.getElementById('themeToggle');
 
     let currentHighlightedLayer = null;
     let tileLayer = null;
+    let pinkPulseLayer = null;
 
     // --- Map Initialization ---
-    // Strict Bounds to keep user inside India Map
-    const mapBounds = L.latLngBounds(
-        L.latLng(6.4626999, 68.1097), // Southwest coordinate
-        L.latLng(35.513327, 97.3953586) // Northeast coordinate
+    // indiaViewBounds used only for initial fit and reset — no panning restriction
+    const indiaViewBounds = L.latLngBounds(
+        L.latLng(6.0, 68.0),
+        L.latLng(37.5, 98.0)
     );
 
     const map = L.map('map', {
         zoomControl: false,
         attributionControl: false,
-        maxBounds: mapBounds,
-        maxBoundsViscosity: 1.0,
-        minZoom: 4.5
-    }).setView([28.6139, 77.2090], 6); // Centered above Delhi with higher zoom to fill the block
+        minZoom: 2
+    }).setView([22.5, 82.5], 5);
 
     L.control.zoom({ position: 'bottomright' }).addTo(map);
     L.control.attribution({position: 'bottomleft'}).addTo(map);
 
-    // Fetch and Highlight India's International Border
-    fetch('https://raw.githubusercontent.com/johan/world.geo.json/master/countries/IND.geo.json')
-        .then(response => response.json())
-        .then(data => {
-            L.geoJSON(data, {
-                style: {
-                    color: '#000000', // Black line as requested
-                    weight: 3,
-                    opacity: 0.9,
-                    fillOpacity: 0
-                },
-                interactive: false // This prevents the border layer from blocking clicks on the roads
-            }).addTo(map);
-        })
-        .catch(err => console.error("Error loading India border:", err));
+    // India border
+    let indiaBorderLayer = null;
+    if (typeof indiaGeoData !== 'undefined') {
+        indiaBorderLayer = L.geoJSON(indiaGeoData, {
+            style: { color: '#000000', weight: 2, opacity: 1, fillOpacity: 0 },
+            interactive: false
+        }).addTo(map);
+        map.fitBounds(indiaBorderLayer.getBounds(), { padding: [8, 8] });
+    }
 
-    // Fix map resize white-space glitch
+    // Single delayed invalidateSize — fires after flyToBounds (1.2s) and CSS transition (0.5s) both finish
     function smoothMapResize() {
-        let startTime = Date.now();
-        let resizeInterval = setInterval(() => {
-            map.invalidateSize();
-            if (Date.now() - startTime > 550) clearInterval(resizeInterval);
-        }, 20);
+        setTimeout(() => map.invalidateSize(), 1400);
     }
 
     // --- Theming Logic ---
     function getTileUrl() {
-        const isDark = document.documentElement.classList.contains('dark');
-        return isDark 
-            ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-            : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+        return 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
     }
 
     function initTileLayer() {
@@ -617,15 +588,9 @@
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 18,
-            minZoom: 4.5,
-            bounds: mapBounds
+            minZoom: 2
         }).addTo(map);
     }
-
-    themeToggleBtn.addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-        initTileLayer();
-    });
 
     initTileLayer(); // First load
 
@@ -709,16 +674,27 @@
 
     function highlightMapLayer(id) {
         if(currentHighlightedLayer) {
-            currentHighlightedLayer.setStyle({ 
-                weight: currentHighlightedLayer.defaultWeight, 
-                opacity: currentHighlightedLayer.defaultOpacity 
+            currentHighlightedLayer.setStyle({
+                weight: currentHighlightedLayer.defaultWeight,
+                opacity: currentHighlightedLayer.defaultOpacity
             });
         }
-        
+        if(pinkPulseLayer) { map.removeLayer(pinkPulseLayer); pinkPulseLayer = null; }
+
         const layer = mapLayers[id];
         if(layer) {
             layer.setStyle({ weight: 9, opacity: 1 });
             currentHighlightedLayer = layer;
+
+            // Pink pulsing outline drawn on top
+            pinkPulseLayer = L.polyline(routeData[id].coords, {
+                color: '#f472b6',
+                weight: 2,
+                opacity: 1,
+                className: 'selected-route-pulse',
+                interactive: false
+            }).addTo(map);
+
             map.flyToBounds(layer.getBounds(), { padding: [60, 60], maxZoom: 7, duration: 1.2 });
         }
     }
@@ -743,7 +719,7 @@
         dLink.href = info.link;
         
         // Set colors dynamically handling tailwind classes
-        dTagContainer.className = `text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full mb-2 inline-flex items-center gap-2 bg-${info.color}-100 text-${info.color}-700 dark:bg-${info.color}-500/20 dark:text-${info.color}-400 border border-${info.color}-200 dark:border-${info.color}-500/30`;
+        dTagContainer.className = `text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full mb-2 inline-flex items-center gap-2 bg-${info.color}-100 text-${info.color}-700 border border-${info.color}-200`;
         dStatusDot.className = `w-2 h-2 rounded-full bg-${info.color}-500 shadow-[0_0_8px_currentColor]`;
         if(info.color === 'emerald') dStatusDot.classList.add('animate-pulse');
         
@@ -757,15 +733,15 @@
         detailsBlock.classList.remove('active');
         smoothMapResize();
         
+        if(pinkPulseLayer) { map.removeLayer(pinkPulseLayer); pinkPulseLayer = null; }
         if(currentHighlightedLayer) {
-            currentHighlightedLayer.setStyle({ 
-                weight: currentHighlightedLayer.defaultWeight, 
-                opacity: currentHighlightedLayer.defaultOpacity 
+            currentHighlightedLayer.setStyle({
+                weight: currentHighlightedLayer.defaultWeight,
+                opacity: currentHighlightedLayer.defaultOpacity
             });
             currentHighlightedLayer = null;
         }
-        // Return to the new default Delhi-centered view instead of zooming all the way out
-        map.flyTo([28.6139, 77.2090], 6, { duration: 1 });
+        map.flyToBounds(indiaViewBounds, { padding: [8, 8], duration: 1 });
     }
 </script>
 </body>
