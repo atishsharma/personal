@@ -227,14 +227,14 @@ const DATA = {
         "keywords": "Atish Ak Sharma, ATS Design Studio, Portfolio, Web Developer, Full Stack, Experimental UI, Web Design, Personal Vault",
         "author": "Atish Ak Sharma",
         "canonical": "https://atishaksharma.com/",
-        "ogImage": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg",
-        "favicon": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg"
+        "ogImage": "master/logo_favicon.jpg",
+        "favicon": "master/logo_favicon.jpg"
     },
     "profile": {
         "name": "Atish Sharma",
         "displayName": "Atish Ak Sharma",
         "title": "Full Stack Developer & Creative Technologist",
-        "avatar": "https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg",
+        "avatar": "master/logo_favicon.jpg",
         "location": "Chandigarh, India",
         "email": "mail@atishaksharma.com",
         "studio": "Ats Design Studio",

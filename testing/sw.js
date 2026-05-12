@@ -2,7 +2,7 @@ const CACHE_NAME = 'ats-testing-v2';
 const ASSETS = [
   '/testing/',
   '/testing/index.html',
-  'https://pbs.twimg.com/profile_images/1530184439409815553/stAtZvyp_400x400.jpg'
+  '../master/logo_favicon.jpg'
 ];
 
 // Install Event - Cache initial assets
