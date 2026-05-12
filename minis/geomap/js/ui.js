@@ -356,7 +356,14 @@ const UI = {
 
       // New GDP Stats
       document.getElementById('stat-gdp-rank').textContent = profile.gdp_rank ? '#' + profile.gdp_rank : 'N/A';
-      document.getElementById('stat-gdp-per-capita').textContent = profile.gdp_per_capita_usd ? '$' + profile.gdp_per_capita_usd.toLocaleString() : 'N/A';
+      
+      let nomPC = profile.gdp_per_capita_usd;
+      let nomPCStr = 'N/A';
+      if (nomPC) {
+          if (nomPC >= 1000) nomPCStr = `$${(nomPC / 1000).toFixed(1)}K`;
+          else nomPCStr = `$${nomPC}`;
+      }
+      document.getElementById('stat-gdp-per-capita').textContent = nomPCStr;
       
       const growthElem = document.getElementById('stat-gdp-growth');
       if (profile.gdp_growth_percent != null) {
@@ -372,17 +379,22 @@ const UI = {
           let gdp = profile.gdp_ppp_usd;
           let gdpStr = '';
           if (gdp >= 1e12) {
-              gdpStr = '$' + (gdp / 1e12).toFixed(2) + 'T';
+              gdpStr = '$' + (gdp / 1e12).toFixed(1) + 'T';
           } else if (gdp >= 1e9) {
-              gdpStr = '$' + (gdp / 1e9).toFixed(2) + 'B';
+              gdpStr = '$' + (gdp / 1e9).toFixed(1) + 'B';
           } else if (gdp >= 1e6) {
-              gdpStr = '$' + (gdp / 1e6).toFixed(2) + 'M';
+              gdpStr = '$' + (gdp / 1e6).toFixed(1) + 'M';
           } else {
               gdpStr = '$' + gdp.toLocaleString();
           }
           
-          let pppPerCapita = profile.gdp_ppp_per_capita_usd ? ` ($${profile.gdp_ppp_per_capita_usd.toLocaleString()})` : '';
-          document.getElementById('stat-gdp-ppp').textContent = gdpStr + pppPerCapita;
+          let pppPC = profile.gdp_ppp_per_capita_usd;
+          let pcStr = '';
+          if (pppPC) {
+              if (pppPC >= 1000) pcStr = ` ($${(pppPC / 1000).toFixed(1)}K)`;
+              else pcStr = ` ($${pppPC})`;
+          }
+          document.getElementById('stat-gdp-ppp').textContent = gdpStr + pcStr;
       } else {
           document.getElementById('stat-gdp-ppp').textContent = 'N/A';
       }

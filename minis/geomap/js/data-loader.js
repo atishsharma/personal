@@ -38,7 +38,8 @@ const DataLoader = {
         'Serbia': 'Republic of Serbia',
         'Vatican City': 'Vatican',
         'T\u00fcrkiye': 'Turkey',
-        'Cape Verde': 'Cabo Verde'
+        'Cape Verde': 'Cabo Verde',
+        "Lao People's Democratic Republic": "Laos"
       };
 
       const skipCountries = new Set([

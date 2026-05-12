@@ -3,16 +3,30 @@
     "capital": "Kabul",
     "population": 45047069,
     "gdp_nominal_usd": 19662000000,
-    "gdp_ppp_usd": null,
+    "gdp_ppp_usd": 72000000000,
     "gdp_rank": 140,
     "gdp_growth_percent": 3.0,
-    "gdp_per_capita_usd": 448,
+    "gdp_per_capita_usd": 436,
     "area_km2": 652860,
     "population_density": 69,
     "currency": "Afghan afghani (AFN)",
-    "major_exports": [],
-    "major_imports": [],
-    "largest_industries": [],
+    "major_exports": [
+      "Fruits and Nuts",
+      "Hand-woven Carpets",
+      "Wool",
+      "Cotton"
+    ],
+    "major_imports": [
+      "Machinery",
+      "Food",
+      "Textiles",
+      "Petroleum Products"
+    ],
+    "largest_industries": [
+      "Agriculture",
+      "Mining",
+      "Textiles"
+    ],
     "major_cities": [],
     "internet_tld": ".af",
     "calling_code": "+93",
@@ -24,14 +38,14 @@
       "Pashto",
       "Turkmen"
     ],
-    "government_type": null,
-    "head_of_state": null,
-    "military_spending": null,
-    "hdi": null,
+    "government_type": "Islamic Emirate",
+    "head_of_state": "Hibatullah Akhundzada",
+    "military_spending": 500000000,
+    "hdi": 0.478,
     "neighboring_countries": [],
     "region": "Asia",
     "subregion": "Southern Asia",
-    "gdp_ppp_per_capita_usd": null,
+    "gdp_ppp_per_capita_usd": 1598,
     "data_sources": {
       "gdp": "Worldometer GDP by Country 2026 - IMF April 2026",
       "population": "Worldometer Population by Country 2026 - UN estimates",
@@ -45,7 +59,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 119,
     "gdp_growth_percent": 3.41,
-    "gdp_per_capita_usd": 12493,
+    "gdp_per_capita_usd": 12117,
     "area_km2": 27400,
     "population_density": 100,
     "currency": "Albanian lek (ALL)",
@@ -82,7 +96,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 51,
     "gdp_growth_percent": 3.78,
-    "gdp_per_capita_usd": 6628,
+    "gdp_per_capita_usd": 6604,
     "area_km2": 2381740,
     "population_density": 20,
     "currency": "Algerian dinar (DZD)",
@@ -118,7 +132,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 64,
     "gdp_growth_percent": 2.29,
-    "gdp_per_capita_usd": 3754,
+    "gdp_per_capita_usd": 3788,
     "area_km2": 1246700,
     "population_density": 32,
     "currency": "Angolan kwanza (AOA)",
@@ -149,12 +163,12 @@
   },
   "Argentina": {
     "capital": "Buenos Aires",
-    "population": 46003734,
-    "gdp_nominal_usd": 688378000000,
+    "population": 46500000,
+    "gdp_nominal_usd": 650000000000,
     "gdp_ppp_usd": null,
-    "gdp_rank": 27,
-    "gdp_growth_percent": 3.5,
-    "gdp_per_capita_usd": 14357,
+    "gdp_rank": 24,
+    "gdp_growth_percent": -1.5,
+    "gdp_per_capita_usd": 13978,
     "area_km2": 2736690,
     "population_density": 17,
     "currency": "Argentine peso (ARS)",
@@ -171,10 +185,10 @@
       "Guaraní",
       "Spanish"
     ],
-    "government_type": null,
+    "government_type": "Federal presidential republic",
     "head_of_state": null,
     "military_spending": null,
-    "hdi": null,
+    "hdi": 0.842,
     "neighboring_countries": [],
     "region": "Americas",
     "subregion": "South America",
@@ -191,7 +205,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 121,
     "gdp_growth_percent": 5.3,
-    "gdp_per_capita_usd": 10410,
+    "gdp_per_capita_usd": 10875,
     "area_km2": 28470,
     "population_density": 103,
     "currency": "Armenian dram (AMD)",
@@ -227,7 +241,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 12,
     "gdp_growth_percent": 2.01,
-    "gdp_per_capita_usd": 75648,
+    "gdp_per_capita_usd": 78009,
     "area_km2": 7682300,
     "population_density": 4,
     "currency": "Australian dollar (AUD)",
@@ -270,7 +284,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 29,
     "gdp_growth_percent": 0.68,
-    "gdp_per_capita_usd": 67761,
+    "gdp_per_capita_usd": 68486,
     "area_km2": 82409,
     "population_density": 111,
     "currency": "euro (EUR)",
@@ -306,7 +320,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 91,
     "gdp_growth_percent": 2.22,
-    "gdp_per_capita_usd": 7467,
+    "gdp_per_capita_usd": 7496,
     "area_km2": 82658,
     "population_density": 126,
     "currency": "Azerbaijani manat (AZN)",
@@ -342,7 +356,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 37,
     "gdp_growth_percent": 4.69,
-    "gdp_per_capita_usd": 2911,
+    "gdp_per_capita_usd": 2872,
     "area_km2": 130170,
     "population_density": 1366,
     "currency": "Bangladeshi taka (BDT)",
@@ -373,12 +387,12 @@
   },
   "Belarus": {
     "capital": "Minsk",
-    "population": 8937018,
-    "gdp_nominal_usd": 102042000000,
+    "population": 9300000,
+    "gdp_nominal_usd": 75000000000,
     "gdp_ppp_usd": null,
     "gdp_rank": 82,
     "gdp_growth_percent": 1.22,
-    "gdp_per_capita_usd": 11286,
+    "gdp_per_capita_usd": 8065,
     "area_km2": 202910,
     "population_density": 44,
     "currency": "Belarusian ruble (BYN)",
@@ -395,7 +409,7 @@
       "Belarusian",
       "Russian"
     ],
-    "government_type": null,
+    "government_type": "Presidential republic",
     "head_of_state": null,
     "military_spending": null,
     "hdi": null,
@@ -410,12 +424,12 @@
   },
   "Belgium": {
     "capital": "Brussels",
-    "population": 11774642,
-    "gdp_nominal_usd": 776730000000,
+    "population": 11800000,
+    "gdp_nominal_usd": 600000000000,
     "gdp_ppp_usd": null,
     "gdp_rank": 24,
     "gdp_growth_percent": 0.66,
-    "gdp_per_capita_usd": 65112,
+    "gdp_per_capita_usd": 50847,
     "area_km2": 30280,
     "population_density": 389,
     "currency": "euro (EUR)",
@@ -433,7 +447,7 @@
       "French",
       "Dutch"
     ],
-    "government_type": null,
+    "government_type": "Federal constitutional monarchy",
     "head_of_state": null,
     "military_spending": null,
     "hdi": null,
@@ -453,7 +467,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 181,
     "gdp_growth_percent": 2.19,
-    "gdp_per_capita_usd": 8134,
+    "gdp_per_capita_usd": 8049,
     "area_km2": 22810,
     "population_density": 19,
     "currency": "Belize dollar (BZD)",
@@ -491,7 +505,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 125,
     "gdp_growth_percent": 6.97,
-    "gdp_per_capita_usd": 1809,
+    "gdp_per_capita_usd": 1832,
     "area_km2": 112760,
     "population_density": 135,
     "currency": "West African CFA franc (XOF)",
@@ -522,12 +536,12 @@
   },
   "Bhutan": {
     "capital": "Thimphu",
-    "population": 802214,
-    "gdp_nominal_usd": 3856000000,
+    "population": 790000,
+    "gdp_nominal_usd": 3000000000,
     "gdp_ppp_usd": null,
     "gdp_rank": 179,
     "gdp_growth_percent": 7.48,
-    "gdp_per_capita_usd": 4867,
+    "gdp_per_capita_usd": 3797,
     "area_km2": 38117,
     "population_density": 21,
     "currency": "Bhutanese ngultrum (BTN), Indian rupee (INR)",
@@ -543,7 +557,7 @@
     "languages": [
       "Dzongkha"
     ],
-    "government_type": null,
+    "government_type": "Constitutional monarchy",
     "head_of_state": null,
     "military_spending": null,
     "hdi": null,
@@ -558,12 +572,12 @@
   },
   "Bolivia": {
     "capital": "Sucre",
-    "population": 12749291,
-    "gdp_nominal_usd": 80743000000,
+    "population": 12500000,
+    "gdp_nominal_usd": 48000000000,
     "gdp_ppp_usd": null,
-    "gdp_rank": 90,
-    "gdp_growth_percent": -3.29,
-    "gdp_per_capita_usd": 6333,
+    "gdp_rank": 95,
+    "gdp_growth_percent": 2.5,
+    "gdp_per_capita_usd": 3840,
     "area_km2": 1083300,
     "population_density": 12,
     "currency": "Bolivian boliviano (BOB)",
@@ -582,10 +596,10 @@
       "Quechua",
       "Spanish"
     ],
-    "government_type": null,
+    "government_type": "Unitary presidential constitutional republic",
     "head_of_state": null,
     "military_spending": null,
-    "hdi": null,
+    "hdi": 0.692,
     "neighboring_countries": [],
     "region": "Americas",
     "subregion": "South America",
@@ -602,7 +616,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 114,
     "gdp_growth_percent": 2.2,
-    "gdp_per_capita_usd": 10701,
+    "gdp_per_capita_usd": 11807,
     "area_km2": 51000,
     "population_density": 61,
     "currency": "Bosnia and Herzegovina convertible mark (BAM)",
@@ -640,7 +654,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 134,
     "gdp_growth_percent": 4.75,
-    "gdp_per_capita_usd": 8490,
+    "gdp_per_capita_usd": 8426,
     "area_km2": 566730,
     "population_density": 5,
     "currency": "Botswana pula (BWP)",
@@ -672,12 +686,12 @@
   },
   "Brazil": {
     "capital": "Brasília",
-    "population": 213562666,
-    "gdp_nominal_usd": 2635912000000,
+    "population": 215000000,
+    "gdp_nominal_usd": 2100000000000,
     "gdp_ppp_usd": null,
     "gdp_rank": 10,
     "gdp_growth_percent": 1.91,
-    "gdp_per_capita_usd": 12313,
+    "gdp_per_capita_usd": 9767,
     "area_km2": 8358140,
     "population_density": 26,
     "currency": "Brazilian real (BRL)",
@@ -696,7 +710,7 @@
     "languages": [
       "Portuguese"
     ],
-    "government_type": null,
+    "government_type": "Federal presidential republic",
     "head_of_state": null,
     "military_spending": null,
     "hdi": null,
@@ -716,7 +730,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 148,
     "gdp_growth_percent": 2.6,
-    "gdp_per_capita_usd": 36288,
+    "gdp_per_capita_usd": 35896,
     "area_km2": 5270,
     "population_density": 89,
     "currency": "Brunei dollar (BND), Singapore dollar (SGD)",
@@ -752,7 +766,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 65,
     "gdp_growth_percent": 2.77,
-    "gdp_per_capita_usd": 23848,
+    "gdp_per_capita_usd": 22215,
     "area_km2": 108560,
     "population_density": 61,
     "currency": "Bulgarian lev (BGN)",
@@ -829,7 +843,9 @@
       "Togo",
       "Ghana",
       "Ivory Coast"
-    ]
+    ],
+    "gdp_per_capita_usd": 1434,
+    "gdp_ppp_per_capita_usd": 2646
   },
   "Burundi": {
     "capital": "Gitega",
@@ -876,12 +892,14 @@
       "Rwanda",
       "Democratic Republic of the Congo",
       "United Republic of Tanzania"
-    ]
+    ],
+    "gdp_per_capita_usd": 615,
+    "gdp_ppp_per_capita_usd": 967
   },
   "Cambodia": {
     "capital": "Phnom Penh",
-    "population": 17168639,
-    "gdp_nominal_usd": 52380000000,
+    "population": 17000000,
+    "gdp_nominal_usd": 30000000000,
     "gdp_ppp_usd": 97000000000,
     "area_km2": 181035,
     "population_density": 95,
@@ -924,7 +942,9 @@
       "Thailand",
       "Laos",
       "Vietnam"
-    ]
+    ],
+    "gdp_per_capita_usd": 1765,
+    "gdp_ppp_per_capita_usd": 5706
   },
   "Cameroon": {
     "capital": "Yaoundé",
@@ -979,7 +999,9 @@
       "Republic of the Congo",
       "Gabon",
       "Equatorial Guinea"
-    ]
+    ],
+    "gdp_per_capita_usd": 2274,
+    "gdp_ppp_per_capita_usd": 4329
   },
   "Canada": {
     "capital": "Ottawa",
@@ -1035,7 +1057,9 @@
     "hdi": 0.935,
     "neighboring_countries": [
       "United States of America"
-    ]
+    ],
+    "gdp_per_capita_usd": 61565,
+    "gdp_ppp_per_capita_usd": 57641
   },
   "Central African Republic": {
     "capital": "Bangui",
@@ -1086,7 +1110,9 @@
       "Democratic Republic of the Congo",
       "Republic of the Congo",
       "Cameroon"
-    ]
+    ],
+    "gdp_per_capita_usd": 608,
+    "gdp_ppp_per_capita_usd": 975
   },
   "Chad": {
     "capital": "N'Djamena",
@@ -1137,12 +1163,14 @@
       "Cameroon",
       "Nigeria",
       "Niger"
-    ]
+    ],
+    "gdp_per_capita_usd": 1402,
+    "gdp_ppp_per_capita_usd": 2079
   },
   "Chile": {
     "capital": "Santiago",
-    "population": 19960889,
-    "gdp_nominal_usd": 407850000000,
+    "population": 19700000,
+    "gdp_nominal_usd": 350000000000,
     "gdp_ppp_usd": 612000000000,
     "area_km2": 756102,
     "population_density": 26,
@@ -1184,17 +1212,21 @@
     "government_type": "Unitary presidential republic",
     "head_of_state": "President",
     "military_spending": 7500000000,
-    "hdi": 0.86,
+    "hdi": 0.855,
     "neighboring_countries": [
       "Peru",
       "Bolivia",
       "Argentina"
-    ]
+    ],
+    "gdp_rank": 43,
+    "gdp_growth_percent": 2.2,
+    "gdp_per_capita_usd": 17766,
+    "gdp_ppp_per_capita_usd": 31066
   },
   "China": {
     "capital": "Beijing",
-    "population": 1409670000,
-    "gdp_nominal_usd": 20850000000000,
+    "population": 1410000000,
+    "gdp_nominal_usd": 19500000000000,
     "gdp_ppp_usd": 37200000000000,
     "area_km2": 9596961,
     "population_density": 145,
@@ -1237,10 +1269,10 @@
     "languages": [
       "Standard Chinese"
     ],
-    "government_type": "Unitary Marxist-Leninist one-party socialist republic",
+    "government_type": "Unitary Marxist–Leninist one-party socialist republic",
     "head_of_state": "President",
     "military_spending": 296000000000,
-    "hdi": 0.788,
+    "hdi": 0.768,
     "neighboring_countries": [
       "Russia",
       "India",
@@ -1250,7 +1282,11 @@
       "Myanmar",
       "Mongolia",
       "Kazakhstan"
-    ]
+    ],
+    "gdp_rank": 2,
+    "gdp_growth_percent": 4.5,
+    "gdp_per_capita_usd": 13830,
+    "gdp_ppp_per_capita_usd": 26383
   },
   "Colombia": {
     "capital": "Bogotá",
@@ -1304,12 +1340,14 @@
       "Peru",
       "Ecuador",
       "Panama"
-    ]
+    ],
+    "gdp_per_capita_usd": 10359,
+    "gdp_ppp_per_capita_usd": 20159
   },
   "Costa Rica": {
     "capital": "San José",
-    "population": 5262227,
-    "gdp_nominal_usd": 109930000000,
+    "population": 5200000,
+    "gdp_nominal_usd": 70000000000,
     "gdp_ppp_usd": 131000000000,
     "area_km2": 51100,
     "population_density": 100,
@@ -1343,14 +1381,16 @@
     "languages": [
       "Spanish"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 0,
     "hdi": 0.806,
     "neighboring_countries": [
       "Nicaragua",
       "Panama"
-    ]
+    ],
+    "gdp_per_capita_usd": 13462,
+    "gdp_ppp_per_capita_usd": 25192
   },
   "Croatia": {
     "capital": "Zagreb",
@@ -1399,13 +1439,15 @@
       "Republic of Serbia",
       "Bosnia and Herzegovina",
       "Montenegro"
-    ]
+    ],
+    "gdp_per_capita_usd": 30190,
+    "gdp_ppp_per_capita_usd": 40920
   },
   "Cuba": {
     "capital": "Havana",
     "population": 11089511,
     "gdp_nominal_usd": 201990000000,
-    "gdp_ppp_usd": 263000000000,
+    "gdp_ppp_usd": 250000000000,
     "area_km2": 109884,
     "population_density": 101,
     "currency": "Peso (CUP)",
@@ -1440,16 +1482,18 @@
     "languages": [
       "Spanish"
     ],
-    "government_type": "Unitary Marxist-Leninist one-party republic",
+    "government_type": "Socialist Republic",
     "head_of_state": "President",
     "military_spending": 3000000000,
     "hdi": 0.764,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 18215,
+    "gdp_ppp_per_capita_usd": 22544
   },
   "Cyprus": {
     "capital": "Nicosia",
-    "population": 1260138,
-    "gdp_nominal_usd": 45170000000,
+    "population": 1280000,
+    "gdp_nominal_usd": 32000000000,
     "gdp_ppp_usd": 49000000000,
     "area_km2": 9251,
     "population_density": 137,
@@ -1487,8 +1531,12 @@
     "government_type": "Unitary presidential republic",
     "head_of_state": "President",
     "military_spending": 700000000,
-    "hdi": 0.907,
-    "neighboring_countries": []
+    "hdi": 0.896,
+    "neighboring_countries": [],
+    "gdp_rank": 105,
+    "gdp_growth_percent": 3.0,
+    "gdp_per_capita_usd": 25000,
+    "gdp_ppp_per_capita_usd": 38281
   },
   "Czech Republic": {
     "capital": "Prague",
@@ -1540,7 +1588,9 @@
       "Poland",
       "Slovakia",
       "Austria"
-    ]
+    ],
+    "gdp_per_capita_usd": 39686,
+    "gdp_ppp_per_capita_usd": 48254
   },
   "Denmark": {
     "capital": "Copenhagen",
@@ -1585,7 +1635,9 @@
     "hdi": 0.952,
     "neighboring_countries": [
       "Germany"
-    ]
+    ],
+    "gdp_per_capita_usd": 84915,
+    "gdp_ppp_per_capita_usd": 70458
   },
   "Djibouti": {
     "capital": "Djibouti",
@@ -1633,7 +1685,9 @@
       "Eritrea",
       "Ethiopia",
       "Somalia"
-    ]
+    ],
+    "gdp_per_capita_usd": 4153,
+    "gdp_ppp_per_capita_usd": 6511
   },
   "Dominican Republic": {
     "capital": "Santo Domingo",
@@ -1678,7 +1732,9 @@
     "hdi": 0.767,
     "neighboring_countries": [
       "Haiti"
-    ]
+    ],
+    "gdp_per_capita_usd": 12014,
+    "gdp_ppp_per_capita_usd": 24089
   },
   "East Timor": {
     "capital": "Dili",
@@ -1723,7 +1779,9 @@
     "hdi": 0.607,
     "neighboring_countries": [
       "Indonesia"
-    ]
+    ],
+    "gdp_per_capita_usd": 1595,
+    "gdp_ppp_per_capita_usd": 6541
   },
   "Ecuador": {
     "capital": "Quito",
@@ -1773,7 +1831,9 @@
     "neighboring_countries": [
       "Colombia",
       "Peru"
-    ]
+    ],
+    "gdp_per_capita_usd": 7677,
+    "gdp_ppp_per_capita_usd": 12833
   },
   "Egypt": {
     "capital": "Cairo",
@@ -1825,7 +1885,9 @@
       "Libya",
       "Sudan",
       "Israel"
-    ]
+    ],
+    "gdp_per_capita_usd": 3932,
+    "gdp_ppp_per_capita_usd": 16657
   },
   "El Salvador": {
     "capital": "San Salvador",
@@ -1871,7 +1933,9 @@
     "neighboring_countries": [
       "Guatemala",
       "Honduras"
-    ]
+    ],
+    "gdp_per_capita_usd": 6259,
+    "gdp_ppp_per_capita_usd": 11155
   },
   "Equatorial Guinea": {
     "capital": "Malabo",
@@ -1917,7 +1981,9 @@
     "neighboring_countries": [
       "Cameroon",
       "Gabon"
-    ]
+    ],
+    "gdp_per_capita_usd": 8002,
+    "gdp_ppp_per_capita_usd": 16913
   },
   "Eritrea": {
     "capital": "Asmara",
@@ -1965,12 +2031,14 @@
       "Sudan",
       "Ethiopia",
       "Djibouti"
-    ]
+    ],
+    "gdp_per_capita_usd": 608,
+    "gdp_ppp_per_capita_usd": 2027
   },
   "Estonia": {
     "capital": "Tallinn",
-    "population": 1365884,
-    "gdp_nominal_usd": 51630000000,
+    "population": 1300000,
+    "gdp_nominal_usd": 40000000000,
     "gdp_ppp_usd": 65000000000,
     "area_km2": 45228,
     "population_density": 31,
@@ -2004,19 +2072,21 @@
     "languages": [
       "Estonian"
     ],
-    "government_type": "Unitary parliamentary republic",
+    "government_type": "Parliamentary republic",
     "head_of_state": "President",
     "military_spending": 1600000000,
     "hdi": 0.899,
     "neighboring_countries": [
       "Latvia",
       "Russia"
-    ]
+    ],
+    "gdp_per_capita_usd": 30769,
+    "gdp_ppp_per_capita_usd": 50000
   },
   "Ethiopia": {
     "capital": "Addis Ababa",
-    "population": 126527060,
-    "gdp_nominal_usd": 121530000000,
+    "population": 128000000,
+    "gdp_nominal_usd": 160000000000,
     "gdp_ppp_usd": 393000000000,
     "area_km2": 1104300,
     "population_density": 115,
@@ -2063,7 +2133,9 @@
       "Kenya",
       "South Sudan",
       "Sudan"
-    ]
+    ],
+    "gdp_per_capita_usd": 1250,
+    "gdp_ppp_per_capita_usd": 3070
   },
   "Fiji": {
     "capital": "Suva",
@@ -2109,12 +2181,14 @@
     "head_of_state": "President",
     "military_spending": 60000000,
     "hdi": 0.73,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 6781,
+    "gdp_ppp_per_capita_usd": 14951
   },
   "Finland": {
     "capital": "Helsinki",
-    "population": 5603851,
-    "gdp_nominal_usd": 337670000000,
+    "population": 5600000,
+    "gdp_nominal_usd": 300000000000,
     "gdp_ppp_usd": 339000000000,
     "area_km2": 338424,
     "population_density": 18,
@@ -2151,7 +2225,7 @@
       "Finnish",
       "Swedish"
     ],
-    "government_type": "Unitary parliamentary republic",
+    "government_type": "Parliamentary republic",
     "head_of_state": "President",
     "military_spending": 7400000000,
     "hdi": 0.942,
@@ -2159,12 +2233,14 @@
       "Sweden",
       "Norway",
       "Russia"
-    ]
+    ],
+    "gdp_per_capita_usd": 53571,
+    "gdp_ppp_per_capita_usd": 60536
   },
   "France": {
     "capital": "Paris",
-    "population": 68373433,
-    "gdp_nominal_usd": 3600000000000,
+    "population": 68000000,
+    "gdp_nominal_usd": 3000000000000,
     "gdp_ppp_usd": 4100000000000,
     "area_km2": 643801,
     "population_density": 105,
@@ -2208,7 +2284,7 @@
     "languages": [
       "French"
     ],
-    "government_type": "Unitary semi-presidential republic",
+    "government_type": "Semi-presidential republic",
     "head_of_state": "President",
     "military_spending": 61300000000,
     "hdi": 0.91,
@@ -2218,7 +2294,9 @@
       "Italy",
       "Belgium",
       "Switzerland"
-    ]
+    ],
+    "gdp_per_capita_usd": 44118,
+    "gdp_ppp_per_capita_usd": 60294
   },
   "Gabon": {
     "capital": "Libreville",
@@ -2265,7 +2343,9 @@
       "Cameroon",
       "Republic of the Congo",
       "Equatorial Guinea"
-    ]
+    ],
+    "gdp_per_capita_usd": 9778,
+    "gdp_ppp_per_capita_usd": 17999
   },
   "Gambia": {
     "capital": "Banjul",
@@ -2310,7 +2390,9 @@
     "hdi": 0.5,
     "neighboring_countries": [
       "Senegal"
-    ]
+    ],
+    "gdp_per_capita_usd": 1031,
+    "gdp_ppp_per_capita_usd": 2624
   },
   "Georgia": {
     "capital": "Tbilisi",
@@ -2359,12 +2441,14 @@
       "Turkey",
       "Armenia",
       "Azerbaijan"
-    ]
+    ],
+    "gdp_per_capita_usd": 11581,
+    "gdp_ppp_per_capita_usd": 22230
   },
   "Germany": {
     "capital": "Berlin",
-    "population": 84358845,
-    "gdp_nominal_usd": 5450000000000,
+    "population": 84000000,
+    "gdp_nominal_usd": 4500000000000,
     "gdp_ppp_usd": 5800000000000,
     "area_km2": 357022,
     "population_density": 236,
@@ -2420,7 +2504,9 @@
       "Netherlands",
       "Belgium",
       "Denmark"
-    ]
+    ],
+    "gdp_per_capita_usd": 53571,
+    "gdp_ppp_per_capita_usd": 69048
   },
   "Ghana": {
     "capital": "Accra",
@@ -2471,7 +2557,9 @@
       "Ivory Coast",
       "Burkina Faso",
       "Togo"
-    ]
+    ],
+    "gdp_per_capita_usd": 3534,
+    "gdp_ppp_per_capita_usd": 7289
   },
   "Greece": {
     "capital": "Athens",
@@ -2524,7 +2612,9 @@
       "Macedonia",
       "Bulgaria",
       "Turkey"
-    ]
+    ],
+    "gdp_per_capita_usd": 29740,
+    "gdp_ppp_per_capita_usd": 41097
   },
   "Guatemala": {
     "capital": "Guatemala City",
@@ -2573,7 +2663,9 @@
       "Belize",
       "Honduras",
       "El Salvador"
-    ]
+    ],
+    "gdp_per_capita_usd": 7168,
+    "gdp_ppp_per_capita_usd": 11067
   },
   "Guinea": {
     "capital": "Conakry",
@@ -2622,12 +2714,14 @@
       "Ivory Coast",
       "Liberia",
       "Sierra Leone"
-    ]
+    ],
+    "gdp_per_capita_usd": 2109,
+    "gdp_ppp_per_capita_usd": 3312
   },
   "Guyana": {
     "capital": "Georgetown",
-    "population": 808726,
-    "gdp_nominal_usd": 33960000000,
+    "population": 810000,
+    "gdp_nominal_usd": 16000000000,
     "gdp_ppp_usd": 45000000000,
     "area_km2": 214969,
     "population_density": 4,
@@ -2662,7 +2756,7 @@
     "languages": [
       "English"
     ],
-    "government_type": "Parliamentary republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 100000000,
     "hdi": 0.714,
@@ -2670,7 +2764,9 @@
       "Venezuela",
       "Brazil",
       "Suriname"
-    ]
+    ],
+    "gdp_per_capita_usd": 19753,
+    "gdp_ppp_per_capita_usd": 55556
   },
   "Haiti": {
     "capital": "Port-au-Prince",
@@ -2716,7 +2812,9 @@
     "hdi": 0.535,
     "neighboring_countries": [
       "Dominican Republic"
-    ]
+    ],
+    "gdp_per_capita_usd": 3342,
+    "gdp_ppp_per_capita_usd": 3241
   },
   "Honduras": {
     "capital": "Tegucigalpa",
@@ -2768,7 +2866,9 @@
       "Guatemala",
       "El Salvador",
       "Nicaragua"
-    ]
+    ],
+    "gdp_per_capita_usd": 3979,
+    "gdp_ppp_per_capita_usd": 6901
   },
   "Hungary": {
     "capital": "Budapest",
@@ -2819,7 +2919,9 @@
       "Republic of Serbia",
       "Croatia",
       "Slovenia"
-    ]
+    ],
+    "gdp_per_capita_usd": 28250,
+    "gdp_ppp_per_capita_usd": 45014
   },
   "Iceland": {
     "capital": "Reykjavik",
@@ -2863,12 +2965,14 @@
     "head_of_state": "President",
     "military_spending": null,
     "hdi": 0.959,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 114144,
+    "gdp_ppp_per_capita_usd": 70363
   },
   "India": {
     "capital": "New Delhi",
-    "population": 1428627663,
-    "gdp_nominal_usd": 4150000000000,
+    "population": 1450000000,
+    "gdp_nominal_usd": 4200000000000,
     "gdp_ppp_usd": 17000000000000,
     "area_km2": 3287263,
     "population_density": 435,
@@ -2914,7 +3018,7 @@
       "Hindi",
       "English"
     ],
-    "government_type": "Federal parliamentary constitutional republic",
+    "government_type": "Federal parliamentary republic",
     "head_of_state": "President",
     "military_spending": 83600000000,
     "hdi": 0.644,
@@ -2925,12 +3029,16 @@
       "Bhutan",
       "Bangladesh",
       "Myanmar"
-    ]
+    ],
+    "gdp_rank": 5,
+    "gdp_growth_percent": 7.0,
+    "gdp_per_capita_usd": 2897,
+    "gdp_ppp_per_capita_usd": 11724
   },
   "Indonesia": {
     "capital": "Jakarta",
-    "population": 277534122,
-    "gdp_nominal_usd": 1540000000000,
+    "population": 285000000,
+    "gdp_nominal_usd": 1580000000000,
     "gdp_ppp_usd": 4390000000000,
     "area_km2": 1904569,
     "population_density": 146,
@@ -2978,13 +3086,17 @@
       "Malaysia",
       "Papua New Guinea",
       "East Timor"
-    ]
+    ],
+    "gdp_rank": 16,
+    "gdp_growth_percent": 5.1,
+    "gdp_per_capita_usd": 5544,
+    "gdp_ppp_per_capita_usd": 15404
   },
   "Iran": {
     "capital": "Tehran",
     "population": 88550570,
     "gdp_nominal_usd": 300290000000,
-    "gdp_ppp_usd": 1580000000000,
+    "gdp_ppp_usd": 1750000000000,
     "area_km2": 1648195,
     "population_density": 52,
     "currency": "Rial (IRR)",
@@ -3022,8 +3134,8 @@
     "languages": [
       "Persian"
     ],
-    "government_type": "Unitary theocratic presidential republic",
-    "head_of_state": "Supreme Leader",
+    "government_type": "Theocratic Republic",
+    "head_of_state": "Ali Khamenei",
     "military_spending": 6800000000,
     "hdi": 0.774,
     "neighboring_countries": [
@@ -3034,13 +3146,15 @@
       "Turkmenistan",
       "Afghanistan",
       "Pakistan"
-    ]
+    ],
+    "gdp_per_capita_usd": 3391,
+    "gdp_ppp_per_capita_usd": 19763
   },
   "Iraq": {
     "capital": "Baghdad",
     "population": 43533592,
     "gdp_nominal_usd": 264780000000,
-    "gdp_ppp_usd": 550000000000,
+    "gdp_ppp_usd": 510000000000,
     "area_km2": 438317,
     "population_density": 93,
     "currency": "Dinar (IQD)",
@@ -3075,7 +3189,7 @@
       "Arabic",
       "Kurdish"
     ],
-    "government_type": "Federal parliamentary republic",
+    "government_type": "Federal Parliamentary Republic",
     "head_of_state": "President",
     "military_spending": 7700000000,
     "hdi": 0.686,
@@ -3086,7 +3200,9 @@
       "Saudi Arabia",
       "Jordan",
       "Syria"
-    ]
+    ],
+    "gdp_per_capita_usd": 6082,
+    "gdp_ppp_per_capita_usd": 11715
   },
   "Ireland": {
     "capital": "Dublin",
@@ -3133,12 +3249,14 @@
     "hdi": 0.945,
     "neighboring_countries": [
       "United Kingdom"
-    ]
+    ],
+    "gdp_per_capita_usd": 151361,
+    "gdp_ppp_per_capita_usd": 129148
   },
   "Israel": {
     "capital": "Jerusalem",
-    "population": 9842000,
-    "gdp_nominal_usd": 719850000000,
+    "population": 9800000,
+    "gdp_nominal_usd": 530000000000,
     "gdp_ppp_usd": 525000000000,
     "area_km2": 20770,
     "population_density": 422,
@@ -3178,7 +3296,7 @@
       "Hebrew",
       "Arabic"
     ],
-    "government_type": "Unitary parliamentary republic",
+    "government_type": "Parliamentary republic",
     "head_of_state": "President",
     "military_spending": 24300000000,
     "hdi": 0.919,
@@ -3187,7 +3305,9 @@
       "Syria",
       "Jordan",
       "Egypt"
-    ]
+    ],
+    "gdp_per_capita_usd": 54082,
+    "gdp_ppp_per_capita_usd": 53571
   },
   "Italy": {
     "capital": "Rome",
@@ -3245,7 +3365,9 @@
       "Switzerland",
       "Austria",
       "Slovenia"
-    ]
+    ],
+    "gdp_per_capita_usd": 46543,
+    "gdp_ppp_per_capita_usd": 55545
   },
   "Ivory Coast": {
     "capital": "Yamoussoukro",
@@ -3295,7 +3417,9 @@
       "Mali",
       "Burkina Faso",
       "Ghana"
-    ]
+    ],
+    "gdp_per_capita_usd": 3883,
+    "gdp_ppp_per_capita_usd": 6684
   },
   "Jamaica": {
     "capital": "Kingston",
@@ -3339,7 +3463,9 @@
     "head_of_state": "Monarch",
     "military_spending": 300000000,
     "hdi": 0.709,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 8151,
+    "gdp_ppp_per_capita_usd": 12387
   },
   "Japan": {
     "capital": "Tokyo",
@@ -3392,7 +3518,9 @@
     "head_of_state": "Emperor",
     "military_spending": 50200000000,
     "hdi": 0.92,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 35223,
+    "gdp_ppp_per_capita_usd": 53879
   },
   "Jordan": {
     "capital": "Amman",
@@ -3440,12 +3568,14 @@
       "Iraq",
       "Saudi Arabia",
       "Israel"
-    ]
+    ],
+    "gdp_per_capita_usd": 5605,
+    "gdp_ppp_per_capita_usd": 10190
   },
   "Kazakhstan": {
     "capital": "Astana",
-    "population": 19900000,
-    "gdp_nominal_usd": 360460000000,
+    "population": 20000000,
+    "gdp_nominal_usd": 250000000000,
     "gdp_ppp_usd": 620000000000,
     "area_km2": 2724900,
     "population_density": 7,
@@ -3485,7 +3615,7 @@
       "Kazakh",
       "Russian"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 2700000000,
     "hdi": 0.811,
@@ -3495,12 +3625,14 @@
       "Kyrgyzstan",
       "Uzbekistan",
       "Turkmenistan"
-    ]
+    ],
+    "gdp_per_capita_usd": 12500,
+    "gdp_ppp_per_capita_usd": 31000
   },
   "Kenya": {
     "capital": "Nairobi",
-    "population": 55100586,
-    "gdp_nominal_usd": 147260000000,
+    "population": 56000000,
+    "gdp_nominal_usd": 115000000000,
     "gdp_ppp_usd": 337000000000,
     "area_km2": 580367,
     "population_density": 94,
@@ -3541,7 +3673,7 @@
       "Swahili",
       "English"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 1400000000,
     "hdi": 0.575,
@@ -3551,7 +3683,9 @@
       "Ethiopia",
       "Somalia",
       "United Republic of Tanzania"
-    ]
+    ],
+    "gdp_per_capita_usd": 2054,
+    "gdp_ppp_per_capita_usd": 6018
   },
   "Kuwait": {
     "capital": "Kuwait City",
@@ -3597,7 +3731,9 @@
     "neighboring_countries": [
       "Iraq",
       "Saudi Arabia"
-    ]
+    ],
+    "gdp_per_capita_usd": 40120,
+    "gdp_ppp_per_capita_usd": 59859
   },
   "Kyrgyzstan": {
     "capital": "Bishkek",
@@ -3646,7 +3782,9 @@
       "Uzbekistan",
       "Tajikistan",
       "China"
-    ]
+    ],
+    "gdp_per_capita_usd": 3325,
+    "gdp_ppp_per_capita_usd": 6197
   },
   "Laos": {
     "capital": "Vientiane",
@@ -3695,12 +3833,14 @@
       "Cambodia",
       "Thailand",
       "Myanmar"
-    ]
+    ],
+    "gdp_per_capita_usd": 2484,
+    "gdp_ppp_per_capita_usd": 9432
   },
   "Latvia": {
     "capital": "Riga",
-    "population": 1830211,
-    "gdp_nominal_usd": 53690000000,
+    "population": 1800000,
+    "gdp_nominal_usd": 45000000000,
     "gdp_ppp_usd": 73000000000,
     "area_km2": 64589,
     "population_density": 28,
@@ -3734,7 +3874,7 @@
     "languages": [
       "Latvian"
     ],
-    "government_type": "Unitary parliamentary republic",
+    "government_type": "Parliamentary republic",
     "head_of_state": "President",
     "military_spending": 1600000000,
     "hdi": 0.866,
@@ -3743,13 +3883,15 @@
       "Estonia",
       "Russia",
       "Belarus"
-    ]
+    ],
+    "gdp_per_capita_usd": 25000,
+    "gdp_ppp_per_capita_usd": 40556
   },
   "Lebanon": {
     "capital": "Beirut",
-    "population": 5489739,
-    "gdp_nominal_usd": 34500000000,
-    "gdp_ppp_usd": 80000000000,
+    "population": 5300000,
+    "gdp_nominal_usd": 22000000000,
+    "gdp_ppp_usd": 70000000000,
     "area_km2": 10452,
     "population_density": 524,
     "currency": "Pound (LBP)",
@@ -3783,14 +3925,16 @@
       "Arabic",
       "French"
     ],
-    "government_type": "Unitary parliamentary republic",
+    "government_type": "Parliamentary Republic",
     "head_of_state": "President",
     "military_spending": 2800000000,
-    "hdi": 0.723,
+    "hdi": 0.706,
     "neighboring_countries": [
       "Syria",
       "Israel"
-    ]
+    ],
+    "gdp_per_capita_usd": 4151,
+    "gdp_ppp_per_capita_usd": 13208
   },
   "Lesotho": {
     "capital": "Maseru",
@@ -3836,7 +3980,9 @@
     "hdi": 0.514,
     "neighboring_countries": [
       "South Africa"
-    ]
+    ],
+    "gdp_per_capita_usd": 1275,
+    "gdp_ppp_per_capita_usd": 3476
   },
   "Liberia": {
     "capital": "Monrovia",
@@ -3884,13 +4030,15 @@
       "Sierra Leone",
       "Guinea",
       "Ivory Coast"
-    ]
+    ],
+    "gdp_per_capita_usd": 1053,
+    "gdp_ppp_per_capita_usd": 1960
   },
   "Libya": {
     "capital": "Tripoli",
     "population": 6812341,
     "gdp_nominal_usd": 52450000000,
-    "gdp_ppp_usd": 128000000000,
+    "gdp_ppp_usd": 160000000000,
     "area_km2": 1759540,
     "population_density": 4,
     "currency": "Dinar (LYD)",
@@ -3924,7 +4072,7 @@
     "languages": [
       "Arabic"
     ],
-    "government_type": "Provisional government",
+    "government_type": "Government of National Unity",
     "head_of_state": "Prime Minister",
     "military_spending": 3800000000,
     "hdi": 0.718,
@@ -3935,12 +4083,14 @@
       "Chad",
       "Sudan",
       "Egypt"
-    ]
+    ],
+    "gdp_per_capita_usd": 7699,
+    "gdp_ppp_per_capita_usd": 23487
   },
   "Lithuania": {
     "capital": "Vilnius",
-    "population": 2860002,
-    "gdp_nominal_usd": 105910000000,
+    "population": 2800000,
+    "gdp_nominal_usd": 75000000000,
     "gdp_ppp_usd": 134000000000,
     "area_km2": 65300,
     "population_density": 44,
@@ -3974,7 +4124,7 @@
     "languages": [
       "Lithuanian"
     ],
-    "government_type": "Unitary semi-presidential republic",
+    "government_type": "Parliamentary republic",
     "head_of_state": "President",
     "military_spending": 2600000000,
     "hdi": 0.879,
@@ -3983,12 +4133,14 @@
       "Belarus",
       "Poland",
       "Russia"
-    ]
+    ],
+    "gdp_per_capita_usd": 26786,
+    "gdp_ppp_per_capita_usd": 47857
   },
   "Luxembourg": {
     "capital": "Luxembourg City",
-    "population": 672050,
-    "gdp_nominal_usd": 110420000000,
+    "population": 660000,
+    "gdp_nominal_usd": 85000000000,
     "gdp_ppp_usd": 97000000000,
     "area_km2": 2586,
     "population_density": 260,
@@ -4024,7 +4176,7 @@
       "French",
       "German"
     ],
-    "government_type": "Unitary parliamentary constitutional monarchy",
+    "government_type": "Constitutional monarchy",
     "head_of_state": "Grand Duke",
     "military_spending": 700000000,
     "hdi": 0.927,
@@ -4032,7 +4184,9 @@
       "Belgium",
       "France",
       "Germany"
-    ]
+    ],
+    "gdp_per_capita_usd": 128788,
+    "gdp_ppp_per_capita_usd": 146970
   },
   "Madagascar": {
     "capital": "Antananarivo",
@@ -4078,12 +4232,14 @@
     "head_of_state": "President",
     "military_spending": 100000000,
     "hdi": 0.501,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 698,
+    "gdp_ppp_per_capita_usd": 1715
   },
   "Malawi": {
     "capital": "Lilongwe",
-    "population": 20405317,
-    "gdp_nominal_usd": 18150000000,
+    "population": 21000000,
+    "gdp_nominal_usd": 13000000000,
     "gdp_ppp_usd": 34000000000,
     "area_km2": 118484,
     "population_density": 172,
@@ -4122,7 +4278,7 @@
       "English",
       "Chichewa"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 50000000,
     "hdi": 0.512,
@@ -4130,12 +4286,14 @@
       "Mozambique",
       "United Republic of Tanzania",
       "Zambia"
-    ]
+    ],
+    "gdp_per_capita_usd": 619,
+    "gdp_ppp_per_capita_usd": 1619
   },
   "Malaysia": {
     "capital": "Kuala Lumpur",
-    "population": 33938221,
-    "gdp_nominal_usd": 516430000000,
+    "population": 34500000,
+    "gdp_nominal_usd": 480000000000,
     "gdp_ppp_usd": 1240000000000,
     "area_km2": 330803,
     "population_density": 100,
@@ -4176,7 +4334,7 @@
       "Malay",
       "English"
     ],
-    "government_type": "Federal parliamentary constitutional monarchy",
+    "government_type": "Federal constitutional elective monarchy",
     "head_of_state": "King",
     "military_spending": 5300000000,
     "hdi": 0.803,
@@ -4184,7 +4342,11 @@
       "Thailand",
       "Indonesia",
       "Brunei"
-    ]
+    ],
+    "gdp_rank": 35,
+    "gdp_growth_percent": 4.5,
+    "gdp_per_capita_usd": 13913,
+    "gdp_ppp_per_capita_usd": 35942
   },
   "Mali": {
     "capital": "Bamako",
@@ -4234,7 +4396,9 @@
       "Guinea",
       "Senegal",
       "Mauritania"
-    ]
+    ],
+    "gdp_per_capita_usd": 1498,
+    "gdp_ppp_per_capita_usd": 2390
   },
   "Malta": {
     "capital": "Valletta",
@@ -4279,7 +4443,9 @@
     "head_of_state": "President",
     "military_spending": 100000000,
     "hdi": 0.918,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 56655,
+    "gdp_ppp_per_capita_usd": 59035
   },
   "Mauritania": {
     "capital": "Nouakchott",
@@ -4327,7 +4493,9 @@
       "Algeria",
       "Mali",
       "Senegal"
-    ]
+    ],
+    "gdp_per_capita_usd": 2951,
+    "gdp_ppp_per_capita_usd": 6992
   },
   "Mexico": {
     "capital": "Mexico City",
@@ -4380,7 +4548,9 @@
       "United States of America",
       "Guatemala",
       "Belize"
-    ]
+    ],
+    "gdp_per_capita_usd": 16117,
+    "gdp_ppp_per_capita_usd": 23947
   },
   "Moldova": {
     "capital": "Chișinău",
@@ -4426,12 +4596,14 @@
     "neighboring_countries": [
       "Romania",
       "Ukraine"
-    ]
+    ],
+    "gdp_per_capita_usd": 8712,
+    "gdp_ppp_per_capita_usd": 17511
   },
   "Mongolia": {
     "capital": "Ulaanbaatar",
-    "population": 3457548,
-    "gdp_nominal_usd": 28450000000,
+    "population": 3400000,
+    "gdp_nominal_usd": 18000000000,
     "gdp_ppp_usd": 59000000000,
     "area_km2": 1564116,
     "population_density": 2,
@@ -4466,14 +4638,16 @@
     "languages": [
       "Mongolian"
     ],
-    "government_type": "Unitary semi-presidential republic",
+    "government_type": "Parliamentary republic",
     "head_of_state": "President",
     "military_spending": 200000000,
     "hdi": 0.739,
     "neighboring_countries": [
       "Russia",
       "China"
-    ]
+    ],
+    "gdp_per_capita_usd": 5294,
+    "gdp_ppp_per_capita_usd": 17353
   },
   "Montenegro": {
     "capital": "Podgorica",
@@ -4521,12 +4695,14 @@
       "Bosnia and Herzegovina",
       "Republic of Serbia",
       "Albania"
-    ]
+    ],
+    "gdp_per_capita_usd": 16602,
+    "gdp_ppp_per_capita_usd": 29212
   },
   "Morocco": {
     "capital": "Rabat",
-    "population": 37984655,
-    "gdp_nominal_usd": 194330000000,
+    "population": 38000000,
+    "gdp_nominal_usd": 140000000000,
     "gdp_ppp_usd": 420000000000,
     "area_km2": 446550,
     "population_density": 83,
@@ -4567,7 +4743,7 @@
       "Arabic",
       "Berber"
     ],
-    "government_type": "Unitary parliamentary constitutional monarchy",
+    "government_type": "Constitutional monarchy",
     "head_of_state": "King",
     "military_spending": 5500000000,
     "hdi": 0.683,
@@ -4575,7 +4751,9 @@
       "Algeria",
       "Mauritania",
       "Spain"
-    ]
+    ],
+    "gdp_per_capita_usd": 3684,
+    "gdp_ppp_per_capita_usd": 11053
   },
   "Mozambique": {
     "capital": "Maputo",
@@ -4630,13 +4808,15 @@
       "Zambia",
       "Malawi",
       "United Republic of Tanzania"
-    ]
+    ],
+    "gdp_per_capita_usd": 686,
+    "gdp_ppp_per_capita_usd": 1416
   },
   "Myanmar": {
     "capital": "Naypyidaw",
     "population": 54179306,
     "gdp_nominal_usd": 83830000000,
-    "gdp_ppp_usd": 285000000000,
+    "gdp_ppp_usd": 260000000000,
     "area_km2": 676578,
     "population_density": 83,
     "currency": "Kyat (MMK)",
@@ -4675,7 +4855,7 @@
     "languages": [
       "Burmese"
     ],
-    "government_type": "Military junta",
+    "government_type": "Provisional Government",
     "head_of_state": "Military Leader",
     "military_spending": 2700000000,
     "hdi": 0.585,
@@ -4685,12 +4865,14 @@
       "China",
       "Laos",
       "Thailand"
-    ]
+    ],
+    "gdp_per_capita_usd": 1547,
+    "gdp_ppp_per_capita_usd": 4799
   },
   "Namibia": {
     "capital": "Windhoek",
-    "population": 2604172,
-    "gdp_nominal_usd": 17310000000,
+    "population": 2600000,
+    "gdp_nominal_usd": 13000000000,
     "gdp_ppp_usd": 33000000000,
     "area_km2": 824292,
     "population_density": 3,
@@ -4726,7 +4908,7 @@
     "languages": [
       "English"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 500000000,
     "hdi": 0.615,
@@ -4735,7 +4917,9 @@
       "Botswana",
       "Angola",
       "Zambia"
-    ]
+    ],
+    "gdp_per_capita_usd": 5000,
+    "gdp_ppp_per_capita_usd": 12692
   },
   "Nepal": {
     "capital": "Kathmandu",
@@ -4782,7 +4966,9 @@
     "neighboring_countries": [
       "India",
       "China"
-    ]
+    ],
+    "gdp_per_capita_usd": 1484,
+    "gdp_ppp_per_capita_usd": 4920
   },
   "Netherlands": {
     "capital": "Amsterdam",
@@ -4833,7 +5019,9 @@
     "neighboring_countries": [
       "Belgium",
       "Germany"
-    ]
+    ],
+    "gdp_per_capita_usd": 81099,
+    "gdp_ppp_per_capita_usd": 70472
   },
   "New Zealand": {
     "capital": "Wellington",
@@ -4883,12 +5071,14 @@
     "head_of_state": "Monarch",
     "military_spending": 4200000000,
     "hdi": 0.939,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 53297,
+    "gdp_ppp_per_capita_usd": 51453
   },
   "Nicaragua": {
     "capital": "Managua",
-    "population": 6948392,
-    "gdp_nominal_usd": 24230000000,
+    "population": 7000000,
+    "gdp_nominal_usd": 16000000000,
     "gdp_ppp_usd": 49000000000,
     "area_km2": 130373,
     "population_density": 51,
@@ -4923,14 +5113,16 @@
     "languages": [
       "Spanish"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 100000000,
     "hdi": 0.667,
     "neighboring_countries": [
       "Honduras",
       "Costa Rica"
-    ]
+    ],
+    "gdp_per_capita_usd": 2286,
+    "gdp_ppp_per_capita_usd": 7000
   },
   "Niger": {
     "capital": "Niamey",
@@ -4982,7 +5174,9 @@
       "Benin",
       "Burkina Faso",
       "Mali"
-    ]
+    ],
+    "gdp_per_capita_usd": 947,
+    "gdp_ppp_per_capita_usd": 1488
   },
   "Nigeria": {
     "capital": "Abuja",
@@ -5039,13 +5233,15 @@
       "Chad",
       "Cameroon",
       "Niger"
-    ]
+    ],
+    "gdp_per_capita_usd": 1686,
+    "gdp_ppp_per_capita_usd": 5719
   },
   "North Korea": {
     "capital": "Pyongyang",
-    "population": 26160821,
-    "gdp_nominal_usd": 16450000000,
-    "gdp_ppp_usd": 40000000000,
+    "population": 26000000,
+    "gdp_nominal_usd": 18000000000,
+    "gdp_ppp_usd": 48000000000,
     "area_km2": 120538,
     "population_density": 215,
     "currency": "Won (KPW)",
@@ -5079,20 +5275,22 @@
     "languages": [
       "Korean"
     ],
-    "government_type": "Unitary one-party socialist republic",
+    "government_type": "One-party socialist republic",
     "head_of_state": "Supreme Leader",
     "military_spending": 4000000000,
-    "hdi": null,
+    "hdi": 0.733,
     "neighboring_countries": [
       "South Korea",
       "China",
       "Russia"
-    ]
+    ],
+    "gdp_per_capita_usd": 692,
+    "gdp_ppp_per_capita_usd": 1846
   },
   "Norway": {
     "capital": "Oslo",
-    "population": 5488984,
-    "gdp_nominal_usd": 599410000000,
+    "population": 5500000,
+    "gdp_nominal_usd": 550000000000,
     "gdp_ppp_usd": 503000000000,
     "area_km2": 385207,
     "population_density": 14,
@@ -5127,7 +5325,7 @@
     "languages": [
       "Norwegian"
     ],
-    "government_type": "Unitary parliamentary constitutional monarchy",
+    "government_type": "Constitutional monarchy",
     "head_of_state": "Monarch",
     "military_spending": 11500000000,
     "hdi": 0.966,
@@ -5135,12 +5333,14 @@
       "Sweden",
       "Finland",
       "Russia"
-    ]
+    ],
+    "gdp_per_capita_usd": 100000,
+    "gdp_ppp_per_capita_usd": 91455
   },
   "Oman": {
     "capital": "Muscat",
-    "population": 4644384,
-    "gdp_nominal_usd": 117180000000,
+    "population": 4600000,
+    "gdp_nominal_usd": 110000000000,
     "gdp_ppp_usd": 193000000000,
     "area_km2": 309500,
     "population_density": 15,
@@ -5174,7 +5374,7 @@
     "languages": [
       "Arabic"
     ],
-    "government_type": "Unitary absolute monarchy",
+    "government_type": "Absolute monarchy",
     "head_of_state": "Sultan",
     "military_spending": 5800000000,
     "hdi": 0.816,
@@ -5182,13 +5382,15 @@
       "United Arab Emirates",
       "Saudi Arabia",
       "Yemen"
-    ]
+    ],
+    "gdp_per_capita_usd": 23913,
+    "gdp_ppp_per_capita_usd": 41957
   },
   "Pakistan": {
     "capital": "Islamabad",
     "population": 231402117,
     "gdp_nominal_usd": 407790000000,
-    "gdp_ppp_usd": 1520000000000,
+    "gdp_ppp_usd": 1580000000000,
     "area_km2": 881913,
     "population_density": 255,
     "currency": "Rupee (PKR)",
@@ -5231,7 +5433,7 @@
       "Urdu",
       "English"
     ],
-    "government_type": "Federal parliamentary republic",
+    "government_type": "Federal Parliamentary Republic",
     "head_of_state": "President",
     "military_spending": 10300000000,
     "hdi": 0.544,
@@ -5240,7 +5442,9 @@
       "China",
       "Afghanistan",
       "Iran"
-    ]
+    ],
+    "gdp_per_capita_usd": 1762,
+    "gdp_ppp_per_capita_usd": 6828
   },
   "Panama": {
     "capital": "Panama City",
@@ -5288,7 +5492,9 @@
     "neighboring_countries": [
       "Costa Rica",
       "Colombia"
-    ]
+    ],
+    "gdp_per_capita_usd": 21266,
+    "gdp_ppp_per_capita_usd": 38495
   },
   "Papua New Guinea": {
     "capital": "Port Moresby",
@@ -5336,7 +5542,9 @@
     "hdi": 0.558,
     "neighboring_countries": [
       "Indonesia"
-    ]
+    ],
+    "gdp_per_capita_usd": 3330,
+    "gdp_ppp_per_capita_usd": 4840
   },
   "Paraguay": {
     "capital": "Asunción",
@@ -5385,12 +5593,14 @@
       "Argentina",
       "Brazil",
       "Bolivia"
-    ]
+    ],
+    "gdp_per_capita_usd": 8823,
+    "gdp_ppp_per_capita_usd": 16614
   },
   "Peru": {
     "capital": "Lima",
-    "population": 34352719,
-    "gdp_nominal_usd": 380900000000,
+    "population": 34800000,
+    "gdp_nominal_usd": 280000000000,
     "gdp_ppp_usd": 580000000000,
     "area_km2": 1285216,
     "population_density": 26,
@@ -5440,7 +5650,11 @@
       "Brazil",
       "Bolivia",
       "Chile"
-    ]
+    ],
+    "gdp_rank": 50,
+    "gdp_growth_percent": 2.8,
+    "gdp_per_capita_usd": 8046,
+    "gdp_ppp_per_capita_usd": 16667
   },
   "Philippines": {
     "capital": "Manila",
@@ -5489,7 +5703,9 @@
     "head_of_state": "President",
     "military_spending": 5400000000,
     "hdi": 0.71,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 4433,
+    "gdp_ppp_per_capita_usd": 11336
   },
   "Poland": {
     "capital": "Warsaw",
@@ -5546,7 +5762,9 @@
       "Belarus",
       "Lithuania",
       "Russia"
-    ]
+    ],
+    "gdp_per_capita_usd": 30745,
+    "gdp_ppp_per_capita_usd": 47614
   },
   "Portugal": {
     "capital": "Lisbon",
@@ -5597,7 +5815,9 @@
     "hdi": 0.874,
     "neighboring_countries": [
       "Spain"
-    ]
+    ],
+    "gdp_per_capita_usd": 36364,
+    "gdp_ppp_per_capita_usd": 42418
   },
   "Qatar": {
     "capital": "Doha",
@@ -5642,12 +5862,14 @@
     "hdi": 0.855,
     "neighboring_countries": [
       "Saudi Arabia"
-    ]
+    ],
+    "gdp_per_capita_usd": 80878,
+    "gdp_ppp_per_capita_usd": 119781
   },
   "Republic of the Congo": {
     "capital": "Brazzaville",
-    "population": 5970424,
-    "gdp_nominal_usd": 17030000000,
+    "population": 6000000,
+    "gdp_nominal_usd": 15000000000,
     "gdp_ppp_usd": 27000000000,
     "area_km2": 342000,
     "population_density": 16,
@@ -5685,7 +5907,7 @@
     "languages": [
       "French"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 500000000,
     "hdi": 0.571,
@@ -5695,7 +5917,9 @@
       "Democratic Republic of the Congo",
       "Angola",
       "Gabon"
-    ]
+    ],
+    "gdp_per_capita_usd": 2500,
+    "gdp_ppp_per_capita_usd": 4500
   },
   "Romania": {
     "capital": "Bucharest",
@@ -5750,12 +5974,14 @@
       "Hungary",
       "Republic of Serbia",
       "Bulgaria"
-    ]
+    ],
+    "gdp_per_capita_usd": 25456,
+    "gdp_ppp_per_capita_usd": 41824
   },
   "Russia": {
     "capital": "Moscow",
-    "population": 144444359,
-    "gdp_nominal_usd": 2660000000000,
+    "population": 144000000,
+    "gdp_nominal_usd": 2000000000000,
     "gdp_ppp_usd": 5800000000000,
     "area_km2": 17098246,
     "population_density": 8,
@@ -5799,7 +6025,7 @@
     "languages": [
       "Russian"
     ],
-    "government_type": "Federal semi-presidential republic",
+    "government_type": "Semi-presidential republic",
     "head_of_state": "President",
     "military_spending": 109000000000,
     "hdi": 0.821,
@@ -5818,7 +6044,9 @@
       "Latvia",
       "Lithuania",
       "Poland"
-    ]
+    ],
+    "gdp_per_capita_usd": 13889,
+    "gdp_ppp_per_capita_usd": 40278
   },
   "Rwanda": {
     "capital": "Kigali",
@@ -5870,7 +6098,9 @@
       "United Republic of Tanzania",
       "Burundi",
       "Democratic Republic of the Congo"
-    ]
+    ],
+    "gdp_per_capita_usd": 1259,
+    "gdp_ppp_per_capita_usd": 3049
   },
   "Saudi Arabia": {
     "capital": "Riyadh",
@@ -5927,7 +6157,9 @@
       "United Arab Emirates",
       "Oman",
       "Yemen"
-    ]
+    ],
+    "gdp_per_capita_usd": 37621,
+    "gdp_ppp_per_capita_usd": 61169
   },
   "Senegal": {
     "capital": "Dakar",
@@ -5978,7 +6210,9 @@
       "Guinea",
       "Guinea Bissau",
       "Gambia"
-    ]
+    ],
+    "gdp_per_capita_usd": 2278,
+    "gdp_ppp_per_capita_usd": 4616
   },
   "Sierra Leone": {
     "capital": "Freetown",
@@ -6024,7 +6258,9 @@
     "neighboring_countries": [
       "Guinea",
       "Liberia"
-    ]
+    ],
+    "gdp_per_capita_usd": 941,
+    "gdp_ppp_per_capita_usd": 1820
   },
   "Slovakia": {
     "capital": "Bratislava",
@@ -6073,7 +6309,9 @@
       "Ukraine",
       "Hungary",
       "Austria"
-    ]
+    ],
+    "gdp_per_capita_usd": 31112,
+    "gdp_ppp_per_capita_usd": 42551
   },
   "Slovenia": {
     "capital": "Ljubljana",
@@ -6121,7 +6359,9 @@
       "Austria",
       "Hungary",
       "Croatia"
-    ]
+    ],
+    "gdp_per_capita_usd": 40969,
+    "gdp_ppp_per_capita_usd": 51961
   },
   "Solomon Islands": {
     "capital": "Honiara",
@@ -6166,12 +6406,14 @@
     "hdi": 0.564,
     "neighboring_countries": [
       "Papua New Guinea"
-    ]
+    ],
+    "gdp_per_capita_usd": 2540,
+    "gdp_ppp_per_capita_usd": 3590
   },
   "Somalia": {
     "capital": "Mogadishu",
-    "population": 18143379,
-    "gdp_nominal_usd": 14170000000,
+    "population": 18000000,
+    "gdp_nominal_usd": 8000000000,
     "gdp_ppp_usd": 24000000000,
     "area_km2": 637657,
     "population_density": 25,
@@ -6214,12 +6456,14 @@
       "Ethiopia",
       "Kenya",
       "Djibouti"
-    ]
+    ],
+    "gdp_per_capita_usd": 444,
+    "gdp_ppp_per_capita_usd": 1333
   },
   "South Africa": {
     "capital": "Pretoria",
-    "population": 62027503,
-    "gdp_nominal_usd": 479960000000,
+    "population": 61000000,
+    "gdp_nominal_usd": 400000000000,
     "gdp_ppp_usd": 1030000000000,
     "area_km2": 1221037,
     "population_density": 49,
@@ -6267,7 +6511,7 @@
       "Afrikaans",
       "English"
     ],
-    "government_type": "Unitary parliamentary republic",
+    "government_type": "Parliamentary republic",
     "head_of_state": "President",
     "military_spending": 4000000000,
     "hdi": 0.713,
@@ -6278,12 +6522,14 @@
       "Mozambique",
       "Swaziland",
       "Lesotho"
-    ]
+    ],
+    "gdp_per_capita_usd": 6557,
+    "gdp_ppp_per_capita_usd": 16885
   },
   "South Korea": {
     "capital": "Seoul",
-    "population": 51784059,
-    "gdp_nominal_usd": 1930000000000,
+    "population": 51000000,
+    "gdp_nominal_usd": 1700000000000,
     "gdp_ppp_usd": 3040000000000,
     "area_km2": 100210,
     "population_density": 517,
@@ -6323,18 +6569,20 @@
     "languages": [
       "Korean"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 54000000000,
     "hdi": 0.929,
     "neighboring_countries": [
       "North Korea"
-    ]
+    ],
+    "gdp_per_capita_usd": 33333,
+    "gdp_ppp_per_capita_usd": 59608
   },
   "South Sudan": {
     "capital": "Juba",
-    "population": 11088796,
-    "gdp_nominal_usd": 6070000000,
+    "population": 11000000,
+    "gdp_nominal_usd": 5000000000,
     "gdp_ppp_usd": 22000000000,
     "area_km2": 644329,
     "population_density": 18,
@@ -6376,7 +6624,9 @@
       "Uganda",
       "Democratic Republic of the Congo",
       "Central African Republic"
-    ]
+    ],
+    "gdp_per_capita_usd": 455,
+    "gdp_ppp_per_capita_usd": 2000
   },
   "Spain": {
     "capital": "Madrid",
@@ -6429,7 +6679,9 @@
       "France",
       "Portugal",
       "Morocco"
-    ]
+    ],
+    "gdp_per_capita_usd": 43488,
+    "gdp_ppp_per_capita_usd": 51186
   },
   "Sri Lanka": {
     "capital": "Sri Jayawardenepura Kotte",
@@ -6477,13 +6729,15 @@
     "hdi": 0.782,
     "neighboring_countries": [
       "India"
-    ]
+    ],
+    "gdp_per_capita_usd": 4491,
+    "gdp_ppp_per_capita_usd": 14703
   },
   "Sudan": {
     "capital": "Khartoum",
     "population": 47958856,
     "gdp_nominal_usd": 44690000000,
-    "gdp_ppp_usd": 201000000000,
+    "gdp_ppp_usd": 160000000000,
     "area_km2": 1861484,
     "population_density": 25,
     "currency": "Pound (SDG)",
@@ -6517,7 +6771,7 @@
       "Arabic",
       "English"
     ],
-    "government_type": "Transitional government",
+    "government_type": "Transitional Council",
     "head_of_state": "Military Leader",
     "military_spending": 2500000000,
     "hdi": 0.508,
@@ -6529,12 +6783,14 @@
       "South Sudan",
       "Ethiopia",
       "Eritrea"
-    ]
+    ],
+    "gdp_per_capita_usd": 932,
+    "gdp_ppp_per_capita_usd": 3336
   },
   "Suriname": {
     "capital": "Paramaribo",
-    "population": 618040,
-    "gdp_nominal_usd": 5910000000,
+    "population": 620000,
+    "gdp_nominal_usd": 4000000000,
     "gdp_ppp_usd": 12000000000,
     "area_km2": 163820,
     "population_density": 4,
@@ -6569,19 +6825,21 @@
     "languages": [
       "Dutch"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 50000000,
     "hdi": 0.73,
     "neighboring_countries": [
       "Brazil",
       "Guyana"
-    ]
+    ],
+    "gdp_per_capita_usd": 6452,
+    "gdp_ppp_per_capita_usd": 19355
   },
   "Sweden": {
     "capital": "Stockholm",
-    "population": 10551707,
-    "gdp_nominal_usd": 760480000000,
+    "population": 10500000,
+    "gdp_nominal_usd": 600000000000,
     "gdp_ppp_usd": 720000000000,
     "area_km2": 450295,
     "population_density": 25,
@@ -6617,14 +6875,16 @@
     "languages": [
       "Swedish"
     ],
-    "government_type": "Unitary parliamentary constitutional monarchy",
+    "government_type": "Constitutional monarchy",
     "head_of_state": "Monarch",
     "military_spending": 12600000000,
     "hdi": 0.952,
     "neighboring_countries": [
       "Norway",
       "Finland"
-    ]
+    ],
+    "gdp_per_capita_usd": 57143,
+    "gdp_ppp_per_capita_usd": 68571
   },
   "Switzerland": {
     "capital": "Bern",
@@ -6681,13 +6941,15 @@
       "France",
       "Italy",
       "Austria"
-    ]
+    ],
+    "gdp_per_capita_usd": 130454,
+    "gdp_ppp_per_capita_usd": 85079
   },
   "Syria": {
     "capital": "Damascus",
-    "population": 22125249,
-    "gdp_nominal_usd": 19990000000,
-    "gdp_ppp_usd": 76000000000,
+    "population": 23000000,
+    "gdp_nominal_usd": 15000000000,
+    "gdp_ppp_usd": 50000000000,
     "area_km2": 185180,
     "population_density": 119,
     "currency": "Pound (SYP)",
@@ -6724,7 +6986,7 @@
     "languages": [
       "Arabic"
     ],
-    "government_type": "Transitional government",
+    "government_type": "Presidential Republic",
     "head_of_state": "President",
     "military_spending": 1800000000,
     "hdi": 0.577,
@@ -6734,7 +6996,9 @@
       "Jordan",
       "Israel",
       "Lebanon"
-    ]
+    ],
+    "gdp_per_capita_usd": 652,
+    "gdp_ppp_per_capita_usd": 2174
   },
   "Taiwan": {
     "capital": "Taipei",
@@ -6781,12 +7045,14 @@
     "head_of_state": "President",
     "military_spending": 19000000000,
     "hdi": 0.926,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 40877,
+    "gdp_ppp_per_capita_usd": 66961
   },
   "Tajikistan": {
     "capital": "Dushanbe",
-    "population": 10143543,
-    "gdp_nominal_usd": 20420000000,
+    "population": 10000000,
+    "gdp_nominal_usd": 10000000000,
     "gdp_ppp_usd": 50000000000,
     "area_km2": 143100,
     "population_density": 68,
@@ -6820,7 +7086,7 @@
     "languages": [
       "Tajik"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 100000000,
     "hdi": 0.685,
@@ -6829,7 +7095,9 @@
       "Kyrgyzstan",
       "Uzbekistan",
       "Afghanistan"
-    ]
+    ],
+    "gdp_per_capita_usd": 1000,
+    "gdp_ppp_per_capita_usd": 5000
   },
   "Thailand": {
     "capital": "Bangkok",
@@ -6883,7 +7151,9 @@
       "Laos",
       "Cambodia",
       "Malaysia"
-    ]
+    ],
+    "gdp_per_capita_usd": 8078,
+    "gdp_ppp_per_capita_usd": 22284
   },
   "Togo": {
     "capital": "Lomé",
@@ -6931,7 +7201,9 @@
       "Ghana",
       "Burkina Faso",
       "Benin"
-    ]
+    ],
+    "gdp_per_capita_usd": 1519,
+    "gdp_ppp_per_capita_usd": 2825
   },
   "Trinidad and Tobago": {
     "capital": "Port of Spain",
@@ -6975,7 +7247,9 @@
     "head_of_state": "President",
     "military_spending": 300000000,
     "hdi": 0.81,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 17486,
+    "gdp_ppp_per_capita_usd": 30620
   },
   "Tunisia": {
     "capital": "Tunis",
@@ -7023,7 +7297,9 @@
     "neighboring_countries": [
       "Algeria",
       "Libya"
-    ]
+    ],
+    "gdp_per_capita_usd": 4875,
+    "gdp_ppp_per_capita_usd": 12923
   },
   "Turkey": {
     "capital": "Ankara",
@@ -7082,13 +7358,15 @@
       "Iran",
       "Iraq",
       "Syria"
-    ]
+    ],
+    "gdp_per_capita_usd": 19231,
+    "gdp_ppp_per_capita_usd": 41041
   },
   "Turkmenistan": {
     "capital": "Ashgabat",
     "population": 6516100,
     "gdp_nominal_usd": 83060000000,
-    "gdp_ppp_usd": 117000000000,
+    "gdp_ppp_usd": 120000000000,
     "area_km2": 488100,
     "population_density": 12,
     "currency": "Manat (TMT)",
@@ -7121,7 +7399,7 @@
     "languages": [
       "Turkmen"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential Republic",
     "head_of_state": "President",
     "military_spending": 200000000,
     "hdi": 0.745,
@@ -7130,7 +7408,9 @@
       "Uzbekistan",
       "Afghanistan",
       "Iran"
-    ]
+    ],
+    "gdp_per_capita_usd": 12747,
+    "gdp_ppp_per_capita_usd": 18416
   },
   "Uganda": {
     "capital": "Kampala",
@@ -7181,12 +7461,14 @@
       "United Republic of Tanzania",
       "Rwanda",
       "Democratic Republic of the Congo"
-    ]
+    ],
+    "gdp_per_capita_usd": 1510,
+    "gdp_ppp_per_capita_usd": 2943
   },
   "Ukraine": {
     "capital": "Kyiv",
-    "population": 36744636,
-    "gdp_nominal_usd": 225340000000,
+    "population": 37000000,
+    "gdp_nominal_usd": 180000000000,
     "gdp_ppp_usd": 480000000000,
     "area_km2": 603500,
     "population_density": 63,
@@ -7226,7 +7508,7 @@
     "languages": [
       "Ukrainian"
     ],
-    "government_type": "Unitary semi-presidential republic",
+    "government_type": "Semi-presidential republic",
     "head_of_state": "President",
     "military_spending": 44000000000,
     "hdi": 0.773,
@@ -7238,12 +7520,14 @@
       "Hungary",
       "Romania",
       "Moldova"
-    ]
+    ],
+    "gdp_per_capita_usd": 4865,
+    "gdp_ppp_per_capita_usd": 12973
   },
   "United Arab Emirates": {
     "capital": "Abu Dhabi",
-    "population": 9441129,
-    "gdp_nominal_usd": 621550000000,
+    "population": 9500000,
+    "gdp_nominal_usd": 500000000000,
     "gdp_ppp_usd": 840000000000,
     "area_km2": 83600,
     "population_density": 113,
@@ -7291,7 +7575,9 @@
     "neighboring_countries": [
       "Saudi Arabia",
       "Oman"
-    ]
+    ],
+    "gdp_per_capita_usd": 52632,
+    "gdp_ppp_per_capita_usd": 88421
   },
   "United Kingdom": {
     "capital": "London",
@@ -7346,12 +7632,14 @@
     "hdi": 0.929,
     "neighboring_countries": [
       "Ireland"
-    ]
+    ],
+    "gdp_per_capita_usd": 62890,
+    "gdp_ppp_per_capita_usd": 60824
   },
   "Uruguay": {
     "capital": "Montevideo",
-    "population": 3423108,
-    "gdp_nominal_usd": 96090000000,
+    "population": 3400000,
+    "gdp_nominal_usd": 75000000000,
     "gdp_ppp_usd": 100000000000,
     "area_km2": 176215,
     "population_density": 19,
@@ -7386,19 +7674,21 @@
     "languages": [
       "Spanish"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 1000000000,
     "hdi": 0.83,
     "neighboring_countries": [
       "Argentina",
       "Brazil"
-    ]
+    ],
+    "gdp_per_capita_usd": 22059,
+    "gdp_ppp_per_capita_usd": 29412
   },
   "Uzbekistan": {
     "capital": "Tashkent",
-    "population": 36024000,
-    "gdp_nominal_usd": 123710000000,
+    "population": 36000000,
+    "gdp_nominal_usd": 90000000000,
     "gdp_ppp_usd": 346000000000,
     "area_km2": 448978,
     "population_density": 79,
@@ -7434,7 +7724,7 @@
     "languages": [
       "Uzbek"
     ],
-    "government_type": "Unitary presidential republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 1500000000,
     "hdi": 0.727,
@@ -7444,7 +7734,9 @@
       "Tajikistan",
       "Afghanistan",
       "Turkmenistan"
-    ]
+    ],
+    "gdp_per_capita_usd": 2500,
+    "gdp_ppp_per_capita_usd": 9611
   },
   "Vanuatu": {
     "capital": "Port Vila",
@@ -7490,13 +7782,15 @@
     "head_of_state": "President",
     "military_spending": null,
     "hdi": 0.607,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 3826,
+    "gdp_ppp_per_capita_usd": 3979
   },
   "Venezuela": {
     "capital": "Caracas",
     "population": 28838499,
     "gdp_nominal_usd": 281850000000,
-    "gdp_ppp_usd": 400000000000,
+    "gdp_ppp_usd": 480000000000,
     "area_km2": 916445,
     "population_density": 32,
     "currency": "Bolívar (VES)",
@@ -7534,7 +7828,7 @@
     "languages": [
       "Spanish"
     ],
-    "government_type": "Federal presidential republic",
+    "government_type": "Federal Presidential Republic",
     "head_of_state": "President",
     "military_spending": 2000000000,
     "hdi": 0.691,
@@ -7542,12 +7836,14 @@
       "Colombia",
       "Brazil",
       "Guyana"
-    ]
+    ],
+    "gdp_per_capita_usd": 9773,
+    "gdp_ppp_per_capita_usd": 16644
   },
   "Vietnam": {
     "capital": "Hanoi",
-    "population": 100987686,
-    "gdp_nominal_usd": 533430000000,
+    "population": 100000000,
+    "gdp_nominal_usd": 430000000000,
     "gdp_ppp_usd": 1550000000000,
     "area_km2": 331212,
     "population_density": 313,
@@ -7587,7 +7883,7 @@
     "languages": [
       "Vietnamese"
     ],
-    "government_type": "Unitary Marxist-Leninist one-party socialist republic",
+    "government_type": "One-party socialist republic",
     "head_of_state": "President",
     "military_spending": 7600000000,
     "hdi": 0.726,
@@ -7595,13 +7891,15 @@
       "China",
       "Laos",
       "Cambodia"
-    ]
+    ],
+    "gdp_per_capita_usd": 4300,
+    "gdp_ppp_per_capita_usd": 15500
   },
   "Yemen": {
     "capital": "Sanaa",
     "population": 34449825,
     "gdp_nominal_usd": 21500000000,
-    "gdp_ppp_usd": 61000000000,
+    "gdp_ppp_usd": 92000000000,
     "area_km2": 527968,
     "population_density": 56,
     "currency": "Rial (YER)",
@@ -7639,14 +7937,16 @@
     "languages": [
       "Arabic"
     ],
-    "government_type": "Presidential republic (civil war)",
+    "government_type": "Transitional Council",
     "head_of_state": "President",
     "military_spending": 1500000000,
     "hdi": 0.455,
     "neighboring_countries": [
       "Saudi Arabia",
       "Oman"
-    ]
+    ],
+    "gdp_per_capita_usd": 624,
+    "gdp_ppp_per_capita_usd": 2671
   },
   "Zambia": {
     "capital": "Lusaka",
@@ -7699,7 +7999,9 @@
       "Botswana",
       "Namibia",
       "Angola"
-    ]
+    ],
+    "gdp_per_capita_usd": 1698,
+    "gdp_ppp_per_capita_usd": 4230
   },
   "Zimbabwe": {
     "capital": "Harare",
@@ -7754,12 +8056,14 @@
       "Botswana",
       "Zambia",
       "Mozambique"
-    ]
+    ],
+    "gdp_per_capita_usd": 2554,
+    "gdp_ppp_per_capita_usd": 3060
   },
   "DR Congo": {
     "capital": "Kinshasa",
-    "population": 102262808,
-    "gdp_nominal_usd": 123410000000,
+    "population": 102000000,
+    "gdp_nominal_usd": 65000000000,
     "gdp_ppp_usd": 147000000000,
     "area_km2": 2344858,
     "population_density": 40,
@@ -7797,7 +8101,7 @@
     "languages": [
       "French"
     ],
-    "government_type": "Unitary semi-presidential republic",
+    "government_type": "Semi-presidential republic",
     "head_of_state": "President",
     "military_spending": 800000000,
     "hdi": 0.479,
@@ -7811,7 +8115,9 @@
       "United Republic of Tanzania",
       "Zambia",
       "Angola"
-    ]
+    ],
+    "gdp_per_capita_usd": 637,
+    "gdp_ppp_per_capita_usd": 1441
   },
   "Guinea-Bissau": {
     "capital": "Bissau",
@@ -7856,7 +8162,9 @@
     "neighboring_countries": [
       "Senegal",
       "Guinea"
-    ]
+    ],
+    "gdp_per_capita_usd": 1415,
+    "gdp_ppp_per_capita_usd": 2660
   },
   "North Macedonia": {
     "capital": "Skopje",
@@ -7905,7 +8213,9 @@
       "Bulgaria",
       "Greece",
       "Albania"
-    ]
+    ],
+    "gdp_per_capita_usd": 11766,
+    "gdp_ppp_per_capita_usd": 22867
   },
   "Serbia": {
     "capital": "Belgrade",
@@ -7962,7 +8272,9 @@
       "Montenegro",
       "Bosnia and Herzegovina",
       "Croatia"
-    ]
+    ],
+    "gdp_per_capita_usd": 16854,
+    "gdp_ppp_per_capita_usd": 27230
   },
   "Eswatini": {
     "capital": "Mbabane",
@@ -8013,7 +8325,9 @@
     "neighboring_countries": [
       "South Africa",
       "Mozambique"
-    ]
+    ],
+    "gdp_per_capita_usd": 4782,
+    "gdp_ppp_per_capita_usd": 11562
   },
   "Tanzania": {
     "capital": "Dodoma",
@@ -8071,7 +8385,9 @@
       "Zambia",
       "Malawi",
       "Mozambique"
-    ]
+    ],
+    "gdp_per_capita_usd": 1449,
+    "gdp_ppp_per_capita_usd": 3786
   },
   "United States": {
     "capital": "Washington, D.C.",
@@ -8132,56 +8448,60 @@
     "neighboring_countries": [
       "Canada",
       "Mexico"
-    ]
+    ],
+    "gdp_per_capita_usd": 96681,
+    "gdp_ppp_per_capita_usd": 87246
   },
   "Dhekelia Sovereign Base Area": {
-    "capital": "Dhekelia Sovereign Base Area City",
-    "population": 5770493,
-    "gdp_nominal_usd": 39723457067,
-    "gdp_ppp_usd": 189510794011,
-    "area_km2": 270909,
-    "population_density": 59,
-    "currency": "Standard Dollar",
+    "capital": "Episkopi Cantonment",
+    "population": 15700,
+    "gdp_nominal_usd": 0,
+    "gdp_ppp_usd": 0,
+    "area_km2": 130,
+    "population_density": 120,
+    "currency": "Euro (EUR)",
     "major_exports": [
-      "Tourism",
-      "Fish",
-      "Agriculture"
+      "Military services",
+      "Limited agriculture"
     ],
     "major_imports": [
       "Fuel",
-      "Machinery",
-      "Food"
+      "Consumer goods"
     ],
     "largest_industries": [
-      "Services",
+      "Defense",
       "Agriculture"
     ],
     "major_cities": [
       {
-        "name": "Dhekelia Sovereign Base Area City",
-        "population": 1836471
+        "name": "Dhekelia Garrison",
+        "population": 2000
       }
     ],
-    "internet_tld": ".dh",
-    "calling_code": "+337",
+    "internet_tld": ".cy",
+    "calling_code": "+357",
     "timezones": [
-      "UTC+00:00"
+      "UTC+02:00"
     ],
     "languages": [
       "English",
-      "Local Language"
+      "Greek"
     ],
-    "government_type": "Republic",
-    "head_of_state": "President",
-    "military_spending": 467802003,
-    "hdi": 0.803,
-    "neighboring_countries": []
+    "government_type": "British Overseas Territory (Sovereign Base Area)",
+    "head_of_state": "Administrator (under British Monarch)",
+    "military_spending": 0,
+    "hdi": 0.9,
+    "neighboring_countries": [
+      "Cyprus"
+    ],
+    "gdp_per_capita_usd": 0,
+    "gdp_ppp_per_capita_usd": 0
   },
   "Palestine": {
     "capital": "Palestine City",
-    "population": 763335,
-    "gdp_nominal_usd": 36212504180,
-    "gdp_ppp_usd": 14199967453,
+    "population": 5400000,
+    "gdp_nominal_usd": 18000000000,
+    "gdp_ppp_usd": 30000000000,
     "area_km2": 394218,
     "population_density": 215,
     "currency": "Standard Dollar",
@@ -8214,16 +8534,18 @@
       "English",
       "Local Language"
     ],
-    "government_type": "Republic",
+    "government_type": "Semi-presidential Republic",
     "head_of_state": "President",
     "military_spending": 372390376,
-    "hdi": 0.669,
-    "neighboring_countries": []
+    "hdi": 0.715,
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 3333,
+    "gdp_ppp_per_capita_usd": 5556
   },
   "United Republic of Tanzania": {
     "capital": "United Republic of Tanzania City",
-    "population": 3334478,
-    "gdp_nominal_usd": 16114496581,
+    "population": 68000000,
+    "gdp_nominal_usd": 85000000000,
     "gdp_ppp_usd": 180781113436,
     "area_km2": 784476,
     "population_density": 197,
@@ -8257,16 +8579,18 @@
       "English",
       "Local Language"
     ],
-    "government_type": "Republic",
+    "government_type": "Presidential republic",
     "head_of_state": "President",
     "military_spending": 137302794,
     "hdi": 0.897,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 1250,
+    "gdp_ppp_per_capita_usd": 2659
   },
   "Somaliland": {
     "capital": "Somaliland City",
-    "population": 171921,
-    "gdp_nominal_usd": 24456361400,
+    "population": 4500000,
+    "gdp_nominal_usd": 2500000000,
     "gdp_ppp_usd": 169927682318,
     "area_km2": 571357,
     "population_density": 143,
@@ -8300,16 +8624,18 @@
       "English",
       "Local Language"
     ],
-    "government_type": "Republic",
+    "government_type": "Presidential republic (unrecognized)",
     "head_of_state": "President",
     "military_spending": 376407039,
     "hdi": 0.621,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 556,
+    "gdp_ppp_per_capita_usd": 37762
   },
   "Western Sahara": {
     "capital": "Western Sahara City",
-    "population": 3889439,
-    "gdp_nominal_usd": 24630709579,
+    "population": 600000,
+    "gdp_nominal_usd": 1000000000,
     "gdp_ppp_usd": 153073084084,
     "area_km2": 316318,
     "population_density": 252,
@@ -8343,16 +8669,18 @@
       "English",
       "Local Language"
     ],
-    "government_type": "Republic",
+    "government_type": "Disputed territory",
     "head_of_state": "President",
     "military_spending": 64471695,
     "hdi": 0.545,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 1667,
+    "gdp_ppp_per_capita_usd": 255122
   },
   "Saint Martin": {
     "capital": "Saint Martin City",
-    "population": 8353720,
-    "gdp_nominal_usd": 4096726719,
+    "population": 35000,
+    "gdp_nominal_usd": 600000000,
     "gdp_ppp_usd": 83571734440,
     "area_km2": 248198,
     "population_density": 399,
@@ -8386,16 +8714,18 @@
       "English",
       "Local Language"
     ],
-    "government_type": "Republic",
+    "government_type": "Overseas collectivity of France",
     "head_of_state": "President",
     "military_spending": 268579728,
     "hdi": 0.525,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 17143,
+    "gdp_ppp_per_capita_usd": 2387764
   },
   "Sint Maarten": {
     "capital": "Sint Maarten City",
-    "population": 7588950,
-    "gdp_nominal_usd": 43812291226,
+    "population": 43000,
+    "gdp_nominal_usd": 1200000000,
     "gdp_ppp_usd": 61084379109,
     "area_km2": 235942,
     "population_density": 296,
@@ -8429,16 +8759,18 @@
       "English",
       "Local Language"
     ],
-    "government_type": "Republic",
+    "government_type": "Constituent country of the Netherlands",
     "head_of_state": "President",
     "military_spending": 305532116,
     "hdi": 0.615,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 27907,
+    "gdp_ppp_per_capita_usd": 1420567
   },
   "Czechia": {
     "capital": "Czechia City",
-    "population": 3357040,
-    "gdp_nominal_usd": 60148076101,
+    "population": 10500000,
+    "gdp_nominal_usd": 300000000000,
     "gdp_ppp_usd": 39885219699,
     "area_km2": 532417,
     "population_density": 51,
@@ -8472,11 +8804,13 @@
       "English",
       "Local Language"
     ],
-    "government_type": "Republic",
+    "government_type": "Parliamentary republic",
     "head_of_state": "President",
     "military_spending": 129288943,
     "hdi": 0.551,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 28571,
+    "gdp_ppp_per_capita_usd": 3799
   },
   "Kosovo": {
     "capital": "Kosovo City",
@@ -8519,7 +8853,9 @@
     "head_of_state": "President",
     "military_spending": 23605808,
     "hdi": 0.607,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 10306,
+    "gdp_ppp_per_capita_usd": 7599
   },
   "Liechtenstein": {
     "capital": "Liechtenstein City",
@@ -8562,7 +8898,9 @@
     "head_of_state": "President",
     "military_spending": 266203269,
     "hdi": 0.535,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 62846,
+    "gdp_ppp_per_capita_usd": 27712
   },
   "Republic of Serbia": {
     "capital": "Republic of Serbia City",
@@ -8605,7 +8943,9 @@
     "head_of_state": "President",
     "military_spending": 236309894,
     "hdi": 0.559,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 13788,
+    "gdp_ppp_per_capita_usd": 17435
   },
   "San Marino": {
     "capital": "San Marino City",
@@ -8648,7 +8988,9 @@
     "head_of_state": "President",
     "military_spending": 45195228,
     "hdi": 0.796,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 4740,
+    "gdp_ppp_per_capita_usd": 14291
   },
   "Monaco": {
     "capital": "Monaco City",
@@ -8691,7 +9033,9 @@
     "head_of_state": "President",
     "military_spending": 185516762,
     "hdi": 0.552,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 7862,
+    "gdp_ppp_per_capita_usd": 21305
   },
   "eSwatini": {
     "capital": "eSwatini City",
@@ -8734,7 +9078,9 @@
     "head_of_state": "President",
     "military_spending": 318676233,
     "hdi": 0.543,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 22745,
+    "gdp_ppp_per_capita_usd": 28593
   },
   "Andorra": {
     "capital": "Andorra la Vella",
@@ -8743,7 +9089,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 174,
     "gdp_growth_percent": 2.1,
-    "gdp_per_capita_usd": 53475,
+    "gdp_per_capita_usd": 58255,
     "area_km2": 470,
     "population_density": 178,
     "currency": "euro (EUR)",
@@ -8813,7 +9159,9 @@
     "head_of_state": "President",
     "military_spending": 43928318,
     "hdi": 0.843,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 11206,
+    "gdp_ppp_per_capita_usd": 4025
   },
   "Brazilian Island": {
     "capital": "Brazilian Island City",
@@ -8856,7 +9204,9 @@
     "head_of_state": "President",
     "military_spending": 37876149,
     "hdi": 0.666,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 39583,
+    "gdp_ppp_per_capita_usd": 14728
   },
   "Gibraltar": {
     "capital": "Gibraltar City",
@@ -8899,7 +9249,9 @@
     "head_of_state": "President",
     "military_spending": 379309737,
     "hdi": 0.886,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 14379,
+    "gdp_ppp_per_capita_usd": 17523
   },
   "Hong Kong S.A.R.": {
     "capital": "Hong Kong S.A.R. City",
@@ -8942,7 +9294,9 @@
     "head_of_state": "President",
     "military_spending": 179629173,
     "hdi": 0.661,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 8526,
+    "gdp_ppp_per_capita_usd": 15481
   },
   "Vatican": {
     "capital": "Vatican City",
@@ -8985,7 +9339,9 @@
     "head_of_state": "President",
     "military_spending": 44548256,
     "hdi": 0.825,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 9784,
+    "gdp_ppp_per_capita_usd": 5174
   },
   "Northern Cyprus": {
     "capital": "Northern Cyprus City",
@@ -9028,7 +9384,9 @@
     "head_of_state": "President",
     "military_spending": 393868635,
     "hdi": 0.635,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 4500,
+    "gdp_ppp_per_capita_usd": 30634
   },
   "Cyprus No Mans Area": {
     "capital": "Cyprus No Mans Area City",
@@ -9071,7 +9429,9 @@
     "head_of_state": "President",
     "military_spending": 159684332,
     "hdi": 0.796,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 25072,
+    "gdp_ppp_per_capita_usd": 50522
   },
   "Siachen Glacier": {
     "capital": "Siachen Glacier City",
@@ -9114,7 +9474,9 @@
     "head_of_state": "President",
     "military_spending": 174905507,
     "hdi": 0.79,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 21018,
+    "gdp_ppp_per_capita_usd": 29168
   },
   "Baykonur Cosmodrome": {
     "capital": "Baykonur Cosmodrome City",
@@ -9157,7 +9519,9 @@
     "head_of_state": "President",
     "military_spending": 82938108,
     "hdi": 0.729,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 6041,
+    "gdp_ppp_per_capita_usd": 5607
   },
   "Akrotiri Sovereign Base Area": {
     "capital": "Akrotiri Sovereign Base Area City",
@@ -9200,7 +9564,9 @@
     "head_of_state": "President",
     "military_spending": 385804021,
     "hdi": 0.64,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 747,
+    "gdp_ppp_per_capita_usd": 27198
   },
   "Southern Patagonian Ice Field": {
     "capital": "Southern Patagonian Ice Field City",
@@ -9243,7 +9609,9 @@
     "head_of_state": "President",
     "military_spending": 256247266,
     "hdi": 0.622,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 1388,
+    "gdp_ppp_per_capita_usd": 8958
   },
   "Bir Tawil": {
     "capital": "Bir Tawil City",
@@ -9286,7 +9654,9 @@
     "head_of_state": "President",
     "military_spending": 296172626,
     "hdi": 0.731,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 391,
+    "gdp_ppp_per_capita_usd": 15092
   },
   "Antarctica": {
     "capital": "Antarctica City",
@@ -9329,7 +9699,9 @@
     "head_of_state": "President",
     "military_spending": 472310118,
     "hdi": 0.731,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 6019,
+    "gdp_ppp_per_capita_usd": 22671
   },
   "Greenland": {
     "capital": "Greenland City",
@@ -9372,7 +9744,9 @@
     "head_of_state": "President",
     "military_spending": 152519996,
     "hdi": 0.806,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 18940,
+    "gdp_ppp_per_capita_usd": 59581
   },
   "New Caledonia": {
     "capital": "New Caledonia City",
@@ -9415,7 +9789,9 @@
     "head_of_state": "President",
     "military_spending": 139882772,
     "hdi": 0.557,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 40262,
+    "gdp_ppp_per_capita_usd": 285311
   },
   "Curaçao": {
     "capital": "Curaçao City",
@@ -9458,7 +9834,9 @@
     "head_of_state": "President",
     "military_spending": 73872735,
     "hdi": 0.853,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 15239,
+    "gdp_ppp_per_capita_usd": 24202
   },
   "Aruba": {
     "capital": "Oranjestad",
@@ -9467,7 +9845,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 177,
     "gdp_growth_percent": 2.25,
-    "gdp_per_capita_usd": 42862,
+    "gdp_per_capita_usd": 43184,
     "area_km2": 180,
     "population_density": 601,
     "currency": "Aruban florin (AWG)",
@@ -9504,7 +9882,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 146,
     "gdp_growth_percent": 2.1,
-    "gdp_per_capita_usd": 40892,
+    "gdp_per_capita_usd": 42118,
     "area_km2": 10010,
     "population_density": 40,
     "currency": "Bahamian dollar (BSD), United States dollar (USD)",
@@ -9574,7 +9952,9 @@
     "head_of_state": "President",
     "military_spending": 421147026,
     "hdi": 0.517,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 19681,
+    "gdp_ppp_per_capita_usd": 19825
   },
   "Saint Pierre and Miquelon": {
     "capital": "Saint Pierre and Miquelon City",
@@ -9617,7 +9997,9 @@
     "head_of_state": "President",
     "military_spending": 326360933,
     "hdi": 0.769,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 17328,
+    "gdp_ppp_per_capita_usd": 8998
   },
   "Pitcairn Islands": {
     "capital": "Pitcairn Islands City",
@@ -9660,7 +10042,9 @@
     "head_of_state": "President",
     "military_spending": 424959075,
     "hdi": 0.708,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 10713,
+    "gdp_ppp_per_capita_usd": 29443
   },
   "French Polynesia": {
     "capital": "French Polynesia City",
@@ -9703,7 +10087,9 @@
     "head_of_state": "President",
     "military_spending": 449087322,
     "hdi": 0.552,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 7154,
+    "gdp_ppp_per_capita_usd": 23755
   },
   "French Southern and Antarctic Lands": {
     "capital": "French Southern and Antarctic Lands City",
@@ -9746,7 +10132,9 @@
     "head_of_state": "President",
     "military_spending": 419791673,
     "hdi": 0.59,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 25991,
+    "gdp_ppp_per_capita_usd": 22989
   },
   "Seychelles": {
     "capital": "Seychelles City",
@@ -9789,7 +10177,9 @@
     "head_of_state": "President",
     "military_spending": 101960193,
     "hdi": 0.783,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 7347,
+    "gdp_ppp_per_capita_usd": 12633
   },
   "Kiribati": {
     "capital": "Kiribati City",
@@ -9832,7 +10222,9 @@
     "head_of_state": "President",
     "military_spending": 393276307,
     "hdi": 0.56,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 19329,
+    "gdp_ppp_per_capita_usd": 2749
   },
   "Marshall Islands": {
     "capital": "Marshall Islands City",
@@ -9875,7 +10267,9 @@
     "head_of_state": "President",
     "military_spending": 468468892,
     "hdi": 0.535,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 1204,
+    "gdp_ppp_per_capita_usd": 20040
   },
   "Grenada": {
     "capital": "Grenada City",
@@ -9918,7 +10312,9 @@
     "head_of_state": "President",
     "military_spending": 338032520,
     "hdi": 0.886,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 12444,
+    "gdp_ppp_per_capita_usd": 24807
   },
   "Saint Vincent and the Grenadines": {
     "capital": "Saint Vincent and the Grenadines City",
@@ -9961,7 +10357,9 @@
     "head_of_state": "President",
     "military_spending": 432692774,
     "hdi": 0.888,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 21155,
+    "gdp_ppp_per_capita_usd": 32670
   },
   "Barbados": {
     "capital": "Bridgetown",
@@ -9970,7 +10368,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 160,
     "gdp_growth_percent": 2.46,
-    "gdp_per_capita_usd": 29020,
+    "gdp_per_capita_usd": 30005,
     "area_km2": 430,
     "population_density": 657,
     "currency": "Barbadian dollar (BBD)",
@@ -10040,7 +10438,9 @@
     "head_of_state": "President",
     "military_spending": 284924832,
     "hdi": 0.877,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 11491,
+    "gdp_ppp_per_capita_usd": 5838
   },
   "Dominica": {
     "capital": "Dominica City",
@@ -10083,7 +10483,9 @@
     "head_of_state": "President",
     "military_spending": 360522753,
     "hdi": 0.674,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 6121,
+    "gdp_ppp_per_capita_usd": 16359
   },
   "United States Minor Outlying Islands": {
     "capital": "United States Minor Outlying Islands City",
@@ -10126,7 +10528,9 @@
     "head_of_state": "President",
     "military_spending": 105713913,
     "hdi": 0.77,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 6397,
+    "gdp_ppp_per_capita_usd": 2800
   },
   "Montserrat": {
     "capital": "Montserrat City",
@@ -10169,7 +10573,9 @@
     "head_of_state": "President",
     "military_spending": 445183407,
     "hdi": 0.542,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 2086,
+    "gdp_ppp_per_capita_usd": 1810
   },
   "Antigua and Barbuda": {
     "capital": "Saint John's",
@@ -10178,7 +10584,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 190,
     "gdp_growth_percent": 2.59,
-    "gdp_per_capita_usd": 22448,
+    "gdp_per_capita_usd": 25204,
     "area_km2": 440,
     "population_density": 215,
     "currency": "Eastern Caribbean dollar (XCD)",
@@ -10248,7 +10654,9 @@
     "head_of_state": "President",
     "military_spending": 260132418,
     "hdi": 0.79,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 688,
+    "gdp_ppp_per_capita_usd": 3183
   },
   "United States Virgin Islands": {
     "capital": "United States Virgin Islands City",
@@ -10291,7 +10699,9 @@
     "head_of_state": "President",
     "military_spending": 19378176,
     "hdi": 0.812,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 9264,
+    "gdp_ppp_per_capita_usd": 2588
   },
   "Saint Barthelemy": {
     "capital": "Saint Barthelemy City",
@@ -10334,7 +10744,9 @@
     "head_of_state": "President",
     "military_spending": 66723927,
     "hdi": 0.865,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 10074,
+    "gdp_ppp_per_capita_usd": 16869
   },
   "Puerto Rico": {
     "capital": "Puerto Rico City",
@@ -10377,7 +10789,9 @@
     "head_of_state": "President",
     "military_spending": 319428907,
     "hdi": 0.773,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 44770,
+    "gdp_ppp_per_capita_usd": 56432
   },
   "Anguilla": {
     "capital": "The Valley",
@@ -10386,7 +10800,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 211,
     "gdp_growth_percent": 2.47,
-    "gdp_per_capita_usd": 28850,
+    "gdp_per_capita_usd": 28058,
     "area_km2": 90,
     "population_density": 165,
     "currency": "Eastern Caribbean dollar (XCD)",
@@ -10422,7 +10836,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 198,
     "gdp_growth_percent": 2.76,
-    "gdp_per_capita_usd": 38627,
+    "gdp_per_capita_usd": 37707,
     "area_km2": 150,
     "population_density": 266,
     "currency": "United States dollar (USD)",
@@ -10492,7 +10906,9 @@
     "head_of_state": "President",
     "military_spending": 330040427,
     "hdi": 0.611,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 4739,
+    "gdp_ppp_per_capita_usd": 6006
   },
   "Bermuda": {
     "capital": "Hamilton",
@@ -10501,7 +10917,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 159,
     "gdp_growth_percent": 2.11,
-    "gdp_per_capita_usd": 138935,
+    "gdp_per_capita_usd": 139316,
     "area_km2": 50,
     "population_density": 1289,
     "currency": "Bermudian dollar (BMD)",
@@ -10571,7 +10987,9 @@
     "head_of_state": "President",
     "military_spending": 471717860,
     "hdi": 0.878,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 2701,
+    "gdp_ppp_per_capita_usd": 37640
   },
   "Saint Helena": {
     "capital": "Saint Helena City",
@@ -10614,7 +11032,9 @@
     "head_of_state": "President",
     "military_spending": 234763725,
     "hdi": 0.534,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 12525,
+    "gdp_ppp_per_capita_usd": 15869
   },
   "Mauritius": {
     "capital": "Mauritius City",
@@ -10657,7 +11077,9 @@
     "head_of_state": "President",
     "military_spending": 101529727,
     "hdi": 0.874,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 16419,
+    "gdp_ppp_per_capita_usd": 42391
   },
   "Comoros": {
     "capital": "Comoros City",
@@ -10700,7 +11122,9 @@
     "head_of_state": "President",
     "military_spending": 170888852,
     "hdi": 0.762,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 2379,
+    "gdp_ppp_per_capita_usd": 5244
   },
   "São Tomé and Principe": {
     "capital": "São Tomé and Principe City",
@@ -10743,7 +11167,9 @@
     "head_of_state": "President",
     "military_spending": 406311616,
     "hdi": 0.868,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 4227,
+    "gdp_ppp_per_capita_usd": 23716
   },
   "Cabo Verde": {
     "capital": "Cabo Verde City",
@@ -10786,7 +11212,9 @@
     "head_of_state": "President",
     "military_spending": 173555194,
     "hdi": 0.671,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 20954,
+    "gdp_ppp_per_capita_usd": 40641
   },
   "Jersey": {
     "capital": "Jersey City",
@@ -10829,7 +11257,9 @@
     "head_of_state": "President",
     "military_spending": 209211436,
     "hdi": 0.894,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 62103,
+    "gdp_ppp_per_capita_usd": 85581
   },
   "Guernsey": {
     "capital": "Guernsey City",
@@ -10872,7 +11302,9 @@
     "head_of_state": "President",
     "military_spending": 378606570,
     "hdi": 0.833,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 18918,
+    "gdp_ppp_per_capita_usd": 31659
   },
   "Isle of Man": {
     "capital": "Isle of Man City",
@@ -10915,7 +11347,9 @@
     "head_of_state": "President",
     "military_spending": 418966333,
     "hdi": 0.867,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 6661,
+    "gdp_ppp_per_capita_usd": 66487
   },
   "Aland": {
     "capital": "Aland City",
@@ -10958,7 +11392,9 @@
     "head_of_state": "President",
     "military_spending": 478582417,
     "hdi": 0.74,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 847,
+    "gdp_ppp_per_capita_usd": 11048
   },
   "Faroe Islands": {
     "capital": "Faroe Islands City",
@@ -11001,7 +11437,9 @@
     "head_of_state": "President",
     "military_spending": 468701237,
     "hdi": 0.53,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 17625,
+    "gdp_ppp_per_capita_usd": 4871
   },
   "Indian Ocean Territories": {
     "capital": "Indian Ocean Territories City",
@@ -11044,7 +11482,9 @@
     "head_of_state": "President",
     "military_spending": 237419860,
     "hdi": 0.763,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 4628,
+    "gdp_ppp_per_capita_usd": 26403
   },
   "British Indian Ocean Territory": {
     "capital": "British Indian Ocean Territory City",
@@ -11087,7 +11527,9 @@
     "head_of_state": "President",
     "military_spending": 29559012,
     "hdi": 0.743,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 23555,
+    "gdp_ppp_per_capita_usd": 3134
   },
   "Singapore": {
     "capital": "Singapore City",
@@ -11130,7 +11572,9 @@
     "head_of_state": "President",
     "military_spending": 147936097,
     "hdi": 0.727,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 57247,
+    "gdp_ppp_per_capita_usd": 35740
   },
   "Norfolk Island": {
     "capital": "Norfolk Island City",
@@ -11173,7 +11617,9 @@
     "head_of_state": "President",
     "military_spending": 102219960,
     "hdi": 0.715,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 5368,
+    "gdp_ppp_per_capita_usd": 8022
   },
   "Cook Islands": {
     "capital": "Cook Islands City",
@@ -11216,7 +11662,9 @@
     "head_of_state": "President",
     "military_spending": 378508938,
     "hdi": 0.563,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 11057,
+    "gdp_ppp_per_capita_usd": 18015
   },
   "Tonga": {
     "capital": "Tonga City",
@@ -11259,7 +11707,9 @@
     "head_of_state": "President",
     "military_spending": 477684412,
     "hdi": 0.64,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 32709,
+    "gdp_ppp_per_capita_usd": 139508
   },
   "Wallis and Futuna": {
     "capital": "Wallis and Futuna City",
@@ -11302,7 +11752,9 @@
     "head_of_state": "President",
     "military_spending": 264242598,
     "hdi": 0.871,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 19352,
+    "gdp_ppp_per_capita_usd": 16207
   },
   "Samoa": {
     "capital": "Samoa City",
@@ -11345,7 +11797,9 @@
     "head_of_state": "President",
     "military_spending": 59054769,
     "hdi": 0.64,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 16640,
+    "gdp_ppp_per_capita_usd": 18162
   },
   "Tuvalu": {
     "capital": "Tuvalu City",
@@ -11388,7 +11842,9 @@
     "head_of_state": "President",
     "military_spending": 53130408,
     "hdi": 0.835,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 5764,
+    "gdp_ppp_per_capita_usd": 64849
   },
   "Maldives": {
     "capital": "Maldives City",
@@ -11431,7 +11887,9 @@
     "head_of_state": "President",
     "military_spending": 43237449,
     "hdi": 0.864,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 18980,
+    "gdp_ppp_per_capita_usd": 115291
   },
   "Nauru": {
     "capital": "Nauru City",
@@ -11474,7 +11932,9 @@
     "head_of_state": "President",
     "military_spending": 11171230,
     "hdi": 0.813,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 6260,
+    "gdp_ppp_per_capita_usd": 27772
   },
   "Federated States of Micronesia": {
     "capital": "Federated States of Micronesia City",
@@ -11517,7 +11977,9 @@
     "head_of_state": "President",
     "military_spending": 475024728,
     "hdi": 0.787,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 3766,
+    "gdp_ppp_per_capita_usd": 21985
   },
   "South Georgia and the Islands": {
     "capital": "South Georgia and the Islands City",
@@ -11560,7 +12022,9 @@
     "head_of_state": "President",
     "military_spending": 218271571,
     "hdi": 0.841,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 485,
+    "gdp_ppp_per_capita_usd": 18005
   },
   "Falkland Islands": {
     "capital": "Falkland Islands City",
@@ -11603,7 +12067,9 @@
     "head_of_state": "President",
     "military_spending": 266343313,
     "hdi": 0.68,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 17422,
+    "gdp_ppp_per_capita_usd": 33857
   },
   "Niue": {
     "capital": "Niue City",
@@ -11646,7 +12112,9 @@
     "head_of_state": "President",
     "military_spending": 238990334,
     "hdi": 0.795,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 34865,
+    "gdp_ppp_per_capita_usd": 25061
   },
   "American Samoa": {
     "capital": "American Samoa City",
@@ -11689,7 +12157,9 @@
     "head_of_state": "President",
     "military_spending": 121788814,
     "hdi": 0.809,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 2376,
+    "gdp_ppp_per_capita_usd": 6403
   },
   "Palau": {
     "capital": "Palau City",
@@ -11732,7 +12202,9 @@
     "head_of_state": "President",
     "military_spending": 437526188,
     "hdi": 0.776,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 69980,
+    "gdp_ppp_per_capita_usd": 152659
   },
   "Guam": {
     "capital": "Guam City",
@@ -11775,7 +12247,9 @@
     "head_of_state": "President",
     "military_spending": 413849362,
     "hdi": 0.641,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 5178,
+    "gdp_ppp_per_capita_usd": 7062
   },
   "Northern Mariana Islands": {
     "capital": "Northern Mariana Islands City",
@@ -11818,7 +12292,9 @@
     "head_of_state": "President",
     "military_spending": 135974242,
     "hdi": 0.61,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 21138,
+    "gdp_ppp_per_capita_usd": 33240
   },
   "Bahrain": {
     "capital": "Manama",
@@ -11827,7 +12303,7 @@
     "gdp_ppp_usd": null,
     "gdp_rank": 103,
     "gdp_growth_percent": -0.5,
-    "gdp_per_capita_usd": 29569,
+    "gdp_per_capita_usd": 29154,
     "area_km2": 760,
     "population_density": 2205,
     "currency": "Bahraini dinar (BHD)",
@@ -11897,7 +12373,9 @@
     "head_of_state": "President",
     "military_spending": 343431950,
     "hdi": 0.663,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 43426,
+    "gdp_ppp_per_capita_usd": 89923
   },
   "Spratly Islands": {
     "capital": "Spratly Islands City",
@@ -11940,7 +12418,9 @@
     "head_of_state": "President",
     "military_spending": 222922388,
     "hdi": 0.561,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 9991,
+    "gdp_ppp_per_capita_usd": 3970
   },
   "Clipperton Island": {
     "capital": "Clipperton Island City",
@@ -11983,7 +12463,9 @@
     "head_of_state": "President",
     "military_spending": 227114612,
     "hdi": 0.785,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 60281,
+    "gdp_ppp_per_capita_usd": 178792
   },
   "Macao S.A.R": {
     "capital": "Macao S.A.R City",
@@ -12026,7 +12508,9 @@
     "head_of_state": "President",
     "military_spending": 300521518,
     "hdi": 0.738,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 24003,
+    "gdp_ppp_per_capita_usd": 53511
   },
   "Ashmore and Cartier Islands": {
     "capital": "Ashmore and Cartier Islands City",
@@ -12069,7 +12553,9 @@
     "head_of_state": "President",
     "military_spending": 482025835,
     "hdi": 0.679,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 10120,
+    "gdp_ppp_per_capita_usd": 8510
   },
   "Bajo Nuevo Bank (Petrel Is.)": {
     "capital": "Bajo Nuevo Bank (Petrel Is.) City",
@@ -12112,7 +12598,9 @@
     "head_of_state": "President",
     "military_spending": 220600620,
     "hdi": 0.865,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 7264,
+    "gdp_ppp_per_capita_usd": 26410
   },
   "Serranilla Bank": {
     "capital": "Serranilla Bank City",
@@ -12155,7 +12643,9 @@
     "head_of_state": "President",
     "military_spending": 287422013,
     "hdi": 0.72,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 7340,
+    "gdp_ppp_per_capita_usd": 14885
   },
   "Scarborough Reef": {
     "capital": "Scarborough Reef City",
@@ -12198,6 +12688,8 @@
     "head_of_state": "President",
     "military_spending": 464655867,
     "hdi": 0.579,
-    "neighboring_countries": []
+    "neighboring_countries": [],
+    "gdp_per_capita_usd": 6207,
+    "gdp_ppp_per_capita_usd": 2069
   }
 }
