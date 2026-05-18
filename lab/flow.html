@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Laminar Flow Hood Simulator (With Baffle)</title>
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- OrbitControls -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.85);
+            --accent: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            user-select: none;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+
+        /* App Header & Footer */
+        #app-header {
+            position: absolute; top: 0; left: 0; width: 100%;
+            padding: 12px 24px; background: rgba(15, 23, 42, 0.9);
+            color: var(--text-main); font-weight: 600; font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px); z-index: 5;
+            box-sizing: border-box; pointer-events: none;
+        }
+
+        #app-footer {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 8px 24px; background: rgba(15, 23, 42, 0.9);
+            color: var(--text-muted); font-size: 0.75rem; text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(8px); z-index: 5;
+            box-sizing: border-box; pointer-events: none;
+        }
+
+        /* UI Control Panel */
+        #ui-panel {
+            position: absolute;
+            top: 60px; /* Shifted down for header */
+            left: 24px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 320px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            transition: height 0.3s ease, padding 0.3s ease;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        #ui-panel.minimized {
+            height: 24px; /* Only show header */
+            padding-bottom: 24px;
+        }
+
+        #ui-panel.minimized .panel-content {
+            display: none;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .panel-header h1 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        #toggle-panel-btn {
+            background: none; border: none; color: var(--text-main);
+            font-size: 1.2rem; cursor: pointer; padding: 0;
+        }
+
+        p.subtitle {
+            margin: 0 0 24px 0;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .control-group:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .toggle-row span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Custom Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #475569;
+            transition: .3s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Range Slider */
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .slider-container label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px; width: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 4px;
+            cursor: pointer;
+            background: #475569;
+            border-radius: 2px;
+        }
+
+        /* Dimension Labels */
+        #labels-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .part-label {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.9);
+            color: #38bdf8;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+            white-space: nowrap;
+        }
+
+        .part-label strong {
+            color: #f8fafc;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Loading Overlay */
+        #loading {
+            position: absolute;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: opacity 0.5s ease;
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            text-align: right;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            pointer-events: none;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            #ui-panel {
+                width: calc(100% - 32px);
+                left: 16px;
+                top: auto;
+                bottom: 16px;
+            }
+            .instructions {
+                top: 60px;
+                right: 16px;
+                bottom: auto;
+            }
+            #app-footer {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loading">Generating 3D Environment...</div>
+
+    <!-- 3D Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- Labels Overlay for Explode Mode -->
+    <div id="labels-container"></div>
+
+    <!-- Header & Footer -->
+    <header id="app-header">DIY Laminar Flow Hood 3D Visualization</header>
+    <footer id="app-footer">Interactive Airflow & Construction Simulator • Built with WebGL</footer>
+
+    <!-- UI Overlay -->
+    <div id="ui-panel">
+        <div class="panel-header" id="panel-header-btn">
+            <h1>Control Panel</h1>
+            <button id="toggle-panel-btn">▲</button>
+        </div>
+
+        <div class="panel-content">
+            <p class="subtitle">Interactive 3D Controls</p>
+
+            <div class="control-group">
+                <div class="toggle-row">
+                    <span>Power ON</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-power">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="slider-container">
+                    <label>Airflow Speed <span id="speed-val">50%</span></label>
+                    <input type="range" id="slider-speed" min="10" max="100" value="50">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="toggle-row">
+                    <span>Explode View</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-explode">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <span>Show All Labels</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-labels">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <span>Remove Prefilter</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-prefilter">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <span>Slide Out Main Filter</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-main-filter">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="toggle-row">
+                    <span>LED Work Light</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-led">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <span>UV Sterilizer</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-uv">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="toggle-row">
+                    <span>Show Plywood Enclosure</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-wood" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <span>Show Airflow Particles</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggle-particles" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="instructions">
+        Left Click & Drag to Orbit • Scroll to Zoom<br>
+        Right Click & Drag to Pan • Click Parts to Highlight
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. GLOBAL VARIABLES & STATE
+        // ==========================================
+        let scene, camera, renderer, controls;
+        let particleSystem;
+        let explodeableParts = [];
+        let woodParts = [];
+        let prefilterMesh;
+        let particleGeometry;
+        let flameMesh;
+        let mainHepaFilter, leftDoorGroup;
+        let ledTube, uvTube, ledLight, uvLight;
+        let selectedPart = null;
+        let fanMotor;
+        let mats;
+
+        // Interaction State
+        const state = {
+            isPowerOn: false,
+            isExploded: false,
+            isPrefilterRemoved: false,
+            isMainFilterRemoved: false,
+            showWood: true,
+            showParticles: true,
+            showLabels: false,
+            ledOn: false,
+            uvOn: false,
+            airflowSpeed: 0.05,
+            particleCount: 2500 // Increased slightly for better baffle visual
+        };
+
+        // Standard Dimensions (1 unit = 100mm = 3.937 inches)
+        // Flow hood setup: Dual 11x14 filters placed side-by-side horizontally
+        const dim = {
+            filterW: 2.794, // 11 inches
+            filterH: 3.556, // 14 inches
+            hepaW: 5.588,   // 22 inches (2x 11" filters side-by-side)
+            hepaH: 3.556,   // 14 inches height
+            hepaD: 0.5,     // 50mm thickness
+            plenumD: 2.0,
+            workD: 3.0,
+            plywood: 0.12,  // 12mm
+            glass: 0.05     // 5mm
+        };
+
+        // Shared Geometry data for the Particle Physics Engine
+        const hoodData = {
+            baffleY: 0,
+            baffleZ: 0,
+            baffleAngle: 20 * Math.PI / 180, // 20 Degrees
+            extZ: 0
+        };
+
+        // ==========================================
+        // 2. INITIALIZATION
+        // ==========================================
+        function init() {
+            // Scene Setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f172a);
+            scene.fog = new THREE.FogExp2(0x0f172a, 0.02);
+
+            // Camera Setup
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+            camera.position.set(8, 8, 12);
+
+            // Renderer Setup
+            const container = document.getElementById('canvas-container');
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            renderer.outputEncoding = THREE.sRGBEncoding;
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            container.appendChild(renderer.domElement);
+
+            // Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.target.set(0, 3, 0); // Focus on the center of the hood
+            controls.maxDistance = 25;
+            controls.minDistance = 2;
+
+            // Lighting
+            setupLighting();
+
+            // Build the Model
+            buildFlowHood();
+
+            // Airflow Particle System
+            createParticleSystem();
+
+            // Event Listeners
+            setupUIEventListeners();
+            window.addEventListener('resize', onWindowResize, false);
+            window.addEventListener('pointerdown', onMouseClick, false);
+
+            // Generate physical dimension labels for explode mode
+            generateLabels();
+
+            // Remove loading screen
+            setTimeout(() => {
+                const loader = document.getElementById('loading');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 500);
+            }, 500);
+
+            // Start Animation Loop
+            animate();
+        }
+
+        // ==========================================
+        // 3. LIGHTING
+        // ==========================================
+        function setupLighting() {
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(10, 15, 10);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 2048;
+            dirLight.shadow.mapSize.height = 2048;
+            dirLight.shadow.camera.near = 0.5;
+            dirLight.shadow.camera.far = 50;
+            const d = 10;
+            dirLight.shadow.camera.left = -d;
+            dirLight.shadow.camera.right = d;
+            dirLight.shadow.camera.top = d;
+            dirLight.shadow.camera.bottom = -d;
+            dirLight.shadow.bias = -0.0005;
+            scene.add(dirLight);
+        }
+
+        // ==========================================
+        // 4. MATERIAL GENERATION
+        // ==========================================
+        function createMaterials() {
+            // Light Wood Texture (Plenum)
+            const lightCanvas = document.createElement('canvas');
+            lightCanvas.width = 512; lightCanvas.height = 512;
+            const lCtx = lightCanvas.getContext('2d');
+            lCtx.fillStyle = '#d4a373';
+            lCtx.fillRect(0, 0, 512, 512);
+            lCtx.fillStyle = '#c08c5d';
+            for(let i=0; i<800; i++) {
+                lCtx.fillRect(Math.random()*512, Math.random()*512, Math.random()*20+5, 1);
+            }
+            const lightWoodTex = new THREE.CanvasTexture(lightCanvas);
+            lightWoodTex.wrapS = THREE.RepeatWrapping;
+            lightWoodTex.wrapT = THREE.RepeatWrapping;
+
+            const lightWoodMat = new THREE.MeshStandardMaterial({
+                map: lightWoodTex,
+                roughness: 0.8,
+                metalness: 0.0,
+            });
+
+            // Dark Wood Texture (Work Area)
+            const darkCanvas = document.createElement('canvas');
+            darkCanvas.width = 512; darkCanvas.height = 512;
+            const dCtx = darkCanvas.getContext('2d');
+            dCtx.fillStyle = '#4e342e';
+            dCtx.fillRect(0, 0, 512, 512);
+            dCtx.fillStyle = '#3e2723';
+            for(let i=0; i<800; i++) {
+                dCtx.fillRect(Math.random()*512, Math.random()*512, Math.random()*20+5, 1);
+            }
+            const darkWoodTex = new THREE.CanvasTexture(darkCanvas);
+            darkWoodTex.wrapS = THREE.RepeatWrapping;
+            darkWoodTex.wrapT = THREE.RepeatWrapping;
+
+            const darkWoodMat = new THREE.MeshStandardMaterial({
+                map: darkWoodTex,
+                roughness: 0.9,
+                metalness: 0.0,
+            });
+
+            // Procedural HEPA Texture (Lines simulating pleats)
+            const hepaCanvas = document.createElement('canvas');
+            hepaCanvas.width = 256; hepaCanvas.height = 256;
+            const hCtx = hepaCanvas.getContext('2d');
+            hCtx.fillStyle = '#22c55e'; // Green base for HEPA
+            hCtx.fillRect(0, 0, 256, 256);
+            hCtx.strokeStyle = '#16a34a'; // Darker green lines
+            hCtx.lineWidth = 2;
+            for(let i=0; i<256; i+=6) {
+                hCtx.beginPath(); hCtx.moveTo(0, i); hCtx.lineTo(256, i); hCtx.stroke();
+            }
+            const hepaTex = new THREE.CanvasTexture(hepaCanvas);
+            hepaTex.wrapS = THREE.RepeatWrapping;
+            hepaTex.wrapT = THREE.RepeatWrapping;
+            hepaTex.repeat.set(4, 4);
+
+            const hepaMat = new THREE.MeshStandardMaterial({
+                map: hepaTex,
+                roughness: 1.0,
+                color: 0xffffff
+            });
+
+            // Glass Material for Work Surface
+            const glassMat = new THREE.MeshPhysicalMaterial({
+                color: 0xbae6fd,
+                metalness: 0.0,
+                roughness: 0.0,
+                transmission: 0.95,
+                thickness: 0.1,
+                ior: 1.0,
+                transparent: true,
+                opacity: 1.0,
+                side: THREE.DoubleSide
+            });
+
+            // Black Door Material
+            const blackDoorMat = new THREE.MeshStandardMaterial({
+                color: 0x111111,
+                roughness: 0.8,
+                metalness: 0.1
+            });
+
+            // Frosted Black Glass Material (Darkened)
+            const frostedBlackMat = new THREE.MeshPhysicalMaterial({
+                color: 0x050505, // Darker base color
+                metalness: 0.4,
+                roughness: 0.7,
+                transmission: 0.25, // Reduced transmission for darker opacity
+                transparent: true,
+                opacity: 0.9,
+                side: THREE.DoubleSide
+            });
+
+            // White Motor Material
+            const whiteMotorMat = new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                roughness: 0.5
+            });
+
+            // Dark Hole Material
+            const holeMat = new THREE.MeshBasicMaterial({ color: 0x020202 });
+
+            // Metal / Blower Material
+            const metalMat = new THREE.MeshStandardMaterial({
+                color: 0x64748b,
+                metalness: 0.7,
+                roughness: 0.4
+            });
+
+            // Prefilter Material (Red)
+            const prefilterMat = new THREE.MeshStandardMaterial({
+                color: 0xef4444, // Red filter
+                roughness: 0.9,
+                wireframe: true // gives a mesh/porous look easily
+            });
+
+            // Frame/Seal Material
+            const sealMat = new THREE.MeshStandardMaterial({
+                color: 0x333333,
+                roughness: 0.9
+            });
+
+            // Petri Dish Material (Dark Blue Frosted)
+            const petriMat = new THREE.MeshPhysicalMaterial({
+                color: 0x1e3a8a, // Dark blue color
+                transmission: 0.6, // Semi-transmissive for frosted effect
+                opacity: 0.9,
+                transparent: true,
+                roughness: 0.6, // Frosted surface
+                thickness: 0.1
+            });
+
+            // Candle & Flame Materials
+            const candleMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, roughness: 0.5 });
+            const flameMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.9 });
+
+            // Tester (PSI/PPM) Material
+            const testerMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7 });
+
+            const screenCanvas = document.createElement('canvas');
+            screenCanvas.width = 128; screenCanvas.height = 64;
+            const sCtx = screenCanvas.getContext('2d');
+            sCtx.fillStyle = '#020617'; sCtx.fillRect(0, 0, 128, 64);
+            sCtx.fillStyle = '#22c55e'; // neon green text
+            sCtx.font = 'bold 22px monospace';
+            sCtx.fillText('PSI: 0.45', 10, 26);
+            sCtx.fillText('PPM: 000', 10, 54);
+            const screenTex = new THREE.CanvasTexture(screenCanvas);
+            const screenMat = new THREE.MeshBasicMaterial({ map: screenTex });
+
+            const switchMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, roughness: 0.5 });
+            const ledMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0 });
+            const uvMat = new THREE.MeshStandardMaterial({ color: 0x8a2be2, emissive: 0x8a2be2, emissiveIntensity: 0 });
+
+            // Red Baffle Material
+            const baffleMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.8 });
+
+            return { lightWoodMat, darkWoodMat, hepaMat, metalMat, prefilterMat, sealMat, petriMat, candleMat, flameMat, testerMat, screenMat, frostedBlackMat, whiteMotorMat, holeMat, switchMat, ledMat, uvMat, glassMat, blackDoorMat, baffleMat };
+        }
+
+        // ==========================================
+        // 5. GEOMETRY CONSTRUCTION
+        // ==========================================
+        function createPart(name, geometry, material, position, explodeDir) {
+            const mesh = new THREE.Mesh(geometry, material);
+            mesh.position.copy(position);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+
+            // Store data for interactivity
+            mesh.userData = {
+                name: name,
+                basePos: position.clone(),
+                explodeDir: new THREE.Vector3(...explodeDir),
+                // Only hide the light/dark wood parts when "Hide Plywood" is toggled, leave the red baffle
+                isWood: (material === mats.lightWoodMat || material === mats.darkWoodMat)
+            };
+
+            explodeableParts.push(mesh);
+            if(mesh.userData.isWood) woodParts.push(mesh);
+
+            scene.add(mesh);
+            return mesh;
+        }
+
+        function buildFlowHood() {
+            mats = createMaterials();
+            const w = dim.hepaW; const h = dim.hepaH; const d = dim.hepaD;
+            const pd = dim.plenumD; const wd = dim.workD; const th = dim.plywood;
+
+            const halfH = h / 2;
+
+            // 1. HEPA Filter (One big piece, z = 0)
+            const hepaZ = 0;
+            const hepaFilterGeom = new THREE.BoxGeometry(dim.hepaW, dim.hepaH, d);
+
+            mainHepaFilter = createPart('Main HEPA Filter (22x14")', hepaFilterGeom, mats.hepaMat,
+                new THREE.Vector3(0, halfH, hepaZ), [0, 0, 3]);
+
+            // 2. Plenum Box (Extended to cover the HEPA filter inside)
+            const extD = pd + d;
+            const extZ = hepaZ - extD/2 + d/2;
+            const pZ = hepaZ - d/2 - pd/2;
+            const pBoxOuterW = w + th*2;
+            const pBoxOuterH = h + th*2;
+            hoodData.extZ = extZ; // Save for particle logic
+
+            // Back Panel
+            createPart('Plenum Back Panel', new THREE.BoxGeometry(pBoxOuterW, pBoxOuterH, th), mats.lightWoodMat,
+                new THREE.Vector3(0, halfH, extZ - extD/2 - th/2), [0, 0, -2]);
+
+            // Top/Bottom Plenum Panels
+            createPart('Plenum Top Panel', new THREE.BoxGeometry(pBoxOuterW, th, extD), mats.lightWoodMat,
+                new THREE.Vector3(0, h + th/2, extZ), [0, 2, 0]);
+            createPart('Plenum Bottom Panel', new THREE.BoxGeometry(pBoxOuterW, th, extD), mats.lightWoodMat,
+                new THREE.Vector3(0, -th/2, extZ), [0, -2, 0]);
+
+            // Side Plenum Panels (Left is split for mechanized door)
+            leftDoorGroup = new THREE.Group();
+            leftDoorGroup.position.set(-w/2 - th/2, halfH, -d/2); // Hinge at back of filter
+
+            const leftDoorMesh = new THREE.Mesh(new THREE.BoxGeometry(th, h, d), mats.blackDoorMat);
+            leftDoorMesh.position.set(0, 0, d/2); // Offset forward to cover filter slot
+            leftDoorMesh.castShadow = true;
+            leftDoorMesh.receiveShadow = true;
+            leftDoorGroup.add(leftDoorMesh);
+
+            leftDoorGroup.userData = {
+                name: 'Filter Access Door',
+                basePos: leftDoorGroup.position.clone(),
+                explodeDir: new THREE.Vector3(-2, 0, 0),
+                isWood: true
+            };
+            explodeableParts.push(leftDoorGroup);
+            woodParts.push(leftDoorGroup);
+            scene.add(leftDoorGroup);
+
+            // Rear Left Static Panel
+            createPart('Plenum Left Panel (Rear)', new THREE.BoxGeometry(th, h, pd), mats.lightWoodMat,
+                new THREE.Vector3(-w/2 - th/2, halfH, pZ), [-2, 0, 0]);
+
+            createPart('Plenum Right Panel', new THREE.BoxGeometry(th, h, extD), mats.lightWoodMat,
+                new THREE.Vector3(w/2 + th/2, halfH, extZ), [2, 0, 0]);
+
+            // 2.5 The 20-Degree Baffle Board (Bottom)
+            // Positioned at the bottom of the plenum, angled from the filter up to the back wall.
+            const baffleLength = pd / Math.cos(hoodData.baffleAngle);
+            hoodData.baffleZ = pZ;
+            hoodData.baffleY = (pd / 2) * Math.tan(hoodData.baffleAngle) - th/2;
+
+            const baffleGeom = new THREE.BoxGeometry(w - 0.05, th, baffleLength);
+            const baffle = createPart('20° Bottom Airflow Baffle (Red)', baffleGeom, mats.baffleMat,
+                new THREE.Vector3(0, hoodData.baffleY, hoodData.baffleZ), [0, -2, -1]);
+
+            // Apply 20 degree rotation (front edge tilts down to filter, back edge tilts up to back wall)
+            baffle.rotation.x = hoodData.baffleAngle;
+
+            // 3. Round Fan (Mounted on Top of Plenum)
+            const fanRadius = 0.762;
+            const blowerY = h + th + 1.0;
+            const blowerGroup = new THREE.Group();
+
+            const housingGeom = new THREE.CylinderGeometry(fanRadius, fanRadius, 2.0, 32, 1, true);
+            const housing = new THREE.Mesh(housingGeom, mats.frostedBlackMat);
+            housing.castShadow = true;
+            blowerGroup.add(housing);
+
+            fanMotor = new THREE.Group();
+            const motorCore = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 1.8, 16), mats.whiteMotorMat);
+            motorCore.castShadow = true;
+            fanMotor.add(motorCore);
+
+            const bladeGeom = new THREE.BoxGeometry(fanRadius * 1.8, 1.4, 0.05);
+            const numBlades = 6;
+            for(let i=0; i<numBlades; i++) {
+                const blade = new THREE.Mesh(bladeGeom, mats.whiteMotorMat);
+                blade.rotation.y = (Math.PI / numBlades) * i;
+                fanMotor.add(blade);
+            }
+            blowerGroup.add(fanMotor);
+
+            blowerGroup.position.set(0, blowerY, pZ);
+            blowerGroup.userData = {
+                name: 'Intake Fan & Motor (6")',
+                basePos: blowerGroup.position.clone(),
+                explodeDir: new THREE.Vector3(0, 3, 0),
+                isWood: false
+            };
+            explodeableParts.push(blowerGroup);
+            scene.add(blowerGroup);
+
+            // Visual Intake Hole
+            const plenumHole = new THREE.Mesh(new THREE.CylinderGeometry(fanRadius - 0.02, fanRadius - 0.02, th + 0.02, 32), mats.holeMat);
+            plenumHole.position.set(0, h + th/2, pZ);
+            plenumHole.userData = { name: 'Plenum Air Intake Hole (6")', basePos: plenumHole.position.clone(), explodeDir: new THREE.Vector3(0, 2, 0) };
+            woodParts.push(plenumHole);
+            explodeableParts.push(plenumHole);
+            scene.add(plenumHole);
+
+            // 4. Prefilter
+            prefilterMesh = new THREE.Group();
+
+            const shape = new THREE.Shape();
+            shape.absarc(0, 0, fanRadius, 0, Math.PI * 2, false);
+            const holePath = new THREE.Path();
+            holePath.absarc(0, 0, fanRadius - 0.3, 0, Math.PI * 2, true);
+            shape.holes.push(holePath);
+            const extrudeSettings = { depth: 2.0, bevelEnabled: false, curveSegments: 32 };
+            const hollowFilterGeom = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+            hollowFilterGeom.rotateX(-Math.PI / 2);
+            hollowFilterGeom.translate(0, -1.0, 0);
+
+            const redFilter = new THREE.Mesh(hollowFilterGeom, mats.prefilterMat);
+            redFilter.castShadow = true;
+            prefilterMesh.add(redFilter);
+
+            const capGeom = new THREE.CylinderGeometry(fanRadius, fanRadius, 0.05, 32);
+            const capMesh = new THREE.Mesh(capGeom, mats.whiteMotorMat);
+            capMesh.position.set(0, 1.0, 0);
+            capMesh.castShadow = true;
+            prefilterMesh.add(capMesh);
+
+            prefilterMesh.position.set(0, blowerY + 2.0, pZ);
+            prefilterMesh.userData = {
+                name: 'Intake Pre-filter (Closed Top, 30mm Walls)',
+                basePos: prefilterMesh.position.clone(),
+                explodeDir: new THREE.Vector3(0, 5, 0),
+                isWood: false
+            };
+            explodeableParts.push(prefilterMesh);
+            scene.add(prefilterMesh);
+
+            // 5. Work Area Box
+            const wZ = hepaZ + d/2 + wd/2;
+
+            const topWoodMesh = createPart('Work Area Top Panel (Dark Wood)', new THREE.BoxGeometry(pBoxOuterW, th, wd), mats.darkWoodMat,
+                new THREE.Vector3(0, h + th/2, wZ), [0, 2, 0]);
+
+            createPart('Work Table / Base (Dark Wood)', new THREE.BoxGeometry(pBoxOuterW, th, wd), mats.darkWoodMat,
+                new THREE.Vector3(0, -th/2, wZ), [0, -1, 0]);
+
+            createPart('Work Surface Glass', new THREE.BoxGeometry(pBoxOuterW, 0.05, wd), mats.glassMat,
+                new THREE.Vector3(0, 0.025, wZ), [0, 1, 0]);
+
+            createPart('Work Area Left Panel (Dark Wood)', new THREE.BoxGeometry(th, h, wd), mats.darkWoodMat,
+                new THREE.Vector3(-w/2 - th/2, halfH, wZ), [-2, 0, 0]);
+            createPart('Work Area Right Panel (Dark Wood)', new THREE.BoxGeometry(th, h, wd), mats.darkWoodMat,
+                new THREE.Vector3(w/2 + th/2, halfH, wZ), [2, 0, 0]);
+
+            // 1.5 Inch Inside Borders (approx 0.38 units)
+            const borderWidth = 0.38;
+            const borderZ = hepaZ + d/2 + th/2;
+
+            createPart('Front Top Border', new THREE.BoxGeometry(w, borderWidth, th), mats.darkWoodMat,
+                new THREE.Vector3(0, h - borderWidth/2, borderZ), [0, 2, 0]);
+            createPart('Front Left Border', new THREE.BoxGeometry(borderWidth, h - borderWidth, th), mats.darkWoodMat,
+                new THREE.Vector3(-w/2 + borderWidth/2, (h - borderWidth)/2, borderZ), [-2, 0, 0]);
+            createPart('Front Right Border', new THREE.BoxGeometry(borderWidth, h - borderWidth, th), mats.darkWoodMat,
+                new THREE.Vector3(w/2 - borderWidth/2, (h - borderWidth)/2, borderZ), [2, 0, 0]);
+
+            // Horizontal Control Buttons & Socket on Right Wall (100% Larger)
+            const pBoxX = w/2 + th/2 + 0.05;
+            createPart('Electrical Panel', new THREE.BoxGeometry(0.1, 0.4, 1.4), mats.testerMat,
+                new THREE.Vector3(pBoxX, halfH, extZ + 0.4), [2, 0, 0]);
+
+            const btnGeom = new THREE.BoxGeometry(0.1, 0.12, 0.12); // Doubled size
+            const socketPos = new THREE.Vector3(pBoxX + 0.025, halfH, extZ - 0.1);
+            createPart('Power Socket', new THREE.BoxGeometry(0.3, 0.3, 0.3), mats.testerMat, socketPos, [2, 0, 0]); // Doubled size
+
+            // Buttons spaced horizontally along the Z axis
+            createPart('Power Button', btnGeom, mats.prefilterMat, new THREE.Vector3(pBoxX + 0.05, halfH, extZ + 0.3), [2, 0, 0]);
+            createPart('LED Button', btnGeom, mats.whiteMotorMat, new THREE.Vector3(pBoxX + 0.05, halfH, extZ + 0.6), [2, 0, 0]);
+            createPart('UV Button', btnGeom, mats.uvMat, new THREE.Vector3(pBoxX + 0.05, halfH, extZ + 0.9), [2, 0, 0]);
+
+            // Wiring (Socket to Fan)
+            const wireMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.9 });
+            const startX = pBoxX + 0.175; // Shifted out to clear larger socket
+            const startPt = new THREE.Vector3(startX, halfH, extZ - 0.1);
+            const p1 = new THREE.Vector3(startX + 0.1, halfH, extZ - 0.1);
+            const p2 = new THREE.Vector3(startX + 0.1, h + th + 0.1, extZ - 0.1);
+            const p3 = new THREE.Vector3(0.5, h + th + 0.1, pZ + 0.2);
+            const endPt = new THREE.Vector3(0, blowerY, pZ);
+
+            const wireCurve = new THREE.CatmullRomCurve3([startPt, p1, p2, p3, endPt]);
+            const wireGeom = new THREE.TubeGeometry(wireCurve, 32, 0.02, 8, false);
+            const wireMesh = new THREE.Mesh(wireGeom, wireMat);
+            wireMesh.userData = { name: 'Power Wire', basePos: new THREE.Vector3(0,0,0), explodeDir: new THREE.Vector3(2, 0, 0), isWood: false };
+            wireMesh.castShadow = true;
+            explodeableParts.push(wireMesh);
+            scene.add(wireMesh);
+
+            // 7. Internal Props
+            buildProps(mats, wZ);
+        }
+
+        function buildProps(mats, wZ) {
+            const tableY = 0.05;
+            const edgeMat = new THREE.LineBasicMaterial({ color: 0xffffff });
+
+            // 1. Glass Petri Dishes (Removed dish under tester)
+            const pGeom = new THREE.CylinderGeometry(0.3, 0.3, 0.08, 24);
+            const edgeGeom = new THREE.EdgesGeometry(pGeom);
+
+            const dishPositions = [ [-1.2, wZ - 0.5], [0.5, wZ + 0.2] ];
+            dishPositions.forEach((pos, i) => {
+                const dish = new THREE.Mesh(pGeom, mats.petriMat);
+
+                // Add white outline
+                const outline = new THREE.LineSegments(edgeGeom, edgeMat);
+                dish.add(outline);
+
+                // Placed slightly higher to sit exactly on top of the new glass panel
+                dish.position.set(pos[0], tableY + 0.04, pos[1]);
+                dish.userData = { name: `Petri Dish ${i+1}`, basePos: dish.position.clone(), explodeDir: new THREE.Vector3(0, 1, 0) };
+                explodeableParts.push(dish);
+                scene.add(dish);
+            });
+
+            // 2. Erlenmeyer Flask
+            const pointsE = [
+                new THREE.Vector2(0, 0),
+                new THREE.Vector2(0.3, 0),
+                new THREE.Vector2(0.1, 0.5),
+                new THREE.Vector2(0.1, 0.7)
+            ];
+            const geomE = new THREE.LatheGeometry(pointsE, 16);
+            const flaskE = new THREE.Mesh(geomE, mats.petriMat);
+            flaskE.add(new THREE.LineSegments(new THREE.EdgesGeometry(geomE), edgeMat));
+            flaskE.position.set(-0.3, tableY, wZ - 0.7);
+            flaskE.userData = { name: 'Erlenmeyer Flask', basePos: flaskE.position.clone(), explodeDir: new THREE.Vector3(0, 1, 0) };
+            explodeableParts.push(flaskE);
+            scene.add(flaskE);
+
+            // 3. Small Neck Flask (Florence)
+            const pointsF = [
+                new THREE.Vector2(0, 0),
+                new THREE.Vector2(0.15, 0),
+                new THREE.Vector2(0.28, 0.15),
+                new THREE.Vector2(0.3, 0.3),
+                new THREE.Vector2(0.22, 0.45),
+                new THREE.Vector2(0.1, 0.55),
+                new THREE.Vector2(0.1, 0.8)
+            ];
+            const geomF = new THREE.LatheGeometry(pointsF, 16);
+            const flaskF = new THREE.Mesh(geomF, mats.petriMat);
+            flaskF.add(new THREE.LineSegments(new THREE.EdgesGeometry(geomF), edgeMat));
+            flaskF.position.set(-0.9, tableY, wZ - 1.0);
+            flaskF.userData = { name: 'Florence Flask', basePos: flaskF.position.clone(), explodeDir: new THREE.Vector3(0, 1, 0) };
+            explodeableParts.push(flaskF);
+            scene.add(flaskF);
+
+            // 4. Test Tube Rack & Tubes
+            const stand = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.3, 0.25), mats.testerMat);
+            stand.position.set(-2.2, tableY + 0.15, wZ - 1.2);
+            stand.userData = { name: 'Test Tube Rack', basePos: stand.position.clone(), explodeDir: new THREE.Vector3(0, 1, 0) };
+            explodeableParts.push(stand);
+            scene.add(stand);
+
+            const pointsT = [];
+            pointsT.push(new THREE.Vector2(0, 0));
+            for (let i = 1; i <= 5; i++) {
+                const a = (i / 5) * (Math.PI / 2);
+                pointsT.push(new THREE.Vector2(Math.sin(a)*0.08, -Math.cos(a)*0.08 + 0.08));
+            }
+            pointsT.push(new THREE.Vector2(0.08, 0.6));
+
+            const geomT = new THREE.LatheGeometry(pointsT, 12);
+
+            [-0.12, 0.12].forEach((offsetX, i) => {
+                const tube = new THREE.Mesh(geomT, mats.petriMat);
+                tube.add(new THREE.LineSegments(new THREE.EdgesGeometry(geomT), edgeMat));
+                tube.position.set(-2.2 + offsetX, tableY + 0.3, wZ - 1.2);
+                tube.userData = { name: `Test Tube ${i+1}`, basePos: tube.position.clone(), explodeDir: new THREE.Vector3(0, 1, 0) };
+                explodeableParts.push(tube);
+                scene.add(tube);
+            });
+
+            // Air Quality Tester
+            const tGroup = new THREE.Group();
+            const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 1.2, 0.4), mats.testerMat);
+            body.position.y = 0.6;
+            const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.3), mats.screenMat);
+            screen.position.set(0, 0.8, 0.21);
+            tGroup.add(body, screen);
+            tGroup.position.set(1.8, tableY, wZ - 0.8);
+            tGroup.rotation.y = -Math.PI / 6;
+            tGroup.userData = { name: 'Laminar Flow Tester (PPM/PSI)', basePos: tGroup.position.clone(), explodeDir: new THREE.Vector3(0, 1, 0) };
+            explodeableParts.push(tGroup);
+            scene.add(tGroup);
+
+            // Candle
+            const cGroup = new THREE.Group();
+            const wax = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.4, 16), mats.candleMat);
+            wax.position.y = 0.2;
+            flameMesh = new THREE.Mesh(new THREE.ConeGeometry(0.08, 0.25, 8), mats.flameMat);
+            flameMesh.position.y = 0.5;
+            flameMesh.geometry.translate(0, 0.125, 0);
+            flameMesh.position.y = 0.4;
+
+            cGroup.add(wax, flameMesh);
+            cGroup.position.set(-0.5, tableY, wZ + 0.8);
+            cGroup.userData = { name: 'Candle (Airflow Indicator)', basePos: cGroup.position.clone(), explodeDir: new THREE.Vector3(0, 1, 0) };
+            explodeableParts.push(cGroup);
+            scene.add(cGroup);
+
+            // Light Tubes (Top of work area)
+            const tubeGeom = new THREE.CylinderGeometry(0.06, 0.06, 3.048, 16); // 12 inch tubes
+            tubeGeom.rotateZ(Math.PI / 2);
+
+            ledTube = new THREE.Mesh(tubeGeom, mats.ledMat);
+            ledTube.position.set(0, dim.hepaH + dim.plywood/2 - 0.15, wZ - 0.5);
+            ledTube.userData = { name: '12" LED Work Light', basePos: ledTube.position.clone(), explodeDir: new THREE.Vector3(0, 2, 0) };
+            explodeableParts.push(ledTube);
+            scene.add(ledTube);
+
+            uvTube = new THREE.Mesh(tubeGeom, mats.uvMat);
+            uvTube.position.set(0, dim.hepaH + dim.plywood/2 - 0.15, wZ + 0.5);
+            uvTube.userData = { name: '12" UV-C Sterilization Tube', basePos: uvTube.position.clone(), explodeDir: new THREE.Vector3(0, 2, 0) };
+            explodeableParts.push(uvTube);
+            scene.add(uvTube);
+
+            // Actual Lights
+            ledLight = new THREE.PointLight(0xfffaed, 0, 10);
+            ledLight.position.copy(ledTube.position);
+            scene.add(ledLight);
+
+            uvLight = new THREE.PointLight(0x8a2be2, 0, 10);
+            uvLight.position.copy(uvTube.position);
+            scene.add(uvLight);
+        }
+
+        // ==========================================
+        // DIMENSION LABELS HELPER
+        // ==========================================
+        function getDimensionsString(obj) {
+            const box = new THREE.Box3().setFromObject(obj);
+            const size = new THREE.Vector3();
+            box.getSize(size);
+            const toFtIn = (units) => {
+                const inches = Math.round(units * 3.937);
+                const ft = Math.floor(inches / 12);
+                const in_rem = inches % 12;
+                if (ft > 0 && in_rem > 0) return `${ft}' ${in_rem}"`;
+                if (ft > 0) return `${ft}' 0"`;
+                return `${in_rem}"`;
+            };
+            return `${toFtIn(size.x)} x ${toFtIn(size.y)} x ${toFtIn(size.z)}`;
+        }
+
+        function generateLabels() {
+            const container = document.getElementById('labels-container');
+            explodeableParts.forEach(part => {
+                const el = document.createElement('div');
+                el.className = 'part-label';
+                const dimStr = getDimensionsString(part);
+                el.innerHTML = `<strong>${part.userData.name}</strong>${dimStr}`;
+                container.appendChild(el);
+                part.userData.labelEl = el;
+            });
+        }
+
+        // ==========================================
+        // 6. AIRFLOW PARTICLE SYSTEM
+        // ==========================================
+        function createParticleSystem() {
+            const count = state.particleCount;
+            particleGeometry = new THREE.BufferGeometry();
+
+            const positions = new Float32Array(count * 3);
+            const lifespans = new Float32Array(count);
+
+            for(let i=0; i<count; i++) {
+                resetParticle(positions, i, true); // true = Initial huge spread to prevent batching
+                lifespans[i] = Math.random();
+            }
+
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeometry.setAttribute('lifespan', new THREE.BufferAttribute(lifespans, 1));
+
+            const pMaterial = new THREE.PointsMaterial({
+                color: 0x38bdf8,
+                size: 0.08,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            particleSystem = new THREE.Points(particleGeometry, pMaterial);
+            scene.add(particleSystem);
+        }
+
+        function resetParticle(positions, index, isInitial = false) {
+            const ix = index * 3;
+            const fanRadius = 0.762;
+            const blowerY = dim.hepaH + dim.plywood + 1.0;
+            const angle = Math.random() * Math.PI * 2;
+            // Uniform disk spread for natural entry
+            const r = Math.sqrt(Math.random()) * (fanRadius - 0.05);
+
+            positions[ix] = Math.cos(angle) * r;
+            // Huge spread on Y during initial load prevents "batches" of particles, creating a smooth stream
+            positions[ix+1] = blowerY + 1.0 + Math.random() * (isInitial ? 40.0 : 2.0);
+            positions[ix+2] = -1.25 + Math.sin(angle) * r;
+        }
+
+        function updateParticles() {
+            if (!state.showParticles || !state.isPowerOn) {
+                particleSystem.visible = false;
+                return;
+            }
+            particleSystem.visible = true;
+
+            const positions = particleGeometry.attributes.position.array;
+            const count = state.particleCount;
+            const speed = state.airflowSpeed;
+
+            const pZ = -1.25;
+            const hepaZFront = dim.hepaD / 2;
+            const hepaZBack = -dim.hepaD / 2;
+            const glassZ = hepaZFront + dim.workD;
+            const blowerY = dim.hepaH + dim.plywood + 1.0;
+            const fanRadius = 0.762;
+
+            for(let i=0; i<count; i++) {
+                let ix = i * 3;
+                let x = positions[ix];
+                let y = positions[ix+1];
+                let z = positions[ix+2];
+
+                // Stage 1: Intake
+                if (y > blowerY + 1.0) {
+                    const dx = 0 - x;
+                    const dz = pZ - z;
+                    const dist2d = Math.sqrt(dx*dx + dz*dz);
+
+                    if (dist2d > fanRadius - 0.3) {
+                        x += dx * 0.1;
+                        z += dz * 0.1;
+                        y -= speed * 0.1;
+                    } else {
+                        y -= speed * 1.5;
+                        x += dx * 0.05;
+                        z += dz * 0.05;
+                    }
+                }
+                // Stage 2: Inside Plenum & Bottom Baffle Collision Physics
+                else if (z < hepaZBack) {
+
+                    // Calculate the position of the 20-degree bottom baffle surface at this particle's Z position
+                    // Surface goes UP as Z goes towards the back wall (more negative)
+                    const surfaceY = hoodData.baffleY + (hoodData.baffleZ - z) * Math.tan(hoodData.baffleAngle);
+
+                    if (y < surfaceY + 0.2 && y > -1.0) {
+                        // Force it to ride slightly above the surface
+                        y = surfaceY + 0.1;
+
+                        // Slide rapidly forward down the 20 degree board towards the filter
+                        z += speed * 2.5;
+
+                        // The baffle distributes air evenly to the left and right!
+                        x += (Math.random() - 0.5) * 2.5; // Spread wide!
+
+                    } else {
+                        // Free space falling from fan
+                        x += (Math.random() - 0.5) * 1.5; // Spread out more horizontally
+                        y -= speed * 1.2 + (Math.random() * 0.1);
+                        z += speed * 0.3; // Slight forward drift
+                    }
+
+                    // Constrain tightly within plenum walls
+                    if (x > dim.hepaW/2 - 0.1) x = dim.hepaW/2 - 0.1;
+                    if (x < -dim.hepaW/2 + 0.1) x = -dim.hepaW/2 + 0.1;
+                    if (y < 0.1) y = 0.1;
+                    if (y > dim.hepaH - 0.1) y -= 0.5;
+                }
+                // Stage 3: Inside HEPA Filter (Straightening out into Laminar)
+                else if (z >= hepaZBack && z <= hepaZFront) {
+                    z += speed * 0.4;
+                }
+                // Stage 4: Work Area (Pure Laminar Flow)
+                else if (z > hepaZFront && z < glassZ) {
+                    // Fast, perfectly straight laminar flow. (X and Y naturally stay locked)
+                    z += speed * 2.0;
+                }
+                // Stage 5: Exit and Deflection
+                else if (z >= glassZ) {
+                    z += speed * 2.0;
+                }
+
+                // Reset logic if out of bounds
+                if (z > glassZ + 3 || y < -0.5) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const r = Math.sqrt(Math.random()) * (fanRadius - 0.05);
+                    x = Math.cos(angle) * r;
+                    y = blowerY + 1.0 + Math.random() * 2.0;
+                    z = pZ + Math.sin(angle) * r;
+                }
+
+                positions[ix] = x;
+                positions[ix+1] = y;
+                positions[ix+2] = z;
+            }
+
+            particleGeometry.attributes.position.needsUpdate = true;
+        }
+
+        // ==========================================
+        // 7. UI AND INTERACTION EVENT LISTENERS
+        // ==========================================
+        function updateLights() {
+            document.getElementById('toggle-led').checked = state.ledOn;
+            document.getElementById('toggle-uv').checked = state.uvOn;
+
+            if (ledTube) ledTube.material.emissiveIntensity = state.ledOn ? 1.5 : 0;
+            if (ledLight) ledLight.intensity = state.ledOn ? 0.8 : 0;
+
+            if (uvTube) uvTube.material.emissiveIntensity = state.uvOn ? 1.5 : 0;
+            if (uvLight) uvLight.intensity = state.uvOn ? 0.6 : 0;
+        }
+
+        function setupUIEventListeners() {
+            const uiPanel = document.getElementById('ui-panel');
+            const toggleBtn = document.getElementById('toggle-panel-btn');
+
+            document.getElementById('panel-header-btn').addEventListener('click', () => {
+                uiPanel.classList.toggle('minimized');
+                toggleBtn.innerText = uiPanel.classList.contains('minimized') ? '▼' : '▲';
+            });
+
+            document.getElementById('toggle-power').addEventListener('change', (e) => {
+                state.isPowerOn = e.target.checked;
+            });
+
+            const speedSlider = document.getElementById('slider-speed');
+            const speedVal = document.getElementById('speed-val');
+            speedSlider.addEventListener('input', (e) => {
+                const val = e.target.value;
+                speedVal.innerText = val + '%';
+                state.airflowSpeed = val / 1000;
+            });
+
+            document.getElementById('toggle-explode').addEventListener('change', (e) => {
+                state.isExploded = e.target.checked;
+            });
+
+            document.getElementById('toggle-labels').addEventListener('change', (e) => {
+                state.showLabels = e.target.checked;
+            });
+
+            document.getElementById('toggle-prefilter').addEventListener('change', (e) => {
+                state.isPrefilterRemoved = e.target.checked;
+            });
+
+            document.getElementById('toggle-main-filter').addEventListener('change', (e) => {
+                state.isMainFilterRemoved = e.target.checked;
+            });
+
+            document.getElementById('toggle-wood').addEventListener('change', (e) => {
+                state.showWood = e.target.checked;
+                woodParts.forEach(p => {
+                    p.visible = state.showWood;
+                });
+            });
+
+            document.getElementById('toggle-particles').addEventListener('change', (e) => {
+                state.showParticles = e.target.checked;
+            });
+
+            document.getElementById('toggle-led').addEventListener('change', (e) => {
+                state.ledOn = e.target.checked;
+                updateLights();
+            });
+
+            document.getElementById('toggle-uv').addEventListener('change', (e) => {
+                state.uvOn = e.target.checked;
+                updateLights();
+            });
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        // Click to Highlight
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function onMouseClick(event) {
+            if (event.target.closest('#ui-panel')) return;
+
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+
+            const getMeshes = (objects) => {
+                let meshes = [];
+                objects.forEach(obj => {
+                    if (obj.isMesh && obj.visible) meshes.push(obj);
+                    if (obj.children.length > 0) meshes = meshes.concat(getMeshes(obj.children));
+                });
+                return meshes;
+            };
+
+            const intersects = raycaster.intersectObjects(getMeshes(scene.children), false);
+
+            explodeableParts.forEach(p => {
+                if (p === ledTube || p === uvTube) {
+                    p.material.emissive.setHex(p === ledTube ? 0xffffff : 0x8a2be2);
+                    return;
+                }
+                if (p.isGroup) {
+                    p.children.forEach(c => { if(c.material && c.material.emissive) c.material.emissive.setHex(0x000000); });
+                } else if (p.material && p.material.emissive) {
+                    p.material.emissive.setHex(0x000000);
+                }
+            });
+
+            selectedPart = null;
+
+            if (intersects.length > 0) {
+                let obj = intersects[0].object;
+
+                let targetData = obj.userData;
+                let targetHighlight = obj;
+
+                while (targetHighlight && !targetHighlight.userData.name) {
+                    if (targetHighlight.parent) {
+                        targetHighlight = targetHighlight.parent;
+                        targetData = targetHighlight.userData;
+                    } else break;
+                }
+
+                if (targetData && targetData.name) {
+                    // Button Interactions
+                    if (targetData.name === 'Power Button') {
+                        state.isPowerOn = !state.isPowerOn;
+                        document.getElementById('toggle-power').checked = state.isPowerOn;
+                    } else if (targetData.name === 'LED Button') {
+                        state.ledOn = !state.ledOn;
+                        updateLights();
+                    } else if (targetData.name === 'UV Button') {
+                        state.uvOn = !state.uvOn;
+                        updateLights();
+                    }
+
+                    if (targetHighlight !== ledTube && targetHighlight !== uvTube) {
+                        if (targetHighlight.isGroup) {
+                            targetHighlight.children.forEach(c => { if(c.material && c.material.emissive) c.material.emissive.setHex(0x333333); });
+                        } else if (targetHighlight.material && targetHighlight.material.emissive) {
+                            targetHighlight.material.emissive.setHex(0x333333);
+                        }
+                    }
+                    selectedPart = targetHighlight;
+                }
+            }
+        }
+
+        // ==========================================
+        // 8. ANIMATION LOOP
+        // ==========================================
+        function animate() {
+            requestAnimationFrame(animate);
+
+            controls.update();
+
+            const explodeFactor = state.isExploded ? 1.0 : 0.0;
+
+            explodeableParts.forEach(part => {
+                const targetPos = part.userData.basePos.clone();
+
+                if (part === prefilterMesh && state.isPrefilterRemoved && !state.isExploded) {
+                    targetPos.add(new THREE.Vector3(3, 1, 0));
+                } else if (part === mainHepaFilter && state.isMainFilterRemoved && !state.isExploded) {
+                    // Slide filter out to the left side
+                    targetPos.add(new THREE.Vector3(-dim.hepaW * 0.8, 0, 0.1));
+                } else {
+                    targetPos.add(part.userData.explodeDir.clone().multiplyScalar(explodeFactor));
+                }
+
+                part.position.lerp(targetPos, 0.08);
+
+                // We don't lerp rotation to keep the baffle fixed on its 20 degree angle
+
+                if (part.userData.labelEl) {
+                    const isSelected = (part === selectedPart);
+                    const showAll = state.isExploded && state.showLabels;
+
+                    if (showAll || isSelected) {
+                        part.userData.labelEl.style.opacity = '1';
+
+                        if (isSelected) {
+                            part.userData.labelEl.style.borderColor = '#f59e0b';
+                            part.userData.labelEl.style.zIndex = '20';
+                        } else {
+                            part.userData.labelEl.style.borderColor = 'rgba(56, 189, 248, 0.3)';
+                            part.userData.labelEl.style.zIndex = '15';
+                        }
+
+                        const vector = part.position.clone();
+                        vector.y += 0.5;
+                        vector.project(camera);
+                        const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+                        const y = (vector.y * -0.5 + 0.5) * window.innerHeight;
+
+                        if (vector.z > 1) {
+                             part.userData.labelEl.style.opacity = '0';
+                        } else {
+                             part.userData.labelEl.style.left = `${x}px`;
+                             part.userData.labelEl.style.top = `${y}px`;
+                        }
+                    } else {
+                        part.userData.labelEl.style.opacity = '0';
+                    }
+                }
+            });
+
+            // Door swinging animation
+            if (leftDoorGroup) {
+                if (state.isMainFilterRemoved && !state.isExploded) {
+                    leftDoorGroup.rotation.y = THREE.MathUtils.lerp(leftDoorGroup.rotation.y, -Math.PI / 1.5, 0.08);
+                } else {
+                    leftDoorGroup.rotation.y = THREE.MathUtils.lerp(leftDoorGroup.rotation.y, 0, 0.08);
+                }
+            }
+
+            if (flameMesh) {
+                if (state.isPowerOn) {
+                    const targetBend = state.airflowSpeed * 8;
+                    flameMesh.rotation.x += (targetBend - flameMesh.rotation.x) * 0.1;
+                    flameMesh.scale.y = 1.0 + (Math.random() * 0.1);
+                    flameMesh.scale.x = 1.0 - (targetBend * 0.2);
+                } else {
+                    flameMesh.rotation.x += (0 - flameMesh.rotation.x) * 0.1;
+                    flameMesh.scale.y = 1.0 + (Math.random() * 0.05);
+                    flameMesh.scale.x = 1.0;
+                }
+            }
+
+            if (fanMotor && state.isPowerOn) {
+                fanMotor.rotation.y -= state.airflowSpeed * 12;
+            }
+
+            updateParticles();
+            renderer.render(scene, camera);
+        }
+
+        window.onload = init;
+
+    </script>
+</body>
+</html>
