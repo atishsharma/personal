@@ -3,8 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generator Run Time & Clock</title>
+  <title>GenTime Pro - Generator Run Time Calculator & Clock</title>
   
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="GenTime Pro is a professional Generator Run Time Calculator, Engine Hour Meter, and Fuel Monitoring System by Atish Ak Sharma. Track fuel consumption, oil maintenance intervals, and log generator sessions accurately.">
+  <meta name="keywords" content="generator runtime calculator, generator run time clock, generator hour meter, fuel consumption calculator, oil change tracker, Atish Ak Sharma, GenTime Pro">
+  <meta name="author" content="Atish Ak Sharma">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://atishaksharma.com/minis/gen.html">
+
+  <!-- Open Graph / Social Media Meta Tags -->
+  <meta property="og:title" content="GenTime Pro - Generator Run Time Calculator & Clock">
+  <meta property="og:description" content="Calculate generator runtime based on fuel level, track total engine lifetime hours, and monitor oil service intervals.">
+  <meta property="og:url" content="https://atishaksharma.com/minis/gen.html">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="GenTime Pro - Generator Run Time Calculator & Clock">
+  <meta name="twitter:description" content="Professional Generator Run Time Calculator and Engine Hour Monitoring System by Atish Ak Sharma.">
+
   <!-- Favicon setup for /minis/gen.html pointing to /master/logo_favicon.jpg -->
   <link rel="icon" type="image/jpeg" href="../master/logo_favicon.jpg">
   <link rel="shortcut icon" type="image/jpeg" href="/master/logo_favicon.jpg">
@@ -45,6 +63,51 @@
     }
   </script>
   <style>
+    :root {
+      --bg-main: #020617;
+      --bg-header: rgba(15, 23, 42, 0.85);
+      --bg-card: rgba(15, 23, 42, 0.9);
+      --bg-input: #020617;
+      --bg-subcard: rgba(2, 6, 23, 0.6);
+      --border-color: #1e293b;
+      --border-input: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-sub: #cbd5e1;
+      --grid-pattern: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      --table-head-bg: #020617;
+      --table-row-hover: rgba(30, 41, 59, 0.5);
+      --digital-bg: rgba(2, 6, 23, 0.85);
+    }
+
+    body.light-mode {
+      --bg-main: #f1f5f9;
+      --bg-header: rgba(255, 255, 255, 0.9);
+      --bg-card: #ffffff;
+      --bg-input: #f8fafc;
+      --bg-subcard: #f1f5f9;
+      --border-color: #e2e8f0;
+      --border-input: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-sub: #334155;
+      --grid-pattern: radial-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+      --table-head-bg: #f8fafc;
+      --table-row-hover: #f1f5f9;
+      --digital-bg: #0f172a;
+    }
+
+    .theme-bg-main { background-color: var(--bg-main); }
+    .theme-bg-header { background-color: var(--bg-header); }
+    .theme-bg-card { background-color: var(--bg-card); }
+    .theme-bg-input { background-color: var(--bg-input); }
+    .theme-bg-subcard { background-color: var(--bg-subcard); }
+    .theme-border { border-color: var(--border-color); }
+    .theme-border-input { border-color: var(--border-input); }
+    .theme-text-main { color: var(--text-main); }
+    .theme-text-muted { color: var(--text-muted); }
+    .theme-text-sub { color: var(--text-sub); }
+
     .glow-amber {
       text-shadow: 0 0 15px rgba(245, 158, 11, 0.6), 0 0 30px rgba(245, 158, 11, 0.2);
     }
@@ -52,7 +115,7 @@
       text-shadow: 0 0 15px rgba(34, 197, 94, 0.6), 0 0 30px rgba(34, 197, 94, 0.2);
     }
     .bg-grid-pattern {
-      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-image: var(--grid-pattern);
       background-size: 20px 20px;
     }
     /* Hide number input spinners */
@@ -66,22 +129,24 @@
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen bg-grid-pattern antialiased flex flex-col justify-between">
+<body class="theme-bg-main theme-text-main font-sans min-h-screen bg-grid-pattern antialiased flex flex-col justify-between transition-colors duration-200">
 
   <div>
     <!-- Top Header & Live Clock Bar (Single Row for Mobile & Desktop) -->
-    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+    <header class="border-b theme-border theme-bg-header backdrop-blur-md sticky top-0 z-50 transition-colors">
       <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 flex flex-row justify-between items-center gap-2">
         
-        <!-- Left: Logo & Title -->
+        <!-- Left: Logo & Title (Clickable for Theme Switching) -->
         <div class="flex items-center space-x-2.5 min-w-0">
-          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/20 font-bold text-lg overflow-hidden flex-shrink-0">
+          <button onclick="toggleTheme()" title="Click to toggle Light/Dark mode" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/20 font-bold text-lg overflow-hidden flex-shrink-0 hover:scale-105 active:scale-95 transition-transform cursor-pointer">
             <img src="../master/logo_favicon.jpg" alt="Logo" class="w-full h-full object-cover" onerror="this.remove(); document.getElementById('fallbackIcon').classList.remove('hidden');">
             <i id="fallbackIcon" class="fa-solid fa-bolt hidden"></i>
-          </div>
-          <div class="truncate">
-            <h1 class="font-bold text-base sm:text-lg leading-tight tracking-wide text-white truncate">GenTime Pro</h1>
-            <p class="text-[10px] text-amber-500 font-medium hidden sm:block">Generator Monitoring System</p>
+          </button>
+          <div class="truncate cursor-pointer select-none" onclick="toggleTheme()" title="Click to toggle Light/Dark mode">
+            <div class="flex items-center gap-2">
+              <h1 class="font-black text-xl sm:text-2xl leading-none tracking-wide theme-text-main truncate">GenTime Pro</h1>
+              <span id="themeBadge" class="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold transition-colors">LIGHT</span>
+            </div>
           </div>
         </div>
 
@@ -89,33 +154,34 @@
         <div class="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
           
           <!-- Clocks Area (Responsive Display) -->
-          <div class="hidden sm:flex items-center space-x-3 bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800 text-right">
+          <div class="hidden sm:flex items-center space-x-3 px-3 py-1.5 rounded-xl border theme-border theme-bg-input text-right">
             <div>
-              <div class="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Current Time</div>
-              <div id="liveClock" class="font-digital text-xs sm:text-sm font-bold tracking-wider text-slate-100">
+              <div class="text-[9px] theme-text-muted uppercase tracking-wider font-semibold">Current Time</div>
+              <div id="liveClock" class="font-digital text-xs sm:text-sm font-bold tracking-wider theme-text-main">
                 00:00:00 AM
               </div>
-              <div id="liveDate" class="text-[9px] text-slate-400">Loading date...</div>
+              <div id="liveDate" class="text-[9px] theme-text-muted">Loading date...</div>
             </div>
 
-            <div class="h-6 w-px bg-slate-800"></div>
+            <!-- Est. Shut-Off header block (Shown only during Countdown mode) -->
+            <div id="headerEstShutoffDivider" class="h-6 w-px theme-border hidden"></div>
 
-            <div>
+            <div id="headerEstShutoff" class="hidden">
               <div class="text-[9px] text-amber-500/90 uppercase tracking-wider font-semibold">Est. Shut-Off</div>
               <div id="targetTimeText" class="font-digital text-xs sm:text-sm font-bold tracking-wider text-amber-400">
                 --:-- --
               </div>
-              <div id="targetSubtext" class="text-[9px] text-slate-400">Stopwatch Mode</div>
+              <div id="targetSubtext" class="text-[9px] theme-text-muted">Timer Set</div>
             </div>
           </div>
 
           <!-- Mobile Live Clock display -->
           <div class="sm:hidden text-right">
-            <div id="liveClockMobile" class="font-digital text-xs font-bold text-slate-200">00:00 AM</div>
+            <div id="liveClockMobile" class="font-digital text-xs font-bold theme-text-main">00:00 AM</div>
           </div>
 
           <!-- Status Badge -->
-          <div id="statusBadge" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-slate-700 bg-slate-800/80 flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 transition-all duration-300 flex-shrink-0">
+          <div id="statusBadge" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border theme-border theme-bg-input flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider theme-text-muted transition-all duration-300 flex-shrink-0">
             <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-500 inline-block" id="statusDot"></span>
             <span id="statusText">GENERATOR OFF</span>
           </div>
@@ -132,22 +198,22 @@
       <section class="lg:col-span-8 space-y-6">
         
         <!-- Main Timer Card -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+        <div class="theme-bg-card border theme-border rounded-2xl p-6 shadow-xl relative overflow-hidden transition-colors">
           
           <!-- Mode Switcher Tabs (Default: Stopwatch) -->
-          <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-4 flex-wrap gap-2">
-            <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <div class="flex items-center justify-between mb-6 border-b theme-border pb-4 flex-wrap gap-2">
+            <div class="flex theme-bg-input p-1 rounded-xl border theme-border">
               <button id="modeStopwatchBtn" onclick="switchMode('stopwatch')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-amber-500 text-slate-950 shadow">
                 <i class="fa-solid fa-stopwatch mr-2"></i>Stopwatch
               </button>
-              <button id="modeCountdownBtn" onclick="switchMode('countdown')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-white">
+              <button id="modeCountdownBtn" onclick="switchMode('countdown')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 theme-text-muted hover:theme-text-main">
                 <i class="fa-solid fa-hourglass-half mr-2"></i>Countdown Timer
               </button>
             </div>
           </div>
 
           <!-- Main Digital Display -->
-          <div class="py-6 sm:py-10 text-center bg-slate-950/80 rounded-2xl border border-slate-800/90 mb-6 shadow-inner relative">
+          <div class="py-6 sm:py-10 text-center bg-slate-950 rounded-2xl border border-slate-800/90 mb-6 shadow-inner relative">
             <div class="text-xs font-semibold tracking-widest uppercase text-slate-500 mb-2" id="timerLabel">
               ELAPSED RUN TIME
             </div>
@@ -156,47 +222,47 @@
               00:00:00
             </div>
 
-            <!-- Elapsed Sub-Counter -->
-            <div id="subDisplay" class="mt-3 text-xs sm:text-sm text-slate-400 font-mono">
+            <!-- Elapsed Sub-Counter (Shown in Countdown mode only) -->
+            <div id="subDisplay" class="mt-3 text-xs sm:text-sm text-slate-400 font-mono hidden">
               Current Session Elapsed: <span id="elapsedText" class="text-slate-200 font-semibold">00:00:00</span>
             </div>
           </div>
 
           <!-- Quick Time Add Buttons (Visible in Countdown mode only) -->
           <div id="quickAddSection" class="mb-6 hidden">
-            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            <label class="block text-xs font-semibold theme-text-muted uppercase tracking-wider mb-2">
               <i class="fa-solid fa-circle-plus text-amber-500 mr-1.5"></i>Quick Add Run Time
             </label>
             <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
-              <button onclick="addTime(15)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200">
+              <button onclick="addTime(15)" class="py-2.5 px-3 theme-bg-input hover:opacity-80 border theme-border rounded-xl font-semibold text-sm transition theme-text-main">
                 +15 Min
               </button>
-              <button onclick="addTime(30)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200">
+              <button onclick="addTime(30)" class="py-2.5 px-3 theme-bg-input hover:opacity-80 border theme-border rounded-xl font-semibold text-sm transition theme-text-main">
                 +30 Min
               </button>
-              <button onclick="addTime(60)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200">
+              <button onclick="addTime(60)" class="py-2.5 px-3 theme-bg-input hover:opacity-80 border theme-border rounded-xl font-semibold text-sm transition theme-text-main">
                 +1 Hour
               </button>
-              <button onclick="addTime(120)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200">
+              <button onclick="addTime(120)" class="py-2.5 px-3 theme-bg-input hover:opacity-80 border theme-border rounded-xl font-semibold text-sm transition theme-text-main">
                 +2 Hours
               </button>
-              <button onclick="addTime(300)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200 col-span-3 sm:col-span-1">
+              <button onclick="addTime(300)" class="py-2.5 px-3 theme-bg-input hover:opacity-80 border theme-border rounded-xl font-semibold text-sm transition theme-text-main col-span-3 sm:col-span-1">
                 +5 Hours
               </button>
             </div>
           </div>
 
           <!-- Manual Time Input Row (Visible in Countdown mode only) -->
-          <div id="manualSetSection" class="mb-6 bg-slate-950/60 p-4 rounded-xl border border-slate-800 hidden flex-wrap items-center justify-between gap-3">
-            <span class="text-xs font-semibold text-slate-300">Set Custom Timer Duration:</span>
+          <div id="manualSetSection" class="mb-6 theme-bg-subcard p-4 rounded-xl border theme-border hidden flex-wrap items-center justify-between gap-3">
+            <span class="text-xs font-semibold theme-text-main">Set Custom Timer Duration:</span>
             <div class="flex items-center space-x-2">
-              <div class="flex items-center bg-slate-900 border border-slate-700 rounded-lg px-2 py-1">
+              <div class="flex items-center theme-bg-input border theme-border rounded-lg px-2 py-1">
                 <input type="number" id="inputHours" min="0" max="99" value="2" class="w-12 bg-transparent text-center font-bold text-amber-400 focus:outline-none">
-                <span class="text-xs text-slate-500 mr-1">h</span>
+                <span class="text-xs theme-text-muted mr-1">h</span>
                 <input type="number" id="inputMinutes" min="0" max="59" value="0" class="w-12 bg-transparent text-center font-bold text-amber-400 focus:outline-none">
-                <span class="text-xs text-slate-500">m</span>
+                <span class="text-xs theme-text-muted">m</span>
               </div>
-              <button onclick="setCustomTimer()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold rounded-lg transition">
+              <button onclick="setCustomTimer()" class="px-4 py-2 theme-bg-input hover:opacity-80 theme-text-main border theme-border text-xs font-semibold rounded-lg transition">
                 Set Time
               </button>
             </div>
@@ -204,22 +270,22 @@
 
           <!-- Main Timer Action Controls -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <button id="startBtn" onclick="startTimer()" class="py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold rounded-xl shadow-lg shadow-emerald-900/30 flex items-center justify-center space-x-2 transition-all">
+            <button id="startBtn" onclick="startTimer()" class="py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold rounded-xl shadow-lg shadow-emerald-900/20 flex items-center justify-center space-x-2 transition-all">
               <i class="fa-solid fa-play"></i>
               <span>START</span>
             </button>
             
-            <button id="pauseBtn" onclick="pauseTimer()" disabled class="py-3.5 px-4 bg-amber-600 hover:bg-amber-500 active:scale-95 text-white font-bold rounded-xl shadow-lg shadow-amber-900/30 flex items-center justify-center space-x-2 transition-all opacity-50 cursor-not-allowed">
+            <button id="pauseBtn" onclick="pauseTimer()" disabled class="py-3.5 px-4 bg-amber-600 hover:bg-amber-500 active:scale-95 text-white font-bold rounded-xl shadow-lg shadow-amber-900/20 flex items-center justify-center space-x-2 transition-all opacity-50 cursor-not-allowed">
               <i class="fa-solid fa-pause"></i>
               <span>PAUSE</span>
             </button>
 
-            <button id="stopBtn" onclick="stopAndLogTimer()" disabled class="py-3.5 px-4 bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold rounded-xl shadow-lg shadow-rose-900/30 flex items-center justify-center space-x-2 transition-all opacity-50 cursor-not-allowed">
+            <button id="stopBtn" onclick="stopAndLogTimer()" disabled class="py-3.5 px-4 bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold rounded-xl shadow-lg shadow-rose-900/20 flex items-center justify-center space-x-2 transition-all opacity-50 cursor-not-allowed">
               <i class="fa-solid fa-square"></i>
               <span>STOP & LOG</span>
             </button>
 
-            <button id="resetBtn" onclick="resetTimer()" class="py-3.5 px-4 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-bold rounded-xl border border-slate-700 flex items-center justify-center space-x-2 transition-all">
+            <button id="resetBtn" onclick="resetTimer()" class="py-3.5 px-4 theme-bg-input hover:opacity-80 theme-text-main font-bold rounded-xl border theme-border flex items-center justify-center space-x-2 transition-all">
               <i class="fa-solid fa-rotate-right"></i>
               <span>RESET</span>
             </button>
@@ -228,27 +294,27 @@
         </div>
 
         <!-- Session History Log Card -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="theme-bg-card border theme-border rounded-2xl p-6 shadow-xl transition-colors">
           <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
-            <h3 class="font-bold text-base text-slate-200 flex items-center gap-2">
+            <h3 class="font-bold text-base theme-text-main flex items-center gap-2">
               <i class="fa-solid fa-list-check text-amber-500"></i> Generator Session History
             </h3>
             <div class="flex items-center space-x-3">
-              <button onclick="downloadPDFReport()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold transition flex items-center gap-1">
+              <button onclick="downloadPDFReport()" class="text-xs text-rose-500 hover:text-rose-400 font-semibold transition flex items-center gap-1">
                 <i class="fa-solid fa-file-pdf"></i> PDF Report
               </button>
-              <button onclick="toggleManualLogModal()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold transition flex items-center gap-1">
+              <button onclick="toggleManualLogModal()" class="text-xs text-amber-500 hover:text-amber-400 font-semibold transition flex items-center gap-1">
                 <i class="fa-solid fa-plus"></i> Manual Entry
               </button>
-              <button onclick="clearHistory()" class="text-xs text-slate-500 hover:text-rose-400 transition">
+              <button onclick="clearHistory()" class="text-xs theme-text-muted hover:text-rose-400 transition">
                 Clear History
               </button>
             </div>
           </div>
 
           <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-slate-300">
-              <thead class="bg-slate-950 text-slate-400 uppercase font-semibold">
+            <table class="w-full text-left text-xs theme-text-sub">
+              <thead class="theme-bg-input theme-text-muted uppercase font-semibold">
                 <tr>
                   <th class="p-3 rounded-l-lg">Date / Time</th>
                   <th class="p-3">Mode</th>
@@ -257,10 +323,10 @@
                   <th class="p-3 rounded-r-lg text-right">Action</th>
                 </tr>
               </thead>
-              <tbody id="historyTableBody" class="divide-y divide-slate-800">
+              <tbody id="historyTableBody" class="divide-y theme-border">
                 <!-- Dynamically populated -->
                 <tr>
-                  <td colspan="5" class="p-4 text-center text-slate-500 italic">No past sessions logged yet.</td>
+                  <td colspan="5" class="p-4 text-center theme-text-muted italic">No past sessions logged yet.</td>
                 </tr>
               </tbody>
             </table>
@@ -273,14 +339,14 @@
       <section class="lg:col-span-4 space-y-6">
 
         <!-- Precise Fuel & Runtime Calculator Card -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
-          <div class="flex items-center space-x-2 mb-4 border-b border-slate-800 pb-3">
+        <div class="theme-bg-card border theme-border rounded-2xl p-6 shadow-xl transition-colors">
+          <div class="flex items-center space-x-2 mb-4 border-b theme-border pb-3">
             <div class="p-2 rounded-lg bg-amber-500/10 text-amber-500">
               <i class="fa-solid fa-gas-pump text-lg"></i>
             </div>
             <div>
-              <h3 class="font-bold text-base text-slate-100">Fuel & Runtime Calculator</h3>
-              <p class="text-xs text-slate-400">Accurate estimation with number inputs</p>
+              <h3 class="font-bold text-base theme-text-main">Fuel & Runtime Calculator</h3>
+              <p class="text-xs theme-text-muted">Accurate estimation with number inputs</p>
             </div>
           </div>
 
@@ -288,68 +354,68 @@
             <!-- Total Tank Capacity -->
             <div>
               <div class="flex justify-between items-center mb-1.5">
-                <label for="inputTankCap" class="font-semibold text-slate-300">Total Tank Capacity</label>
-                <span class="text-[10px] text-slate-500 font-mono">Liters (L)</span>
+                <label for="inputTankCap" class="font-semibold theme-text-main">Total Tank Capacity</label>
+                <span class="text-[10px] theme-text-muted font-mono">Liters (L)</span>
               </div>
               <div class="relative">
-                <input type="number" id="inputTankCap" min="0.5" max="1000" value="20" step="0.5" oninput="calculateFuelRuntime()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-slate-100 focus:outline-none focus:border-amber-500 pr-10 transition">
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">L</span>
+                <input type="number" id="inputTankCap" min="0.5" max="1000" value="20" step="0.5" oninput="calculateFuelRuntime()" class="w-full theme-bg-input border theme-border rounded-xl px-3 py-2 text-sm font-bold theme-text-main focus:outline-none focus:border-amber-500 pr-10 transition">
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold theme-text-muted">L</span>
               </div>
               <!-- Presets -->
               <div class="flex space-x-1.5 mt-2">
-                <button type="button" onclick="setTankPreset(10)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">10 L</button>
-                <button type="button" onclick="setTankPreset(20)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">20 L</button>
-                <button type="button" onclick="setTankPreset(30)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">30 L</button>
-                <button type="button" onclick="setTankPreset(50)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">50 L</button>
+                <button type="button" onclick="setTankPreset(10)" class="px-2 py-1 theme-bg-input hover:opacity-80 text-[10px] font-medium theme-text-muted hover:text-amber-500 rounded border theme-border transition">10 L</button>
+                <button type="button" onclick="setTankPreset(20)" class="px-2 py-1 theme-bg-input hover:opacity-80 text-[10px] font-medium theme-text-muted hover:text-amber-500 rounded border theme-border transition">20 L</button>
+                <button type="button" onclick="setTankPreset(30)" class="px-2 py-1 theme-bg-input hover:opacity-80 text-[10px] font-medium theme-text-muted hover:text-amber-500 rounded border theme-border transition">30 L</button>
+                <button type="button" onclick="setTankPreset(50)" class="px-2 py-1 theme-bg-input hover:opacity-80 text-[10px] font-medium theme-text-muted hover:text-amber-500 rounded border theme-border transition">50 L</button>
               </div>
             </div>
 
             <!-- Current Fuel Level (Dual Number Inputs: % and Liters) -->
             <div>
               <div class="flex justify-between items-center mb-1.5">
-                <label class="font-semibold text-slate-300">Current Fuel Level</label>
-                <span id="fuelVolDisplay" class="text-[10px] text-amber-400 font-semibold font-mono">20.0 L Remaining</span>
+                <label class="font-semibold theme-text-main">Current Fuel Level</label>
+                <span id="fuelVolDisplay" class="text-[10px] text-amber-500 font-semibold font-mono">20.0 L Remaining</span>
               </div>
               <div class="grid grid-cols-2 gap-2">
                 <div>
-                  <label for="inputFuelPct" class="text-[10px] text-slate-500 block mb-1">Percentage (%)</label>
+                  <label for="inputFuelPct" class="text-[10px] theme-text-muted block mb-1">Percentage (%)</label>
                   <div class="relative">
-                    <input type="number" id="inputFuelPct" min="0" max="100" value="100" step="1" oninput="onFuelPctInput()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-amber-400 focus:outline-none focus:border-amber-500 pr-8 transition">
-                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">%</span>
+                    <input type="number" id="inputFuelPct" min="0" max="100" value="100" step="1" oninput="onFuelPctInput()" class="w-full theme-bg-input border theme-border rounded-xl px-3 py-2 text-sm font-bold text-amber-500 focus:outline-none focus:border-amber-500 pr-8 transition">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold theme-text-muted">%</span>
                   </div>
                 </div>
                 <div>
-                  <label for="inputFuelLiters" class="text-[10px] text-slate-500 block mb-1">Fuel Volume (L)</label>
+                  <label for="inputFuelLiters" class="text-[10px] theme-text-muted block mb-1">Fuel Volume (L)</label>
                   <div class="relative">
-                    <input type="number" id="inputFuelLiters" min="0" max="1000" value="20" step="0.5" oninput="onFuelLitersInput()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-amber-400 focus:outline-none focus:border-amber-500 pr-8 transition">
-                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">L</span>
+                    <input type="number" id="inputFuelLiters" min="0" max="1000" value="20" step="0.5" oninput="onFuelLitersInput()" class="w-full theme-bg-input border theme-border rounded-xl px-3 py-2 text-sm font-bold text-amber-500 focus:outline-none focus:border-amber-500 pr-8 transition">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold theme-text-muted">L</span>
                   </div>
                 </div>
               </div>
               <!-- Presets -->
               <div class="grid grid-cols-4 gap-1.5 mt-2">
-                <button type="button" onclick="setFuelPctPreset(25)" class="py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-semibold text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition text-center">25%</button>
-                <button type="button" onclick="setFuelPctPreset(50)" class="py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-semibold text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition text-center">50%</button>
-                <button type="button" onclick="setFuelPctPreset(75)" class="py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-semibold text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition text-center">75%</button>
-                <button type="button" onclick="setFuelPctPreset(100)" class="py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-semibold text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition text-center">100%</button>
+                <button type="button" onclick="setFuelPctPreset(25)" class="py-1 theme-bg-input hover:opacity-80 text-[10px] font-semibold theme-text-muted hover:text-amber-500 rounded border theme-border transition text-center">25%</button>
+                <button type="button" onclick="setFuelPctPreset(50)" class="py-1 theme-bg-input hover:opacity-80 text-[10px] font-semibold theme-text-muted hover:text-amber-500 rounded border theme-border transition text-center">50%</button>
+                <button type="button" onclick="setFuelPctPreset(75)" class="py-1 theme-bg-input hover:opacity-80 text-[10px] font-semibold theme-text-muted hover:text-amber-500 rounded border theme-border transition text-center">75%</button>
+                <button type="button" onclick="setFuelPctPreset(100)" class="py-1 theme-bg-input hover:opacity-80 text-[10px] font-semibold theme-text-muted hover:text-amber-500 rounded border theme-border transition text-center">100%</button>
               </div>
             </div>
 
             <!-- Consumption Rate -->
             <div>
               <div class="flex justify-between items-center mb-1.5">
-                <label for="inputBurnRate" class="font-semibold text-slate-300">Consumption Rate</label>
-                <span class="text-[10px] text-slate-500 font-mono">Liters / Hour</span>
+                <label for="inputBurnRate" class="font-semibold theme-text-main">Consumption Rate</label>
+                <span class="text-[10px] theme-text-muted font-mono">Liters / Hour</span>
               </div>
               <div class="relative">
-                <input type="number" id="inputBurnRate" min="0.1" max="100" value="2.0" step="0.1" oninput="calculateFuelRuntime()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-slate-100 focus:outline-none focus:border-amber-500 pr-14 transition">
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">L / hr</span>
+                <input type="number" id="inputBurnRate" min="0.1" max="100" value="2.0" step="0.1" oninput="calculateFuelRuntime()" class="w-full theme-bg-input border theme-border rounded-xl px-3 py-2 text-sm font-bold theme-text-main focus:outline-none focus:border-amber-500 pr-14 transition">
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold theme-text-muted">L / hr</span>
               </div>
               <!-- Presets -->
               <div class="flex space-x-1.5 mt-2">
-                <button type="button" onclick="setBurnPreset(1.0)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">1.0 L/h (Eco)</button>
-                <button type="button" onclick="setBurnPreset(2.0)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">2.0 L/h (Half)</button>
-                <button type="button" onclick="setBurnPreset(3.5)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">3.5 L/h (Full)</button>
+                <button type="button" onclick="setBurnPreset(1.0)" class="px-2 py-1 theme-bg-input hover:opacity-80 text-[10px] font-medium theme-text-muted hover:text-amber-500 rounded border theme-border transition">1.0 L/h (Eco)</button>
+                <button type="button" onclick="setBurnPreset(2.0)" class="px-2 py-1 theme-bg-input hover:opacity-80 text-[10px] font-medium theme-text-muted hover:text-amber-500 rounded border theme-border transition">2.0 L/h (Half)</button>
+                <button type="button" onclick="setBurnPreset(3.5)" class="px-2 py-1 theme-bg-input hover:opacity-80 text-[10px] font-medium theme-text-muted hover:text-amber-500 rounded border theme-border transition">3.5 L/h (Full)</button>
               </div>
             </div>
 
@@ -362,21 +428,21 @@
               <p class="text-[11px] text-slate-500 mt-1">Based on exact fuel & consumption rate</p>
             </div>
 
-            <button type="button" onclick="applyCalcToTimer()" class="w-full py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl font-semibold transition flex items-center justify-center gap-2">
+            <button type="button" onclick="applyCalcToTimer()" class="w-full py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/30 rounded-xl font-semibold transition flex items-center justify-center gap-2">
               <i class="fa-solid fa-arrow-left"></i> Set Calculated Time to Timer
             </button>
           </div>
         </div>
 
         <!-- Cumulative Hour Meter & Oil Service Tracker Card -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
-          <div class="flex items-center space-x-2 mb-4 border-b border-slate-800 pb-3">
-            <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+        <div class="theme-bg-card border theme-border rounded-2xl p-6 shadow-xl transition-colors">
+          <div class="flex items-center space-x-2 mb-4 border-b theme-border pb-3">
+            <div class="p-2 rounded-lg bg-blue-500/10 text-blue-500">
               <i class="fa-solid fa-gauge-high text-lg"></i>
             </div>
             <div>
-              <h3 class="font-bold text-base text-slate-100">Engine Hour Meter & Oil Maintenance</h3>
-              <p class="text-xs text-slate-400">Lifetime tracking & service alerts</p>
+              <h3 class="font-bold text-base theme-text-main">Engine Hour Meter & Oil Maintenance</h3>
+              <p class="text-xs theme-text-muted">Lifetime tracking & service alerts</p>
             </div>
           </div>
 
@@ -389,44 +455,44 @@
           </div>
 
           <!-- Oil Service Interval Settings & Days Estimate -->
-          <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3">
+          <div class="theme-bg-subcard p-4 rounded-xl border theme-border space-y-3">
             
             <div class="flex items-center justify-between">
-              <label class="text-xs font-semibold text-slate-300">Service Interval Setup:</label>
+              <label class="text-xs font-semibold theme-text-main">Service Interval Setup:</label>
               <div class="flex items-center space-x-1">
-                <input type="number" id="oilIntervalInput" min="10" max="1000" value="100" onchange="updateOilIntervalSetting()" class="w-16 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs text-center font-bold text-blue-400 focus:outline-none">
-                <span class="text-xs text-slate-400">Hours</span>
+                <input type="number" id="oilIntervalInput" min="10" max="1000" value="100" onchange="updateOilIntervalSetting()" class="w-16 theme-bg-input border theme-border rounded px-2 py-0.5 text-xs text-center font-bold text-blue-500 focus:outline-none">
+                <span class="text-xs theme-text-muted">Hours</span>
               </div>
             </div>
 
             <div class="flex items-center justify-between">
-              <label class="text-xs font-semibold text-slate-300">Avg. Daily Run Time:</label>
+              <label class="text-xs font-semibold theme-text-main">Avg. Daily Run Time:</label>
               <div class="flex items-center space-x-1">
-                <input type="number" id="dailyUsageInput" min="0.5" max="24" value="4" step="0.5" onchange="renderDisplay()" class="w-16 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs text-center font-bold text-blue-400 focus:outline-none">
-                <span class="text-xs text-slate-400">Hrs/Day</span>
+                <input type="number" id="dailyUsageInput" min="0.5" max="24" value="4" step="0.5" onchange="renderDisplay()" class="w-16 theme-bg-input border theme-border rounded px-2 py-0.5 text-xs text-center font-bold text-blue-500 focus:outline-none">
+                <span class="text-xs theme-text-muted">Hrs/Day</span>
               </div>
             </div>
 
-            <div class="border-t border-slate-800/80 pt-3 space-y-2">
+            <div class="border-t theme-border pt-3 space-y-2">
               <div class="flex justify-between text-xs font-semibold">
-                <span class="text-slate-300">Oil Change Status</span>
-                <span id="oilServiceText" class="text-blue-400">100.0h remaining</span>
+                <span class="theme-text-main">Oil Change Status</span>
+                <span id="oilServiceText" class="text-blue-500">100.0h remaining</span>
               </div>
 
               <!-- Days estimate badge -->
-              <div id="oilDaysEstText" class="text-xs text-amber-400 font-medium text-right">
+              <div id="oilDaysEstText" class="text-xs text-amber-500 font-medium text-right">
                 ~ 25 Days until oil change
               </div>
 
-              <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
+              <div class="w-full theme-bg-input h-2.5 rounded-full overflow-hidden border theme-border">
                 <div id="oilBar" class="bg-blue-500 h-full rounded-full transition-all duration-500" style="width: 100%;"></div>
               </div>
 
               <div class="flex justify-between items-center pt-1">
-                <button onclick="resetOilService()" class="text-[11px] text-slate-400 hover:text-slate-200 underline">
+                <button onclick="resetOilService()" class="text-[11px] theme-text-muted hover:theme-text-main underline">
                   Reset Oil Service Counter
                 </button>
-                <span id="oilPctBadge" class="text-[11px] font-bold text-slate-400">100%</span>
+                <span id="oilPctBadge" class="text-[11px] font-bold theme-text-muted">100%</span>
               </div>
             </div>
 
@@ -440,36 +506,36 @@
 
   <!-- SELF-ADD RUN MANUAL MODAL -->
   <div id="manualLogModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
-        <h3 class="font-bold text-base text-white flex items-center gap-2">
+    <div class="theme-bg-card border theme-border rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+      <div class="flex justify-between items-center border-b theme-border pb-3 mb-4">
+        <h3 class="font-bold text-base theme-text-main flex items-center gap-2">
           <i class="fa-solid fa-pen-to-square text-amber-500"></i> Self Add Generator Run
         </h3>
-        <button onclick="toggleManualLogModal()" class="text-slate-400 hover:text-white">
+        <button onclick="toggleManualLogModal()" class="theme-text-muted hover:theme-text-main">
           <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
 
       <div class="space-y-4 text-xs">
         <div>
-          <label class="block text-slate-300 font-semibold mb-1">Date & Time of Run</label>
-          <input type="datetime-local" id="manualDateInput" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-amber-500">
+          <label class="block theme-text-main font-semibold mb-1">Date & Time of Run</label>
+          <input type="datetime-local" id="manualDateInput" class="w-full theme-bg-input border theme-border rounded-lg p-2.5 theme-text-main focus:outline-none focus:border-amber-500">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block text-slate-300 font-semibold mb-1">Hours Ran</label>
-            <input type="number" id="manualHoursInput" min="0" value="1" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-amber-400 font-bold focus:outline-none focus:border-amber-500">
+            <label class="block theme-text-main font-semibold mb-1">Hours Ran</label>
+            <input type="number" id="manualHoursInput" min="0" value="1" class="w-full theme-bg-input border theme-border rounded-lg p-2.5 text-amber-500 font-bold focus:outline-none focus:border-amber-500">
           </div>
           <div>
-            <label class="block text-slate-300 font-semibold mb-1">Minutes Ran</label>
-            <input type="number" id="manualMinutesInput" min="0" max="59" value="30" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-amber-400 font-bold focus:outline-none focus:border-amber-500">
+            <label class="block theme-text-main font-semibold mb-1">Minutes Ran</label>
+            <input type="number" id="manualMinutesInput" min="0" max="59" value="30" class="w-full theme-bg-input border theme-border rounded-lg p-2.5 text-amber-500 font-bold focus:outline-none focus:border-amber-500">
           </div>
         </div>
 
         <div>
-          <label class="block text-slate-300 font-semibold mb-1">Run Mode / Note</label>
-          <select id="manualModeInput" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none">
+          <label class="block theme-text-main font-semibold mb-1">Run Mode / Note</label>
+          <select id="manualModeInput" class="w-full theme-bg-input border theme-border rounded-lg p-2.5 theme-text-main focus:outline-none">
             <option value="STOPWATCH">Stopwatch Run</option>
             <option value="MANUAL ENTRY">Manual Entry</option>
             <option value="COUNTDOWN">Countdown Run</option>
@@ -478,7 +544,7 @@
         </div>
 
         <div class="pt-2 flex justify-end space-x-2">
-          <button onclick="toggleManualLogModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg transition">
+          <button onclick="toggleManualLogModal()" class="px-4 py-2 theme-bg-input hover:opacity-80 theme-text-main font-semibold rounded-lg transition">
             Cancel
           </button>
           <button onclick="saveManualRun()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg transition">
@@ -490,12 +556,42 @@
   </div>
 
   <!-- Footer -->
-  <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500 mt-8">
-    GenTime Pro &bull; Generator Run Time Tracker & Maintenance Monitor
+  <footer class="border-t theme-border py-4 text-center text-xs theme-text-muted mt-8">
+    GenTime Pro &bull; Generator Monitoring System &bull; &copy; <a href="https://atishaksharma.com" target="_blank" rel="noopener noreferrer" class="hover:text-amber-500 font-semibold transition-colors">Atish Ak Sharma</a>
   </footer>
 
   <!-- Web Audio Sound Synthesizer & Main Script -->
   <script>
+    // --- THEME TOGGLE ENGINE (Default: Light) ---
+    let currentTheme = localStorage.getItem('gen_theme') || 'light';
+
+    function applyTheme(theme) {
+      currentTheme = theme;
+      const badge = document.getElementById('themeBadge');
+      if (theme === 'light') {
+        document.body.classList.add('light-mode');
+        if (badge) {
+          badge.textContent = 'LIGHT';
+          badge.className = 'text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-600 font-mono font-bold';
+        }
+      } else {
+        document.body.classList.remove('light-mode');
+        if (badge) {
+          badge.textContent = 'DARK';
+          badge.className = 'text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-mono font-bold';
+        }
+      }
+      localStorage.setItem('gen_theme', theme);
+    }
+
+    function toggleTheme() {
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(newTheme);
+    }
+
+    // Apply stored theme on load
+    applyTheme(currentTheme);
+
     // --- APP STATE (Timestamp-Based Real Time Tracking) ---
     let state = {
       mode: 'stopwatch', // Default tab: Stopwatch
@@ -773,7 +869,7 @@
         stopBtn.disabled = false;
         stopBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       } else { // stopped
-        statusBadge.className = "px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-slate-700 bg-slate-800/80 flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 flex-shrink-0";
+        statusBadge.className = "px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border theme-border theme-bg-input flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider theme-text-muted flex-shrink-0";
         statusDot.className = "w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-500 inline-block";
         statusText.textContent = "GENERATOR OFF";
 
@@ -803,9 +899,6 @@
         
         targetTimeText.textContent = `${formattedHours}:${minutes} ${ampm}`;
         targetSubtext.textContent = state.status === 'running' ? 'Active Countdown' : 'Timer Set';
-      } else if (state.mode === 'stopwatch') {
-        targetTimeText.textContent = '--:-- --';
-        targetSubtext.textContent = 'Stopwatch Mode';
       } else {
         targetTimeText.textContent = '--:-- --';
         targetSubtext.textContent = 'Not Running';
@@ -970,18 +1063,27 @@
       const quickAddSec = document.getElementById('quickAddSection');
       const manualSec = document.getElementById('manualSetSection');
       const timerLabel = document.getElementById('timerLabel');
+      const subDisplay = document.getElementById('subDisplay');
+      const headerEstShutoff = document.getElementById('headerEstShutoff');
+      const headerEstShutoffDivider = document.getElementById('headerEstShutoffDivider');
 
       if (newMode === 'countdown') {
         countBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-amber-500 text-slate-950 shadow";
-        stopBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-white";
+        stopBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 theme-text-muted hover:theme-text-main";
         quickAddSec.style.display = 'block';
         manualSec.style.display = 'flex';
+        subDisplay.style.display = 'block';
+        if (headerEstShutoff) headerEstShutoff.classList.remove('hidden');
+        if (headerEstShutoffDivider) headerEstShutoffDivider.classList.remove('hidden');
         timerLabel.textContent = "REMAINING RUN TIME";
       } else {
         stopBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-amber-500 text-slate-950 shadow";
-        countBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-white";
+        countBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 theme-text-muted hover:theme-text-main";
         quickAddSec.style.display = 'none';
         manualSec.style.display = 'none';
+        subDisplay.style.display = 'none';
+        if (headerEstShutoff) headerEstShutoff.classList.add('hidden');
+        if (headerEstShutoffDivider) headerEstShutoffDivider.classList.add('hidden');
         timerLabel.textContent = "ELAPSED RUN TIME";
       }
 
@@ -1211,18 +1313,18 @@
     function renderHistory() {
       const tbody = document.getElementById('historyTableBody');
       if (state.history.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">No past sessions logged yet.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center theme-text-muted italic">No past sessions logged yet.</td></tr>`;
         return;
       }
 
       tbody.innerHTML = state.history.map(item => `
-        <tr class="hover:bg-slate-800/50 transition">
-          <td class="p-3 font-medium text-slate-200">${item.date}</td>
-          <td class="p-3"><span class="px-2 py-0.5 bg-slate-800 rounded border border-slate-700 text-[10px]">${item.mode}</span></td>
-          <td class="p-3 font-mono text-amber-400 font-semibold">${item.duration}</td>
-          <td class="p-3 text-slate-300">${item.fuelUsed}</td>
+        <tr class="hover:theme-bg-subcard transition">
+          <td class="p-3 font-medium theme-text-main">${item.date}</td>
+          <td class="p-3"><span class="px-2 py-0.5 theme-bg-input rounded border theme-border text-[10px] theme-text-sub">${item.mode}</span></td>
+          <td class="p-3 font-mono text-amber-500 font-semibold">${item.duration}</td>
+          <td class="p-3 theme-text-sub">${item.fuelUsed}</td>
           <td class="p-3 text-right">
-            <button onclick="deleteLog(${item.id})" class="text-slate-500 hover:text-rose-400 transition" title="Delete log">
+            <button onclick="deleteLog(${item.id})" class="theme-text-muted hover:text-rose-400 transition" title="Delete log">
               <i class="fa-solid fa-trash-can"></i>
             </button>
           </td>
