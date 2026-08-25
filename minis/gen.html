@@ -1,0 +1,1104 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generator Run Time & Clock</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Orbitron for Digital Look & Inter for UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <!-- jsPDF & jsPDF AutoTable for PDF Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            digital: ['Orbitron', 'monospace'],
+          },
+          colors: {
+            industrial: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              400: '#fbbf24',
+              500: '#f59e0b',
+              600: '#d97706',
+              800: '#92400e',
+              900: '#78350f',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glow-amber {
+      text-shadow: 0 0 15px rgba(245, 158, 11, 0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+    }
+    .glow-green {
+      text-shadow: 0 0 15px rgba(34, 197, 94, 0.6), 0 0 30px rgba(34, 197, 94, 0.2);
+    }
+    .bg-grid-pattern {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    /* Hide number input spinners */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
+      margin: 0; 
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen bg-grid-pattern antialiased flex flex-col justify-between">
+
+  <div>
+    <!-- Top Header & Live Clock Bar -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+        
+        <!-- App Title / Logo -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20 font-bold text-xl">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div>
+            <h1 class="font-bold text-lg leading-tight tracking-wide text-white">GenTime Pro</h1>
+            <p class="text-xs text-amber-500 font-medium">Generator Run Time & Monitoring</p>
+          </div>
+        </div>
+
+        <!-- Generator Status Pill -->
+        <div id="statusBadge" class="px-4 py-1.5 rounded-full border border-slate-700 bg-slate-800/80 flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-400 transition-all duration-300">
+          <span class="w-2.5 h-2.5 rounded-full bg-slate-500 inline-block" id="statusDot"></span>
+          <span id="statusText">GENERATOR OFF</span>
+        </div>
+
+        <!-- Clocks Area: Live System Clock + Estimated Shut-off Time -->
+        <div class="flex items-center space-x-4 bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800">
+          <!-- Live Clock -->
+          <div class="text-right">
+            <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Current Time</div>
+            <div id="liveClock" class="font-digital text-lg sm:text-xl font-bold tracking-wider text-slate-100">
+              00:00:00 AM
+            </div>
+            <div id="liveDate" class="text-[10px] text-slate-400">Loading date...</div>
+          </div>
+
+          <div class="h-8 w-px bg-slate-800"></div>
+
+          <!-- Estimated Shut-Off Time -->
+          <div class="text-right">
+            <div class="text-[10px] text-amber-500/90 uppercase tracking-wider font-semibold flex items-center justify-end gap-1">
+              <i class="fa-regular fa-clock"></i> Est. Shut-Off
+            </div>
+            <div id="targetTimeText" class="font-digital text-lg sm:text-xl font-bold tracking-wider text-amber-400">
+              --:-- --
+            </div>
+            <div id="targetSubtext" class="text-[10px] text-slate-400">Count Up Mode</div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+      <!-- LEFT / MAIN COLUMN: Timer & Controls (8 cols) -->
+      <section class="lg:col-span-8 space-y-6">
+        
+        <!-- Main Timer Card -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+          
+          <!-- Mode Switcher Tabs (Default: Stopwatch) -->
+          <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-4 flex-wrap gap-2">
+            <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
+              <button id="modeStopwatchBtn" onclick="switchMode('stopwatch')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-amber-500 text-slate-950 shadow">
+                <i class="fa-solid fa-stopwatch mr-2"></i>Stopwatch (Count Up)
+              </button>
+              <button id="modeCountdownBtn" onclick="switchMode('countdown')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-white">
+                <i class="fa-solid fa-hourglass-half mr-2"></i>Countdown Timer
+              </button>
+            </div>
+
+            <div class="flex items-center space-x-2">
+              <button onclick="downloadPDFReport()" class="px-3 py-1.5 bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 text-xs font-semibold rounded-lg border border-rose-500/30 flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-file-pdf"></i> PDF Report
+              </button>
+              <button onclick="toggleManualLogModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-plus-circle"></i> Self Add Run Log
+              </button>
+            </div>
+          </div>
+
+          <!-- Main Digital Display -->
+          <div class="py-6 sm:py-10 text-center bg-slate-950/80 rounded-2xl border border-slate-800/90 mb-6 shadow-inner relative">
+            <div class="text-xs font-semibold tracking-widest uppercase text-slate-500 mb-2" id="timerLabel">
+              ELAPSED RUN TIME
+            </div>
+            
+            <div id="digitalDisplay" class="font-digital text-5xl sm:text-7xl md:text-8xl font-black tracking-widest text-amber-400 glow-amber transition-colors duration-300">
+              00:00:00
+            </div>
+
+            <!-- Elapsed Sub-Counter -->
+            <div id="subDisplay" class="mt-3 text-xs sm:text-sm text-slate-400 font-mono">
+              Current Session Elapsed: <span id="elapsedText" class="text-slate-200 font-semibold">00:00:00</span>
+            </div>
+          </div>
+
+          <!-- Quick Time Add Buttons (Visible in Countdown mode only) -->
+          <div id="quickAddSection" class="mb-6 hidden">
+            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <i class="fa-solid fa-circle-plus text-amber-500 mr-1.5"></i>Quick Add Run Time
+            </label>
+            <div class="grid grid-cols-3 sm:grid-cols-5 gap-2">
+              <button onclick="addTime(15)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200">
+                +15 Min
+              </button>
+              <button onclick="addTime(30)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200">
+                +30 Min
+              </button>
+              <button onclick="addTime(60)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200">
+                +1 Hour
+              </button>
+              <button onclick="addTime(120)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200">
+                +2 Hours
+              </button>
+              <button onclick="addTime(300)" class="py-2.5 px-3 bg-slate-800 hover:bg-slate-700 active:bg-amber-600 active:text-slate-950 border border-slate-700/80 rounded-xl font-semibold text-sm transition text-slate-200 col-span-3 sm:col-span-1">
+                +5 Hours
+              </button>
+            </div>
+          </div>
+
+          <!-- Manual Time Input Row (Visible in Countdown mode only) -->
+          <div id="manualSetSection" class="mb-6 bg-slate-950/60 p-4 rounded-xl border border-slate-800 hidden flex-wrap items-center justify-between gap-3">
+            <span class="text-xs font-semibold text-slate-300">Set Custom Timer Duration:</span>
+            <div class="flex items-center space-x-2">
+              <div class="flex items-center bg-slate-900 border border-slate-700 rounded-lg px-2 py-1">
+                <input type="number" id="inputHours" min="0" max="99" value="2" class="w-12 bg-transparent text-center font-bold text-amber-400 focus:outline-none">
+                <span class="text-xs text-slate-500 mr-1">h</span>
+                <input type="number" id="inputMinutes" min="0" max="59" value="0" class="w-12 bg-transparent text-center font-bold text-amber-400 focus:outline-none">
+                <span class="text-xs text-slate-500">m</span>
+              </div>
+              <button onclick="setCustomTimer()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold rounded-lg transition">
+                Set Time
+              </button>
+            </div>
+          </div>
+
+          <!-- Main Timer Action Controls -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <button id="startBtn" onclick="startTimer()" class="py-3.5 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold rounded-xl shadow-lg shadow-emerald-900/30 flex items-center justify-center space-x-2 transition-all">
+              <i class="fa-solid fa-play"></i>
+              <span>START</span>
+            </button>
+            
+            <button id="pauseBtn" onclick="pauseTimer()" disabled class="py-3.5 px-4 bg-amber-600 hover:bg-amber-500 active:scale-95 text-white font-bold rounded-xl shadow-lg shadow-amber-900/30 flex items-center justify-center space-x-2 transition-all opacity-50 cursor-not-allowed">
+              <i class="fa-solid fa-pause"></i>
+              <span>PAUSE</span>
+            </button>
+
+            <button id="stopBtn" onclick="stopAndLogTimer()" disabled class="py-3.5 px-4 bg-rose-600 hover:bg-rose-500 active:scale-95 text-white font-bold rounded-xl shadow-lg shadow-rose-900/30 flex items-center justify-center space-x-2 transition-all opacity-50 cursor-not-allowed">
+              <i class="fa-solid fa-square"></i>
+              <span>STOP & LOG</span>
+            </button>
+
+            <button id="resetBtn" onclick="resetTimer()" class="py-3.5 px-4 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 font-bold rounded-xl border border-slate-700 flex items-center justify-center space-x-2 transition-all">
+              <i class="fa-solid fa-rotate-right"></i>
+              <span>RESET</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Session History Log Card -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+            <h3 class="font-bold text-base text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-amber-500"></i> Generator Session History
+            </h3>
+            <div class="flex items-center space-x-3">
+              <button onclick="downloadPDFReport()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold transition flex items-center gap-1">
+                <i class="fa-solid fa-file-pdf"></i> PDF Report
+              </button>
+              <button onclick="toggleManualLogModal()" class="text-xs text-amber-400 hover:text-amber-300 font-semibold transition flex items-center gap-1">
+                <i class="fa-solid fa-plus"></i> Manual Entry
+              </button>
+              <button onclick="clearHistory()" class="text-xs text-slate-500 hover:text-rose-400 transition">
+                Clear History
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-300">
+              <thead class="bg-slate-950 text-slate-400 uppercase font-semibold">
+                <tr>
+                  <th class="p-3 rounded-l-lg">Date / Time</th>
+                  <th class="p-3">Mode</th>
+                  <th class="p-3">Duration</th>
+                  <th class="p-3">Est. Fuel Used</th>
+                  <th class="p-3 rounded-r-lg text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody" class="divide-y divide-slate-800">
+                <!-- Dynamically populated -->
+                <tr>
+                  <td colspan="5" class="p-4 text-center text-slate-500 italic">No past sessions logged yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT COLUMN: Calculator, Meter & Maintenance (4 cols) -->
+      <section class="lg:col-span-4 space-y-6">
+
+        <!-- Precise Fuel & Runtime Calculator Card -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center space-x-2 mb-4 border-b border-slate-800 pb-3">
+            <div class="p-2 rounded-lg bg-amber-500/10 text-amber-500">
+              <i class="fa-solid fa-gas-pump text-lg"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-base text-slate-100">Fuel & Runtime Calculator</h3>
+              <p class="text-xs text-slate-400">Accurate estimation with number inputs</p>
+            </div>
+          </div>
+
+          <div class="space-y-4 text-xs">
+            <!-- Total Tank Capacity -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label for="inputTankCap" class="font-semibold text-slate-300">Total Tank Capacity</label>
+                <span class="text-[10px] text-slate-500 font-mono">Liters (L)</span>
+              </div>
+              <div class="relative">
+                <input type="number" id="inputTankCap" min="0.5" max="1000" value="20" step="0.5" oninput="calculateFuelRuntime()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-slate-100 focus:outline-none focus:border-amber-500 pr-10 transition">
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">L</span>
+              </div>
+              <!-- Presets -->
+              <div class="flex space-x-1.5 mt-2">
+                <button type="button" onclick="setTankPreset(10)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">10 L</button>
+                <button type="button" onclick="setTankPreset(20)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">20 L</button>
+                <button type="button" onclick="setTankPreset(30)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">30 L</button>
+                <button type="button" onclick="setTankPreset(50)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">50 L</button>
+              </div>
+            </div>
+
+            <!-- Current Fuel Level (Dual Number Inputs: % and Liters) -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="font-semibold text-slate-300">Current Fuel Level</label>
+                <span id="fuelVolDisplay" class="text-[10px] text-amber-400 font-semibold font-mono">20.0 L Remaining</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label for="inputFuelPct" class="text-[10px] text-slate-500 block mb-1">Percentage (%)</label>
+                  <div class="relative">
+                    <input type="number" id="inputFuelPct" min="0" max="100" value="100" step="1" oninput="onFuelPctInput()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-amber-400 focus:outline-none focus:border-amber-500 pr-8 transition">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">%</span>
+                  </div>
+                </div>
+                <div>
+                  <label for="inputFuelLiters" class="text-[10px] text-slate-500 block mb-1">Fuel Volume (L)</label>
+                  <div class="relative">
+                    <input type="number" id="inputFuelLiters" min="0" max="1000" value="20" step="0.5" oninput="onFuelLitersInput()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-amber-400 focus:outline-none focus:border-amber-500 pr-8 transition">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">L</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Presets -->
+              <div class="grid grid-cols-4 gap-1.5 mt-2">
+                <button type="button" onclick="setFuelPctPreset(25)" class="py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-semibold text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition text-center">25%</button>
+                <button type="button" onclick="setFuelPctPreset(50)" class="py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-semibold text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition text-center">50%</button>
+                <button type="button" onclick="setFuelPctPreset(75)" class="py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-semibold text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition text-center">75%</button>
+                <button type="button" onclick="setFuelPctPreset(100)" class="py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-semibold text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition text-center">100%</button>
+              </div>
+            </div>
+
+            <!-- Consumption Rate -->
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label for="inputBurnRate" class="font-semibold text-slate-300">Consumption Rate</label>
+                <span class="text-[10px] text-slate-500 font-mono">Liters / Hour</span>
+              </div>
+              <div class="relative">
+                <input type="number" id="inputBurnRate" min="0.1" max="100" value="2.0" step="0.1" oninput="calculateFuelRuntime()" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm font-bold text-slate-100 focus:outline-none focus:border-amber-500 pr-14 transition">
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">L / hr</span>
+              </div>
+              <!-- Presets -->
+              <div class="flex space-x-1.5 mt-2">
+                <button type="button" onclick="setBurnPreset(1.0)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">1.0 L/h (Eco)</button>
+                <button type="button" onclick="setBurnPreset(2.0)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">2.0 L/h (Half)</button>
+                <button type="button" onclick="setBurnPreset(3.5)" class="px-2 py-1 bg-slate-950 hover:bg-slate-800 text-[10px] font-medium text-slate-400 hover:text-amber-400 rounded border border-slate-800 transition">3.5 L/h (Full)</button>
+              </div>
+            </div>
+
+            <!-- Calculated Result Box -->
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center mt-4">
+              <span class="text-slate-400 uppercase text-[10px] font-bold tracking-wider block mb-1">Max Estimated Run Time</span>
+              <div id="calcRuntimeResult" class="font-digital text-2xl font-bold text-amber-400">
+                10h 00m
+              </div>
+              <p class="text-[11px] text-slate-500 mt-1">Based on exact fuel & consumption rate</p>
+            </div>
+
+            <button type="button" onclick="applyCalcToTimer()" class="w-full py-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl font-semibold transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-arrow-left"></i> Set Calculated Time to Timer
+            </button>
+          </div>
+        </div>
+
+        <!-- Cumulative Hour Meter & Oil Service Tracker Card -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
+          <div class="flex items-center space-x-2 mb-4 border-b border-slate-800 pb-3">
+            <div class="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+              <i class="fa-solid fa-gauge-high text-lg"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-base text-slate-100">Engine Hour Meter & Oil Maintenance</h3>
+              <p class="text-xs text-slate-400">Lifetime tracking & service alerts</p>
+            </div>
+          </div>
+
+          <!-- Analog/Digital Meter Look -->
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center mb-4">
+            <div class="text-xs text-slate-500 mb-1 font-semibold uppercase tracking-wider">Total Engine Lifetime Hours</div>
+            <div id="totalHoursDisplay" class="font-digital text-3xl font-black text-blue-400 tracking-wider">
+              0000.0 HRS
+            </div>
+          </div>
+
+          <!-- Oil Service Interval Settings & Days Estimate -->
+          <div class="bg-slate-950/60 p-4 rounded-xl border border-slate-800 space-y-3">
+            
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold text-slate-300">Service Interval Setup:</label>
+              <div class="flex items-center space-x-1">
+                <input type="number" id="oilIntervalInput" min="10" max="1000" value="100" onchange="updateOilIntervalSetting()" class="w-16 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs text-center font-bold text-blue-400 focus:outline-none">
+                <span class="text-xs text-slate-400">Hours</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <label class="text-xs font-semibold text-slate-300">Avg. Daily Run Time:</label>
+              <div class="flex items-center space-x-1">
+                <input type="number" id="dailyUsageInput" min="0.5" max="24" value="4" step="0.5" onchange="renderDisplay()" class="w-16 bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-xs text-center font-bold text-blue-400 focus:outline-none">
+                <span class="text-xs text-slate-400">Hrs/Day</span>
+              </div>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-3 space-y-2">
+              <div class="flex justify-between text-xs font-semibold">
+                <span class="text-slate-300">Oil Change Status</span>
+                <span id="oilServiceText" class="text-blue-400">100.0h remaining</span>
+              </div>
+
+              <!-- Days estimate badge -->
+              <div id="oilDaysEstText" class="text-xs text-amber-400 font-medium text-right">
+                ~ 25 Days until oil change
+              </div>
+
+              <div class="w-full bg-slate-950 h-2.5 rounded-full overflow-hidden border border-slate-800">
+                <div id="oilBar" class="bg-blue-500 h-full rounded-full transition-all duration-500" style="width: 100%;"></div>
+              </div>
+
+              <div class="flex justify-between items-center pt-1">
+                <button onclick="resetOilService()" class="text-[11px] text-slate-400 hover:text-slate-200 underline">
+                  Reset Oil Service Counter
+                </button>
+                <span id="oilPctBadge" class="text-[11px] font-bold text-slate-400">100%</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- SELF-ADD RUN MANUAL MODAL -->
+  <div id="manualLogModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
+        <h3 class="font-bold text-base text-white flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-amber-500"></i> Self Add Generator Run
+        </h3>
+        <button onclick="toggleManualLogModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Date & Time of Run</label>
+          <input type="datetime-local" id="manualDateInput" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-amber-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Hours Ran</label>
+            <input type="number" id="manualHoursInput" min="0" value="1" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-amber-400 font-bold focus:outline-none focus:border-amber-500">
+          </div>
+          <div>
+            <label class="block text-slate-300 font-semibold mb-1">Minutes Ran</label>
+            <input type="number" id="manualMinutesInput" min="0" max="59" value="30" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-amber-400 font-bold focus:outline-none focus:border-amber-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-semibold mb-1">Run Mode / Note</label>
+          <select id="manualModeInput" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none">
+            <option value="STOPWATCH">Stopwatch Run</option>
+            <option value="MANUAL ENTRY">Manual Entry</option>
+            <option value="COUNTDOWN">Countdown Run</option>
+            <option value="MAINTENANCE TEST">Maintenance Test</option>
+          </select>
+        </div>
+
+        <div class="pt-2 flex justify-end space-x-2">
+          <button onclick="toggleManualLogModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-lg transition">
+            Cancel
+          </button>
+          <button onclick="saveManualRun()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg transition">
+            Save Run Log
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800 py-4 text-center text-xs text-slate-500 mt-8">
+    GenTime Pro &bull; Generator Run Time Tracker & Maintenance Monitor
+  </footer>
+
+  <!-- Web Audio Sound Synthesizer & Main Script -->
+  <script>
+    // --- APP STATE (Default: Stopwatch mode) ---
+    let state = {
+      mode: 'stopwatch', // Default tab is now Stopwatch
+      status: 'stopped', // 'running', 'paused', 'stopped'
+      remainingSeconds: 7200, 
+      elapsedSeconds: 0,
+      totalEngineSeconds: parseFloat(localStorage.getItem('gen_total_seconds')) || 0,
+      oilIntervalSeconds: parseFloat(localStorage.getItem('gen_oil_seconds')) || 0,
+      maxOilServiceHours: parseFloat(localStorage.getItem('gen_max_oil_hours')) || 100,
+      history: JSON.parse(localStorage.getItem('gen_history')) || [],
+      timerInterval: null
+    };
+
+    // Audio context for alarm sound (synthesized beep)
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function triggerAlarmSound() {
+      try {
+        initAudio();
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+          }, i * 500);
+        }
+      } catch (e) {
+        console.error("Audio error:", e);
+      }
+    }
+
+    // --- CLOCK & INITIALIZATION ---
+    function updateLiveClock() {
+      const now = new Date();
+      
+      const hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const formattedHours = String(hours % 12 || 12).padStart(2, '0');
+      
+      document.getElementById('liveClock').textContent = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+
+      const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
+      document.getElementById('liveDate').textContent = now.toLocaleDateString('en-US', options);
+
+      updateTargetTimeDisplay();
+    }
+
+    setInterval(updateLiveClock, 1000);
+    updateLiveClock();
+
+    // Set initial date for manual run picker
+    document.getElementById('manualDateInput').value = new Date().toISOString().slice(0,16);
+    document.getElementById('oilIntervalInput').value = state.maxOilServiceHours;
+
+    // --- UI UPDATERS ---
+    function formatTimeHMS(totalSec) {
+      const h = Math.floor(totalSec / 3600);
+      const m = Math.floor((totalSec % 3600) / 60);
+      const s = Math.floor(totalSec % 60);
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function renderDisplay() {
+      const digitalDisplay = document.getElementById('digitalDisplay');
+      const elapsedText = document.getElementById('elapsedText');
+
+      if (state.mode === 'countdown') {
+        digitalDisplay.textContent = formatTimeHMS(state.remainingSeconds);
+        elapsedText.textContent = formatTimeHMS(state.elapsedSeconds);
+      } else {
+        digitalDisplay.textContent = formatTimeHMS(state.elapsedSeconds);
+        elapsedText.textContent = formatTimeHMS(state.elapsedSeconds);
+      }
+
+      // Update Total Cumulative Hours
+      const totalHours = (state.totalEngineSeconds / 3600).toFixed(1);
+      document.getElementById('totalHoursDisplay').textContent = `${String(totalHours).padStart(6, '0')} HRS`;
+
+      // Update Oil Service Progress
+      const serviceMaxSecs = state.maxOilServiceHours * 3600;
+      const oilUsedSecs = state.oilIntervalSeconds % serviceMaxSecs;
+      const oilRemainingHours = Math.max(0, (state.maxOilServiceHours - (oilUsedSecs / 3600))).toFixed(1);
+      const oilPct = Math.max(0, Math.min(100, 100 - (oilUsedSecs / serviceMaxSecs * 100)));
+
+      document.getElementById('oilServiceText').textContent = `${oilRemainingHours}h remaining`;
+      document.getElementById('oilPctBadge').textContent = `${Math.round(oilPct)}%`;
+      
+      // Days estimate
+      const dailyUsageHours = parseFloat(document.getElementById('dailyUsageInput').value) || 4;
+      if (dailyUsageHours > 0) {
+        const daysLeft = (parseFloat(oilRemainingHours) / dailyUsageHours).toFixed(1);
+        document.getElementById('oilDaysEstText').textContent = `~ ${daysLeft} Days until oil change (${dailyUsageHours}h/day)`;
+      } else {
+        document.getElementById('oilDaysEstText').textContent = `-- Days until oil change`;
+      }
+
+      const oilBar = document.getElementById('oilBar');
+      oilBar.style.width = `${oilPct}%`;
+      if (oilPct < 15) {
+        oilBar.className = "bg-rose-500 h-full rounded-full transition-all duration-500";
+      } else if (oilPct < 40) {
+        oilBar.className = "bg-amber-500 h-full rounded-full transition-all duration-500";
+      } else {
+        oilBar.className = "bg-blue-500 h-full rounded-full transition-all duration-500";
+      }
+    }
+
+    function updateStatusUI() {
+      const statusBadge = document.getElementById('statusBadge');
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('statusText');
+      const startBtn = document.getElementById('startBtn');
+      const pauseBtn = document.getElementById('pauseBtn');
+      const stopBtn = document.getElementById('stopBtn');
+      const digitalDisplay = document.getElementById('digitalDisplay');
+
+      if (state.status === 'running') {
+        statusBadge.className = "px-4 py-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 shadow-lg shadow-emerald-500/10 animate-pulse";
+        statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block";
+        statusText.textContent = "GENERATOR RUNNING";
+
+        digitalDisplay.className = "font-digital text-5xl sm:text-7xl md:text-8xl font-black tracking-widest text-emerald-400 glow-green transition-colors duration-300";
+
+        startBtn.disabled = true;
+        startBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        pauseBtn.disabled = false;
+        pauseBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+        stopBtn.disabled = false;
+        stopBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      } else if (state.status === 'paused') {
+        statusBadge.className = "px-4 py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-amber-400";
+        statusDot.className = "w-2.5 h-2.5 rounded-full bg-amber-400 inline-block";
+        statusText.textContent = "GENERATOR PAUSED";
+
+        digitalDisplay.className = "font-digital text-5xl sm:text-7xl md:text-8xl font-black tracking-widest text-amber-400 opacity-80 transition-colors duration-300";
+
+        startBtn.disabled = false;
+        startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+        pauseBtn.disabled = true;
+        pauseBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        stopBtn.disabled = false;
+        stopBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      } else { // stopped
+        statusBadge.className = "px-4 py-1.5 rounded-full border border-slate-700 bg-slate-800/80 flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-400";
+        statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500 inline-block";
+        statusText.textContent = "GENERATOR OFF";
+
+        digitalDisplay.className = "font-digital text-5xl sm:text-7xl md:text-8xl font-black tracking-widest text-amber-400 glow-amber transition-colors duration-300";
+
+        startBtn.disabled = false;
+        startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+        pauseBtn.disabled = true;
+        pauseBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        stopBtn.disabled = true;
+        stopBtn.classList.add('opacity-50', 'cursor-not-allowed');
+      }
+    }
+
+    function updateTargetTimeDisplay() {
+      const targetTimeText = document.getElementById('targetTimeText');
+      const targetSubtext = document.getElementById('targetSubtext');
+
+      if (state.mode === 'countdown' && state.remainingSeconds > 0) {
+        const targetDate = new Date(Date.now() + state.remainingSeconds * 1000);
+        const hours = targetDate.getHours();
+        const minutes = String(targetDate.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = String(hours % 12 || 12).padStart(2, '0');
+        
+        targetTimeText.textContent = `${formattedHours}:${minutes} ${ampm}`;
+        targetSubtext.textContent = state.status === 'running' ? 'Active Countdown' : 'Timer Set';
+      } else if (state.mode === 'stopwatch') {
+        targetTimeText.textContent = '--:-- --';
+        targetSubtext.textContent = 'Count Up Mode';
+      } else {
+        targetTimeText.textContent = '--:-- --';
+        targetSubtext.textContent = 'Not Running';
+      }
+    }
+
+    // --- TIMER CONTROL ENGINE ---
+    function startTimer() {
+      initAudio();
+      if (state.status === 'running') return;
+
+      state.status = 'running';
+      updateStatusUI();
+
+      state.timerInterval = setInterval(() => {
+        state.elapsedSeconds++;
+        state.totalEngineSeconds++;
+        state.oilIntervalSeconds++;
+
+        if (state.mode === 'countdown') {
+          if (state.remainingSeconds > 0) {
+            state.remainingSeconds--;
+          } else {
+            handleTimerComplete();
+            return;
+          }
+        }
+
+        localStorage.setItem('gen_total_seconds', state.totalEngineSeconds);
+        localStorage.setItem('gen_oil_seconds', state.oilIntervalSeconds);
+
+        renderDisplay();
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      if (state.status !== 'running') return;
+      clearInterval(state.timerInterval);
+      state.status = 'paused';
+      updateStatusUI();
+      renderDisplay();
+    }
+
+    function stopAndLogTimer() {
+      if (state.elapsedSeconds <= 0 && state.status === 'stopped') return;
+
+      clearInterval(state.timerInterval);
+      
+      const burnRate = parseFloat(document.getElementById('inputBurnRate').value) || 2.0;
+      const fuelUsed = ((state.elapsedSeconds / 3600) * burnRate).toFixed(1);
+
+      if (state.elapsedSeconds >= 5) {
+        const sessionLog = {
+          id: Date.now(),
+          date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+          mode: state.mode.toUpperCase(),
+          duration: formatTimeHMS(state.elapsedSeconds),
+          fuelUsed: `${fuelUsed} L`
+        };
+        state.history.unshift(sessionLog);
+        localStorage.setItem('gen_history', JSON.stringify(state.history));
+        renderHistory();
+      }
+
+      state.status = 'stopped';
+      state.elapsedSeconds = 0;
+      updateStatusUI();
+      renderDisplay();
+    }
+
+    function resetTimer() {
+      if (state.status === 'running') {
+        if (!confirm("Generator is running. Are you sure you want to reset?")) return;
+      }
+      clearInterval(state.timerInterval);
+      state.status = 'stopped';
+      state.elapsedSeconds = 0;
+      state.remainingSeconds = 7200;
+      updateStatusUI();
+      renderDisplay();
+    }
+
+    function handleTimerComplete() {
+      clearInterval(state.timerInterval);
+      triggerAlarmSound();
+      alert("⚠️ GENERATOR TIMER EXPIRED! Please check generator fuel or power off.");
+      stopAndLogTimer();
+    }
+
+    // --- QUICK ADD & MANUAL INPUT ---
+    function addTime(minutes) {
+      initAudio();
+      state.remainingSeconds += minutes * 60;
+      renderDisplay();
+      updateTargetTimeDisplay();
+    }
+
+    function setCustomTimer() {
+      const h = parseInt(document.getElementById('inputHours').value) || 0;
+      const m = parseInt(document.getElementById('inputMinutes').value) || 0;
+      state.remainingSeconds = (h * 3600) + (m * 60);
+      if (state.mode !== 'countdown') {
+        switchMode('countdown');
+      } else {
+        renderDisplay();
+        updateTargetTimeDisplay();
+      }
+    }
+
+    function switchMode(newMode) {
+      if (state.status === 'running' && state.mode !== newMode) {
+        if (!confirm("Generator is running. Switching mode will stop current timer. Continue?")) return;
+        clearInterval(state.timerInterval);
+        state.status = 'stopped';
+        updateStatusUI();
+      }
+
+      state.mode = newMode;
+      const countBtn = document.getElementById('modeCountdownBtn');
+      const stopBtn = document.getElementById('modeStopwatchBtn');
+      const quickAddSec = document.getElementById('quickAddSection');
+      const manualSec = document.getElementById('manualSetSection');
+      const timerLabel = document.getElementById('timerLabel');
+
+      if (newMode === 'countdown') {
+        countBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-amber-500 text-slate-950 shadow";
+        stopBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-white";
+        quickAddSec.style.display = 'block';
+        manualSec.style.display = 'flex';
+        timerLabel.textContent = "REMAINING RUN TIME";
+      } else {
+        stopBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-amber-500 text-slate-950 shadow";
+        countBtn.className = "px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-white";
+        quickAddSec.style.display = 'none';
+        manualSec.style.display = 'none';
+        timerLabel.textContent = "ELAPSED RUN TIME";
+      }
+
+      renderDisplay();
+      updateTargetTimeDisplay();
+    }
+
+    // --- SELF ADD / MANUAL RUN ENTRY ---
+    function toggleManualLogModal() {
+      const modal = document.getElementById('manualLogModal');
+      modal.classList.toggle('hidden');
+      modal.classList.toggle('flex');
+    }
+
+    function saveManualRun() {
+      const dateVal = document.getElementById('manualDateInput').value;
+      const hours = parseInt(document.getElementById('manualHoursInput').value) || 0;
+      const minutes = parseInt(document.getElementById('manualMinutesInput').value) || 0;
+      const mode = document.getElementById('manualModeInput').value;
+
+      const totalSec = (hours * 3600) + (minutes * 60);
+      if (totalSec <= 0) {
+        alert("Please enter a valid duration greater than 0 minutes.");
+        return;
+      }
+
+      const formattedDate = dateVal ? new Date(dateVal).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleString();
+      const burnRate = parseFloat(document.getElementById('inputBurnRate').value) || 2.0;
+      const fuelUsed = ((totalSec / 3600) * burnRate).toFixed(1);
+
+      const sessionLog = {
+        id: Date.now(),
+        date: formattedDate,
+        mode: mode,
+        duration: formatTimeHMS(totalSec),
+        fuelUsed: `${fuelUsed} L`
+      };
+
+      state.totalEngineSeconds += totalSec;
+      state.oilIntervalSeconds += totalSec;
+      localStorage.setItem('gen_total_seconds', state.totalEngineSeconds);
+      localStorage.setItem('gen_oil_seconds', state.oilIntervalSeconds);
+
+      state.history.unshift(sessionLog);
+      localStorage.setItem('gen_history', JSON.stringify(state.history));
+
+      renderHistory();
+      renderDisplay();
+      toggleManualLogModal();
+    }
+
+    // --- PDF REPORT GENERATOR ---
+    function downloadPDFReport() {
+      if (!window.jspdf) {
+        alert("PDF generator library loading, please try again in a moment.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Top Header Banner
+      doc.setFillColor(15, 23, 42); // Slate 900
+      doc.rect(0, 0, 210, 40, 'F');
+
+      doc.setTextColor(245, 158, 11); // Amber
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      doc.text("GENTIME PRO - GENERATOR RUN REPORT", 14, 18);
+
+      doc.setTextColor(203, 213, 225); // Slate 300
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Report Date: ${new Date().toLocaleString()}`, 14, 28);
+      doc.text(`Engine Lifetime: ${(state.totalEngineSeconds / 3600).toFixed(1)} HRS`, 140, 28);
+
+      // Section: Executive Summary Box
+      doc.setFillColor(248, 250, 252);
+      doc.roundedRect(14, 46, 182, 32, 2, 2, 'F');
+      
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(11);
+      doc.setFont("helvetica", "bold");
+      doc.text("System & Maintenance Summary", 18, 54);
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(51, 65, 85);
+      
+      const stopwatchCount = state.history.filter(i => i.mode.includes('STOPWATCH') || i.mode.includes('MANUAL')).length;
+      doc.text(`• Total Logged Sessions: ${state.history.length}`, 18, 62);
+      doc.text(`• Stopwatch / Manual Runs: ${stopwatchCount}`, 18, 70);
+
+      const oilRemainingHours = Math.max(0, (state.maxOilServiceHours - ((state.oilIntervalSeconds % (state.maxOilServiceHours * 3600)) / 3600))).toFixed(1);
+      doc.text(`• Oil Service Interval: ${state.maxOilServiceHours} HRS`, 110, 62);
+      doc.text(`• Remaining to Oil Change: ${oilRemainingHours} HRS`, 110, 70);
+
+      // Table Header Title
+      doc.setTextColor(15, 23, 42);
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text("Generator Session History", 14, 86);
+
+      // Table Data
+      const tableRows = state.history.map(item => [
+        item.date,
+        item.mode,
+        item.duration,
+        item.fuelUsed
+      ]);
+
+      doc.autoTable({
+        startY: 90,
+        head: [['Date / Time', 'Run Mode', 'Duration (HH:MM:SS)', 'Est. Fuel Used']],
+        body: tableRows.length > 0 ? tableRows : [['No sessions recorded yet', '-', '-', '-']],
+        theme: 'grid',
+        headStyles: {
+          fillColor: [30, 41, 59],
+          textColor: [245, 158, 11],
+          fontStyle: 'bold',
+          fontSize: 9
+        },
+        styles: {
+          fontSize: 8.5,
+          cellPadding: 3.5
+        },
+        alternateRowStyles: {
+          fillColor: [241, 245, 249]
+        }
+      });
+
+      // Footer
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(148, 163, 184);
+        doc.text(`GenTime Pro Generator Monitoring System • Page ${i} of ${pageCount}`, 14, 287);
+      }
+
+      const filename = `Generator_Run_Report_${new Date().toISOString().slice(0,10)}.pdf`;
+      doc.save(filename);
+    }
+
+    // --- OIL SERVICE INTERVAL CUSTOMIZER ---
+    function updateOilIntervalSetting() {
+      const val = parseFloat(document.getElementById('oilIntervalInput').value) || 100;
+      state.maxOilServiceHours = val;
+      localStorage.setItem('gen_max_oil_hours', val);
+      renderDisplay();
+    }
+
+    // --- NUMERIC CALCULATOR LOGIC ---
+    function onFuelPctInput() {
+      const cap = parseFloat(document.getElementById('inputTankCap').value) || 0;
+      const pct = parseFloat(document.getElementById('inputFuelPct').value) || 0;
+      const liters = (cap * (pct / 100)).toFixed(1);
+      document.getElementById('inputFuelLiters').value = liters;
+      calculateFuelRuntime();
+    }
+
+    function onFuelLitersInput() {
+      const cap = parseFloat(document.getElementById('inputTankCap').value) || 0;
+      const liters = parseFloat(document.getElementById('inputFuelLiters').value) || 0;
+      if (cap > 0) {
+        const pct = Math.min(100, Math.round((liters / cap) * 100));
+        document.getElementById('inputFuelPct').value = pct;
+      }
+      calculateFuelRuntime();
+    }
+
+    function setTankPreset(val) {
+      document.getElementById('inputTankCap').value = val;
+      onFuelPctInput();
+    }
+
+    function setFuelPctPreset(pct) {
+      document.getElementById('inputFuelPct').value = pct;
+      onFuelPctInput();
+    }
+
+    function setBurnPreset(rate) {
+      document.getElementById('inputBurnRate').value = rate;
+      calculateFuelRuntime();
+    }
+
+    function calculateFuelRuntime() {
+      const cap = parseFloat(document.getElementById('inputTankCap').value) || 0;
+      const burnRate = parseFloat(document.getElementById('inputBurnRate').value) || 0;
+      const actualFuel = parseFloat(document.getElementById('inputFuelLiters').value) || 0;
+
+      const fuelDisplay = document.getElementById('fuelVolDisplay');
+      if (fuelDisplay) {
+        fuelDisplay.textContent = `${actualFuel.toFixed(1)} L Remaining`;
+      }
+
+      const resultBox = document.getElementById('calcRuntimeResult');
+      if (burnRate > 0 && actualFuel > 0) {
+        const totalHours = actualFuel / burnRate;
+        const h = Math.floor(totalHours);
+        const m = Math.round((totalHours - h) * 60);
+        resultBox.textContent = `${h}h ${m}m`;
+      } else {
+        resultBox.textContent = `0h 00m`;
+      }
+    }
+
+    function applyCalcToTimer() {
+      const burnRate = parseFloat(document.getElementById('inputBurnRate').value) || 0;
+      const actualFuel = parseFloat(document.getElementById('inputFuelLiters').value) || 0;
+      
+      if (burnRate > 0 && actualFuel > 0) {
+        const totalSeconds = Math.floor((actualFuel / burnRate) * 3600);
+        state.remainingSeconds = totalSeconds;
+        switchMode('countdown');
+      }
+    }
+
+    // --- SERVICE / HISTORY LOGS ---
+    function resetOilService() {
+      if (confirm(`Reset oil service counter back to ${state.maxOilServiceHours} hours?`)) {
+        state.oilIntervalSeconds = 0;
+        localStorage.setItem('gen_oil_seconds', 0);
+        renderDisplay();
+      }
+    }
+
+    function renderHistory() {
+      const tbody = document.getElementById('historyTableBody');
+      if (state.history.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">No past sessions logged yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = state.history.map(item => `
+        <tr class="hover:bg-slate-800/50 transition">
+          <td class="p-3 font-medium text-slate-200">${item.date}</td>
+          <td class="p-3"><span class="px-2 py-0.5 bg-slate-800 rounded border border-slate-700 text-[10px]">${item.mode}</span></td>
+          <td class="p-3 font-mono text-amber-400 font-semibold">${item.duration}</td>
+          <td class="p-3 text-slate-300">${item.fuelUsed}</td>
+          <td class="p-3 text-right">
+            <button onclick="deleteLog(${item.id})" class="text-slate-500 hover:text-rose-400 transition" title="Delete log">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function deleteLog(id) {
+      state.history = state.history.filter(item => item.id !== id);
+      localStorage.setItem('gen_history', JSON.stringify(state.history));
+      renderHistory();
+    }
+
+    function clearHistory() {
+      if (confirm("Clear all session history?")) {
+        state.history = [];
+        localStorage.removeItem('gen_history');
+        renderHistory();
+      }
+    }
+
+    // --- INITIAL RENDER ---
+    // Enforce Stopwatch default tab on launch
+    switchMode('stopwatch');
+    calculateFuelRuntime();
+    renderDisplay();
+    updateStatusUI();
+    renderHistory();
+  </script>
+</body>
+</html>
+```
