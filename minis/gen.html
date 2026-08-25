@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Generator Run Time & Clock</title>
+  
+  <!-- Favicon setup for /minis/gen.html pointing to /master/logo_favicon.jpg -->
+  <link rel="icon" type="image/jpeg" href="../master/logo_favicon.jpg">
+  <link rel="shortcut icon" type="image/jpeg" href="/master/logo_favicon.jpg">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- FontAwesome Icons -->
@@ -64,50 +69,57 @@
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen bg-grid-pattern antialiased flex flex-col justify-between">
 
   <div>
-    <!-- Top Header & Live Clock Bar -->
+    <!-- Top Header & Live Clock Bar (Single Row for Mobile & Desktop) -->
     <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row justify-between items-center gap-3">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 flex flex-row justify-between items-center gap-2">
         
-        <!-- App Title / Logo -->
-        <div class="flex items-center space-x-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-lg shadow-amber-500/20 font-bold text-xl">
-            <i class="fa-solid fa-bolt"></i>
+        <!-- Left: Logo & Title -->
+        <div class="flex items-center space-x-2.5 min-w-0">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/20 font-bold text-lg overflow-hidden flex-shrink-0">
+            <img src="../master/logo_favicon.jpg" alt="Logo" class="w-full h-full object-cover" onerror="this.remove(); document.getElementById('fallbackIcon').classList.remove('hidden');">
+            <i id="fallbackIcon" class="fa-solid fa-bolt hidden"></i>
           </div>
-          <div>
-            <h1 class="font-bold text-lg leading-tight tracking-wide text-white">GenTime Pro</h1>
-            <p class="text-xs text-amber-500 font-medium">Generator Run Time & Monitoring</p>
+          <div class="truncate">
+            <h1 class="font-bold text-base sm:text-lg leading-tight tracking-wide text-white truncate">GenTime Pro</h1>
+            <p class="text-[10px] text-amber-500 font-medium hidden sm:block">Generator Monitoring System</p>
           </div>
         </div>
 
-        <!-- Generator Status Pill -->
-        <div id="statusBadge" class="px-4 py-1.5 rounded-full border border-slate-700 bg-slate-800/80 flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-400 transition-all duration-300">
-          <span class="w-2.5 h-2.5 rounded-full bg-slate-500 inline-block" id="statusDot"></span>
-          <span id="statusText">GENERATOR OFF</span>
-        </div>
-
-        <!-- Clocks Area: Live System Clock + Estimated Shut-off Time -->
-        <div class="flex items-center space-x-4 bg-slate-950/80 px-4 py-2 rounded-xl border border-slate-800">
-          <!-- Live Clock -->
-          <div class="text-right">
-            <div class="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Current Time</div>
-            <div id="liveClock" class="font-digital text-lg sm:text-xl font-bold tracking-wider text-slate-100">
-              00:00:00 AM
+        <!-- Right: Clocks Readout & Status Badge Pill -->
+        <div class="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+          
+          <!-- Clocks Area (Responsive Display) -->
+          <div class="hidden sm:flex items-center space-x-3 bg-slate-950/80 px-3 py-1.5 rounded-xl border border-slate-800 text-right">
+            <div>
+              <div class="text-[9px] text-slate-500 uppercase tracking-wider font-semibold">Current Time</div>
+              <div id="liveClock" class="font-digital text-xs sm:text-sm font-bold tracking-wider text-slate-100">
+                00:00:00 AM
+              </div>
+              <div id="liveDate" class="text-[9px] text-slate-400">Loading date...</div>
             </div>
-            <div id="liveDate" class="text-[10px] text-slate-400">Loading date...</div>
+
+            <div class="h-6 w-px bg-slate-800"></div>
+
+            <div>
+              <div class="text-[9px] text-amber-500/90 uppercase tracking-wider font-semibold">Est. Shut-Off</div>
+              <div id="targetTimeText" class="font-digital text-xs sm:text-sm font-bold tracking-wider text-amber-400">
+                --:-- --
+              </div>
+              <div id="targetSubtext" class="text-[9px] text-slate-400">Stopwatch Mode</div>
+            </div>
           </div>
 
-          <div class="h-8 w-px bg-slate-800"></div>
-
-          <!-- Estimated Shut-Off Time -->
-          <div class="text-right">
-            <div class="text-[10px] text-amber-500/90 uppercase tracking-wider font-semibold flex items-center justify-end gap-1">
-              <i class="fa-regular fa-clock"></i> Est. Shut-Off
-            </div>
-            <div id="targetTimeText" class="font-digital text-lg sm:text-xl font-bold tracking-wider text-amber-400">
-              --:-- --
-            </div>
-            <div id="targetSubtext" class="text-[10px] text-slate-400">Count Up Mode</div>
+          <!-- Mobile Live Clock display -->
+          <div class="sm:hidden text-right">
+            <div id="liveClockMobile" class="font-digital text-xs font-bold text-slate-200">00:00 AM</div>
           </div>
+
+          <!-- Status Badge -->
+          <div id="statusBadge" class="px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-slate-700 bg-slate-800/80 flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 transition-all duration-300 flex-shrink-0">
+            <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-500 inline-block" id="statusDot"></span>
+            <span id="statusText">GENERATOR OFF</span>
+          </div>
+
         </div>
 
       </div>
@@ -126,19 +138,10 @@
           <div class="flex items-center justify-between mb-6 border-b border-slate-800 pb-4 flex-wrap gap-2">
             <div class="flex bg-slate-950 p-1 rounded-xl border border-slate-800">
               <button id="modeStopwatchBtn" onclick="switchMode('stopwatch')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-amber-500 text-slate-950 shadow">
-                <i class="fa-solid fa-stopwatch mr-2"></i>Stopwatch (Count Up)
+                <i class="fa-solid fa-stopwatch mr-2"></i>Stopwatch
               </button>
               <button id="modeCountdownBtn" onclick="switchMode('countdown')" class="px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 text-slate-400 hover:text-white">
                 <i class="fa-solid fa-hourglass-half mr-2"></i>Countdown Timer
-              </button>
-            </div>
-
-            <div class="flex items-center space-x-2">
-              <button onclick="downloadPDFReport()" class="px-3 py-1.5 bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 text-xs font-semibold rounded-lg border border-rose-500/30 flex items-center gap-1.5 transition">
-                <i class="fa-solid fa-file-pdf"></i> PDF Report
-              </button>
-              <button onclick="toggleManualLogModal()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-amber-400 text-xs font-semibold rounded-lg border border-slate-700 flex items-center gap-1.5 transition">
-                <i class="fa-solid fa-plus-circle"></i> Self Add Run Log
               </button>
             </div>
           </div>
@@ -493,14 +496,28 @@
 
   <!-- Web Audio Sound Synthesizer & Main Script -->
   <script>
-    // --- APP STATE (Default: Stopwatch mode) ---
+    // --- APP STATE (Timestamp-Based Real Time Tracking) ---
     let state = {
-      mode: 'stopwatch', // Default tab is now Stopwatch
+      mode: 'stopwatch', // Default tab: Stopwatch
       status: 'stopped', // 'running', 'paused', 'stopped'
-      remainingSeconds: 7200, 
+      
+      // Timestamps & Duration tracking
+      startTimeTimestamp: null,       // Date.now() when started/resumed
+      accumulatedElapsedMs: 0,         // Accumulated elapsed ms prior to current run segment
+      countdownTargetTimestamp: null, // Date.now() when countdown will expire
+      countdownDurationMs: 7200000,   // Default 2 hrs in ms
+
+      // Calculated Display values (Seconds)
       elapsedSeconds: 0,
-      totalEngineSeconds: parseFloat(localStorage.getItem('gen_total_seconds')) || 0,
-      oilIntervalSeconds: parseFloat(localStorage.getItem('gen_oil_seconds')) || 0,
+      remainingSeconds: 7200,
+
+      // Cumulative Lifetime Engine Meters
+      baseEngineSeconds: parseFloat(localStorage.getItem('gen_base_engine_seconds')) || parseFloat(localStorage.getItem('gen_total_seconds')) || 0,
+      baseOilSeconds: parseFloat(localStorage.getItem('gen_base_oil_seconds')) || parseFloat(localStorage.getItem('gen_oil_seconds')) || 0,
+      
+      totalEngineSeconds: 0,
+      oilIntervalSeconds: 0,
+
       maxOilServiceHours: parseFloat(localStorage.getItem('gen_max_oil_hours')) || 100,
       history: JSON.parse(localStorage.getItem('gen_history')) || [],
       timerInterval: null
@@ -551,10 +568,18 @@
       const ampm = hours >= 12 ? 'PM' : 'AM';
       const formattedHours = String(hours % 12 || 12).padStart(2, '0');
       
-      document.getElementById('liveClock').textContent = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+      const timeStr = `${formattedHours}:${minutes}:${seconds} ${ampm}`;
+      const timeMobileStr = `${formattedHours}:${minutes} ${ampm}`;
+
+      const liveClockEl = document.getElementById('liveClock');
+      if (liveClockEl) liveClockEl.textContent = timeStr;
+
+      const liveClockMobileEl = document.getElementById('liveClockMobile');
+      if (liveClockMobileEl) liveClockMobileEl.textContent = timeMobileStr;
 
       const options = { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' };
-      document.getElementById('liveDate').textContent = now.toLocaleDateString('en-US', options);
+      const liveDateEl = document.getElementById('liveDate');
+      if (liveDateEl) liveDateEl.textContent = now.toLocaleDateString('en-US', options);
 
       updateTargetTimeDisplay();
     }
@@ -565,6 +590,95 @@
     // Set initial date for manual run picker
     document.getElementById('manualDateInput').value = new Date().toISOString().slice(0,16);
     document.getElementById('oilIntervalInput').value = state.maxOilServiceHours;
+
+    // --- TIMESTAMP CALCULATION CORE ENGINE ---
+    function updateTimerCalculations() {
+      const now = Date.now();
+
+      if (state.status === 'running') {
+        const currentSegmentMs = now - state.startTimeTimestamp;
+        const totalSessionMs = state.accumulatedElapsedMs + currentSegmentMs;
+        state.elapsedSeconds = Math.floor(totalSessionMs / 1000);
+
+        if (state.mode === 'countdown') {
+          const remainingMs = Math.max(0, state.countdownTargetTimestamp - now);
+          state.remainingSeconds = Math.ceil(remainingMs / 1000);
+
+          if (remainingMs <= 0) {
+            state.remainingSeconds = 0;
+            renderDisplay();
+            handleTimerComplete();
+            return;
+          }
+        }
+      } else if (state.status === 'paused') {
+        state.elapsedSeconds = Math.floor(state.accumulatedElapsedMs / 1000);
+        if (state.mode === 'countdown') {
+          const remMs = Math.max(0, state.countdownDurationMs - state.accumulatedElapsedMs);
+          state.remainingSeconds = Math.ceil(remMs / 1000);
+        }
+      } else { // stopped
+        state.elapsedSeconds = 0;
+        if (state.mode === 'countdown') {
+          state.remainingSeconds = Math.ceil(state.countdownDurationMs / 1000);
+        } else {
+          state.remainingSeconds = 0;
+        }
+      }
+
+      state.totalEngineSeconds = state.baseEngineSeconds + state.elapsedSeconds;
+      state.oilIntervalSeconds = state.baseOilSeconds + state.elapsedSeconds;
+
+      saveActiveRunState();
+    }
+
+    // Handle Tab Focus & Visibility changes
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        updateTimerCalculations();
+        renderDisplay();
+        updateTargetTimeDisplay();
+      }
+    });
+
+    window.addEventListener('focus', () => {
+      updateTimerCalculations();
+      renderDisplay();
+      updateTargetTimeDisplay();
+    });
+
+    function saveActiveRunState() {
+      const runData = {
+        status: state.status,
+        mode: state.mode,
+        startTimeTimestamp: state.startTimeTimestamp,
+        accumulatedElapsedMs: state.accumulatedElapsedMs,
+        countdownTargetTimestamp: state.countdownTargetTimestamp,
+        countdownDurationMs: state.countdownDurationMs
+      };
+      localStorage.setItem('gen_active_run', JSON.stringify(runData));
+    }
+
+    function restoreActiveRunState() {
+      const saved = localStorage.getItem('gen_active_run');
+      if (saved) {
+        try {
+          const runData = JSON.parse(saved);
+          state.status = runData.status || 'stopped';
+          state.mode = runData.mode || 'stopwatch';
+          state.startTimeTimestamp = runData.startTimeTimestamp || null;
+          state.accumulatedElapsedMs = runData.accumulatedElapsedMs || 0;
+          state.countdownTargetTimestamp = runData.countdownTargetTimestamp || null;
+          state.countdownDurationMs = runData.countdownDurationMs || 7200000;
+
+          if (state.status === 'running') {
+            startTimerLoop();
+          }
+        } catch(e) {
+          console.error("Error restoring state:", e);
+        }
+      }
+    }
 
     // --- UI UPDATERS ---
     function formatTimeHMS(totalSec) {
@@ -629,8 +743,8 @@
       const digitalDisplay = document.getElementById('digitalDisplay');
 
       if (state.status === 'running') {
-        statusBadge.className = "px-4 py-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-emerald-400 shadow-lg shadow-emerald-500/10 animate-pulse";
-        statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block";
+        statusBadge.className = "px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-emerald-400 shadow-lg shadow-emerald-500/10 animate-pulse flex-shrink-0";
+        statusDot.className = "w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-400 inline-block";
         statusText.textContent = "GENERATOR RUNNING";
 
         digitalDisplay.className = "font-digital text-5xl sm:text-7xl md:text-8xl font-black tracking-widest text-emerald-400 glow-green transition-colors duration-300";
@@ -644,8 +758,8 @@
         stopBtn.disabled = false;
         stopBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       } else if (state.status === 'paused') {
-        statusBadge.className = "px-4 py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-amber-400";
-        statusDot.className = "w-2.5 h-2.5 rounded-full bg-amber-400 inline-block";
+        statusBadge.className = "px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-amber-400 flex-shrink-0";
+        statusDot.className = "w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-amber-400 inline-block";
         statusText.textContent = "GENERATOR PAUSED";
 
         digitalDisplay.className = "font-digital text-5xl sm:text-7xl md:text-8xl font-black tracking-widest text-amber-400 opacity-80 transition-colors duration-300";
@@ -659,8 +773,8 @@
         stopBtn.disabled = false;
         stopBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       } else { // stopped
-        statusBadge.className = "px-4 py-1.5 rounded-full border border-slate-700 bg-slate-800/80 flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-slate-400";
-        statusDot.className = "w-2.5 h-2.5 rounded-full bg-slate-500 inline-block";
+        statusBadge.className = "px-2.5 sm:px-4 py-1 sm:py-1.5 rounded-full border border-slate-700 bg-slate-800/80 flex items-center space-x-1.5 sm:space-x-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-400 flex-shrink-0";
+        statusDot.className = "w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-500 inline-block";
         statusText.textContent = "GENERATOR OFF";
 
         digitalDisplay.className = "font-digital text-5xl sm:text-7xl md:text-8xl font-black tracking-widest text-amber-400 glow-amber transition-colors duration-300";
@@ -691,7 +805,7 @@
         targetSubtext.textContent = state.status === 'running' ? 'Active Countdown' : 'Timer Set';
       } else if (state.mode === 'stopwatch') {
         targetTimeText.textContent = '--:-- --';
-        targetSubtext.textContent = 'Count Up Mode';
+        targetSubtext.textContent = 'Stopwatch Mode';
       } else {
         targetTimeText.textContent = '--:-- --';
         targetSubtext.textContent = 'Not Running';
@@ -699,39 +813,43 @@
     }
 
     // --- TIMER CONTROL ENGINE ---
+    function startTimerLoop() {
+      clearInterval(state.timerInterval);
+      state.timerInterval = setInterval(() => {
+        updateTimerCalculations();
+        renderDisplay();
+      }, 250);
+    }
+
     function startTimer() {
       initAudio();
       if (state.status === 'running') return;
 
       state.status = 'running';
+      state.startTimeTimestamp = Date.now();
+
+      if (state.mode === 'countdown') {
+        const remainingMs = Math.max(0, state.countdownDurationMs - state.accumulatedElapsedMs);
+        state.countdownTargetTimestamp = Date.now() + remainingMs;
+      }
+
       updateStatusUI();
-
-      state.timerInterval = setInterval(() => {
-        state.elapsedSeconds++;
-        state.totalEngineSeconds++;
-        state.oilIntervalSeconds++;
-
-        if (state.mode === 'countdown') {
-          if (state.remainingSeconds > 0) {
-            state.remainingSeconds--;
-          } else {
-            handleTimerComplete();
-            return;
-          }
-        }
-
-        localStorage.setItem('gen_total_seconds', state.totalEngineSeconds);
-        localStorage.setItem('gen_oil_seconds', state.oilIntervalSeconds);
-
-        renderDisplay();
-      }, 1000);
+      startTimerLoop();
+      updateTimerCalculations();
+      renderDisplay();
     }
 
     function pauseTimer() {
       if (state.status !== 'running') return;
+      
       clearInterval(state.timerInterval);
+      const currentSegmentMs = Date.now() - state.startTimeTimestamp;
+      state.accumulatedElapsedMs += currentSegmentMs;
+      state.startTimeTimestamp = null;
       state.status = 'paused';
+
       updateStatusUI();
+      updateTimerCalculations();
       renderDisplay();
     }
 
@@ -739,26 +857,42 @@
       if (state.elapsedSeconds <= 0 && state.status === 'stopped') return;
 
       clearInterval(state.timerInterval);
-      
-      const burnRate = parseFloat(document.getElementById('inputBurnRate').value) || 2.0;
-      const fuelUsed = ((state.elapsedSeconds / 3600) * burnRate).toFixed(1);
 
-      if (state.elapsedSeconds >= 5) {
+      if (state.status === 'running') {
+        const currentSegmentMs = Date.now() - state.startTimeTimestamp;
+        state.accumulatedElapsedMs += currentSegmentMs;
+      }
+      
+      const finalElapsedSec = Math.floor(state.accumulatedElapsedMs / 1000);
+      const burnRate = parseFloat(document.getElementById('inputBurnRate').value) || 2.0;
+      const fuelUsed = ((finalElapsedSec / 3600) * burnRate).toFixed(1);
+
+      if (finalElapsedSec >= 5) {
         const sessionLog = {
           id: Date.now(),
           date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
           mode: state.mode.toUpperCase(),
-          duration: formatTimeHMS(state.elapsedSeconds),
+          duration: formatTimeHMS(finalElapsedSec),
           fuelUsed: `${fuelUsed} L`
         };
+
+        state.baseEngineSeconds += finalElapsedSec;
+        state.baseOilSeconds += finalElapsedSec;
+        localStorage.setItem('gen_base_engine_seconds', state.baseEngineSeconds);
+        localStorage.setItem('gen_base_oil_seconds', state.baseOilSeconds);
+
         state.history.unshift(sessionLog);
         localStorage.setItem('gen_history', JSON.stringify(state.history));
         renderHistory();
       }
 
       state.status = 'stopped';
+      state.startTimeTimestamp = null;
+      state.accumulatedElapsedMs = 0;
       state.elapsedSeconds = 0;
+      
       updateStatusUI();
+      updateTimerCalculations();
       renderDisplay();
     }
 
@@ -768,9 +902,13 @@
       }
       clearInterval(state.timerInterval);
       state.status = 'stopped';
+      state.startTimeTimestamp = null;
+      state.accumulatedElapsedMs = 0;
       state.elapsedSeconds = 0;
-      state.remainingSeconds = 7200;
+      state.countdownDurationMs = 7200000;
+      
       updateStatusUI();
+      updateTimerCalculations();
       renderDisplay();
     }
 
@@ -784,7 +922,14 @@
     // --- QUICK ADD & MANUAL INPUT ---
     function addTime(minutes) {
       initAudio();
-      state.remainingSeconds += minutes * 60;
+      const addedMs = minutes * 60 * 1000;
+      state.countdownDurationMs += addedMs;
+      
+      if (state.status === 'running' && state.mode === 'countdown') {
+        state.countdownTargetTimestamp += addedMs;
+      }
+      
+      updateTimerCalculations();
       renderDisplay();
       updateTargetTimeDisplay();
     }
@@ -792,10 +937,18 @@
     function setCustomTimer() {
       const h = parseInt(document.getElementById('inputHours').value) || 0;
       const m = parseInt(document.getElementById('inputMinutes').value) || 0;
-      state.remainingSeconds = (h * 3600) + (m * 60);
+      state.countdownDurationMs = (h * 3600 + m * 60) * 1000;
+      state.accumulatedElapsedMs = 0;
+
+      if (state.status === 'running' && state.mode === 'countdown') {
+        state.startTimeTimestamp = Date.now();
+        state.countdownTargetTimestamp = Date.now() + state.countdownDurationMs;
+      }
+
       if (state.mode !== 'countdown') {
         switchMode('countdown');
       } else {
+        updateTimerCalculations();
         renderDisplay();
         updateTargetTimeDisplay();
       }
@@ -806,6 +959,8 @@
         if (!confirm("Generator is running. Switching mode will stop current timer. Continue?")) return;
         clearInterval(state.timerInterval);
         state.status = 'stopped';
+        state.startTimeTimestamp = null;
+        state.accumulatedElapsedMs = 0;
         updateStatusUI();
       }
 
@@ -830,6 +985,7 @@
         timerLabel.textContent = "ELAPSED RUN TIME";
       }
 
+      updateTimerCalculations();
       renderDisplay();
       updateTargetTimeDisplay();
     }
@@ -865,15 +1021,16 @@
         fuelUsed: `${fuelUsed} L`
       };
 
-      state.totalEngineSeconds += totalSec;
-      state.oilIntervalSeconds += totalSec;
-      localStorage.setItem('gen_total_seconds', state.totalEngineSeconds);
-      localStorage.setItem('gen_oil_seconds', state.oilIntervalSeconds);
+      state.baseEngineSeconds += totalSec;
+      state.baseOilSeconds += totalSec;
+      localStorage.setItem('gen_base_engine_seconds', state.baseEngineSeconds);
+      localStorage.setItem('gen_base_oil_seconds', state.baseOilSeconds);
 
       state.history.unshift(sessionLog);
       localStorage.setItem('gen_history', JSON.stringify(state.history));
 
       renderHistory();
+      updateTimerCalculations();
       renderDisplay();
       toggleManualLogModal();
     }
@@ -888,7 +1045,6 @@
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
 
-      // Top Header Banner
       doc.setFillColor(15, 23, 42); // Slate 900
       doc.rect(0, 0, 210, 40, 'F');
 
@@ -903,7 +1059,6 @@
       doc.text(`Report Date: ${new Date().toLocaleString()}`, 14, 28);
       doc.text(`Engine Lifetime: ${(state.totalEngineSeconds / 3600).toFixed(1)} HRS`, 140, 28);
 
-      // Section: Executive Summary Box
       doc.setFillColor(248, 250, 252);
       doc.roundedRect(14, 46, 182, 32, 2, 2, 'F');
       
@@ -924,13 +1079,11 @@
       doc.text(`• Oil Service Interval: ${state.maxOilServiceHours} HRS`, 110, 62);
       doc.text(`• Remaining to Oil Change: ${oilRemainingHours} HRS`, 110, 70);
 
-      // Table Header Title
       doc.setTextColor(15, 23, 42);
       doc.setFontSize(12);
       doc.setFont("helvetica", "bold");
       doc.text("Generator Session History", 14, 86);
 
-      // Table Data
       const tableRows = state.history.map(item => [
         item.date,
         item.mode,
@@ -958,7 +1111,6 @@
         }
       });
 
-      // Footer
       const pageCount = doc.internal.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
@@ -976,6 +1128,7 @@
       const val = parseFloat(document.getElementById('oilIntervalInput').value) || 100;
       state.maxOilServiceHours = val;
       localStorage.setItem('gen_max_oil_hours', val);
+      updateTimerCalculations();
       renderDisplay();
     }
 
@@ -1040,7 +1193,7 @@
       
       if (burnRate > 0 && actualFuel > 0) {
         const totalSeconds = Math.floor((actualFuel / burnRate) * 3600);
-        state.remainingSeconds = totalSeconds;
+        state.countdownDurationMs = totalSeconds * 1000;
         switchMode('countdown');
       }
     }
@@ -1048,8 +1201,9 @@
     // --- SERVICE / HISTORY LOGS ---
     function resetOilService() {
       if (confirm(`Reset oil service counter back to ${state.maxOilServiceHours} hours?`)) {
-        state.oilIntervalSeconds = 0;
-        localStorage.setItem('gen_oil_seconds', 0);
+        state.baseOilSeconds = 0;
+        localStorage.setItem('gen_base_oil_seconds', 0);
+        updateTimerCalculations();
         renderDisplay();
       }
     }
@@ -1091,11 +1245,12 @@
     }
 
     // --- INITIAL RENDER ---
-    // Enforce Stopwatch default tab on launch
-    switchMode('stopwatch');
+    restoreActiveRunState();
+    switchMode(state.mode);
     calculateFuelRuntime();
-    renderDisplay();
+    updateTimerCalculations();
     updateStatusUI();
+    renderDisplay();
     renderHistory();
   </script>
 </body>
