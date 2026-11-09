@@ -89,6 +89,22 @@
             margin-top: 6rem;
         }
 
+
+        /* Mobile menu */
+        .mm-desk { display: none; }
+        .mm-burger { display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border: 1px solid #e7e5e4; border-radius: 50%; background: transparent; color: #1a1a1a; cursor: pointer; }
+        .mm-burger svg { width: 22px; height: 22px; }
+        .mm-burger .x { display: none; }
+        .mm-burger[aria-expanded="true"] .b { display: none; }
+        .mm-burger[aria-expanded="true"] .x { display: block; }
+        .mm-panel { display: none; position: absolute; left: 0; right: 0; top: 100%; background: #FFFDF9; border-bottom: 1px solid #fed7aa; padding: 8px 24px 26px; max-height: calc(100vh - 96px); overflow-y: auto; box-shadow: 0 24px 40px -20px rgba(0, 0, 0, 0.25); }
+        .mm-panel.open { display: block; }
+        .mm-panel a { display: block; padding: 16px 4px; font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: #1c1917; text-decoration: none; border-bottom: 1px solid #f5f5f4; }
+        .mm-panel a:hover { color: #ea580c; }
+        .mm-panel a.sm { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 600; color: #57534e; border: 0; padding: 12px 4px; }
+        #about, #portfolio, #shop { scroll-margin-top: 96px; }
+        @media (min-width: 1200px) { .mm-desk { display: flex; } .mm-burger, .mm-panel { display: none !important; } }
+
         @media (max-width: 768px) {
             .staggered-grid>div:nth-child(even) {
                 margin-top: 0;
@@ -110,15 +126,18 @@
                     </a>
                 </div>
 
-                <div class="hidden md:flex space-x-12 text-[10px] font-bold uppercase tracking-[0.4em] text-stone-500">
+                <div class="mm-desk space-x-12 text-[10px] font-bold uppercase tracking-[0.4em] text-stone-500">
                     <a href="#about" class="hover:text-orange-600 transition-colors">The Philosophy</a>
                     <a href="#portfolio" class="hover:text-orange-600 transition-colors">Lookbook</a>
                     <a href="#shop" class="hover:text-orange-600 transition-colors">The Studio</a>
+                    <a href="market.html" class="hover:text-orange-600 transition-colors">Market Report</a>
+                    <a href="studio/" class="hover:text-orange-600 transition-colors">Crochet Studio</a>
                 </div>
 
                 <div class="flex items-center gap-8">
                     <span class="hidden lg:block text-[9px] font-bold tracking-[0.3em] text-stone-400 uppercase">India
                         &bull; Estd 2026</span>
+                    <button class="mm-burger" id="mmBtn" type="button" aria-expanded="false" aria-controls="mmPanel" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path class="b" d="M4 7h16M4 12h16M4 17h16"/><path class="x" d="M6 6l12 12M18 6 6 18"/></svg></button>
                     <button class="relative group p-2">
                         <i
                             class="fa-solid fa-cart-shopping text-xl text-stone-900 group-hover:text-orange-600 transition-colors"></i>
@@ -127,6 +146,14 @@
                     </button>
                 </div>
             </div>
+        </div>
+        <div class="mm-panel" id="mmPanel">
+            <a href="#about">The Philosophy</a>
+            <a href="#portfolio">Lookbook</a>
+            <a href="#shop">The Studio</a>
+            <a class="sm" href="market.html">Market Report</a>
+            <a class="sm" href="studio/">Crochet Studio</a>
+            <a class="sm" href="../">Back to atishaksharma.com</a>
         </div>
     </nav>
 
@@ -384,6 +411,18 @@
 
             document.querySelectorAll('.reveal-on-scroll').forEach((el) => observer.observe(el));
         };
+
+
+        // Mobile menu
+        (function () {
+            const b = document.getElementById('mmBtn'), p = document.getElementById('mmPanel');
+            const set = o => { p.classList.toggle('open', o); b.setAttribute('aria-expanded', o); };
+            b.addEventListener('click', e => { e.stopPropagation(); set(!p.classList.contains('open')); });
+            p.addEventListener('click', e => { if (e.target.closest('a')) set(false); });
+            document.addEventListener('click', e => { if (!e.target.closest('nav')) set(false); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && p.classList.contains('open')) { set(false); b.focus(); } });
+            matchMedia('(min-width:1200px)').addEventListener('change', e => { if (e.matches) set(false); });
+        })();
 
         let cartCount = 0;
         function updateCart() {
