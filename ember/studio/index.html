@@ -1,499 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="public, max-age=604800">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ember Crochet Studio - Boutique Edition</title>
-    <link rel="icon" type="image/png"
-        href="../../master/logo_favicon.jpg">
-    <link rel="stylesheet" href="../../master/servetailwind.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ember Studio | Crochet Pattern Designer</title>
+<meta name="description" content="Design a crochet pattern in the browser: pick a shape, paint or stamp stitches, preview it as yarn and export a printable stitch-map PDF.">
+<meta name="theme-color" content="#d44a06">
+<link rel="icon" href="../../master/logo_favicon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:ital,wght@1,600;1,700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{
+  --bg:#f3efea; --panel:#fff; --panel2:#f0ebe5; --ink:#201b17; --mute:#6a6159; --line:#ddd5cb;
+  --ember:#d44a06; --on-ember:#fff; --soft:#fde4d3; --danger:#b8301f; --grid:rgba(0,0,0,.13);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#141110; --panel:#201c19; --panel2:#2a2521; --ink:#f3ece4; --mute:#a99f95; --line:#38312c;
+  --ember:#ff7a30; --on-ember:#1a0e05; --soft:#3a2415; --danger:#ff7a63; --grid:rgba(0,0,0,.16);
+}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Figtree',system-ui,sans-serif;font-size:1rem;line-height:1.45;
+  -webkit-font-smoothing:antialiased;min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--ember);outline-offset:2px}
+h2{font-size:1rem;font-weight:700;margin-bottom:10px}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f9f7f4;
-            color: #2d3436;
-        }
+/* top bar */
+.bar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+.brand{font-family:'Fraunces',serif;font-style:italic;font-weight:700;font-size:1.5rem;text-decoration:none;color:var(--ember);line-height:1;margin-right:auto}
+.brand small{font-family:'Figtree',sans-serif;font-style:normal;font-weight:600;font-size:.8rem;color:var(--mute);margin-left:6px}
+.ibtn,.btn{min-height:42px;border-radius:12px;border:1px solid var(--line);background:var(--panel);font-weight:600;padding:0 14px;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.ibtn{min-width:42px;padding:0}
+.ibtn:hover,.btn:hover{border-color:var(--ink)}
+.ibtn:disabled{opacity:.35;cursor:default}
+.btn.primary{background:var(--ember);color:var(--on-ember);border-color:var(--ember)}
+.btn.danger{color:var(--danger)}
+.btn:disabled{opacity:.4;cursor:default;border-color:var(--line)}
+.btn.primary:disabled{border-color:var(--ember)}
+.btn.sm{min-height:36px;padding:0 12px;font-size:.92rem;border-radius:10px}
+.btn[aria-pressed="true"]{background:var(--soft);border-color:var(--ember);color:var(--ember)}
 
-        /* Technical Outlines for designer workspace */
-        .editor-card,
-        .preview-card,
-        .toolbox-card,
-        .silhouette-card,
-        .motif-library-card {
-            outline: 1px solid red;
-        }
+/* layout */
+.studio{display:grid;gap:16px;padding:16px 16px 92px;max-width:1700px;margin:0 auto}
+.pane{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:16px;display:none;min-width:0}
+.studio[data-tab="draw"] .draw,.studio[data-tab="library"] .library,.studio[data-tab="preview"] .preview,.studio[data-tab="layers"] .layers{display:block}
+.side{display:contents}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);background:var(--panel);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+.tabs button{background:none;border:0;padding:9px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.78rem;font-weight:600;color:var(--mute)}
+.tabs button svg{width:22px;height:22px}
+.tabs button[aria-selected="true"]{color:var(--ember)}
+@media (min-width:1100px){
+  .studio{grid-template-columns:300px minmax(0,1fr) 400px;align-items:start;padding-bottom:24px}
+  .pane{display:block!important}
+  .library{position:sticky;top:76px;max-height:calc(100vh - 92px);overflow:auto}
+  .side{display:flex;flex-direction:column;gap:16px}
+  .tabs{display:none}
+}
 
-        .category-tab {
-            @apply px-5 py-2 rounded-xl font-bold text-[10px] uppercase tracking-wider transition-all cursor-pointer flex items-center gap-2 bg-white border border-gray-200 shadow-sm hover:bg-orange-50;
-        }
+/* library */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:6px;scrollbar-width:thin}
+.chip{flex:none;border:1px solid var(--line);background:var(--panel2);border-radius:99px;padding:6px 14px;font-weight:600;font-size:.9rem}
+.chip[aria-pressed="true"]{background:var(--ember);border-color:var(--ember);color:var(--on-ember)}
+.shapes{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px;margin-bottom:20px}
+.shape{border:2px solid transparent;background:var(--panel2);border-radius:14px;padding:10px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.78rem;font-weight:600;text-align:center;line-height:1.15}
+.shape svg{width:34px;height:34px;fill:var(--mute)}
+.shape[aria-pressed="true"]{border-color:var(--ember);background:var(--soft)}
+.shape[aria-pressed="true"] svg{fill:var(--ember)}
+.stampbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.motifs{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
+.motif{border:2px solid transparent;background:var(--panel2);border-radius:14px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.74rem;font-weight:600;text-align:center;line-height:1.1}
+.motif span:first-child{font-size:1.4rem;line-height:1.2}
+.motif[aria-pressed="true"]{border-color:var(--ember);background:var(--soft)}
 
-        .category-tab.active {
-            @apply bg-orange-500 text-white shadow-lg border-orange-600 ring-2 ring-orange-400 ring-offset-2;
-        }
+/* draw */
+.dhead{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:12px}
+.mode{font-weight:700;padding:5px 14px;border-radius:99px;background:var(--soft);color:var(--ember);margin-right:auto;font-size:.92rem}
+.canvaswrap{width:min(100%,calc(100vh - 230px));min-width:260px;margin:0 auto}
+#editorCanvas{display:block;width:100%;aspect-ratio:1/1;background:#fff;border:2px solid var(--ink);border-radius:6px;touch-action:none;cursor:crosshair}
+.palette{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:14px;justify-content:center}
+.sw{width:34px;height:34px;border-radius:50%;border:2px solid var(--panel);box-shadow:0 0 0 1px var(--line);padding:0}
+.sw[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+input[type=color]{width:34px;height:34px;border:0;border-radius:50%;padding:0;background:none;cursor:pointer}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 18px;margin-top:16px}
+.row{display:flex;align-items:center;gap:12px;background:var(--panel2);border-radius:12px;padding:8px 12px;min-height:46px}
+.row label{font-weight:600;font-size:.9rem;white-space:nowrap}
+.row input[type=range]{flex:1;min-width:60px;accent-color:var(--ember)}
+.row output,.row select{font-weight:700;font-size:.9rem}
+.row select{background:transparent;border:0;flex:1;text-align:right}
+.seg{display:inline-flex;gap:4px;margin-left:auto}
+.seg button{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:var(--panel);font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--ember);color:var(--on-ember);border-color:var(--ember)}
 
-        .crochet-grid {
-            display: grid;
-            gap: 1px;
-            background: #e2e8f0;
-            border: 2px solid #1f2937;
-            aspect-ratio: 1/1;
-            width: 100%;
-            position: relative;
-        }
+/* preview */
+.stage{position:relative;width:100%;aspect-ratio:1/1;max-height:70vh;margin:0 auto;border-radius:18px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#b40e0e;perspective:1000px}
+.zoomw{width:80%;height:80%;display:flex;align-items:center;justify-content:center;transition:transform .2s ease-out}
+.mask{width:100%;height:100%;mask-size:contain;mask-repeat:no-repeat;mask-position:center;-webkit-mask-size:contain;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;background-repeat:repeat}
+.pname{text-align:center;font-weight:700;margin:10px 0 12px}
+.stack{display:grid;gap:8px}
 
-        .stitch {
-            background: #ffffff;
-            aspect-ratio: 1/1;
-            cursor: crosshair;
-            position: relative;
-        }
+/* layers */
+.lhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.lhead h2{margin:0}
+.layer{display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--panel);cursor:pointer}
+.layer[aria-current="true"]{border-color:var(--ember);background:var(--soft)}
+.layer .nm{flex:1;min-width:0;font-weight:600;font-size:.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.layer button{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--panel);flex:none}
+.layer .eye{border:0;background:none;font-size:1.05rem}
+.layers .list{max-height:340px;overflow:auto}
 
-        .stitch.stamp-preview {
-            opacity: 0.6;
-            outline: 1px dashed rgba(0, 0, 0, 0.3);
-        }
-
-        .visual-container {
-            position: relative;
-            width: 100%;
-            height: 520px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 2.5rem;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            border: 1px solid #333;
-            background: #000;
-            perspective: 1000px;
-        }
-
-        .visual-mask-wrapper {
-            width: 80%;
-            height: 80%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s ease-out;
-        }
-
-        .visual-mask {
-            width: 100%;
-            height: 100%;
-            mask-size: contain;
-            mask-repeat: no-repeat;
-            mask-position: center;
-            -webkit-mask-size: contain;
-            -webkit-mask-repeat: no-repeat;
-            -webkit-mask-position: center;
-            background-repeat: repeat;
-            position: relative;
-            image-rendering: auto;
-        }
-
-        /* Popover System */
-        .artisan-btn {
-            @apply flex-1 py-3 bg-white border border-gray-100 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-sm hover:bg-gray-50 transition-all flex items-center justify-center gap-2 text-gray-900;
-        }
-
-        .artisan-btn.active {
-            @apply border-orange-500 text-orange-600 bg-orange-50;
-        }
-
-        .popover-panel {
-            @apply absolute bottom-full mb-4 left-0 right-0 bg-white/95 backdrop-blur-md p-4 rounded-3xl shadow-2xl border border-gray-100 flex items-center gap-4 transition-all scale-95 opacity-0 pointer-events-none;
-        }
-
-        .popover-panel.show {
-            @apply scale-100 opacity-100 pointer-events-auto;
-        }
-
-        .history-btn-text {
-            @apply px-5 py-2 rounded-xl font-black text-[11px] uppercase transition-all active:scale-90 disabled:opacity-20 disabled:grayscale shadow-md text-gray-900;
-        }
-
-        .btn-undo {
-            @apply bg-red-600 text-white hover:bg-red-700;
-        }
-
-        .btn-redo {
-            @apply bg-emerald-600 text-white hover:bg-emerald-700;
-        }
-
-        .layer-item {
-            @apply flex items-center justify-between p-3 bg-white border border-gray-100 rounded-2xl mb-2 transition-all cursor-pointer hover:border-orange-200;
-        }
-
-        .layer-item.active {
-            @apply border-orange-400 bg-orange-50 shadow-sm ring-1 ring-orange-200;
-        }
-
-        .motif-item.selected {
-            outline: 3px solid #10b981;
-            @apply bg-green-50;
-        }
-
-        #reportModal,
-        .stamp-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        #motifHoverWindow {
-            position: fixed;
-            pointer-events: none;
-            z-index: 3000;
-            display: none;
-            width: 160px;
-            @apply bg-white rounded-2xl shadow-2xl border border-gray-100 p-2 flex flex-col items-center;
-            transform: translate(15px, 15px);
-        }
-
-        .hover-canvas-container {
-            width: 140px;
-            height: 140px;
-            @apply bg-gray-100 rounded-xl overflow-hidden border border-gray-100;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 22px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked+.slider {
-            background-color: #f97316;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(18px);
-        }
-
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-    </style>
+/* dialogs */
+dialog{border:0;border-radius:22px;padding:22px;background:var(--panel);color:var(--ink);width:min(92vw,460px);max-height:90vh}
+dialog::backdrop{background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
+dialog h3{font-family:'Fraunces',serif;font-style:italic;font-size:1.35rem;margin-bottom:14px;text-align:center}
+dialog input[type=text],dialog select{width:100%;border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:11px 12px;margin-bottom:12px}
+dialog .acts{display:flex;gap:10px;margin-top:6px}
+dialog .acts .btn{flex:1}
+#emojiGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:4px;max-height:50vh;overflow:auto;margin-bottom:12px}
+#emojiGrid button{font-size:1.7rem;padding:6px;border:0;background:none;border-radius:12px}
+#emojiGrid button:hover{background:var(--soft)}
+#reportModal{width:min(96vw,1200px);padding:0;overflow:hidden}
+#reportModal .rh{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line)}
+#reportModal .rh h3{margin:0;text-align:left}
+#reportModal .rb{padding:14px;overflow:auto;max-height:calc(90vh - 150px);background:var(--panel2)}
+#modalPrintArea{overflow:hidden;margin:0 auto;background:#fff;border-radius:6px}
+#reportModal .rf{display:flex;flex-wrap:wrap;gap:10px;padding:12px 18px;border-top:1px solid var(--line)}
+#reportModal .rf .btn{flex:1;min-width:140px}
+#hover{position:fixed;pointer-events:none;z-index:3000;display:none;width:156px;padding:8px;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+#hover canvas{width:140px;height:140px;border-radius:8px;background:var(--panel2);image-rendering:pixelated;display:block}
+.bar .btn{padding:0 12px}
+@media (max-width:560px){.bar{gap:6px;padding:10px 12px}.lg,.brand small{display:none}.brand{font-size:1.3rem}.bar .btn.danger{padding:0 11px}}
+#toast{position:fixed;left:50%;bottom:84px;transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-weight:600;font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:3500}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+@media (min-width:1100px){#toast{bottom:28px}}
+.foot{text-align:center;color:var(--mute);font-size:.85rem;padding:0 16px 24px}
+.foot a{color:inherit}
+@media (prefers-reduced-motion:reduce){.zoomw{transition:none}}
+</style>
 </head>
+<body>
+<div id="hover"><canvas id="hoverPreviewCanvas" width="140" height="140"></canvas></div>
 
-<body class="bg-[#f9f7f4] min-h-screen flex flex-col">
+<header class="bar">
+  <a class="brand" href="../" aria-label="Ember home">Emberloom<small>Studio</small></a>
+  <button class="ibtn" id="undoBtn" onclick="undo()" aria-label="Undo" title="Undo (Ctrl+Z)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></button>
+  <button class="ibtn" id="redoBtn" onclick="redo()" aria-label="Redo" title="Redo (Ctrl+Y)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/></svg></button>
+  <button class="btn danger" onclick="clearAll()" aria-label="Clear design"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg><span class="lg">Clear</span></button>
+  <button class="btn primary" onclick="openReportModal()">Export<span class="lg">pattern</span></button>
+</header>
 
-    <div id="motifHoverWindow">
-        <div class="hover-canvas-container">
-            <canvas id="hoverPreviewCanvas" width="140" height="140" style="image-rendering: pixelated;"></canvas>
-        </div>
+<main class="studio" id="studio" data-tab="draw">
+  <section class="pane library" aria-label="Shapes and stamps">
+    <h2>Shape</h2>
+    <div class="chips" id="categoryContainer" role="group" aria-label="Shape categories"></div>
+    <div class="shapes" id="silhouetteGrid"></div>
+    <h2>Stamps</h2>
+    <div class="stampbtns">
+      <button class="btn sm" onclick="openTextStampModal()">Text</button>
+      <button class="btn sm" onclick="$('emojiStampModal').showModal()">Emoji</button>
+      <button class="btn sm" onclick="$('imageStampModal').showModal()">Image</button>
     </div>
+    <div class="motifs" id="motifLibrary"></div>
+  </section>
 
-    <!-- STAMP MODALS -->
-    <div id="textStampModal" class="stamp-modal" onclick="closeModals()">
-        <div class="bg-white rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl" onclick="event.stopPropagation()">
-            <h2 class="text-xl font-bold mb-4 font-serif italic text-center text-gray-900">Text Stamp Designer</h2>
-            <div class="space-y-4">
-                <input type="text" id="textStampInput" maxlength="8" placeholder="Type here..."
-                    class="w-full border rounded-xl p-3 focus:outline-orange-500">
-                <select id="textStampFont" class="w-full border rounded-xl p-3">
-                    <option value="serif">Classic Serif</option>
-                    <option value="sans-serif">Modern Sans</option>
-                    <option value="monospace">Digital Mono</option>
-                </select>
-                <div class="flex gap-4 pt-4">
-                    <button onclick="closeModals()"
-                        class="flex-1 py-3 rounded-2xl font-bold bg-gray-100 text-xs transition hover:bg-gray-200">Cancel</button>
-                    <button onclick="processTextStamp()"
-                        class="flex-1 py-3 rounded-2xl font-black bg-orange-500 text-white text-xs shadow-lg hover:bg-orange-600 transition">Generate</button>
-                </div>
-            </div>
-        </div>
+  <section class="pane draw" aria-label="Pattern canvas">
+    <div class="dhead">
+      <span class="mode" id="selectedLabel">Painting</span>
+      <button class="btn sm primary" id="finalizeBtn" onclick="bakeStamp()" disabled>Place stamp</button>
+      <button class="btn sm" id="cancelBtn" onclick="cancelStamp()" disabled>Cancel</button>
+      <button class="btn sm" id="eraserBtn" aria-pressed="false" onclick="toggleEraser()">Eraser</button>
+      <button class="btn sm" onclick="fillActiveLayer()">Fill</button>
+      <button class="btn sm" onclick="clearActiveLayer()">Clear layer</button>
     </div>
-
-    <div id="emojiStampModal" class="stamp-modal" onclick="closeModals()">
-        <div class="bg-white rounded-[2.5rem] p-8 w-full max-w-xl shadow-2xl" onclick="event.stopPropagation()">
-            <h2 class="text-xl font-bold mb-4 font-serif italic text-center text-gray-900">Emoji Selection</h2>
-            <div class="grid grid-cols-6 sm:grid-cols-8 gap-3 max-h-80 overflow-y-auto no-scrollbar mb-6 p-4 bg-gray-50 rounded-3xl"
-                id="emojiGrid"></div>
-            <button onclick="closeModals()"
-                class="w-full py-4 rounded-2xl bg-gray-100 text-xs font-bold hover:bg-gray-200 transition uppercase tracking-widest text-gray-900">Close</button>
-        </div>
+    <div class="canvaswrap"><canvas id="editorCanvas" aria-label="Stitch grid. Tap or drag to paint."></canvas></div>
+    <div class="palette" id="colorPalette" role="group" aria-label="Yarn colours"></div>
+    <div class="opts">
+      <div class="row"><label>Brush</label><div class="seg" id="brushSeg"><button aria-pressed="true" data-b="1">1</button><button aria-pressed="false" data-b="2">2</button><button aria-pressed="false" data-b="3">3</button></div></div>
+      <div class="row"><label for="stampScale">Stamp size</label><input type="range" id="stampScale" min="0.5" max="4" step="0.1" value="1" oninput="updateStampScale(this.value)"><output id="stampScaleLabel">1.0x</output></div>
+      <div class="row"><label for="gridSizeSelect">Resolution</label>
+        <select id="gridSizeSelect" onchange="changeGridSize(this.value)">
+          <option value="20">20 × 20 Standard</option><option value="32">32 × 32 Fine</option><option value="48" selected>48 × 48 Boutique</option><option value="64">64 × 64 Elite</option>
+        </select></div>
     </div>
+  </section>
 
-    <div id="imageStampModal" class="stamp-modal" onclick="closeModals()">
-        <div class="bg-white rounded-[2.5rem] p-8 w-full max-w-md shadow-2xl" onclick="event.stopPropagation()">
-            <h2 class="text-xl font-bold mb-4 font-serif italic text-center text-gray-900">Image Processor</h2>
-            <input type="file" id="imageStampInput" accept="image/*"
-                class="w-full mb-6 text-xs file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-black file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100">
-            <div class="flex gap-4">
-                <button onclick="closeModals()"
-                    class="flex-1 py-3 rounded-2xl font-bold bg-gray-100 text-xs transition hover:bg-gray-200 text-gray-900">Cancel</button>
-                <button onclick="processImageStamp()"
-                    class="flex-1 py-3 rounded-2xl bg-black text-white font-black text-xs hover:bg-gray-900 transition">Convert</button>
-            </div>
-        </div>
-    </div>
+  <div class="side">
+    <section class="pane preview" aria-label="Preview">
+      <h2>Preview</h2>
+      <div class="stage" id="dropTarget"><div class="zoomw" id="zoomWrapper"><div class="mask" id="visualMask"></div></div></div>
+      <p class="pname" id="currentSelection">Model</p>
+      <div class="stack">
+        <div class="row"><label for="globalScale">Stitch size</label><input type="range" id="globalScale" min="5" max="300" value="60" oninput="updateVisualScale(this.value)"><output id="scaleLabel">60px</output></div>
+        <div class="row"><label for="tiltR">Tilt</label><input type="range" id="tiltR" min="-45" max="45" value="0" oninput="tiltPreview(this.value)"></div>
+        <div class="row"><label for="zoomR">Zoom</label><input type="range" id="zoomR" min="0.5" max="2.5" step="0.1" value="1" oninput="zoomPreview(this.value)"></div>
+        <div class="row"><label for="bgColorPicker">Background</label><input type="color" value="#b40e0e" id="bgColorPicker" oninput="updatePreviewBG(this.value)" style="margin-left:auto"></div>
+      </div>
+    </section>
+    <section class="pane layers" aria-label="Layers">
+      <div class="lhead"><h2>Layers</h2><button class="btn sm primary" onclick="addNewPaintLayer()">New layer</button></div>
+      <div class="list" id="layersList"></div>
+    </section>
+  </div>
+</main>
 
-    <!-- Final Report Modal -->
-    <div id="reportModal" onclick="closeReportModal(event)">
-        <div class="bg-white rounded-[3.5rem] w-full max-w-7xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl"
-            onclick="event.stopPropagation()">
-            <div class="p-6 border-b border-gray-100 flex justify-between items-end bg-gray-50/50">
-                <div class="text-gray-900">
-                    <h2 class="text-2xl font-bold font-serif italic">Emberloom Crochet Studio</h2>
-                    <p class="text-[10px] font-black text-orange-500 uppercase tracking-[0.3em] mt-1">Your Crochet
-                        Design Blueprint</p>
-                </div>
-                <button onclick="closeReportModal()"
-                    class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-all shadow-sm">✕</button>
-            </div>
-            <div id="modalPrintArea" class="bg-white flex-grow no-scrollbar overflow-hidden"
-                style="width: 1122px; margin: 0 auto;"></div>
-            <div class="p-6 border-t border-gray-100 flex gap-6 bg-gray-50/50">
-                <button onclick="closeReportModal()"
-                    class="flex-1 py-4 rounded-3xl font-bold text-xs bg-white border border-gray-200 hover:bg-gray-100 transition tracking-widest uppercase text-gray-900">Discard</button>
-                <button onclick="generateFinalPDF()"
-                    class="flex-1 py-4 rounded-3xl font-black text-xs bg-gray-900 text-white hover:bg-black transition shadow-xl tracking-widest uppercase">Export
-                    PDF</button>
-            </div>
-        </div>
-    </div>
+<nav class="tabs" id="tabs" aria-label="Sections">
+  <button data-t="draw" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>Design</button>
+  <button data-t="library" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Shapes</button>
+  <button data-t="preview" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>Preview</button>
+  <button data-t="layers" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 10 5-10 5L2 7Z"/><path d="m2 12 10 5 10-5"/><path d="m2 17 10 5 10-5"/></svg>Layers</button>
+</nav>
 
-    <!-- Workspace -->
-    <div class="max-w-[1400px] mx-auto p-4 lg:p-8 flex-grow w-full">
-        <header class="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-            <div class="group cursor-default">
-                <h1 class="text-4xl font-extrabold tracking-tighter leading-none flex items-baseline gap-1">
-                    <span
-                        class="bg-clip-text text-transparent bg-gradient-to-br from-orange-600 to-orange-400 font-serif italic pr-1">Emberloom</span>
-                    <span class="text-gray-900 text-2xl font-light tracking-widest uppercase">Crochet</span>
-                    <sup class="text-orange-500 text-sm font-black italic ml-1">Studio</sup>
-                </h1>
-                <div class="h-1 w-12 bg-orange-500 mt-2 group-hover:w-32 transition-all duration-500"></div>
-            </div>
-            <div class="flex gap-4">
-                <button onclick="resetCanvas()"
-                    class="bg-red-50 text-red-600 px-6 py-4 rounded-3xl font-black text-[11px] hover:bg-red-100 transition shadow-sm uppercase">
-                    Clear All</button>
-                <button onclick="openReportModal()"
-                    class="bg-gray-900 text-white px-8 py-5 rounded-3xl font-black text-[11px] hover:bg-black transition flex items-center justify-center gap-3 shadow-xl hover:scale-105 active:scale-95 tracking-[0.1em] uppercase">📥
-                    Download Your Crochet Pattern </button>
-            </div>
-        </header>
+<div id="toast" role="status" aria-live="polite"></div>
+<p class="foot">© 2026 Emberloom Crochet Studio · <a href="../">Back to Ember</a></p>
 
-        <div class="mb-8 space-y-6">
-            <div class="flex flex-wrap gap-3" id="categoryContainer"></div>
-            <div class="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 silhouette-card">
-                <label
-                    class="text-[10px] font-black uppercase text-gray-400 block mb-4 ml-2 tracking-widest italic uppercase leading-none">Silhouette
-                    Boutique</label>
-                <div id="silhouetteGrid" class="flex gap-5 overflow-x-auto pb-2 no-scrollbar text-gray-900"></div>
-            </div>
+<!-- stamp dialogs -->
+<dialog id="textStampModal" class="stamp"><h3>Text stamp</h3>
+  <input type="text" id="textStampInput" maxlength="8" placeholder="Up to 8 characters" aria-label="Stamp text">
+  <select id="textStampFont" aria-label="Font"><option value="serif">Classic serif</option><option value="sans-serif">Modern sans</option><option value="monospace">Digital mono</option></select>
+  <div class="acts"><button class="btn" onclick="closeModals()">Cancel</button><button class="btn primary" onclick="processTextStamp()">Make stamp</button></div></dialog>
+<dialog id="emojiStampModal" class="stamp" style="width:min(92vw,560px)"><h3>Emoji stamp</h3><div id="emojiGrid"></div><div class="acts"><button class="btn" onclick="closeModals()">Close</button></div></dialog>
+<dialog id="imageStampModal" class="stamp"><h3>Image stamp</h3>
+  <input type="file" id="imageStampInput" accept="image/*" aria-label="Choose an image" style="margin-bottom:12px;width:100%">
+  <p style="color:var(--mute);font-size:.9rem;margin-bottom:12px">Dark areas of the image become stitches. Simple black-and-white logos work best.</p>
+  <div class="acts"><button class="btn" onclick="closeModals()">Cancel</button><button class="btn primary" onclick="processImageStamp()">Make stamp</button></div></dialog>
 
-            <div class="bg-white p-6 rounded-[2.5rem] shadow-xl border border-white motif-library-card">
-                <div
-                    class="flex flex-col md:flex-row md:items-center justify-between mb-2 border-b border-gray-100 pb-4 gap-4 text-gray-900">
-                    <div class="flex items-center gap-4">
-                        <h2 class="text-xl font-bold tracking-tight text-gray-900 font-serif italic">Artisan Motif
-                            Library</h2>
-                        <button onclick="toggleMotifLibrary()" id="libraryToggleBtn"
-                            class="bg-gray-100 hover:bg-gray-200 text-[10px] font-black px-4 py-1.5 rounded-full uppercase transition shadow-sm">Show
-                            Library</button>
-                    </div>
-                    <div
-                        class="flex items-center gap-4 bg-gray-50 px-5 py-2 rounded-2xl border border-gray-100 flex-wrap">
-                        <button onclick="openTextStampModal()"
-                            class="bg-white border text-[10px] font-black px-3 py-1 rounded-xl hover:bg-gray-50 transition shadow-sm">🔤
-                            Text</button>
-                        <button onclick="document.getElementById('emojiStampModal').style.display='flex'"
-                            class="bg-white border text-[10px] font-black px-3 py-1 rounded-xl hover:bg-gray-50 transition shadow-sm">😀
-                            Emoji</button>
-                        <button onclick="document.getElementById('imageStampModal').style.display='flex'"
-                            class="bg-white border text-[10px] font-black px-3 py-1 rounded-xl hover:bg-gray-50 transition shadow-sm">🖼️
-                            Image</button>
-                        <div class="h-4 w-[1px] bg-gray-200"></div>
-                        <div class="flex items-center gap-3"><span
-                                class="text-[10px] font-black uppercase text-gray-500">Auto-Layer</span><label
-                                class="switch"><input type="checkbox" id="layerToggle" checked><span
-                                    class="slider"></span></label></div>
-                        <div class="h-4 w-[1px] bg-gray-200"></div>
-                        <div id="selectedLabel"
-                            class="text-[10px] font-black text-orange-600 uppercase tracking-widest">Painting Mode</div>
-                    </div>
-                </div>
-                <div id="motifLibraryContent" class="hidden pt-4 text-gray-900">
-                    <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-10 gap-3" id="motifLibrary">
-                    </div>
-                </div>
-            </div>
-        </div>
+<dialog id="reportModal">
+  <div class="rh"><h3>Your crochet blueprint</h3><button class="ibtn" onclick="closeReportModal()" aria-label="Close">✕</button></div>
+  <div class="rb"><div id="modalPrintArea"></div></div>
+  <div class="rf"><button class="btn" onclick="downloadPNG()">Save picture (PNG)</button><button class="btn primary" onclick="generateFinalPDF()">Export PDF</button></div>
+</dialog>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-5 space-y-6">
-                <div class="bg-white p-6 rounded-[2.5rem] shadow-xl border border-white editor-card text-gray-900">
-                    <div class="flex justify-between items-center mb-5">
-                        <h2 class="text-lg font-bold">Pattern Canvas</h2>
-                        <div class="flex gap-2 items-center">
-                            <button id="finalizeBtn" onclick="bakeStamp()"
-                                class="hidden bg-orange-500 text-white text-[9px] font-black px-4 py-1.5 rounded-lg uppercase hover:bg-orange-600 transition shadow-lg ring-2 ring-orange-200">Finalize
-                                Stamp</button>
-                            <button onclick="fillActiveLayer()"
-                                class="text-[10px] uppercase font-black bg-gray-100 px-4 py-2 rounded-xl hover:bg-gray-200 transition">Fill</button>
-                            <button onclick="clearActiveLayer()"
-                                class="text-[10px] uppercase font-black bg-orange-50 text-orange-600 px-4 py-2 rounded-xl hover:bg-orange-100 transition">Clear
-                                Layer</button>
-                        </div>
-                    </div>
-                    <div id="gridContainer"
-                        class="mb-6 rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 shadow-inner">
-                        <div id="editorGrid" class="crochet-grid"></div>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="bg-gray-50 p-4 rounded-2xl flex items-center justify-between gap-6">
-                            <label
-                                class="text-[10px] font-black uppercase text-gray-400 shrink-0 tracking-widest">Stitch
-                                Scale</label>
-                            <input type="range" id="globalScale" min="5" max="300" value="60"
-                                class="w-full accent-orange-500" oninput="updateVisualScale(this.value)">
-                            <span id="scaleLabel" class="text-xs font-bold w-14 text-right">60px</span>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-2xl flex items-center justify-between gap-6">
-                            <label class="text-[10px] font-black uppercase text-gray-400 shrink-0 tracking-widest">Stamp
-                                Size</label>
-                            <input type="range" id="stampScale" min="0.5" max="4.0" step="0.1" value="1.0"
-                                class="w-full accent-green-500" oninput="updateStampScale(this.value)">
-                            <span id="stampScaleLabel" class="text-xs font-bold w-14 text-right">1.0x</span>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-2xl flex items-center justify-between gap-6">
-                            <label
-                                class="text-[10px] font-black uppercase text-gray-400 shrink-0 uppercase leading-none">Resolution</label>
-                            <select id="gridSizeSelect" onchange="changeGridSize(this.value)"
-                                class="w-full bg-transparent text-xs font-bold focus:outline-none text-right cursor-pointer uppercase">
-                                <option value="20">20x20 Standard</option>
-                                <option value="32">32x32 Fine</option>
-                                <option value="48" selected>48x48 Boutique</option>
-                                <option value="64">64x64 Elite</option>
-                            </select>
-                        </div>
-                        <div class="bg-gray-50 p-4 rounded-2xl flex items-center justify-between gap-6">
-                            <label
-                                class="text-[10px] font-black uppercase text-gray-400 shrink-0 uppercase leading-none">Yarn
-                                Palette</label>
-                            <div class="flex gap-2 items-center overflow-x-auto no-scrollbar py-1" id="colorPalette">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-[2.5rem] shadow-xl border border-white toolbox-card text-gray-900">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-lg font-bold">Design Layers</h2><button onclick="addNewPaintLayer()"
-                            class="text-[10px] font-black uppercase bg-gray-900 text-white px-5 py-2.5 rounded-2xl hover:bg-black transition shadow-sm">+
-                            New Layer</button>
-                    </div>
-                    <div id="layersList" class="max-h-64 overflow-y-auto no-scrollbar pr-2 space-y-1"></div>
-                </div>
-            </div>
-
-            <!-- RIGHT COLUMN -->
-            <div class="lg:col-span-7 flex flex-col">
-                <div
-                    class="bg-white p-5 rounded-[2.5rem] shadow-xl border border-white h-full flex flex-col preview-card text-gray-900">
-                    <div class="flex justify-between items-center px-2 mb-6 text-gray-900">
-                        <div class="flex items-center gap-6">
-                            <h2 class="text-lg font-bold">Studio Preview</h2>
-                            <div class="flex gap-3"><button onclick="undo()" id="undoBtn"
-                                    class="history-btn-text btn-undo">Undo</button><button onclick="redo()" id="redoBtn"
-                                    class="history-btn-text btn-redo">Redo</button></div>
-                        </div>
-                        <span id="currentSelection"
-                            class="text-[10px] font-black text-orange-500 uppercase px-4 py-1.5 bg-orange-50 rounded-full tracking-widest uppercase leading-none">Model</span>
-                    </div>
-                    <div class="visual-container flex-grow" id="dropTarget" ondragover="allowDrop(event)"
-                        ondrop="onDropPattern(event)">
-                        <div class="visual-mask-wrapper" id="zoomWrapper">
-                            <div id="visualMask" class="visual-mask"></div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Controls Row -->
-                <div class="relative mt-4 flex gap-4">
-                    <div class="flex-1 relative"><button onclick="togglePopover('tilt')" id="btn-tilt"
-                            class="artisan-btn">📐 Tilt View</button>
-                        <div id="panel-tilt" class="popover-panel"><input type="range" min="-45" max="45" value="0"
-                                class="w-full h-1.5 accent-orange-500" oninput="tiltPreview(this.value)"></div>
-                    </div>
-                    <div class="flex-1 relative"><button onclick="togglePopover('zoom')" id="btn-zoom"
-                            class="artisan-btn">🔍 Zoom Level</button>
-                        <div id="panel-zoom" class="popover-panel"><input type="range" min="0.5" max="2.5" step="0.1"
-                                value="1" class="w-full h-1.5 accent-orange-500" oninput="zoomPreview(this.value)">
-                        </div>
-                    </div>
-                    <div class="flex-1 relative"><button onclick="togglePopover('bg')" id="btn-bg"
-                            class="artisan-btn">🎨 Studio BG</button>
-                        <div id="panel-bg" class="popover-panel"><input type="color" value="#b40e0e" id="bgColorPicker"
-                                oninput="updatePreviewBG(this.value)"
-                                class="w-full h-8 cursor-pointer rounded-xl border-none bg-transparent"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <footer class="mt-4 pb-12 text-center pt-8">
-        <div class="flex flex-col items-center gap-1">
-            <div class="text-orange-500 text-xl mb-1">🧶</div>
-            <p class="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">© 2026 Emberloom Crochet Studio
-            </p>
-            <p
-                class="text-[9px] font-bold text-gray-300 uppercase tracking-widest leading-none text-center text-gray-900">
-                Artistry by Ats</p>
-        </div>
-    </footer>
-    <script>
-        /**
-         * EMBERLOOM ENGINE V3
-         * FULL FUNCTION HOISTING FOR REFERENCE INTEGRITY
-         */
-
-        // --- GLOBAL CONSTANTS & DATA ---
-        const palette = ['#FBBF24', '#3B82F6', '#EF4444', '#10B981', '#F472B6', '#8B5CF6', '#1F2937', '#ffffff'];
+<script>
+const $ = id => document.getElementById(id);
         const boutiqueMotifs = [
             { id: 'ref-chevron', icon: '📐', name: 'Chevron' }, { id: 'ref-mandala', icon: '☸️', name: 'Mandala' },
             { id: 'ref-bobble', icon: '🧶', name: 'Bobble' }, { id: 'ref-zigzag', icon: '⚡', name: 'Zigzag' },
@@ -520,35 +260,26 @@
             more: { title: 'More Designs', icon: '✨', items: [{ id: 'bouquet-closed', name: 'Flower Bouquet (C)', path: 'M50,10 Q35,40 40,90 L60,90 Q65,40 50,10' }, { id: 'bouquet-open', name: 'Flower Bouquet (O)', path: 'M50,90 L30,30 Q50,10 70,30 Z M40,30 L60,30' }, { id: 'hat-sun', name: 'Sun Hat', path: 'M10,70 Q10,55 30,55 L30,40 Q30,20 50,20 Q70,20 70,40 L70,55 Q90,55 90,70 L90,80 L10,80 Z' }, { id: 'hat-beanie', name: 'Beanie Hat', path: 'M30,80 L70,80 Q70,30 50,30 Q30,30 30,80 Z' }, { id: 'hat-beret', name: 'Beret', path: 'M20,60 Q50,30 80,60 L80,70 Q50,85 20,70 Z' }, { id: 'hat-cowboy', name: 'Cowboy Hat', path: 'M10,75 Q30,65 30,50 L30,35 Q30,25 50,25 Q70,25 70,35 L70,50 Q70,65 90,75 Z' }, { id: 'hat-cloche', name: 'Cloche Hat', path: 'M25,80 Q25,30 50,30 Q75,30 75,80 Q50,95 25,80 Z' }] }
         };
         const emojiPool = ['🧶', '❤️', '🌸', '⭐', '🦄', '🌈', '🦋', '🍀', '🍄', '🐚', '🌙', '🔥', '🌊', '🛸', '💎', '🎨', '👾', '🍦', '🍩', '🍬', '🎈', '🧸', '🍪', '🐈', '✨', '🌍', '🍓', '🥑', '🍎', '🐱', '🐶', '🦊', '🦉', '🦜', '🦒', '🐧', '🐼', '🐨', '🐢', '🐉', '🌵', '🌻', '🌞', '🧵', '🪡', '🐘', '🐳', '🍭', '🍕', '🛰️', '🪐', '🎸', '📷', '🗝️'];
+const palette = ['#FBBF24', '#F97316', '#EF4444', '#F472B6', '#8B5CF6', '#3B82F6', '#14B8A6', '#10B981', '#A16207', '#94A3B8', '#1F2937', '#ffffff'];
 
-        // --- GLOBAL STATE ---
-        let layers = [];
-        let activeLayerIndex = 0;
-        let gridSize = 48;
-        let currentColor = '#FBBF24';
-        let currentStampScale = 1.0;
-        let customTextMotif = null;
-        let isDrawing = false;
-        let isDraggingStamp = false;
-        let currentItem = library.fashion.items[0];
-        let currentCatId = 'fashion';
-        let selectedMotifId = null;
-        let ghostStamp = null;
-        let historyStack = [];
-        let historyIndex = -1;
+// --- STATE ---
+let layers = [], activeLayerIndex = 0, gridSize = 48, currentColor = '#FBBF24', currentStampScale = 1.0;
+let customBits = null;           // '0101…' bitmap of the stamp being placed (64×64)
+let isDrawing = false, brush = 1, erasing = false;
+let currentItem = library.fashion.items[0], currentCatId = 'fashion', selectedMotifId = null, ghostStamp = null;
+let historyStack = [], historyIndex = -1, lastCell = -1;
 
-        // --- ENGINE FUNCTIONS ---
-
-        function isMotifActive(motifId, x, y, cx, cy, layerScale) {
-            // NORMALIZED RADIAL GEOMETRY ENGINE
-            let dx = (x - cx) / layerScale;
-            let dy = (y - cy) / layerScale;
-            let d = Math.sqrt(dx * dx + dy * dy);
-            if (motifId === 'custom-text' && customTextMotif) {
-                let localX = Math.round(dx + 32); let localY = Math.round(dy + 32);
-                if (localX >= 0 && localX < 64 && localY >= 0 && localY < 64) return customTextMotif[localY * 64 + localX];
-                return false;
-            }
+// --- ENGINE ---
+function isMotifActive(motifId, x, y, cx, cy, layerScale, bits) {
+    let dx = (x - cx) / layerScale;
+    let dy = (y - cy) / layerScale;
+    let d = Math.sqrt(dx * dx + dy * dy);
+    if (motifId === 'custom-text') {
+        if (!bits) return false;
+        let localX = Math.round(dx + 32), localY = Math.round(dy + 32);
+        if (localX >= 0 && localX < 64 && localY >= 0 && localY < 64) return bits[localY * 64 + localX] === '1';
+        return false;
+    }
             switch (motifId) {
                 case 'ref-chevron': return Math.abs(dy) % 8 > Math.abs((dx % 8) - 4);
                 case 'ref-mandala': return (d < 12) && (Math.floor(Math.atan2(dy, dx) * 4) % 2 == 0 || d < 3);
@@ -582,331 +313,290 @@
                 case 'ref-zigzag': return (x + y) % 6 < 3;
                 default: return d < 1;
             }
+}
+
+function compositeGrid() {
+    const final = Array(gridSize * gridSize).fill('#ffffff');
+    layers.forEach(layer => {
+        if (!layer.visible) return;
+        for (let i = 0; i < final.length; i++) {
+            const x = i % gridSize, y = Math.floor(i / gridSize);
+            if (layer.type === 'paint') { if (layer.data[i]) final[i] = layer.data[i]; }
+            else if (isMotifActive(layer.motifId, x, y, layer.cx, layer.cy, layer.scale, layer.bits)) final[i] = layer.color;
         }
+    });
+    return final;
+}
 
-        function compositeGrid() {
-            const final = Array(gridSize * gridSize).fill('#ffffff');
-            layers.forEach(layer => {
-                if (!layer.visible) return;
-                for (let i = 0; i < final.length; i++) {
-                    const x = i % gridSize, y = Math.floor(i / gridSize);
-                    if (layer.type === 'paint') { if (layer.data[i] && layer.data[i] !== '#ffffff') final[i] = layer.data[i]; }
-                    else { if (isMotifActive(layer.motifId, x, y, layer.cx, layer.cy, layer.scale)) final[i] = layer.color; }
-                }
-            });
-            return final;
+// --- RENDER ---
+let texQueued = false;
+function renderGrid() {
+    const cv = $('editorCanvas'); if (!cv) return;
+    const cell = Math.max(6, Math.floor(960 / gridSize)), size = cell * gridSize;
+    if (cv.width !== size) { cv.width = size; cv.height = size; }
+    const ctx = cv.getContext('2d'), data = compositeGrid();
+    for (let i = 0; i < data.length; i++) { ctx.fillStyle = data[i]; ctx.fillRect((i % gridSize) * cell, Math.floor(i / gridSize) * cell, cell, cell); }
+    if (ghostStamp) {
+        ctx.globalAlpha = .7; ctx.fillStyle = currentColor;
+        for (let i = 0; i < data.length; i++) {
+            const x = i % gridSize, y = Math.floor(i / gridSize);
+            if (isMotifActive(ghostStamp.id, x, y, ghostStamp.x, ghostStamp.y, currentStampScale, customBits)) ctx.fillRect(x * cell, y * cell, cell, cell);
         }
+        ctx.globalAlpha = 1;
+    }
+    if (cell >= 9) {
+        ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--grid'); ctx.lineWidth = 1; ctx.beginPath();
+        for (let i = 1; i < gridSize; i++) { ctx.moveTo(i * cell + .5, 0); ctx.lineTo(i * cell + .5, size); ctx.moveTo(0, i * cell + .5); ctx.lineTo(size, i * cell + .5); }
+        ctx.stroke();
+    }
+    if (!texQueued) { texQueued = true; requestAnimationFrame(() => { texQueued = false; updateLiveTexture(); }); }
+}
 
-        function handleHoverMove(e) {
-            const win = document.getElementById('motifHoverWindow');
-            if (win && win.style.display === 'flex') {
-                win.style.left = (e.clientX + 15) + 'px'; win.style.top = (e.clientY + 15) + 'px';
-            }
-        }
+function updateLiveTexture() {
+    const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 512;
+    const ctx = canvas.getContext('2d'), step = 512 / gridSize, data = compositeGrid();
+    data.forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect((i % gridSize) * step, Math.floor(i / gridSize) * step, step, step); });
+    if (ghostStamp) {
+        ctx.fillStyle = currentColor;
+        for (let i = 0; i < data.length; i++) if (isMotifActive(ghostStamp.id, i % gridSize, Math.floor(i / gridSize), ghostStamp.x, ghostStamp.y, currentStampScale, customBits)) ctx.fillRect((i % gridSize) * step, Math.floor(i / gridSize) * step, step, step);
+    }
+    $('visualMask').style.backgroundImage = `url(${canvas.toDataURL()})`;
+}
 
-        function hideHoverPreview() { const win = document.getElementById('motifHoverWindow'); if (win) win.style.display = 'none'; }
+function renderLayersUI() {
+    const list = $('layersList'); list.innerHTML = '';
+    [...layers].reverse().forEach((layer, r) => {
+        const idx = layers.length - 1 - r, el = document.createElement('div');
+        el.className = 'layer'; if (idx === activeLayerIndex) el.setAttribute('aria-current', 'true');
+        el.onclick = () => { activeLayerIndex = idx; renderLayersUI(); };
+        el.innerHTML = `<button class="eye" aria-label="${layer.visible ? 'Hide' : 'Show'} layer" onclick="event.stopPropagation();toggleLayerVisibility(${idx})">${layer.visible ? '👁️' : '🕶️'}</button>
+          <span class="nm">${layer.name}</span>
+          <button aria-label="Move up" onclick="event.stopPropagation();moveLayer(${idx},1)">↑</button>
+          <button aria-label="Move down" onclick="event.stopPropagation();moveLayer(${idx},-1)">↓</button>
+          <button aria-label="Delete layer" onclick="event.stopPropagation();removeLayer(${idx})">🗑️</button>`;
+        list.appendChild(el);
+    });
+    refreshMode();
+}
 
-        function showHoverPreview(motifId) {
-            const win = document.getElementById('motifHoverWindow');
-            const canvas = document.getElementById('hoverPreviewCanvas');
-            if (!win || !canvas) return;
-            const ctx = canvas.getContext('2d'); ctx.clearRect(0, 0, 140, 140);
-            const previewRes = 30; const step = 140 / previewRes; const mid = previewRes / 2;
-            for (let y = 0; y < previewRes; y++) {
-                for (let x = 0; x < previewRes; x++) {
-                    if (isMotifActive(motifId, x, y, mid, mid, currentStampScale)) {
-                        ctx.fillStyle = currentColor; ctx.fillRect(x * step, y * step, step, step);
-                    }
-                }
-            }
-            win.style.display = 'flex';
-        }
+function renderCategories() {
+    const c = $('categoryContainer'); c.innerHTML = '';
+    Object.keys(library).forEach(id => {
+        const b = document.createElement('button'); b.className = 'chip'; b.setAttribute('aria-pressed', id === currentCatId);
+        b.textContent = `${library[id].icon} ${library[id].title}`; b.onclick = () => setCategory(id); c.appendChild(b);
+    });
+}
 
-        function renderLayersUI() {
-            const list = document.getElementById('layersList'); if (!list) return;
-            list.innerHTML = '';
-            [...layers].reverse().forEach((layer, revIdx) => {
-                const idx = layers.length - 1 - revIdx;
-                const item = document.createElement('div');
-                item.className = `layer-item ${idx === activeLayerIndex ? 'active' : ''}`;
-                item.onclick = () => { activeLayerIndex = idx; renderLayersUI(); renderGrid(); };
-                item.innerHTML = `
-                    <div class="flex items-center gap-3 flex-grow min-w-0">
-                        <button onclick="event.stopPropagation(); toggleLayerVisibility(${idx})" class="text-gray-400 hover:text-orange-500 shrink-0 text-sm">${layer.visible ? '👁️' : '🕶️'}</button>
-                        <span class="text-[10px] font-black uppercase tracking-tight truncate text-gray-900">${layer.name}</span>
-                    </div>
-                    <div class="flex items-center gap-1 shrink-0 ml-4">
-                        <button onclick="event.stopPropagation(); moveLayer(${idx}, 1)" class="w-7 h-7 border border-gray-200 rounded-lg hover:bg-gray-100 flex items-center justify-center font-bold">↑</button>
-                        <button onclick="event.stopPropagation(); moveLayer(${idx}, -1)" class="w-7 h-7 border border-gray-200 rounded-lg hover:bg-gray-100 flex items-center justify-center font-bold">↓</button>
-                        <button onclick="event.stopPropagation(); removeLayer(${idx})" class="w-7 h-7 border border-gray-200 hover:text-red-500 hover:border-red-500 flex items-center justify-center text-sm rounded-lg">🗑️</button>
-                    </div>
-                `;
-                list.appendChild(item);
-            });
-        }
+function setCategory(id) {
+    currentCatId = id; renderCategories();
+    const g = $('silhouetteGrid'); g.innerHTML = '';
+    library[id].items.forEach(item => {
+        const b = document.createElement('button'); b.className = 'shape'; b.dataset.id = item.id;
+        b.onclick = () => { selectItem(item); setTab('preview', true); };
+        b.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true"><path d="${item.path}"/></svg><span>${item.name}</span>`;
+        g.appendChild(b);
+    });
+    selectItem(library[id].items.some(i => i.id === currentItem.id) ? currentItem : library[id].items[0]);
+}
 
-        function renderGrid() {
-            const grid = document.getElementById('editorGrid'); if (!grid) return;
-            grid.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
-            const data = compositeGrid(); grid.innerHTML = '';
-            for (let i = 0; i < gridSize * gridSize; i++) {
-                const stitch = document.createElement('div');
-                stitch.className = 'stitch';
-                let x = i % gridSize; let y = Math.floor(i / gridSize);
-                stitch.style.backgroundColor = data[i];
-                if (ghostStamp && isMotifActive(ghostStamp.id, x, y, ghostStamp.x, ghostStamp.y, currentStampScale)) {
-                    stitch.style.backgroundColor = currentColor; stitch.classList.add('stamp-preview');
-                }
-                stitch.onmouseover = () => { if (isDrawing) { if (selectedMotifId) { ghostStamp = { id: selectedMotifId, x, y }; renderGrid(); } else paintCell(i); } };
-                stitch.onmousedown = () => {
-                    if (selectedMotifId) { ghostStamp = { id: selectedMotifId, x, y }; renderGrid(); }
-                    else if (layers[activeLayerIndex].type === 'motif') { layers[activeLayerIndex].cx = x; layers[activeLayerIndex].cy = y; renderGrid(); }
-                    else paintCell(i);
-                };
-                grid.appendChild(stitch);
-            }
-            updateLiveTexture();
-        }
+function selectItem(item) {
+    currentItem = item;
+    const url = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='${item.path}' fill='black'/%3E%3C/svg%3E")`;
+    const m = $('visualMask'); m.style.maskImage = url; m.style.webkitMaskImage = url;
+    $('currentSelection').innerText = item.name;
+    document.querySelectorAll('.shape').forEach(b => b.setAttribute('aria-pressed', b.dataset.id === item.id));
+    persist();
+}
 
-        function paintCell(idx) {
-            const layer = layers[activeLayerIndex];
-            if (layer && layer.type === 'paint') { layer.data[idx] = currentColor; renderGrid(); }
-        }
+function renderMotifs() {
+    const lib = $('motifLibrary'); lib.innerHTML = '';
+    boutiqueMotifs.forEach(m => {
+        const b = document.createElement('button'); b.className = 'motif'; b.id = `motif-${m.id}`;
+        b.setAttribute('aria-pressed', selectedMotifId === m.id);
+        b.innerHTML = `<span>${m.icon}</span><span>${m.name}</span>`;
+        b.onclick = () => {
+            if (selectedMotifId) bakeStamp();
+            if (selectedMotifId === m.id) cancelStamp(); else { selectedMotifId = m.id; setStampUI(`Stamp: ${m.name}`); setTab('draw', true); }
+            renderMotifs();
+        };
+        b.onpointerenter = e => { if (e.pointerType === 'mouse') showHoverPreview(m.id); };
+        b.onpointerleave = hideHoverPreview;
+        lib.appendChild(b);
+    });
+}
 
-        function fillActiveLayer() {
-            const layer = layers[activeLayerIndex];
-            if (layer && layer.type === 'paint') { layer.data = Array(gridSize * gridSize).fill(currentColor); renderGrid(); saveHistory(); }
-        }
+let stampLabel = null, toastT;
+function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 1800); }
+function refreshMode() {
+    const l = layers[activeLayerIndex];
+    $('selectedLabel').innerText = selectedMotifId ? stampLabel : (l && l.type === 'motif') ? `Moving: ${l.name}` : (erasing ? 'Erasing' : 'Painting');
+    $('finalizeBtn').disabled = $('cancelBtn').disabled = !selectedMotifId;
+}
+function setStampUI(text) { stampLabel = text; refreshMode(); }
+// Fill / Clear / paint always target a paint layer, switching to the top one if a stamp layer is active.
+function paintLayer() {
+    let l = layers[activeLayerIndex]; if (l && l.type === 'paint') return l;
+    for (let i = layers.length - 1; i >= 0; i--) if (layers[i].type === 'paint') { activeLayerIndex = i; renderLayersUI(); return layers[i]; }
+    layers.unshift({ id: Date.now(), name: 'Base layer', type: 'paint', visible: true, data: Array(gridSize * gridSize).fill(null), scale: 1.0 });
+    activeLayerIndex = 0; renderLayersUI(); return layers[0];
+}
+function cancelStamp() { selectedMotifId = null; ghostStamp = null; setStampUI(null); renderMotifs(); renderGrid(); }
+function toggleEraser() {
+    erasing = !erasing; $('eraserBtn').setAttribute('aria-pressed', erasing); refreshMode();
+}
 
-        function clearActiveLayer() {
-            const layer = layers[activeLayerIndex];
-            if (layer && layer.type === 'paint') { layer.data = Array(gridSize * gridSize).fill('#ffffff'); renderGrid(); saveHistory(); }
-        }
+// --- HOVER PREVIEW (desktop) ---
+function showHoverPreview(motifId) {
+    const win = $('hover'), canvas = $('hoverPreviewCanvas'), ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 140, 140);
+    const res = 30, step = 140 / res, mid = res / 2;
+    ctx.fillStyle = currentColor;
+    for (let y = 0; y < res; y++) for (let x = 0; x < res; x++) if (isMotifActive(motifId, x, y, mid, mid, currentStampScale, null)) ctx.fillRect(x * step, y * step, step, step);
+    win.style.display = 'block';
+}
+function hideHoverPreview() { $('hover').style.display = 'none'; }
+document.addEventListener('pointermove', e => { const w = $('hover'); if (w.style.display === 'block') { w.style.left = (e.clientX + 16) + 'px'; w.style.top = (e.clientY + 16) + 'px'; } });
 
-        function resetCanvas() {
-            layers = [{ id: Date.now(), name: 'Base Layer', type: 'paint', visible: true, data: Array(gridSize * gridSize).fill('#ffffff'), scale: 1.0 }];
-            activeLayerIndex = 0; historyStack = []; historyIndex = -1;
-            selectedMotifId = null; ghostStamp = null; customTextMotif = null;
-            document.getElementById('selectedLabel').innerText = 'Painting Mode';
-            document.getElementById('finalizeBtn').classList.add('hidden');
-            document.querySelectorAll('.motif-item').forEach(el => el.classList.remove('selected'));
-            renderLayersUI(); renderGrid(); saveHistory();
-        }
+// --- EDITING ---
+function paintAt(x, y) {
+    const layer = layers[activeLayerIndex];
+    if (!layer || layer.type !== 'paint') return;
+    const v = erasing ? null : currentColor;
+    for (let dy = 0; dy < brush; dy++) for (let dx = 0; dx < brush; dx++) {
+        const px = x + dx - Math.floor((brush - 1) / 2), py = y + dy - Math.floor((brush - 1) / 2);
+        if (px >= 0 && py >= 0 && px < gridSize && py < gridSize) layer.data[py * gridSize + px] = v;
+    }
+}
+function act(e) {
+    const cv = $('editorCanvas'), r = cv.getBoundingClientRect();
+    const x = Math.min(gridSize - 1, Math.max(0, Math.floor((e.clientX - r.left) / r.width * gridSize)));
+    const y = Math.min(gridSize - 1, Math.max(0, Math.floor((e.clientY - r.top) / r.height * gridSize)));
+    if (y * gridSize + x === lastCell) return; lastCell = y * gridSize + x;
+    if (selectedMotifId) ghostStamp = { id: selectedMotifId, x, y };
+    else if (layers[activeLayerIndex].type === 'motif') { layers[activeLayerIndex].cx = x; layers[activeLayerIndex].cy = y; }
+    else paintAt(x, y);
+    renderGrid();
+}
+function fillActiveLayer() { const l = paintLayer(); l.data = Array(gridSize * gridSize).fill(erasing ? null : currentColor); renderGrid(); saveHistory(); toast(erasing ? 'Layer emptied' : 'Layer filled'); }
+function clearActiveLayer() { const l = paintLayer(); l.data = Array(gridSize * gridSize).fill(null); renderGrid(); saveHistory(); toast('Layer cleared'); }
+function newBase() { return [{ id: Date.now(), name: 'Base layer', type: 'paint', visible: true, data: Array(gridSize * gridSize).fill(null), scale: 1.0 }]; }
+function resetCanvas() {
+    layers = newBase(); activeLayerIndex = 0; historyStack = []; historyIndex = -1;
+    selectedMotifId = null; ghostStamp = null; customBits = null; setStampUI(null);
+    renderMotifs(); renderLayersUI(); renderGrid(); saveHistory();
+}
+function clearAll() { if (historyStack.length <= 1 || confirm('Clear the whole design? This cannot be undone.')) { resetCanvas(); toast('Design cleared'); } }
+function changeGridSize(s) {
+    if (historyStack.length > 1 && !confirm('Changing the resolution starts a new design. Continue?')) { $('gridSizeSelect').value = gridSize; return; }
+    gridSize = parseInt(s); resetCanvas();
+}
 
-        function selectItem(item) {
-            currentItem = item;
-            const mask = document.getElementById('visualMask'); if (!mask) return;
-            const url = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='${item.path}' fill='black'/%3E%3C/svg%3E")`;
-            mask.style.maskImage = url; mask.style.webkitMaskImage = url;
-            document.getElementById('currentSelection').innerText = item.name;
-        }
+// --- STAMPS ---
+function closeModals() { document.querySelectorAll('dialog.stamp').forEach(d => d.open && d.close()); }
+function openTextStampModal() { $('textStampModal').showModal(); $('textStampInput').focus(); }
+function useBitmap(bits, label) { customBits = bits; selectedMotifId = 'custom-text'; setStampUI(label); closeModals(); renderMotifs(); setTab('draw', true); }
+function bitsFromCanvas(ctx, test) { const d = ctx.getImageData(0, 0, 64, 64).data; let s = ''; for (let i = 0; i < d.length; i += 4) s += test(d, i) ? '1' : '0'; return s; }
+function renderStickerToGrid(content, font, size) {
+    const c = document.createElement('canvas'); c.width = c.height = 64; const ctx = c.getContext('2d');
+    ctx.fillStyle = 'white'; ctx.fillRect(0, 0, 64, 64); ctx.fillStyle = 'black'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `bold ${size}px ${font}`; ctx.fillText(content, 32, 32);
+    return bitsFromCanvas(ctx, (d, i) => d[i] < 220);
+}
+function processTextStamp() { const t = $('textStampInput').value || 'A'; useBitmap(renderStickerToGrid(t, $('textStampFont').value, 40), `Text: ${t}`); }
+function processEmojiStamp(e) { useBitmap(renderStickerToGrid(e, 'sans-serif', 46), `Emoji: ${e}`); }
+function processImageStamp() {
+    const file = $('imageStampInput').files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+        const img = new Image();
+        img.onload = () => {
+            const c = document.createElement('canvas'); c.width = c.height = 64; const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0, 64, 64);
+            useBitmap(bitsFromCanvas(ctx, (d, i) => (d[i] + d[i + 1] + d[i + 2]) / 3 < 180 && d[i + 3] > 50), 'Image stamp');
+        };
+        img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+function bakeStamp() {
+    if (!ghostStamp) return;
+    const name = ghostStamp.id === 'custom-text' ? 'Custom stamp' : (boutiqueMotifs.find(m => m.id === ghostStamp.id)?.name || 'Motif');
+    layers.push({ id: Date.now(), name, type: 'motif', motifId: ghostStamp.id, cx: ghostStamp.x, cy: ghostStamp.y, color: currentColor, visible: true, scale: currentStampScale, bits: ghostStamp.id === 'custom-text' ? customBits : undefined });
+    paintLayer(); ghostStamp = null; selectedMotifId = null; setStampUI(null);
+    renderMotifs(); renderLayersUI(); renderGrid(); saveHistory();
+}
+function addNewPaintLayer() { bakeStamp(); layers.push({ id: Date.now(), name: `Layer ${layers.length + 1}`, type: 'paint', visible: true, data: Array(gridSize * gridSize).fill(null), scale: 1.0 }); activeLayerIndex = layers.length - 1; renderLayersUI(); renderGrid(); saveHistory(); }
+function updateStampScale(v) {
+    currentStampScale = parseFloat(v); $('stampScaleLabel').innerText = `${(+v).toFixed(1)}x`;
+    const l = layers[activeLayerIndex]; if (l && l.type === 'motif') l.scale = currentStampScale;
+    renderGrid();
+}
 
-        function setCategory(id) {
-            currentCatId = id; renderCategories();
-            const grid = document.getElementById('silhouetteGrid'); if (!grid) return;
-            grid.innerHTML = '';
-            library[id].items.forEach(item => {
-                const btn = document.createElement('button');
-                btn.className = 'bg-white border-2 border-transparent rounded-2xl p-4 min-w-[110px] hover:border-orange-200 transition-all flex flex-col items-center shrink-0 group shadow-sm';
-                btn.onclick = () => selectItem(item);
-                btn.innerHTML = `<svg viewBox="0 0 100 100" class="w-8 h-8 fill-gray-300 group-hover:fill-orange-500 transition-colors"><path d="${item.path}"></path></svg><span class="text-[8px] font-black uppercase mt-2 text-gray-400 group-hover:text-gray-900 leading-tight truncate w-full text-center">${item.name}</span>`;
-                grid.appendChild(btn);
-            });
-            selectItem(library[id].items[0]);
-        }
+// --- HISTORY + AUTOSAVE ---
+function saveHistory() {
+    const d = JSON.stringify(layers);
+    if (historyIndex < historyStack.length - 1) historyStack = historyStack.slice(0, historyIndex + 1);
+    if (historyStack[historyIndex] === d) return;
+    historyStack.push(d); if (historyStack.length > 40) historyStack.shift(); historyIndex = historyStack.length - 1;
+    updateHistoryButtons(); persist();
+}
+function restoreHistory() { layers = JSON.parse(historyStack[historyIndex]); activeLayerIndex = Math.min(activeLayerIndex, layers.length - 1); renderLayersUI(); renderGrid(); updateHistoryButtons(); persist(); }
+function undo() { if (historyIndex > 0) { historyIndex--; restoreHistory(); } }
+function redo() { if (historyIndex < historyStack.length - 1) { historyIndex++; restoreHistory(); } }
+function updateHistoryButtons() { $('undoBtn').disabled = historyIndex <= 0; $('redoBtn').disabled = historyIndex >= historyStack.length - 1; }
+let saveT;
+function persist() {
+    clearTimeout(saveT);
+    saveT = setTimeout(() => { try { localStorage.setItem('ember-studio-v2', JSON.stringify({ layers, gridSize, cat: currentCatId, item: currentItem.id, color: currentColor })); } catch (e) {} }, 400);
+}
+function loadSaved() {
+    try {
+        const s = JSON.parse(localStorage.getItem('ember-studio-v2') || 'null');
+        if (!s || !Array.isArray(s.layers) || !s.layers.length) return false;
+        gridSize = s.gridSize; layers = s.layers; currentColor = s.color || currentColor;
+        if (library[s.cat]) { currentCatId = s.cat; currentItem = library[s.cat].items.find(i => i.id === s.item) || library[s.cat].items[0]; }
+        $('gridSizeSelect').value = gridSize; activeLayerIndex = layers.length - 1; return true;
+    } catch (e) { return false; }
+}
 
-        function renderCategories() {
-            const container = document.getElementById('categoryContainer'); if (!container) return;
-            container.innerHTML = '';
-            Object.keys(library).forEach(id => {
-                const btn = document.createElement('div');
-                btn.className = `category-tab ${id === currentCatId ? 'active' : ''}`;
-                btn.onclick = () => setCategory(id);
-                btn.innerHTML = `<span>${library[id].icon}</span> <span>${library[id].title}</span>`;
-                container.appendChild(btn);
-            });
-        }
+// --- PREVIEW CONTROLS ---
+function updateVisualScale(v) { $('visualMask').style.backgroundSize = `${v}px ${v}px`; $('scaleLabel').innerText = `${v}px`; }
+function updatePreviewBG(c) { $('dropTarget').style.background = c; }
+function tiltPreview(v) { $('visualMask').style.transform = `rotateY(${v}deg)`; }
+function zoomPreview(v) { $('zoomWrapper').style.transform = `scale(${v})`; }
+function toggleLayerVisibility(i) { layers[i].visible = !layers[i].visible; renderLayersUI(); renderGrid(); saveHistory(); }
+function removeLayer(i) { if (layers.length > 1) { layers.splice(i, 1); activeLayerIndex = Math.min(activeLayerIndex, layers.length - 1); renderLayersUI(); renderGrid(); saveHistory(); } }
+function moveLayer(i, dir) { const n = i + dir; if (n >= 0 && n < layers.length) { [layers[i], layers[n]] = [layers[n], layers[i]]; activeLayerIndex = n; renderLayersUI(); renderGrid(); saveHistory(); } }
 
-        function renderMotifs() {
-            const lib = document.getElementById('motifLibrary'); if (!lib) return;
-            lib.innerHTML = '';
-            boutiqueMotifs.forEach(m => {
-                const div = document.createElement('div');
-                div.className = 'bg-white border shadow-sm rounded-2xl p-3 flex flex-col items-center justify-center cursor-pointer hover:border-orange-400 transition w-full motif-item';
-                if (selectedMotifId === m.id) div.classList.add('selected');
-                div.id = `motif-${m.id}`;
-                div.onclick = () => {
-                    if (selectedMotifId) bakeStamp();
-                    selectedMotifId = (selectedMotifId === m.id) ? null : m.id;
-                    renderMotifs();
-                    const label = document.getElementById('selectedLabel');
-                    if (selectedMotifId) {
-                        label.innerText = `Stamp: ${m.name}`;
-                        document.getElementById('finalizeBtn').classList.remove('hidden');
-                    } else {
-                        label.innerText = 'Painting Mode';
-                        document.getElementById('finalizeBtn').classList.add('hidden');
-                    }
-                };
-                div.onmouseenter = () => showHoverPreview(m.id);
-                div.onmouseleave = hideHoverPreview;
-                div.innerHTML = `<span class="text-xl mb-1">${m.icon}</span><span class="text-[9px] font-black uppercase text-center leading-none text-gray-900">${m.name}</span>`;
-                lib.appendChild(div);
-            });
-        }
+function createPalette() {
+    const c = $('colorPalette'); c.innerHTML = '';
+    palette.forEach(color => {
+        const b = document.createElement('button'); b.className = 'sw'; b.style.background = color; b.setAttribute('aria-label', `Yarn ${color}`);
+        b.setAttribute('aria-pressed', color.toLowerCase() === currentColor.toLowerCase());
+        b.onclick = () => { setColor(color); }; c.appendChild(b);
+    });
+    const p = document.createElement('input'); p.type = 'color'; p.value = currentColor; p.setAttribute('aria-label', 'Custom colour');
+    p.onchange = e => setColor(e.target.value); c.appendChild(p);
+}
+function setColor(color) { currentColor = color; if (erasing) toggleEraser(); createPalette(); renderGrid(); persist(); }
 
-        // --- INTERACTION & STAMP LOGIC ---
+// --- TABS (small screens) ---
+function setTab(t, soft) {
+    if (soft && matchMedia('(min-width:1100px)').matches) return;
+    $('studio').dataset.tab = t;
+    document.querySelectorAll('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.t === t));
+    window.scrollTo({ top: 0 });
+}
 
-        function togglePopover(type) {
-            const el = document.getElementById(`panel-${type}`);
-            const btn = document.getElementById(`btn-${type}`);
-            const panels = ['tilt', 'zoom', 'bg'];
-            const isShowing = el.classList.contains('show');
-            panels.forEach(p => {
-                const panel = document.getElementById(`panel-${p}`);
-                const b = document.getElementById(`btn-${p}`);
-                if (panel) panel.classList.remove('show');
-                if (b) b.classList.remove('active');
-            });
-            if (!isShowing && el) { el.classList.add('show'); btn.classList.add('active'); }
-        }
-
-        function closeModals() { document.querySelectorAll('.stamp-modal').forEach(m => m.style.display = 'none'); }
-
-        function toggleMotifLibrary() {
-            const content = document.getElementById('motifLibraryContent');
-            const btn = document.getElementById('libraryToggleBtn');
-            content.classList.toggle('hidden');
-            btn.innerText = content.classList.contains('hidden') ? 'Show Library' : 'Hide Library';
-        }
-
-        function openTextStampModal() { document.getElementById('textStampModal').style.display = 'flex'; }
-
-        function processTextStamp() {
-            const text = document.getElementById('textStampInput').value || "A";
-            renderStickerToGrid(text, document.getElementById('textStampFont').value, 40);
-            selectedMotifId = 'custom-text'; document.getElementById('selectedLabel').innerText = `Text: ${text}`;
-            document.getElementById('finalizeBtn').classList.remove('hidden'); closeModals(); renderMotifs();
-        }
-
-        function processEmojiStamp(emoji) {
-            renderStickerToGrid(emoji, "sans-serif", 46);
-            selectedMotifId = 'custom-text'; document.getElementById('selectedLabel').innerText = `Emoji: ${emoji}`;
-            document.getElementById('finalizeBtn').classList.remove('hidden'); closeModals(); renderMotifs();
-        }
-
-        function processImageStamp() {
-            const file = document.getElementById('imageStampInput').files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 64;
-                    const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, 64, 64);
-                    const data = ctx.getImageData(0, 0, 64, 64).data;
-                    customTextMotif = new Array(64 * 64).fill(false);
-                    for (let i = 0; i < data.length; i += 4) {
-                        let avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
-                        if (avg < 180 && data[i + 3] > 50) customTextMotif[i / 4] = true;
-                    }
-                    selectedMotifId = 'custom-text'; document.getElementById('selectedLabel').innerText = "Image Stamp";
-                    document.getElementById('finalizeBtn').classList.remove('hidden'); closeModals(); renderMotifs();
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-
-        function renderStickerToGrid(content, font, size) {
-            const canvas = document.createElement('canvas'); canvas.width = 64; canvas.height = 64;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = "white"; ctx.fillRect(0, 0, 64, 64);
-            ctx.fillStyle = "black"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-            ctx.font = `bold ${size}px ${font}`; ctx.fillText(content, 32, 32);
-            const imgData = ctx.getImageData(0, 0, 64, 64).data;
-            customTextMotif = new Array(64 * 64).fill(false);
-            for (let i = 0; i < imgData.length; i += 4) { if (imgData[i] < 220) customTextMotif[i / 4] = true; }
-        }
-
-        function bakeStamp() { if (ghostStamp) { addMotifLayer(ghostStamp.id, ghostStamp.x, ghostStamp.y, currentColor, currentStampScale); ghostStamp = null; renderGrid(); renderLayersUI(); } }
-
-        function addNewPaintLayer() {
-            bakeStamp();
-            const newLayer = { id: Date.now(), name: `Layer ${layers.length + 1}`, type: 'paint', visible: true, data: Array(gridSize * gridSize).fill(null), scale: 1.0 };
-            layers.push(newLayer); activeLayerIndex = layers.length - 1; renderLayersUI(); renderGrid(); saveHistory();
-        }
-
-        function addMotifLayer(motifId, cx, cy, color, scale) {
-            const name = motifId === 'custom-text' ? 'Custom Stamp' : (boutiqueMotifs.find(m => m.id === motifId)?.name || 'Motif');
-            layers.push({ id: Date.now(), name, type: 'motif', motifId, cx, cy, color, visible: true, scale: scale });
-            activeLayerIndex = layers.length - 1; saveHistory();
-        }
-
-        function updateStampScale(v) {
-            currentStampScale = parseFloat(v);
-            document.getElementById('stampScaleLabel').innerText = `${v}x`;
-            // INDIVIDUAL SCALING: If active layer is a motif, update its specific scale
-            const activeLayer = layers[activeLayerIndex];
-            if (activeLayer && activeLayer.type === 'motif') { activeLayer.scale = currentStampScale; }
-            renderGrid();
-        }
-
-        function saveHistory() {
-            const d = JSON.stringify(layers); if (historyIndex < historyStack.length - 1) historyStack = historyStack.slice(0, historyIndex + 1);
-            if (historyStack[historyIndex] === d) return;
-            historyStack.push(d); if (historyStack.length > 50) historyStack.shift(); historyIndex = historyStack.length - 1;
-            updateHistoryButtons();
-        }
-        function undo() { if (historyIndex > 0) { historyIndex--; layers = JSON.parse(historyStack[historyIndex]); activeLayerIndex = Math.min(activeLayerIndex, layers.length - 1); renderLayersUI(); renderGrid(); updateHistoryButtons(); } }
-        function redo() { if (historyIndex < historyStack.length - 1) { historyIndex++; layers = JSON.parse(historyStack[historyIndex]); activeLayerIndex = Math.min(activeLayerIndex, layers.length - 1); renderLayersUI(); renderGrid(); updateHistoryButtons(); } }
-        function updateHistoryButtons() {
-            const u = document.getElementById('undoBtn'); const r = document.getElementById('redoBtn');
-            if (u) u.disabled = historyIndex <= 0; if (r) r.disabled = historyIndex >= historyStack.length - 1;
-        }
-
-        function updateVisualScale(v) { document.getElementById('visualMask').style.backgroundSize = `${v}px ${v}px`; document.getElementById('scaleLabel').innerText = `${v}px`; }
-        function updatePreviewBG(c) { document.getElementById('dropTarget').style.background = c; }
-        function tiltPreview(v) { document.getElementById('visualMask').style.transform = `rotateY(${v}deg)`; }
-        function zoomPreview(v) { document.getElementById('zoomWrapper').style.transform = `scale(${v})`; }
-        function changeGridSize(s) { gridSize = parseInt(s); resetCanvas(); }
-        function toggleLayerVisibility(idx) { layers[idx].visible = !layers[idx].visible; renderLayersUI(); renderGrid(); }
-        function removeLayer(idx) { if (layers.length > 1) { layers.splice(idx, 1); activeLayerIndex = Math.min(activeLayerIndex, layers.length - 1); renderLayersUI(); renderGrid(); saveHistory(); } }
-        function moveLayer(idx, dir) { const nIdx = idx + dir; if (nIdx >= 0 && nIdx < layers.length) { const t = layers[idx]; layers[idx] = layers[nIdx]; layers[nIdx] = t; activeLayerIndex = nIdx; renderLayersUI(); renderGrid(); saveHistory(); } }
-
-        function createPalette() {
-            const container = document.getElementById('colorPalette'); if (!container) return;
-            container.innerHTML = '';
-            const picker = document.createElement('input');
-            picker.type = 'color'; picker.className = 'w-7 h-7 rounded-full cursor-pointer border-2 border-white shadow-sm shrink-0 p-0 overflow-hidden';
-            picker.value = currentColor;
-            picker.onchange = (e) => { bakeStamp(); currentColor = e.target.value; renderMotifs(); };
-            container.appendChild(picker);
-            palette.forEach(color => {
-                const btn = document.createElement('button'); btn.className = 'w-7 h-7 rounded-full border-2 border-white shadow-sm shrink-0';
-                btn.style.backgroundColor = color;
-                btn.onclick = () => { bakeStamp(); currentColor = color; renderMotifs(); };
-                container.appendChild(btn);
-            });
-        }
-
-        function updateLiveTexture() {
-            const canvas = document.createElement('canvas'); canvas.width = 512; canvas.height = 512;
-            const ctx = canvas.getContext('2d'); const step = 512 / gridSize;
-            const data = compositeGrid();
-            data.forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect((i % gridSize) * step, Math.floor(i / gridSize) * step, step, step); });
-            if (ghostStamp) {
-                for (let i = 0; i < data.length; i++) {
-                    if (isMotifActive(ghostStamp.id, i % gridSize, Math.floor(i / gridSize), ghostStamp.x, ghostStamp.y, currentStampScale)) {
-                        ctx.fillStyle = currentColor; ctx.fillRect((i % gridSize) * step, Math.floor(i / gridSize) * step, step, step);
-                    }
-                }
-            }
-            document.getElementById('visualMask').style.backgroundImage = `url(${canvas.toDataURL()})`;
-        }
-
-        // --- PDF ENGINE ---
-        function openReportModal() {
-            bakeStamp(); const modal = document.getElementById('reportModal'); const area = document.getElementById('modalPrintArea'); if (!modal || !area) return;
+// --- EXPORT ---
+function fitReport() {
+    const area = $('modalPrintArea'), root = $('pdf-root'); if (!root) return;
+    const s = Math.min(1, ($('reportModal').querySelector('.rb').clientWidth - 28) / 1122);
+    root.style.transformOrigin = '0 0'; root.style.transform = `scale(${s})`;
+    area.style.width = `${1122 * s}px`; area.style.height = `${794 * s}px`;
+}
+addEventListener('resize', () => { if ($('reportModal').open) fitReport(); });
+function openReportModal() {
+    bakeStamp(); const area = $('modalPrintArea');
             const data = compositeGrid(); const usedColors = [...new Set(data)].filter(c => c !== '#ffffff');
             const studioBG = document.getElementById('bgColorPicker').value;
             const currentScale = document.getElementById('globalScale').value;
@@ -954,53 +644,50 @@
                         </div>
                     </div>
                 </div>`;
-            modal.style.display = 'flex';
-        }
+    $('reportModal').showModal(); fitReport();
+}
+function closeReportModal() { $('reportModal').close(); }
+async function generateFinalPDF() {
+    const root = $('pdf-root'); if (!root) return;
+    const prev = root.style.transform; root.style.transform = 'none';
+    try {
+        await html2pdf().set({ margin: 0, filename: 'EMBERLOOM_BLUEPRINT.pdf', image: { type: 'jpeg', quality: 1.0 },
+            html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0, x: 0, y: 0, windowWidth: 1122 },
+            jsPDF: { unit: 'px', format: [1122, 794], orientation: 'landscape' } }).from(root).save();
+    } finally { root.style.transform = prev; }
+    closeReportModal();
+}
+function downloadPNG() {
+    const cell = Math.floor(1024 / gridSize), c = document.createElement('canvas'); c.width = c.height = cell * gridSize;
+    const ctx = c.getContext('2d'); compositeGrid().forEach((col, i) => { ctx.fillStyle = col; ctx.fillRect((i % gridSize) * cell, Math.floor(i / gridSize) * cell, cell, cell); });
+    const a = document.createElement('a'); a.href = c.toDataURL('image/png'); a.download = 'emberloom-pattern.png'; a.click();
+}
 
-        function closeReportModal() { document.getElementById('reportModal').style.display = 'none'; }
+// --- INIT ---
+function init() {
+    const eg = $('emojiGrid');
+    emojiPool.forEach(e => { const b = document.createElement('button'); b.innerText = e; b.setAttribute('aria-label', `Emoji ${e}`); b.onclick = () => processEmojiStamp(e); eg.appendChild(b); });
+    const restored = loadSaved();
+    createPalette(); renderCategories(); renderMotifs(); setCategory(currentCatId);
+    if (restored) { renderLayersUI(); renderGrid(); saveHistory(); } else resetCanvas();
+    updateVisualScale($('globalScale').value);
 
-        async function generateFinalPDF() {
-            const area = document.getElementById('pdf-root'); if (!area) return;
-            const opt = {
-                margin: 0,
-                filename: `EMBERLOOM_BLUEPRINT.pdf`,
-                image: { type: 'jpeg', quality: 1.0 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0, x: 0, y: 0, windowWidth: 1122 },
-                jsPDF: { unit: 'px', format: [1122, 794], orientation: 'landscape' }
-            };
-            await html2pdf().set(opt).from(area).save(); closeReportModal();
-        }
-
-        // --- INIT ---
-        function init() {
-            const eg = document.getElementById('emojiGrid');
-            if (eg) {
-                eg.innerHTML = '';
-                emojiPool.forEach(e => {
-                    const b = document.createElement('button');
-                    b.className = "text-3xl p-3 hover:bg-orange-100 rounded-2xl transition active:scale-90";
-                    b.innerText = e; b.onclick = () => processEmojiStamp(e); eg.appendChild(b);
-                });
-            }
-
-            createPalette();
-            renderCategories();
-            renderMotifs();
-            resetCanvas();
-            setCategory('fashion');
-
-            document.body.addEventListener('mousedown', (e) => { if (e.target.closest('#editorGrid')) isDrawing = true; });
-            document.body.addEventListener('mouseup', () => { if (isDrawing || isDraggingStamp) saveHistory(); isDrawing = false; isDraggingStamp = false; });
-            document.addEventListener('mousemove', handleHoverMove);
-            updateHistoryButtons();
-        }
-
-        window.onload = init;
-        window.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
-        });
-    </script>
+    const cv = $('editorCanvas');
+    cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); isDrawing = true; lastCell = -1; act(e); });
+    cv.addEventListener('pointermove', e => { if (isDrawing) act(e); });
+    const end = () => { if (isDrawing) { isDrawing = false; saveHistory(); } };
+    cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    $('brushSeg').onclick = e => { const b = e.target.closest('[data-b]'); if (!b) return; brush = +b.dataset.b; document.querySelectorAll('#brushSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); };
+    $('tabs').onclick = e => { const b = e.target.closest('[data-t]'); if (b) setTab(b.dataset.t); };
+    updateHistoryButtons();
+}
+addEventListener('keydown', e => {
+    if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) return;
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+    if (e.key === 'Escape' && selectedMotifId) cancelStamp();
+});
+window.onload = init;
+</script>
 </body>
-
 </html>
