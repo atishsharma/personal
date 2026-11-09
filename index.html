@@ -1,702 +1,266 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="public, max-age=604800">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atish Ak Sharma - Official Portfolio</title>
-    <meta name="description"
-        content="Official portfolio of Atish Ak Sharma. A developer's garden of experiments, tools, and research.">
-    <meta name="keywords" content="Atish Ak Sharma, ATS Design Studio, Portfolio, Web Developer, Full Stack">
-    <meta name="author" content="Atish Ak Sharma">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://atishaksharma.com/">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://atishaksharma.com/">
-    <meta property="og:title" content="Atish Ak Sharma - Official Portfolio">
-    <meta property="og:description" content="A developer's garden of experiments, tools, and research.">
-    <meta property="og:image" content="master/logo_favicon.jpg">
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://atishaksharma.com/">
-    <meta property="twitter:title" content="Atish Ak Sharma - Official Portfolio">
-    <meta property="twitter:description" content="A developer's garden of experiments, tools, and research.">
-    <meta property="twitter:image" content="master/logo_favicon.jpg">
-    <link rel="icon" type="image/png" href="master/logo_favicon.jpg">
-
-    <link rel="stylesheet" href="master/servetailwind.css">
-    <script>
-if (localStorage.theme === 'light') {
-            document.documentElement.classList.remove('dark');
-        } else {
-            document.documentElement.classList.add('dark');
-        }
-    </script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Bebas+Neue&family=Anton&display=swap"
-        rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .glass-nav {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        .dark .glass-nav {
-            background: rgba(15, 23, 42, 0.5);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 24px 40px -8px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-        }
-
-        .dark .glass-panel {
-            background: rgba(17, 24, 39, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 24px 40px -8px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-        }
-
-        .dark .glass-card {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .gradient-text {
-            background: linear-gradient(to right, #10b981, #3b82f6, #6366f1);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-        }
-
-        .gradient-text-alt {
-            background: linear-gradient(to right, #f43f5e, #8b5cf6, #3b82f6);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-        }
-
-        .bg-grid-pattern {
-            background-image: linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-            background-size: 32px 32px;
-        }
-
-        .dark .bg-grid-pattern {
-            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        }
-
-        summary::-webkit-details-marker {
-            display: none;
-        }
-
-        summary {
-            list-style: none;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-5px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fadeIn {
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-
-        @keyframes outlineBlink {
-
-            0%,
-            100% {
-                border-color: rgba(239, 68, 68, 0.8);
-                box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
-            }
-
-            50% {
-                border-color: rgba(239, 68, 68, 0.1);
-                box-shadow: 0 0 0px rgba(239, 68, 68, 0);
-            }
-        }
-
-        .blink-outline {
-            animation: outlineBlink 2.5s ease-in-out infinite;
-            border: 1px solid transparent;
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* === HERO SECTION === */
-        .hero-section {
-            position: relative;
-            min-height: 100vh;
-            min-height: 100svh;
-            background: linear-gradient(135deg, #f8f9fc 0%, #e8eaf0 100%);
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .dark .hero-section {
-            background: #050508;
-        }
-
-        .hero-glow {
-            position: absolute;
-            top: 45%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: min(800px, 100vw);
-            height: min(800px, 100vw);
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(139, 92, 246, 0.08) 40%, transparent 65%);
-            border-radius: 50%;
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .dark .hero-glow {
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.30) 0%, rgba(139, 92, 246, 0.15) 40%, transparent 65%);
-        }
-
-        .hero-glow-2 {
-            position: absolute;
-            top: 40%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: min(500px, 65vw);
-            height: min(500px, 65vw);
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, transparent 55%);
-            border-radius: 50%;
-            z-index: 1;
-            pointer-events: none;
-            animation: glowPulse 4s ease-in-out infinite;
-        }
-
-        .dark .hero-glow-2 {
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, transparent 55%);
-        }
-
-        @keyframes glowPulse {
-
-            0%,
-            100% {
-                opacity: .8;
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            50% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.06);
-            }
-        }
-
-        .hero-name-bg {
-            position: absolute;
-            top: 15%;
-            left: 0;
-            right: 0;
-            z-index: 2;
-            font-family: 'Anton', 'Inter', sans-serif;
-            font-weight: 900;
-            font-size: clamp(86px, 12.5vw, 237px);
-            color: rgba(44, 90, 142, 0.12);
-            text-transform: uppercase;
-            line-height: 1;
-            text-align: center;
-            white-space: nowrap;
-            letter-spacing: 0.03em;
-            pointer-events: none;
-            user-select: none;
-            width: 100%;
-        }
-
-        .dark .hero-name-bg {
-            color: rgba(255, 255, 255, 0.88);
-        }
-
-        .hero-name-mobile {
-            display: none;
-        }
-
-        .hero-photo {
-            position: relative;
-            z-index: 3;
-            margin-bottom: -4px;
-        }
-
-        .hero-photo img {
-            width: clamp(380px, 48vw, 700px);
-            height: auto;
-            max-height: 85vh;
-            object-fit: contain;
-            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.10));
-        }
-
-        .dark .hero-photo img {
-            filter: drop-shadow(0 10px 50px rgba(139, 92, 246, 0.25));
-        }
-
-        .hero-left {
-            position: absolute;
-            bottom: 10%;
-            left: 4%;
-            z-index: 4;
-            max-width: 340px;
-        }
-
-        .hero-left p {
-            color: #475569;
-            font-size: 14px;
-            line-height: 1.7;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
-        .dark .hero-left p {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .hero-socials {
-            display: flex;
-            gap: 10px;
-        }
-
-        .hero-socials a {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(139, 92, 246, 0.15);
-            color: #8b5cf6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        .dark .hero-socials a {
-            background: rgba(139, 92, 246, 0.8);
-            color: white;
-        }
-
-        .hero-socials a:hover {
-            background: #8b5cf6;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-        }
-
-        .hero-right {
-            position: absolute;
-            bottom: 10%;
-            right: 4%;
-            z-index: 4;
-            max-width: 300px;
-            text-align: right;
-        }
-
-        .hero-right p {
-            color: #64748b;
-            font-size: 14px;
-            line-height: 1.7;
-            font-weight: 500;
-            margin-bottom: 20px;
-        }
-
-        .dark .hero-right p {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .hero-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 28px;
-            border: 2px solid #8b5cf6;
-            border-radius: 50px;
-            color: #8b5cf6;
-            font-weight: 700;
-            font-size: 15px;
-            transition: all 0.3s;
-            text-decoration: none;
-        }
-
-        .dark .hero-cta {
-            color: white;
-        }
-
-        .hero-cta:hover {
-            background: #8b5cf6;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-        }
-
-        .hero-cta-arrow {
-            width: 32px;
-            height: 32px;
-            background: #8b5cf6;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .hero-scroll-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 28px;
-            border-radius: 50px;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            color: #0f172a;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .dark .hero-scroll-btn {
-            background: rgba(15, 23, 42, 0.6);
-            border-color: rgba(139, 92, 246, 0.4);
-            color: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .hero-scroll-btn:hover {
-            background: #8b5cf6;
-            color: white;
-            border-color: #8b5cf6;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
-        }
-
-        .hero-scroll-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: rgba(139, 92, 246, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: scrollBounce 2s ease-in-out infinite;
-            color: #8b5cf6;
-        }
-
-        .dark .hero-scroll-icon {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .hero-scroll-btn:hover .hero-scroll-icon {
-            background: white;
-            color: #8b5cf6;
-        }
-
-        @keyframes scrollBounce {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(4px);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero-section {
-                align-items: center;
-                flex-direction: column;
-                padding: 20px 0px 90px;
-                gap: 0;
-                margin-top: 80px;
-                min-height: calc(100vh - 80px);
-                min-height: calc(100svh - 80px);
-                overflow-x: hidden;
-            }
-
-            .hero-left,
-            .hero-right {
-                position: relative;
-                bottom: auto;
-                left: auto;
-                right: auto;
-                max-width: 100%;
-                text-align: center;
-                padding: 0 20px;
-            }
-
-            .hero-socials {
-                justify-content: center;
-                margin-bottom: 20px;
-            }
-
-            .hero-name-bg {
-                display: none;
-            }
-
-            .hero-name-mobile {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                font-family: 'Anton', 'Inter', sans-serif;
-                font-weight: 900;
-                font-size: 28vw;
-                text-transform: uppercase;
-                line-height: 0.85;
-                letter-spacing: 0.02em;
-                color: rgba(44, 90, 142, 0.15);
-                text-align: center;
-                z-index: 2;
-                position: absolute;
-                top: 21%;
-                left: 0;
-                right: 0;
-                transform: translateY(-50%);
-                pointer-events: none;
-                user-select: none;
-                width: 100%;
-            }
-
-            .dark .hero-name-mobile {
-                color: rgba(255, 255, 255, 0.85);
-            }
-
-            .hero-photo {
-                margin-bottom: 30px;
-                margin-top: 3vh;
-                position: relative;
-                z-index: 3;
-                width: 100%;
-            }
-
-            .hero-photo img {
-                width: 100%;
-                max-width: none;
-                height: auto;
-                max-height: 60vh;
-                object-fit: cover;
-                object-position: top;
-            }
-
-            .hero-right {
-                text-align: center;
-                margin-top: 20px;
-            }
-
-            .mobile-nav-title {
-                display: none !important;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atish Ak Sharma | Full Stack Developer in Chandigarh | Software, Simply Built</title>
+<meta name="description" content="Atish Ak Sharma is a full stack developer in Chandigarh, India (M.Tech, Computer Science). Browse his music player, file explorer, India highway maps, weather and web tools from ATS Design Studio.">
+<link rel="canonical" href="https://atishaksharma.com/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="author" content="Atish Ak Sharma">
+<meta name="theme-color" content="#d3cfc6">
+<meta property="og:site_name" content="Atish Ak Sharma">
+<meta property="og:title" content="Atish Ak Sharma | Full Stack Developer in Chandigarh">
+<meta property="og:description" content="Software, simply built. Apps, maps and web tools from ATS Design Studio.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Atish Ak Sharma | Full Stack Developer in Chandigarh">
+<meta name="twitter:description" content="Software, simply built. Apps, maps and web tools from ATS Design Studio.">
+<meta name="twitter:image" content="https://atishaksharma.com/heroimage.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Atish Ak Sharma","url":"https://atishaksharma.com/","image":"https://atishaksharma.com/heroimage.png","jobTitle":"Full Stack Developer","email":"mailto:mail@atishaksharma.com","address":{"@type":"PostalAddress","addressLocality":"Chandigarh","addressCountry":"IN"},"worksFor":{"@type":"Organization","name":"ATS Design Studio"},"sameAs":["https://github.com/atishsharma","https://instagram.com/atishaksharma","https://twitter.com/atishaksharma","https://facebook.com/atishaksharma"]}
+</script>
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://atishaksharma.com/">
+<meta property="og:image" content="https://atishaksharma.com/heroimage.png">
+<link rel="icon" href="master/logo_favicon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap">
+<style>
+:root{
+  --concrete:#d3cfc6; --paper:#e4e1d9; --ink:#1d1e21; --mute:#55564f;
+  --ochre:#e0a526; --blue:#2f5d9e; --red:#c8442e; --green:#3e7b59;
+  --on-ochre:#1d1e21; --on-blue:#fff; --on-red:#fff; --on-green:#fff;
+  --line:rgba(29,30,33,.28);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --concrete:#2a2a27; --paper:#20201e; --ink:#ebe8e0; --mute:#a3a198;
+    --blue:#4f7fc4; --red:#dd5f48; --green:#5aa07a; --line:rgba(235,232,224,.25);
+  }
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--concrete);color:var(--ink);
+  font-family:'Archivo',system-ui,sans-serif;font-size:1.0625rem;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px}
+
+/* top bar */
+.bar{display:flex;justify-content:space-between;align-items:center;padding:20px 0;font-weight:600}
+.bar nav{display:flex;gap:28px}
+.bar a{text-decoration:none}
+.bar a:hover{text-decoration:underline;text-underline-offset:5px}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:end;padding:36px 0 72px}
+.name{
+  font-stretch:125%;font-weight:900;line-height:.86;letter-spacing:-.03em;
+  font-size:clamp(3.6rem,11.5vw,9.5rem);text-transform:none;
+}
+.name span{display:block}
+.name span:nth-child(2){font-stretch:62%;font-weight:800;margin-left:.1em}
+.tag{margin-top:28px;font-stretch:112%;font-weight:800;font-size:clamp(1.3rem,2.6vw,1.9rem);letter-spacing:-.01em}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.intro{margin-top:14px;max-width:34rem;font-size:1.25rem;line-height:1.5}
+.intro b{font-weight:700}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{
+  display:inline-block;padding:14px 24px;font-weight:700;text-decoration:none;
+  border:2.5px solid var(--ink);
+}
+.btn.solid{background:var(--ink);color:var(--concrete)}
+.btn:hover{background:var(--ochre);color:#1d1e21;border-color:#1d1e21}
+
+.plate{position:relative;aspect-ratio:4/5;max-width:470px;margin-left:auto;width:100%}
+.plate i{position:absolute;display:block}
+.plate .p1{inset:14% 0 0 12%;background:var(--blue)}
+.plate .p2{left:0;top:0;width:44%;height:36%;background:var(--ochre)}
+.plate .p3{right:0;bottom:0;width:30%;height:22%;background:var(--red)}
+.plate img{position:absolute;left:4%;right:4%;bottom:0;width:92%;height:auto;z-index:2}
+.plate i,.plate img{animation:rise .8s cubic-bezier(.2,.7,.2,1) both}
+.plate .p2{animation-delay:.1s}.plate .p3{animation-delay:.2s}.plate img{animation-delay:.3s}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+/* bands */
+.band{display:grid;grid-template-columns:minmax(220px,340px) 1fr;border-top:3px solid var(--ink)}
+.band .head{padding:28px 28px 28px 0;position:sticky;top:0;align-self:start}
+.band h2{font-stretch:112%;font-weight:850;font-size:clamp(1.7rem,3vw,2.4rem);line-height:1.05;letter-spacing:-.01em}
+.band .head p{margin-top:12px;color:var(--mute);max-width:24ch}
+.swatch{display:block;width:56px;height:14px;margin-bottom:18px}
+.band.blue .swatch{background:var(--blue)}.band.ochre .swatch{background:var(--ochre)}
+.band.red .swatch{background:var(--red)}.band.green .swatch{background:var(--green)}
+.band.ink .swatch{background:var(--ink)}
+
+.rows{list-style:none;padding:0}
+.rows>li{border-bottom:1px solid var(--line)}
+.rows>li:first-child{border-top:0}
+.row{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 24px;align-items:baseline;
+  padding:22px 18px;text-decoration:none;
+}
+.row strong{font-size:1.35rem;font-weight:700;font-stretch:100%;letter-spacing:-.005em}
+.row span{grid-column:1;color:var(--mute)}
+.row em{grid-column:2;grid-row:1/3;align-self:center;font-style:normal;font-size:.9rem;font-weight:600;
+  border:1.5px solid currentColor;padding:3px 10px;white-space:nowrap}
+.blue .row:hover{background:var(--blue);color:var(--on-blue)}
+.ochre .row:hover{background:var(--ochre);color:var(--on-ochre)}
+.red .row:hover{background:var(--red);color:var(--on-red)}
+.green .row:hover{background:var(--green);color:var(--on-green)}
+.ink .row:hover{background:var(--ink);color:var(--concrete)}
+.row:hover span{color:inherit}
+.sub{display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 18px 20px;font-size:.95rem;font-weight:600}
+.sub a{text-underline-offset:4px}
+.sub a:hover{background:var(--ink);color:var(--concrete);text-decoration:none}
+
+/* contact */
+.contact{border-top:3px solid var(--ink);padding:72px 0 40px}
+.contact h2{font-stretch:125%;font-weight:900;font-size:clamp(2rem,6vw,4.6rem);line-height:.95;letter-spacing:-.025em}
+.mail{
+  display:inline-block;margin-top:28px;font-size:clamp(1.3rem,3.2vw,2.2rem);font-weight:700;
+  text-decoration-thickness:4px;text-underline-offset:8px;text-decoration-color:var(--ochre);
+}
+.mail:hover{background:var(--ochre);color:#1d1e21;text-decoration-color:transparent}
+.social{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:32px;font-weight:600}
+.social a{text-underline-offset:5px}
+footer{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:28px 0 40px;
+  border-top:1px solid var(--line);color:var(--mute);font-size:.95rem}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding-bottom:48px}
+  .plate{margin:0;max-width:380px}
+  .band{grid-template-columns:1fr}
+  .band .head{position:static;padding:24px 0 8px}
+  .band .head p{max-width:none}
+  .row{padding:18px 4px}.sub{padding:0 4px 18px}
+  .bar nav{gap:18px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .plate i,.plate img{animation:none}
+}
+</style>
 </head>
+<body>
+<div class="wrap">
 
-<body
-    class="text-slate-900 dark:text-slate-200 selection:bg-emerald-500/30 antialiased overflow-x-hidden transition-colors duration-300 bg-transparent">
+<header class="bar">
+  <a href="#top" aria-label="Atish Ak Sharma, home"><b>ATS Design Studio</b></a>
+  <nav aria-label="Main">
+    <a href="#work">Work</a>
+    <a href="#contact">Contact</a>
+    <a href="https://github.com/atishsharma">GitHub</a>
+  </nav>
+</header>
 
-    <!-- Global Fixed Wallpaper & Grid Background -->
-    <div class="fixed inset-0 z-[-100]">
-        <img src="https://images.unsplash.com/photo-1557672172-298e090bd0f1?q=80&w=2564&auto=format&fit=crop"
-            class="w-full h-full object-cover dark:hidden transition-opacity duration-700" alt="Background Light">
-        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
-            class="w-full h-full object-cover hidden dark:block transition-opacity duration-700" alt="Background Dark">
-        <div class="absolute inset-0 bg-white/30 dark:bg-slate-950/60 backdrop-blur-[4px]"></div>
-        <div
-            class="absolute inset-0 bg-grid-pattern [mask-image:linear-gradient(to_bottom,white,transparent)] opacity-60">
-        </div>
+<main id="top">
+  <section class="hero">
+    <div>
+      <h1 class="name"><span>Atish</span><span>Ak</span><span>Sharma</span><b class="sr">, full stack developer in Chandigarh</b></h1>
+      <p class="tag">Software, simply built.</p>
+      <p class="intro">I'm a full stack developer in Chandigarh with an M.Tech in Computer Science. I build apps people use every day, like a music player and a file manager, plus maps, weather and web tools that do one job well. Everything below is live and open to try.</p>
+      <div class="cta">
+        <a class="btn solid" href="#work">See the work</a>
+        <a class="btn" href="mailto:mail@atishaksharma.com">Email me</a>
+      </div>
     </div>
-
-    <!-- Resume Modal -->
-    <div id="resume-modal"
-        class="fixed inset-0 z-[110] flex items-center justify-center hidden transition-opacity duration-300 opacity-0 px-4 py-6 sm:p-6 md:p-12">
-        <div id="resume-backdrop"
-            class="absolute inset-0 bg-slate-900/40 dark:bg-slate-950/80 backdrop-blur-md cursor-pointer transition-opacity">
-        </div>
-        <div
-            class="relative w-full max-w-4xl max-h-full overflow-y-auto glass-panel rounded-[2rem] shadow-2xl border border-white/60 dark:border-white/10 animate-fadeIn z-10 flex flex-col hide-scrollbar">
-            <button id="close-resume"
-                class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 bg-white/50 dark:bg-black/20 hover:bg-white/80 dark:hover:bg-white/10 rounded-full transition-colors z-20 text-slate-700 dark:text-slate-300 border border-white/40 dark:border-white/5 backdrop-blur-md">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                    </path>
-                </svg>
-            </button>
-            <div id="resume-body" class="p-6 sm:p-12"><!-- Populated by JS --></div>
-        </div>
+    <div class="plate" aria-hidden="false">
+      <i class="p1"></i><i class="p2"></i><i class="p3"></i>
+      <img src="heroimage.png" alt="Portrait of Atish Ak Sharma" width="1024" height="1024">
     </div>
+  </section>
 
-    <!-- App Viewer Overlay -->
-    <div id="app-viewer"
-        class="fixed inset-0 z-[100] bg-white/40 dark:bg-slate-950/60 backdrop-blur-2xl flex flex-col hidden transition-opacity duration-300 opacity-0">
-        <div class="h-16 glass-nav flex items-center px-4 justify-between shrink-0">
-            <button id="close-viewer"
-                class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 transition-colors font-medium text-sm border border-white/40 dark:border-white/10 shadow-sm">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg> Back to Portfolio
-            </button>
-            <div class="flex items-center gap-4">
-                <div id="viewer-title"
-                    class="hidden sm:block text-sm font-bold text-slate-800 dark:text-slate-300 uppercase tracking-widest truncate max-w-[200px] drop-shadow-sm">
-                    Preview</div>
-                <a id="viewer-external-link" href="#" target="_blank"
-                    class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors"
-                    title="Open in new tab">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                    </svg>
-                </a>
-            </div>
-        </div>
-        <div class="relative flex-grow w-full h-full p-2 sm:p-4">
-            <div class="absolute inset-0 flex items-center justify-center -z-10">
-                <svg class="w-8 h-8 text-emerald-500 animate-spin drop-shadow-lg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                    </path>
-                </svg>
-            </div>
-            <div class="w-full h-full glass-card rounded-2xl overflow-hidden shadow-2xl">
-                <iframe id="viewer-frame" class="w-full h-full border-none bg-slate-50 dark:bg-slate-950 relative z-10"
-                    src=""></iframe>
-            </div>
-        </div>
-    </div>
+  <div id="work">
 
-    <!-- Navbar -->
-    <nav id="main-nav" class="fixed top-0 w-full z-50 glass-nav transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center w-1/4 md:w-auto shrink-0">
-                <a href="https://atishaksharma.com" class="group flex items-center gap-3">
-                    <div
-                        class="w-10 h-10 border border-white/40 dark:border-white/20 rounded-xl overflow-hidden shadow-lg group-hover:rotate-12 transition-transform shrink-0">
-                        <img id="nav-logo" src="/master/logo_favicon.jpg" alt="Logo" class="w-full h-full object-cover">
-                    </div>
-                    <span
-                        class="font-bold text-xl tracking-tight hidden md:block gradient-text-alt whitespace-nowrap drop-shadow-sm"
-                        id="nav-name-desktop"></span>
-                    <span
-                        class="font-bold text-[17px] tracking-tight md:hidden text-slate-700 dark:text-slate-300 whitespace-nowrap drop-shadow-sm ml-2">Official
-                        Portfolio</span>
-                </a>
-            </div>
-            <div class="flex items-center justify-center w-2/4 md:hidden text-center shrink-0 mobile-nav-title">
-                <span class="font-bold text-[1.1rem] tracking-tight gradient-text-alt whitespace-nowrap drop-shadow-sm"
-                    id="nav-name-mobile"></span>
-            </div>
-            <div class="flex items-center justify-end w-1/4 md:w-auto gap-1 sm:gap-3 shrink-0">
-                <div id="nav-links"
-                    class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-slate-700 dark:text-slate-300 mr-2">
-                </div>
-                <button id="theme-toggle" type="button" aria-label="Toggle Dark Mode"
-                    class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors drop-shadow-sm">
-                    <svg id="theme-toggle-dark-icon" class="hidden w-6 h-6 md:w-5 md:h-5" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                    <svg id="theme-toggle-light-icon" class="hidden w-6 h-6 md:w-5 md:h-5" fill="currentColor"
-                        viewBox="0 0 20 20">
-                        <path
-                            d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z">
-                        </path>
-                    </svg>
-                </button>
-                <button id="open-resume" aria-label="View Resume"
-                    class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors shrink-0 drop-shadow-sm"
-                    title="View Resume">
-                    <svg class="w-6 h-6 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2">
-                        </path>
-                    </svg>
-                </button>
-                <a id="nav-github" href="#" target="_blank" aria-label="GitHub Profile"
-                    class="p-2 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/10 rounded-full transition-colors shrink-0 drop-shadow-sm">
-                    <svg class="w-6 h-6 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path fill-rule="evenodd" clip-rule="evenodd"
-                            d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z">
-                        </path>
-                    </svg>
-                </a>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero-section">
-        <div class="hero-glow"></div>
-        <div class="hero-glow-2"></div>
-        <div id="hero-name-bg" class="hero-name-bg"></div>
-        <div id="hero-name-mobile-container" class="hero-name-mobile"></div>
-        <div id="hero-photo-container" class="hero-photo"></div>
-        <div id="hero-left" class="hero-left"></div>
-        <div id="hero-right" class="hero-right"></div>
+    <section class="band blue" aria-labelledby="apps">
+      <div class="head"><i class="swatch"></i><h2 id="apps">Apps</h2><p>Software you can download, with a page for each.</p></div>
+      <ul class="rows">
+        <li><a class="row" href="https://tulipix.pro/"><strong>Tulipix</strong><span>My newest app: your media, files and daily tools in one place.</span><em>tulipix.pro</em></a></li>
+        <li><a class="row" href="atmusic/"><strong>AT Music Player</strong><span>A music player with no compromises. Open source.</span><em>Web demo</em></a></li>
+        <li><a class="row" href="tulip/"><strong>Tulip File Explorer</strong><span>Cross-platform file manager, with a web preview.</span><em>Project page</em></a></li>
+        <li><a class="row" href="https://github.com/atishsharma/ats-hindu-calendar-widget"><strong>Hindu Calendar Widget</strong><span>Desktop widget for dates and events.</span><em>GitHub</em></a></li>
+        <li><a class="row" href="https://github.com/atishsharma/AT-Music-Player"><strong>AT Music Player source</strong><span>The code behind the player.</span><em>GitHub</em></a></li>
+        <li><a class="row" href="https://github.com/atishsharma/Tulip-File-Explorer"><strong>Tulip File Explorer source</strong><span>The code behind the file manager.</span><em>GitHub</em></a></li>
+      </ul>
     </section>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="py-24 px-6 relative z-10">
-        <div class="max-w-7xl mx-auto">
-            <div id="portfolio-grid" class="grid lg:grid-cols-2 gap-8 items-start"><!-- Populated by JS --></div>
-        </div>
+    <section class="band ochre" aria-labelledby="minis">
+      <div class="head"><i class="swatch"></i><h2 id="minis">Mini projects</h2><p>Small tools that each do one thing.</p></div>
+      <ul class="rows">
+        <li><a class="row" href="minis/expressways.html"><strong>Indian Expressways</strong><span>The expressway network, mapped with routes and spans.</span><em>Map</em></a></li>
+        <li><a class="row" href="minis/indianhighways.html"><strong>Indian Highways</strong><span>National Highways across India on one map.</span><em>Map</em></a></li>
+        <li><a class="row" href="minis/geomap.html"><strong>GeoMap JS</strong><span>A lightweight geographic mapping utility.</span><em>Library</em></a></li>
+        <li><a class="row" href="minis/weather.html"><strong>Weather Station</strong><span>Live weather and forecasts from several providers.</span><em>Tool</em></a></li>
+        <li><a class="row" href="minis/foodlens.html"><strong>FoodLens</strong><span>Scan a food QR code for nutrition facts and ingredients.</span><em>App</em></a></li>
+        <li><a class="row" href="minis/uitesting.html"><strong>UI Testing</strong><span>Preview any website at different screen sizes.</span><em>Utility</em></a></li>
+        <li><a class="row" href="minis/packager.html"><strong>Packager</strong><span>Bundle and organise resources.</span><em>Tool</em></a></li>
+        <li><a class="row" href="minis/loadbox.html"><strong>Loadbox</strong><span>Try loading states and animations.</span><em>UI</em></a></li>
+        <li><a class="row" href="minis/"><strong>All mini projects</strong><span>The full list.</span><em>Index</em></a></li>
+      </ul>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="pt-0 pb-24 px-6 relative overflow-hidden z-10">
-        <div id="contact-content" class="max-w-5xl mx-auto text-center space-y-12 relative z-10">
-            <!-- Populated by JS --></div>
+    <section class="band red" aria-labelledby="labs">
+      <div class="head"><i class="swatch"></i><h2 id="labs">Labs</h2><p>Hardware-inspired interfaces and design concepts.</p></div>
+      <ul class="rows">
+        <li>
+          <a class="row" href="testing/"><strong>Testing Grounds</strong><span>Hardware interface simulations, all in the browser.</span><em>Index</em></a>
+          <div class="sub">
+            <a href="testing/camera.html">Camera</a>
+            <a href="testing/chip.html">Chip logic</a>
+            <a href="testing/fold.html">Foldable</a>
+            <a href="testing/laptop.html">Laptop and desktop</a>
+            <a href="testing/smartphone.html">Smartphone</a>
+          </div>
+        </li>
+        <li><a class="row" href="lab/"><strong>The Lab</strong><span>A playground for web APIs.</span><em>Research</em></a></li>
+        <li><a class="row" href="concept/"><strong>Concept Hub</strong><span>Design concepts and visual research.</span><em>Ideas</em></a></li>
+        <li><a class="row" href="core1987remote/"><strong>Core1987 Remote</strong><span>A redesign of the 1987 CL-9 Core universal remote.</span><em>Redesign</em></a></li>
+      </ul>
     </section>
 
-    <!-- Footer -->
-    <footer class="py-12 px-6 text-center text-slate-700 dark:text-slate-400 glass-nav border-t-0 relative z-20">
-        <div class="max-w-7xl mx-auto flex flex-col items-center justify-center gap-2">
-            <p id="footer-text" class="text-sm font-bold drop-shadow-sm"></p>
-        </div>
-    </footer>
+    <section class="band green" aria-labelledby="ember">
+      <div class="head"><i class="swatch"></i><h2 id="ember">Ember</h2><p>A candle brand, from feasibility study to storefront.</p></div>
+      <ul class="rows">
+        <li><a class="row" href="ember/"><strong>Ember storefront</strong><span>The brand site, with scroll animations.</span><em>Site</em></a></li>
+        <li><a class="row" href="ember/market.html"><strong>Ember Market</strong><span>Market data and positioning in charts.</span><em>Dashboard</em></a></li>
+        <li><a class="row" href="ember/studio/"><strong>Ember Studio</strong><span>Design a crochet pattern and export it as a PDF.</span><em>Design tool</em></a></li>
+        <li><a class="row" href="ember/Scented%20Candle%20Business%20Feasibility%20Report.pdf"><strong>Feasibility report</strong><span>Scented candle business analysis.</span><em>PDF</em></a></li>
+      </ul>
+    </section>
 
-    <script src="app.js"></script>
+    <section class="band ink" aria-labelledby="tools">
+      <div class="head"><i class="swatch"></i><h2 id="tools">Everyday tools</h2><p>The ones I open daily.</p></div>
+      <ul class="rows">
+        <li><a class="row" href="hub/"><strong>Personal Hub</strong><span>Bookmarks and links in one installable page.</span><em>PWA</em></a></li>
+        <li><a class="row" href="memo/"><strong>Memo Vault</strong><span>Quick notes and a temporary log.</span><em>Notes</em></a></li>
+        <li><a class="row" href="calendar/"><strong>Time Calendar</strong><span>Month view with events.</span><em>Calendar</em></a></li>
+      </ul>
+    </section>
+
+  </div>
+
+  <section class="contact" id="contact" aria-labelledby="contact-h">
+    <h2 id="contact-h">Have something to build?</h2>
+    <a class="mail" href="mailto:mail@atishaksharma.com">mail@atishaksharma.com</a>
+    <div class="social">
+      <a href="https://github.com/atishsharma">GitHub</a>
+      <a href="https://instagram.com/atishaksharma">Instagram</a>
+      <a href="https://twitter.com/atishaksharma">X</a>
+      <a href="https://facebook.com/atishaksharma">Facebook</a>
+      <a href="mailto:atishaksharma@gmail.com">Gmail</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>© 2026 Atish Ak Sharma. All rights reserved.</span>
+  <span>ATS Design Studio, Chandigarh</span>
+</footer>
+
+</div>
 </body>
-
 </html>
