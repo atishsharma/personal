@@ -1,1290 +1,302 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-color="blue">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="public, max-age=604800">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- SEO & Meta Tags -->
-    <title>Atish's Weather Station - Real-Time Vibrant Weather</title>
-    <meta name="description"
-        content="Real-time vibrant weather station by Atish Ak Sharma featuring 7-day forecast, AQI, UV Index, and a beautifully colored glassmorphism UI.">
-    <meta name="keywords"
-        content="Atish's Weather Station, live weather app, AQI, 7-day forecast, Atish Ak Sharma, weather dashboard">
-    <meta name="author" content="Atish Ak Sharma">
-
-    <meta property="og:title" content="Atish's Weather Station">
-    <meta property="og:description"
-        content="Check live weather, AQI, and weekly forecasts on this vibrant, colourful weather dashboard.">
-    <meta property="og:image" content="../master/logo_favicon.jpg">
-    <meta property="og:type" content="website">
-
-    <link rel="icon" type="image/png"
-        href="../master/logo_favicon.jpg">
-
-    <link rel="stylesheet" href="../master/servetailwind.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <style>
-        /* Base Theme Variables */
-        :root[data-theme="light"] {
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --bg-base: #e0e7ff;
-            --glass-bg: rgba(255, 255, 255, 0.5);
-            --modal-bg: rgba(255, 255, 255, 0.98);
-            --glass-border-light: rgba(255, 255, 255, 0.8);
-            --glass-border-dark: rgba(255, 255, 255, 0.2);
-            --glass-shadow: rgba(30, 30, 80, 0.1);
-            --inner-glow: rgba(255, 255, 255, 0.6);
-            --input-bg: rgba(255, 255, 255, 0.9);
-            --overlay-bg: rgba(255, 255, 255, 0.95);
-        }
-
-        :root[data-theme="dark"] {
-            --text-primary: #ffffff;
-            --text-secondary: #94a3b8;
-            --bg-base: #020617;
-            --glass-bg: rgba(15, 23, 42, 0.5);
-            --modal-bg: rgba(15, 23, 42, 0.98);
-            --glass-border-light: rgba(255, 255, 255, 0.15);
-            --glass-border-dark: rgba(0, 0, 0, 0.5);
-            --glass-shadow: rgba(0, 0, 0, 0.6);
-            --inner-glow: rgba(255, 255, 255, 0.05);
-            --input-bg: rgba(30, 41, 59, 0.8);
-            --overlay-bg: rgba(15, 23, 42, 0.98);
-        }
-
-        /* Accent Color Selection Maps */
-        :root[data-color="pink"] {
-            --c-main: 236, 72, 153;
-        }
-
-        :root[data-color="blue"] {
-            --c-main: 59, 130, 246;
-        }
-
-        :root[data-color="purple"] {
-            --c-main: 168, 85, 247;
-        }
-
-        :root[data-color="orange"] {
-            --c-main: 249, 115, 22;
-        }
-
-        :root[data-color="cyan"] {
-            --c-main: 6, 182, 212;
-        }
-
-        :root[data-color="red"] {
-            --c-main: 239, 68, 68;
-        }
-
-        :root[data-color="teal"] {
-            --c-main: 20, 184, 166;
-        }
-
-        /* Secondary Fixed Logical Palette */
-        :root {
-            --c-warm: 249, 115, 22;
-            /* Orange */
-            --c-cool: 14, 165, 233;
-            /* Sky Blue */
-            --c-earth: 16, 185, 129;
-            /* Emerald */
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text-primary);
-            background-color: var(--bg-base);
-            min-height: 100vh;
-            margin: 0;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            zoom: 0.89;
-        }
-
-        /* 3D Card Flip - Book Page Peel */
-        .card-flip-out-left {
-            animation: flipOutLeft 0.5s ease-in forwards;
-            transform-origin: left center;
-        }
-
-        .card-flip-in-right {
-            animation: flipInRight 0.5s ease-out forwards;
-            transform-origin: right center;
-        }
-
-        .card-flip-out-right {
-            animation: flipOutRight 0.5s ease-in forwards;
-            transform-origin: right center;
-        }
-
-        .card-flip-in-left {
-            animation: flipInLeft 0.5s ease-out forwards;
-            transform-origin: left center;
-        }
-
-        @keyframes flipOutLeft {
-            0% {
-                transform: perspective(2000px) rotateY(0deg);
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: perspective(2000px) rotateY(-90deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes flipInRight {
-            0% {
-                transform: perspective(2000px) rotateY(90deg);
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: perspective(2000px) rotateY(0deg);
-                opacity: 1;
-            }
-        }
-
-        @keyframes flipOutRight {
-            0% {
-                transform: perspective(2000px) rotateY(0deg);
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: perspective(2000px) rotateY(90deg);
-                opacity: 0;
-            }
-        }
-
-        @keyframes flipInLeft {
-            0% {
-                transform: perspective(2000px) rotateY(-90deg);
-                opacity: 0;
-            }
-
-            50% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: perspective(2000px) rotateY(0deg);
-                opacity: 1;
-            }
-        }
-
-        /* Swipe notch indicators */
-        .swipe-notch {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 6px;
-            height: 48px;
-            border-radius: 8px;
-            background: rgba(var(--c-main), 0.5);
-            z-index: 20;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-
-        .swipe-notch-left {
-            left: 8px;
-        }
-
-        .swipe-notch-right {
-            right: 8px;
-        }
-
-        /* Animated Locate Button Outline */
-        @keyframes locatePulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(var(--c-cool), 0.5);
-            }
-
-            70% {
-                box-shadow: 0 0 0 6px rgba(var(--c-cool), 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(var(--c-cool), 0);
-            }
-        }
-
-        .locate-animated {
-            animation: locatePulse 2s ease-in-out infinite;
-        }
-
-        /* Flowing Air Background */
-        .bg-air-flow {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            background: linear-gradient(120deg, var(--bg-base) 0%, rgba(var(--c-main), 0.15) 50%, var(--bg-base) 100%);
-            background-size: 200% 200%;
-            animation: flowAir 15s ease-in-out infinite;
-        }
-
-        .bg-air-flow::before,
-        .bg-air-flow::after {
-            content: '';
-            position: absolute;
-            width: 200vw;
-            height: 200vh;
-            top: -50%;
-            left: -50%;
-            background: radial-gradient(ellipse at center, rgba(var(--c-cool), 0.08) 0%, transparent 50%);
-            animation: rotateAir 40s linear infinite;
-        }
-
-        .bg-air-flow::after {
-            background: radial-gradient(ellipse at center, rgba(var(--c-main), 0.1) 0%, transparent 50%);
-            animation: rotateAir 30s linear infinite reverse;
-        }
-
-        @keyframes flowAir {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        @keyframes rotateAir {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Water-Drop Glassmorphism Styles */
-        .glass {
-            background: var(--glass-bg);
-            background-image: linear-gradient(135deg, rgba(var(--card-color, 255, 255, 255), 0.1) 0%, transparent 100%);
-            backdrop-filter: blur(28px) saturate(150%);
-            -webkit-backdrop-filter: blur(28px) saturate(150%);
-            border-top: 1px solid var(--glass-border-light);
-            border-left: 1px solid var(--glass-border-light);
-            border-bottom: 1px solid var(--glass-border-dark);
-            border-right: 1px solid var(--glass-border-dark);
-            border-radius: 2.5rem;
-            box-shadow: 0 20px 40px var(--glass-shadow), inset 0 4px 6px var(--inner-glow);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-header {
-            border-radius: 2rem;
-        }
-
-        .modal-glass {
-            background: var(--modal-bg) !important;
-            backdrop-filter: blur(40px) saturate(200%) !important;
-            -webkit-backdrop-filter: blur(40px) saturate(200%) !important;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 4px 6px var(--inner-glow);
-        }
-
-        /* Animated 2px Outline using mask */
-        @keyframes outlineGlow {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .animated-outline::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            padding: var(--out-w, 4px);
-            background: linear-gradient(90deg, rgba(var(--out-c, var(--c-main)), 1), transparent, rgba(var(--out-c, var(--c-main)), 1), transparent);
-            background-size: 300% 300%;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            animation: outlineGlow 4s linear infinite;
-        }
-
-        /* Animated 1px Outline using mask */
-        .animated-outline-1px::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            padding: 1px;
-            background: linear-gradient(90deg, rgba(var(--c-main), 1), transparent, rgba(var(--c-main), 1), transparent);
-            background-size: 300% 300%;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            animation: outlineGlow 4s linear infinite;
-        }
-
-        /* Inputs & Buttons */
-        .glass-input {
-            background: var(--input-bg);
-            border: 1px solid var(--glass-border-light);
-            color: var(--text-primary);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .glass-input:focus {
-            outline: none;
-            border-color: rgb(var(--c-main));
-            box-shadow: 0 0 0 3px rgba(var(--c-main), 0.2), inset 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .glass-btn {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border-light);
-            box-shadow: 0 4px 12px var(--glass-shadow);
-            color: var(--text-primary);
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .glass-btn:hover {
-            transform: translateY(-2px);
-            background: var(--overlay-bg);
-        }
-
-        .glass-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* Color Picker Buttons */
-        .color-btn {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
-        }
-
-        .color-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .color-btn.active {
-            border-color: var(--text-primary);
-            transform: scale(1.2);
-            box-shadow: 0 0 12px rgba(var(--c-main), 0.8);
-        }
-
-        /* Floating Animation */
-        @keyframes float {
-            0% {
-                transform: translateY(0px);
-            }
-
-            50% {
-                transform: translateY(-8px);
-            }
-
-            100% {
-                transform: translateY(0px);
-            }
-        }
-
-        .floating {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .floating-delay-1 {
-            animation-delay: 1s;
-        }
-
-        .floating-delay-2 {
-            animation-delay: 2s;
-        }
-
-        .loader {
-            border: 4px solid rgba(var(--c-main), 0.2);
-            border-radius: 50%;
-            border-top: 4px solid rgb(var(--c-main));
-            width: 48px;
-            height: 48px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        #toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            opacity: 0;
-            transition: all 0.3s ease-out;
-            z-index: 90;
-        }
-
-        #toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
-        }
-
-        .search-scroll::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .search-scroll::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .search-scroll::-webkit-scrollbar-thumb {
-            background: rgba(var(--c-main), 0.3);
-            border-radius: 10px;
-        }
-
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .panel-clickable {
-            cursor: pointer;
-        }
-
-        .panel-clickable:hover {
-            transform: scale(1.03);
-            box-shadow: 0 25px 50px var(--glass-shadow), inset 0 4px 6px var(--inner-glow);
-        }
-
-        .panel-clickable:active {
-            transform: scale(0.98);
-        }
-
-        /* Icon Animations */
-        @keyframes animSpinSlow {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .anim-spin-slow {
-            animation: animSpinSlow 12s linear infinite;
-        }
-
-        @keyframes animRock {
-
-            0%,
-            100% {
-                transform: rotate(-10deg);
-            }
-
-            50% {
-                transform: rotate(10deg);
-            }
-        }
-
-        .anim-rock {
-            animation: animRock 3s ease-in-out infinite;
-        }
-
-        @keyframes animFloat {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-5px);
-            }
-        }
-
-        .anim-float {
-            animation: animFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes animPulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
-        }
-
-        .anim-pulse {
-            animation: animPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes animSlideX {
-
-            0%,
-            100% {
-                transform: translateX(0);
-            }
-
-            50% {
-                transform: translateX(5px);
-            }
-        }
-
-        .anim-slide-x {
-            animation: animSlideX 2s ease-in-out infinite;
-        }
-
-        /* High-End Weather Background Animations for Main Card */
-        .weather-fx-layer {
-            transition: all 1s ease;
-        }
-
-        .weather-anim-sun {
-            background: linear-gradient(105deg, transparent 15%, rgba(255, 255, 255, 0.6) 20%, transparent 25%);
-            background-size: 300% 300%;
-            animation: fxSweep 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-        }
-
-        .weather-anim-lightning {
-            background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.9) 0%, transparent 50%);
-            opacity: 0;
-            animation: fxLightning 6s infinite;
-        }
-
-        .weather-anim-rain {
-            background-image: repeating-linear-gradient(-25deg, transparent 0%, rgba(255, 255, 255, 0.2) 2%, transparent 4%, transparent 10%);
-            background-size: 200% 200%;
-            animation: fxRain 0.7s linear infinite;
-        }
-
-        .weather-anim-snow {
-            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.8) 10%, transparent 20%);
-            background-size: 20px 20px;
-            background-position: 0 0, 10px 10px;
-            animation: fxSnow 3s linear infinite;
-        }
-
-        .weather-anim-cloud {
-            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
-            animation: fxCloud 10s alternate infinite ease-in-out;
-        }
-
-        .weather-anim-moon {
-            background: radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 40%);
-            animation: fxMoon 4s alternate infinite ease-in-out;
-        }
-
-        @keyframes fxSweep {
-
-            0%,
-            20% {
-                background-position: 200% 0;
-            }
-
-            100% {
-                background-position: -100% 0;
-            }
-        }
-
-        @keyframes fxLightning {
-
-            0%,
-            91%,
-            95%,
-            98%,
-            100% {
-                opacity: 0;
-            }
-
-            92%,
-            96% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes fxRain {
-            0% {
-                background-position: 0 0;
-            }
-
-            100% {
-                background-position: -50px 100px;
-            }
-        }
-
-        @keyframes fxSnow {
-            0% {
-                background-position: 0 0, 10px 10px;
-            }
-
-            100% {
-                background-position: 20px 40px, 30px 50px;
-            }
-        }
-
-        @keyframes fxCloud {
-            0% {
-                transform: scale(1) translate(0, 0);
-            }
-
-            100% {
-                transform: scale(1.1) translate(5%, 5%);
-            }
-        }
-
-        @keyframes fxMoon {
-            0% {
-                opacity: 0.5;
-                filter: blur(2px);
-            }
-
-            100% {
-                opacity: 1;
-                filter: blur(0px);
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Weather Station | Live Forecast, Air Quality, UV and Wind</title>
+<meta name="description" content="A weather station by Atish Ak Sharma: live conditions, hourly and 7-day forecast, air quality, UV, wind, pressure and sunrise for any city. Choose Open-Meteo, WeatherAPI or OpenWeatherMap.">
+<meta name="theme-color" content="#1c6fe0">
+<link rel="icon" href="../master/logo_favicon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+<style>
+:root{
+  --bg:#edf0f5; --card:#fff; --ink:#111827; --mute:#5a6578; --line:#dce2ec; --accent:#2563eb; --soft:#eaf0fe;
+  --a:#1c6fe0; --b:#3d97ef;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0e15; --card:#151a25; --ink:#eef2f8; --mute:#9aa6ba; --line:#262e3d; --accent:#7fa8ff; --soft:#1a2644}}
+:root[data-theme="dark"]{--bg:#0b0e15; --card:#151a25; --ink:#eef2f8; --mute:#9aa6ba; --line:#262e3d; --accent:#7fa8ff; --soft:#1a2644}
+body[data-sky="day-clear"]{--a:#1c6fe0;--b:#3d97ef}
+body[data-sky="day-cloud"]{--a:#3b5873;--b:#7d99b3}
+body[data-sky="day-fog"]{--a:#5f6e79;--b:#98a7b1}
+body[data-sky="day-rain"]{--a:#2b4152;--b:#587a8f}
+body[data-sky="day-snow"]{--a:#53697f;--b:#9fb2c6}
+body[data-sky="day-storm"]{--a:#262847;--b:#574c7c}
+body[data-sky="night-clear"]{--a:#0a0f2e;--b:#22307a}
+body[data-sky="night-cloud"]{--a:#131a29;--b:#38455f}
+body[data-sky="night-fog"]{--a:#171d25;--b:#414c58}
+body[data-sky="night-rain"]{--a:#0d1520;--b:#293a4f}
+body[data-sky="night-snow"]{--a:#161f2c;--b:#43536a}
+body[data-sky="night-storm"]{--a:#12102a;--b:#382d5a}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:'Manrope',system-ui,sans-serif;font-size:1rem;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;text-align:left}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+i[data-lucide],svg.lucide{width:1.15em;height:1.15em;flex:none;vertical-align:-.2em}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+.mute{color:var(--mute)}
+
+/* site header + footer */
+.site{background:var(--card);border-bottom:1px solid var(--line)}
+.site .in{max-width:1240px;margin:0 auto;padding:0 16px;height:60px;display:flex;align-items:center;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;margin-right:auto}
+.brand img{width:34px;height:34px;border-radius:9px;object-fit:cover}
+.brand small{display:block;font-weight:500;font-size:.75rem;color:var(--mute);line-height:1.1}
+.site nav{display:flex;gap:4px}
+.site nav a{text-decoration:none;font-weight:600;padding:8px 12px;border-radius:10px}
+.site nav a:hover{background:var(--soft)}
+.site nav a[aria-current="page"]{background:var(--ink);color:var(--bg)}
+.foot{max-width:1240px;margin:28px auto 0;padding:20px 16px 36px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px;color:var(--mute);font-size:.9rem;border-top:1px solid var(--line)}
+.foot nav{display:flex;gap:16px}
+
+
+.site{position:relative;z-index:30}
+.burger{display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);align-items:center;justify-content:center;cursor:pointer}
+.burger .x{display:none}.burger[aria-expanded="true"] .b{display:none}.burger[aria-expanded="true"] .x{display:block}
+@media (max-width:760px){
+  .burger{display:inline-flex}
+  .brand span{white-space:nowrap}
+  .site nav{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:2px;padding:8px 16px 14px;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 22px 30px -14px rgba(0,0,0,.35)}
+  .site nav.open{display:flex}
+  .site nav a{padding:14px 12px;font-size:1.05rem}
+}
+
+/* toolbar */
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:16px 0 12px}
+.search{position:relative;flex:1 1 260px;min-width:0}
+.search>i,.search>svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--mute);pointer-events:none}
+#q{width:100%;height:46px;border-radius:14px;border:1px solid var(--line);background:var(--card);padding:0 14px 0 42px}
+#results{position:absolute;z-index:20;left:0;right:0;top:52px;list-style:none;padding:6px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px -12px rgba(0,0,0,.35)}
+#results li{display:flex;gap:10px;align-items:center;padding:10px;border-radius:10px;cursor:pointer}
+#results li.on,#results li:hover{background:var(--soft)}
+#results li.none{color:var(--mute);cursor:default}
+#results small{color:var(--mute)}
+.ib,.btn{height:46px;min-width:46px;border-radius:14px;border:1px solid var(--line);background:var(--card);display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;padding:0 14px}
+.ib{padding:0}
+.ib:hover,.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card)}
+.seg button{height:44px;padding:0 14px;font-weight:700}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.spin i,.spin svg{animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* states */
+#app[data-state="loading"] .ready,#app[data-state="error"] .ready{display:none}
+#app[data-state="ready"] .stateview,#app[data-state="loading"] .err,#app[data-state="ready"] .err{display:none}
+#app[data-state="error"] .loading{display:none}
+.stateview{border-radius:28px;padding:56px 24px;text-align:center;background:var(--card);border:1px solid var(--line)}
+.stateview h2{margin:10px 0 6px}
+.stateview .row{display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.stateview i,.stateview svg{width:36px;height:36px;color:var(--mute)}
+
+/* hero */
+.hero{position:relative;border-radius:30px;padding:26px 28px 22px;color:#fff;background:linear-gradient(rgba(0,0,0,.16),rgba(0,0,0,.16)),linear-gradient(160deg,var(--a),var(--b));display:grid;grid-template-columns:1fr auto;gap:8px 24px;align-items:center;overflow:hidden}
+.hero .top{grid-column:1/-1;display:flex;align-items:flex-start;gap:12px}
+.hero h1{font-size:clamp(1.6rem,4vw,2.3rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.hero .meta{opacity:.9;font-size:.95rem;margin-top:2px}
+#pin{margin-left:auto;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex:none}
+#pin:hover{background:rgba(255,255,255,.3)}
+#pin[aria-pressed="true"] svg{fill:#ffe08a;color:#ffe08a}
+.tline{display:flex;align-items:flex-start}
+#temp{font-size:clamp(5.5rem,17vw,9.5rem);font-weight:200;line-height:.9;letter-spacing:-.05em}
+#tunit{font-size:2rem;font-weight:300;margin-top:.7rem;opacity:.9}
+.cond{font-size:1.5rem;font-weight:700;margin-top:6px}
+.sub{opacity:.92;margin-top:2px;display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+#hilo{display:inline-flex;gap:14px;font-weight:700}
+#hilo span{display:inline-flex;align-items:center;gap:2px}
+#heroIcon{justify-self:end}
+#heroIcon i,#heroIcon svg{width:clamp(110px,24vw,190px);height:clamp(110px,24vw,190px);stroke-width:1.2;filter:drop-shadow(0 8px 20px rgba(0,0,0,.25))}
+.chips{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.18);padding:7px 14px;border-radius:99px;font-weight:600;font-size:.92rem}
+.upd{grid-column:1/-1;display:flex;align-items:center;gap:8px;font-size:.85rem;opacity:.9;margin-top:6px}
+#refresh{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:inline-flex;align-items:center;justify-content:center}
+#refresh:hover{background:rgba(255,255,255,.3)}
+
+/* layout below hero */
+.cols{display:grid;gap:16px;margin-top:16px}
+@media (min-width:1000px){.cols{grid-template-columns:minmax(0,1fr) 400px;align-items:start}}
+.stack{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:18px}
+.card h2{font-size:1.05rem;font-weight:800;margin-bottom:12px;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.card h2 small{font-weight:500;color:var(--mute);font-size:.85rem}
+
+#hourly{display:flex;gap:6px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:6px;scrollbar-width:thin}
+.hr{flex:none;width:68px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 0;border-radius:16px;scroll-snap-align:start}
+.hr:first-child{background:var(--soft)}
+.hr b{font-size:.85rem;font-weight:600;color:var(--mute)}
+.hr i,.hr svg{width:26px;height:26px;color:var(--accent)}
+.hr .t{font-weight:800}
+.hr .p{font-size:.78rem;font-weight:700;color:var(--mute);min-height:1.2em}
+.hr .p.on,.dp.on{color:var(--accent)}
+
+#tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:6px;min-height:150px;transition:border-color .12s,transform .12s}
+.tile:hover{border-color:var(--accent)}
+.th{display:flex;align-items:center;gap:8px;color:var(--mute);font-weight:700;font-size:.88rem}
+.big{font-size:2.4rem;font-weight:300;letter-spacing:-.03em;line-height:1.05}
+.big small{font-size:1rem;font-weight:600;color:var(--mute);margin-left:4px;letter-spacing:0}
+.tile p{color:var(--mute);font-size:.9rem;font-weight:500;line-height:1.3}
+.wind{display:flex;align-items:center;gap:10px}
+.wind svg{width:70px;height:70px;flex:none}
+.meter{display:block;position:relative;height:8px;border-radius:99px;margin-top:auto}
+.meter i{position:absolute;top:-4px;width:6px;height:16px;border-radius:3px;background:var(--ink);box-shadow:0 0 0 2px var(--card);transform:translateX(-50%)}
+.meter.uv{background:linear-gradient(90deg,#2e9e55 0 27%,#c9a100 27% 54%,#e07b00 54% 72%,#d33a2c 72% 99%,#8e3fc0 99%)}
+.meter.aqi{background:linear-gradient(90deg,#2e9e55 0 16.6%,#c9a100 16.6% 33.3%,#e07b00 33.3% 50%,#d33a2c 50% 66.6%,#8e3fc0 66.6% 100%)}
+.arc{width:100%;height:auto;color:var(--ink)}
+.srss{display:flex;justify-content:space-between;font-weight:800;font-size:.95rem}
+
+.day{width:100%;display:grid;grid-template-columns:58px 26px 40px 34px minmax(40px,1fr) 34px;gap:8px;align-items:center;padding:10px 6px;border-radius:12px;border-bottom:1px solid var(--line)}
+.day:last-child{border-bottom:0}
+.day:hover{background:var(--soft)}
+.dn{font-weight:700}
+.day i,.day svg{width:24px;height:24px;color:var(--accent)}
+.dp{font-size:.8rem;font-weight:700;color:var(--mute);text-align:right}
+.lo{text-align:right;color:var(--mute);font-weight:600}
+.hi{font-weight:800}
+.rng{position:relative;height:6px;border-radius:99px;background:var(--line)}
+.rng i{position:absolute;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,#4aa3ff,#ffb347,#ff6b4a)}
+.rng b{position:absolute;top:-3px;width:12px;height:12px;border-radius:50%;background:var(--card);border:3px solid var(--ink);transform:translateX(-50%)}
+
+#places{display:grid;gap:8px}
+.pl{position:relative;border:1px solid var(--line);border-radius:16px}
+.pl.cur{border-color:var(--accent);background:var(--soft)}
+.plgo{width:100%;padding:12px 44px 12px 14px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;border-radius:16px}
+.plgo b{font-weight:800}
+.pt{font-weight:800;font-size:1.2rem;display:flex;align-items:center;gap:6px}
+.pt i,.pt svg{color:var(--accent)}
+.pm{grid-column:1/-1;color:var(--mute);font-size:.85rem}
+.plx{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--mute)}
+.plx:hover{background:var(--line)}
+.plx i,.plx svg{width:16px;height:16px}
+
+/* dialogs */
+dialog{border:0;border-radius:26px;padding:0;background:var(--card);color:var(--ink);width:min(94vw,560px);max-height:88vh;overflow:auto}
+dialog::backdrop{background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
+.dh{position:sticky;top:0;display:flex;align-items:center;gap:10px;padding:16px 18px;background:var(--card);border-bottom:1px solid var(--line);z-index:1}
+.dh h2{font-size:1.15rem;display:flex;align-items:center;gap:10px;margin-right:auto}
+.dh h2 i,.dh h2 svg{color:var(--accent);width:26px;height:26px}
+.db{padding:18px;display:grid;gap:14px}
+.lead{font-size:1.1rem;line-height:1.45}
+.db p{color:var(--mute)}
+.db .lead{color:var(--ink)}
+.tbl{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:.95rem}
+.tbl th,.tbl td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line)}
+.tbl th{background:var(--soft);font-size:.85rem}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tr.now td{background:var(--soft);font-weight:800;color:var(--ink)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px}
+.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kv div{background:var(--soft);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column}
+.kv span{color:var(--mute);font-size:.85rem}
+.kv b{font-weight:800}
+.src{font-size:.85rem}
+.chart{width:100%;height:auto;color:var(--ink)}
+.form{display:grid;gap:14px;padding:18px}
+.form label{font-weight:700;font-size:.92rem;display:block;margin-bottom:6px}
+.form input,.form select{width:100%;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--bg);padding:0 12px}
+.form .hint{color:var(--mute);font-size:.85rem;margin-top:6px}
+.form .acts{display:flex;gap:10px;flex-wrap:wrap}
+.form .acts .btn{flex:1}
+.btn.danger{color:#c0341d}
+#toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);max-width:92vw;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:14px;font-weight:600;font-size:.92rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:640px){
+  .hero{padding:20px 18px 18px;border-radius:24px}
+  .brand small{display:none}
+  .day{grid-template-columns:50px 24px 34px 30px minmax(30px,1fr) 30px;gap:6px}
+  #tiles{grid-template-columns:1fr 1fr;gap:10px}
+  .tile{padding:14px;min-height:140px}.big{font-size:2rem}
+  .wind svg{width:54px;height:54px}
+}
+@media (prefers-reduced-motion:reduce){.spin i,.spin svg{animation:none}.tile{transition:none}}
+</style>
 </head>
+<body data-sky="day-clear">
+<header class="site">
+  <div class="in">
+    <a class="brand" href="../" aria-label="Atish Ak Sharma, main site"><img src="../master/logo_favicon.jpg" alt="" width="34" height="34"><span>Atish Ak Sharma<small>ATS Design Studio</small></span></a>
+    <button class="burger" id="menuBtn" type="button" aria-expanded="false" aria-controls="menuNav" aria-label="Menu"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path class="b" d="M4 7h16M4 12h16M4 17h16"/><path class="x" d="M6 6l12 12M18 6 6 18"/></svg></button><nav id="menuNav" aria-label="Site"><a href="../">Home</a><a href="./">Mini projects</a><a href="./weather.html" aria-current="page">Weather</a><a href="../#contact">Contact</a></nav>
+  </div>
+</header>
 
-<body class="p-2 md:p-6 lg:p-8 items-center flex-grow" id="app-body">
-
-    <!-- Animated Flowing Air Background -->
-    <div class="bg-air-flow"></div>
-
-    <!-- Mobile Bottom Navigation Bar -->
-    <div id="mobile-bottom-bar" class="fixed bottom-0 left-0 right-0 z-50 lg:hidden hidden"
-        style="padding-bottom: env(safe-area-inset-bottom);">
-        <div class="glass glass-header mx-2 mb-2 p-2 flex items-center gap-2 rounded-2xl"
-            style="--card-color: var(--c-main); backdrop-filter: blur(40px) saturate(200%); -webkit-backdrop-filter: blur(40px) saturate(200%);">
-            <!-- Search -->
-            <div class="relative flex-1 rounded-full animated-outline" style="--out-w: 2px; --out-c: var(--c-cool);">
-                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50"></i>
-                <input type="text" id="city-search-mobile" placeholder="Search city..." autocomplete="off"
-                    class="glass-input w-full pl-9 pr-10 py-2.5 rounded-full font-bold text-sm">
-                <button id="locate-btn-mobile"
-                    class="absolute right-1.5 top-1/2 -translate-y-1/2 p-1.5 rounded-full border-2 border-[rgb(var(--c-cool))] hover:bg-black/5 dark:hover:bg-white/10 transition-colors locate-animated"
-                    title="Use Current Location">
-                    <i data-lucide="map-pin" class="w-4 h-4 text-[rgb(var(--c-cool))]"></i>
-                </button>
-                <div id="search-results-mobile"
-                    class="absolute bottom-[110%] left-0 right-0 !rounded-2xl hidden flex-col overflow-y-auto max-h-64 search-scroll z-50 bg-[#f8fafc] dark:bg-[#0f172a] backdrop-blur-3xl border border-black/10 dark:border-white/10 shadow-2xl">
-                </div>
-            </div>
-            <!-- Theme Toggle -->
-            <button id="theme-btn-mobile"
-                class="glass-btn flex items-center justify-center p-2.5 rounded-full relative animated-outline"
-                title="Toggle Theme" style="--out-w: 2px; --out-c: var(--c-warm);">
-                <span id="theme-icon-wrapper-mobile"><i data-lucide="moon"
-                        class="w-5 h-5 text-[rgb(var(--c-main))]"></i></span>
-            </button>
-            <!-- Settings -->
-            <button id="settings-btn-mobile"
-                class="glass-btn flex items-center justify-center p-2.5 rounded-full relative animated-outline"
-                title="Settings" style="--out-w: 2px; --out-c: var(--c-earth);">
-                <i data-lucide="settings" class="w-5 h-5 text-[rgb(var(--c-main))]"></i>
-            </button>
-        </div>
+<main class="wrap" id="app" data-state="loading">
+  <div class="bar">
+    <div class="search">
+      <i data-lucide="search" aria-hidden="true"></i>
+      <input id="q" type="search" placeholder="Search for a city" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="results" aria-label="Search for a city">
+      <ul id="results" role="listbox" hidden></ul>
     </div>
+    <button class="ib" id="locate" aria-label="Use my location" title="Use my location"><i data-lucide="locate-fixed"></i></button>
+    <div class="seg" id="unitSeg" role="group" aria-label="Units"><button data-u="metric" aria-pressed="true">°C</button><button data-u="imperial" aria-pressed="false">°F</button></div>
+    <button class="ib" id="themeBtn" aria-label="Theme"></button>
+    <button class="ib" id="settingsBtn" aria-label="Settings" title="Settings"><i data-lucide="settings"></i></button>
+  </div>
 
-    <!-- Header / Controls -->
-    <div id="header-bar"
-        class="glass glass-header animated-outline-1px w-full max-w-7xl mt-1 md:mt-0 p-3 md:p-4 mb-4 flex flex-col lg:flex-row items-center justify-between z-40 relative gap-3 md:gap-4 mx-auto"
-        style="--card-color: var(--c-main);">
+  <section class="stateview loading" aria-live="polite" id="loadView"><i data-lucide="cloud-sun"></i><h2>Loading the weather…</h2><p class="mute">Fetching live data for your location.</p></section>
+  <section class="stateview err" aria-live="assertive"><i data-lucide="cloud-off"></i><h2>Could not load the weather</h2><p class="mute" id="errMsg"></p>
+    <div class="row"><button class="btn primary" id="retry">Try again</button><button class="btn" id="errSettings" hidden>Open settings</button></div></section>
 
-        <!-- Logo -->
-        <div class="flex items-center gap-3 w-full lg:w-auto justify-center lg:justify-start flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
-            onclick="window.location.reload()" title="Reload Station">
-            <i data-lucide="cloud-lightning"
-                class="w-8 h-8 md:w-10 md:h-10 text-[rgb(var(--c-main))] drop-shadow-md transition-colors duration-300 anim-pulse"></i>
-            <h1 class="text-xl md:text-2xl lg:text-3xl font-extrabold tracking-tight whitespace-nowrap">
-                <span>Atish's</span>
-                <span class="inline">
-                    <span class="text-[rgb(var(--c-main))] transition-colors duration-300">Weather</span>
-                    <span class="text-[rgb(var(--c-cool))]">Station</span>
-                </span>
-            </h1>
-        </div>
+  <div class="ready">
+    <section class="hero" aria-label="Current weather">
+      <div class="top">
+        <div><h1 id="place"></h1><p class="meta" id="region"></p><p class="meta" id="clock"></p></div>
+        <button id="pin" aria-pressed="false" aria-label="Save this place"></button>
+      </div>
+      <div>
+        <div class="tline"><span id="temp"></span><span id="tunit"></span></div>
+        <div class="cond" id="cond"></div>
+        <div class="sub"><span id="feelsLine"></span><span id="hilo"></span></div>
+      </div>
+      <div id="heroIcon" aria-hidden="true"></div>
+      <div class="chips" id="heroChips"></div>
+      <div class="upd"><button id="refresh" aria-label="Refresh weather" title="Refresh"><i data-lucide="refresh-cw"></i></button><span id="updated"></span></div>
+    </section>
 
-        <!-- Right Controls Container: Search + Buttons in Single Row -->
-        <div id="header-controls" class="flex flex-row items-center gap-2 md:gap-3 w-full lg:w-auto lg:ml-auto">
-
-            <!-- Search Bar with integrated Location Button -->
-            <div class="relative w-full flex-1 lg:w-96 rounded-full animated-outline"
-                style="--out-w: 2px; --out-c: var(--c-cool);">
-                <i data-lucide="search"
-                    class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 opacity-50 text-secondary"></i>
-                <input type="text" id="city-search" placeholder="Search any city..." autocomplete="off"
-                    class="glass-input w-full pl-9 md:pl-12 pr-10 md:pr-12 py-2.5 md:py-3.5 rounded-full font-bold text-sm md:text-base">
-
-                <button id="locate-btn"
-                    class="absolute right-1.5 md:right-2 top-1/2 -translate-y-1/2 p-1.5 md:p-2 rounded-full border-2 border-[rgb(var(--c-cool))] shadow-sm hover:bg-black/5 dark:hover:bg-white/10 transition-colors group locate-animated"
-                    title="Use Current Location">
-                    <i data-lucide="map-pin"
-                        class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-cool))] group-hover:scale-110 transition-transform"></i>
-                </button>
-
-                <!-- Dynamic Search Results -->
-                <div id="search-results"
-                    class="absolute top-[110%] left-0 right-0 !rounded-2xl hidden flex-col overflow-y-auto max-h-64 search-scroll z-50 bg-[#f8fafc] dark:bg-[#0f172a] backdrop-blur-3xl border border-black/10 dark:border-white/10 shadow-2xl">
-                </div>
-            </div>
-
-            <!-- Utility Buttons -->
-            <div class="flex items-center gap-2 shrink-0">
-                <button id="theme-btn"
-                    class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold relative animated-outline"
-                    title="Toggle Theme" style="--out-w: 2px; --out-c: var(--c-warm);">
-                    <span id="theme-icon-wrapper"><i data-lucide="moon"
-                            class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i></span>
-                </button>
-
-                <button id="settings-btn"
-                    class="glass-btn flex items-center justify-center p-2.5 md:p-3.5 rounded-full font-bold relative animated-outline"
-                    title="Settings" style="--out-w: 2px; --out-c: var(--c-earth);">
-                    <i data-lucide="settings"
-                        class="w-4 h-4 md:w-5 md:h-5 text-[rgb(var(--c-main))] transition-colors duration-300"></i>
-                </button>
-            </div>
-        </div>
+    <div class="cols">
+      <div class="stack">
+        <section class="card" aria-label="Hourly forecast"><h2>Hourly <small id="hourlyHint"></small></h2><div id="hourly"></div></section>
+        <section aria-label="Conditions"><div id="tiles"></div></section>
+      </div>
+      <div class="stack">
+        <section class="card" aria-label="Daily forecast"><h2>Forecast <small id="dailyHint"></small></h2><div id="daily"></div></section>
+        <section class="card" id="placesCard" aria-label="Saved places" hidden><h2>Saved places</h2><div id="places"></div></section>
+      </div>
     </div>
+  </div>
+</main>
 
-    <!-- Pinned Cities Carousel -->
-    <div id="pinned-wrapper" class="w-full max-w-7xl mx-auto relative hidden z-20 mb-4 md:mb-6 px-12 group">
-        <button id="scroll-left-btn" onclick="scrollPinned(-1)"
-            class="absolute left-0 top-1/2 -translate-y-1/2 z-10 p-2 glass rounded-full opacity-100 transition-transform hover:scale-110 hidden">
-            <i data-lucide="chevron-left" class="w-6 h-6 text-[rgb(var(--c-main))]"></i>
-        </button>
+<footer class="foot"><span>© <span id="year">2026</span> Atish Ak Sharma. All rights reserved.</span><nav aria-label="Footer"><a href="../">Main site</a><a href="./">More mini projects</a><a href="../#contact">Contact</a></nav></footer>
 
-        <div id="pinned-cities-container"
-            class="flex gap-3 md:gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar py-6 -my-4 md:py-10 md:-my-8 px-4 -mx-4">
-            <!-- Pinned items dynamically injected -->
-        </div>
+<dialog id="pop" aria-labelledby="popTitle"><div class="dh"><h2 id="popTitle"></h2><button class="ib" data-close aria-label="Close"><i data-lucide="x"></i></button></div><div class="db" id="popBody"></div></dialog>
 
-        <button id="scroll-right-btn" onclick="scrollPinned(1)"
-            class="absolute right-0 top-1/2 -translate-y-1/2 z-10 p-2 glass rounded-full opacity-100 transition-transform hover:scale-110 hidden">
-            <i data-lucide="chevron-right" class="w-6 h-6 text-[rgb(var(--c-main))]"></i>
-        </button>
-    </div>
+<dialog id="settings" aria-labelledby="sTitle"><div class="dh"><h2 id="sTitle"><i data-lucide="settings"></i>Settings</h2><button class="ib" data-close aria-label="Close"><i data-lucide="x"></i></button></div>
+  <div class="form">
+    <div><label for="sUnits">Units</label><select id="sUnits"><option value="metric">Metric (°C, km/h)</option><option value="imperial">Imperial (°F, mph)</option></select></div>
+    <div><label for="sTheme">Theme</label><select id="sTheme"><option value="auto">Automatic</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
+    <div><label for="sProv">Weather source</label><select id="sProv"><option value="open-meteo">Open-Meteo (free, no key)</option><option value="weatherapi">WeatherAPI.com (needs a key)</option><option value="openweathermap">OpenWeatherMap (needs a key)</option></select></div>
+    <div id="keyRow" hidden><label for="sKey">API key</label><input id="sKey" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your key"><p class="hint" id="keyHint"></p><p class="hint">Your key stays in this browser and is only sent to that provider.</p></div>
+    <div class="acts"><button class="btn danger" id="sClear">Clear saved data</button><button class="btn primary" id="sSave">Save</button></div>
+  </div>
+</dialog>
 
-    <!-- Confirm Remove Modal -->
-    <div id="confirm-modal"
-        class="fixed inset-0 z-[80] hidden flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
-        <div class="glass modal-glass w-full max-w-sm p-6 m-4 relative flex flex-col gap-4 text-center">
-            <div
-                class="w-14 h-14 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center mx-auto mb-2 border border-red-500/30">
-                <i data-lucide="trash-2" class="w-7 h-7"></i>
-            </div>
-            <h3 class="text-2xl font-extrabold text-[rgb(var(--text-primary))]">Remove City?</h3>
-            <p class="font-bold opacity-80 text-lg text-[rgb(var(--c-main))]" id="confirm-city-name"></p>
-            <div class="flex gap-3 mt-4 w-full">
-                <button onclick="cancelRemove()" class="glass-btn flex-1 py-3 rounded-xl font-bold">No, Keep</button>
-                <button onclick="confirmRemove()"
-                    class="glass-btn flex-1 py-3 rounded-xl font-bold !bg-red-500 !text-white !border-red-500 hover:!bg-red-600 shadow-[0_4px_15px_rgba(239,68,68,0.4)]">Yes,
-                    Remove</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
-    <div id="settings-modal"
-        class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
-        <div class="glass modal-glass w-full max-w-3xl p-5 md:p-6 relative flex flex-col gap-4 lg:gap-5 max-h-[90vh] overflow-y-auto hide-scrollbar"
-            style="--card-color: var(--c-main);">
-            <button id="close-settings"
-                class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors z-10">
-                <i data-lucide="x" class="w-5 h-5 lg:w-6 lg:h-6"></i>
-            </button>
-
-            <h2
-                class="text-xl lg:text-2xl font-extrabold flex items-center gap-2 lg:gap-3 text-[rgb(var(--c-main))] transition-colors duration-300 pr-8">
-                <img src="../master/logo_favicon.jpg" alt="Icon"
-                    loading="lazy"
-                    class="w-7 h-7 lg:w-8 lg:h-8 rounded-full border-2 border-[rgb(var(--c-main))] shadow-md">
-                Atish's Weather Station
-            </h2>
-
-            <div class="flex items-center justify-between flex-wrap gap-2">
-                <div class="flex items-center gap-3 lg:gap-4">
-                    <h3 class="text-base lg:text-lg font-extrabold flex items-center gap-2 opacity-90">
-                        <i data-lucide="sliders-horizontal" class="w-4 h-4 lg:w-5 lg:h-5 text-[rgb(var(--c-main))]"></i>
-                        Customizations
-                    </h3>
-                    <button id="clear-data-btn"
-                        class="glass-btn p-2 md:px-3 md:py-1.5 rounded-full text-[11px] font-bold text-red-500 dark:text-red-400 border border-red-500/20 hover:bg-red-500/10 flex items-center gap-1.5 transition-all duration-300"
-                        title="Clear Cached City Data">
-                        <i data-lucide="trash-2" class="w-4 h-4 md:w-3.5 md:h-3.5"></i>
-                        <span class="hidden md:inline">Clear Data</span>
-                    </button>
-                </div>
-                <div class="flex items-center gap-2">
-                    <!-- Mobile Layout Toggle -->
-                    <button id="layout-toggle-btn"
-                        class="lg:hidden glass-btn px-3 py-1.5 rounded-full text-[11px] font-bold flex items-center gap-1.5 transition-all duration-300"
-                        title="Toggle controls position">
-                        <i data-lucide="search" class="w-3 h-3"></i>
-                        <span id="layout-toggle-label">App Like</span>
-                    </button>
-                    <!-- Desktop Zoom Toggle -->
-                    <button id="zoom-toggle-btn"
-                        class="hidden lg:flex glass-btn px-3 py-1.5 rounded-full text-[11px] font-bold items-center gap-1.5 transition-all duration-300"
-                        title="Toggle page zoom">
-                        <i data-lucide="maximize-2" class="w-3 h-3"></i>
-                        <span id="zoom-toggle-label">100%</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Hidden selects for internal use -->
-            <select id="country-input" class="hidden">
-                <option value="India">India</option>
-            </select>
-            <select id="timezone-input" class="hidden">
-                <option value="Asia/Kolkata">Asia/Kolkata (IST)</option>
-            </select>
-
-            <!-- 2-column grid layout -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-5">
-
-                <!-- Column 1 -->
-                <div class="flex flex-col gap-3">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-bold text-xs lg:text-sm opacity-80">Weather Provider</label>
-                        <div class="relative">
-                            <select id="provider-select"
-                                class="glass-input w-full pl-3 pr-8 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm cursor-pointer appearance-none">
-                                <!-- Populated by JS -->
-                            </select>
-                            <i data-lucide="chevron-down"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-60"></i>
-                        </div>
-                        <input type="text" id="api-key-input" placeholder="Enter Private API Key"
-                            class="glass-input w-full px-3 py-2 rounded-xl text-xs md:text-sm font-medium hidden mt-1">
-                        <p id="api-hint" class="text-[10px] opacity-70 hidden font-medium">Using secure built-in key for
-                            WeatherAPI.</p>
-                    </div>
-                </div>
-
-                <!-- Column 2 -->
-                <div class="flex flex-col gap-3">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="font-bold text-xs lg:text-sm opacity-80">Measurement Units</label>
-                        <div class="relative">
-                            <select id="unit-select"
-                                class="glass-input w-full pl-3 pr-8 py-2 md:py-2.5 rounded-xl font-bold text-xs md:text-sm cursor-pointer appearance-none">
-                                <option value="metric">Metric (°C, km/h, hPa)</option>
-                                <option value="imperial">Imperial (°F, mph, inHg)</option>
-                            </select>
-                            <i data-lucide="chevron-down"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none opacity-60"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Row 2: Accent + Developer side by side on desktop -->
-                <div class="flex flex-col gap-4 lg:col-span-2 pt-2 border-t border-black/5 dark:border-white/5">
-                    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                        <!-- Accent Color -->
-                        <div class="flex flex-col gap-2 flex-1">
-                            <label class="font-bold text-xs lg:text-sm opacity-80">Glass Accent Color</label>
-                            <div class="flex gap-2 flex-wrap lg:flex-nowrap w-full">
-                                <button
-                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-blue-500 active"
-                                    data-color="blue" title="Blue"></button>
-                                <button
-                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-teal-500"
-                                    data-color="teal" title="Teal"></button>
-                                <button
-                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-pink-500"
-                                    data-color="pink" title="Pink"></button>
-                                <button
-                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-purple-500"
-                                    data-color="purple" title="Purple"></button>
-                                <button
-                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-orange-500"
-                                    data-color="orange" title="Orange"></button>
-                                <button
-                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-cyan-500"
-                                    data-color="cyan" title="Cyan"></button>
-                                <button
-                                    class="color-btn flex-1 lg:flex-none h-9 lg:w-9 lg:h-9 rounded-full border-2 border-transparent bg-red-500"
-                                    data-color="red" title="Red"></button>
-                            </div>
-                        </div>
-                        <!-- Developer (right side on desktop) -->
-                        <div
-                            class="p-3 rounded-xl bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 flex items-center justify-between shrink-0 gap-4 lg:self-end">
-                            <div class="flex items-center gap-2">
-                                <img src="../master/logo_favicon.jpg"
-                                    alt="Atish Ak Sharma" loading="lazy"
-                                    class="w-8 h-8 rounded-full border border-[rgb(var(--c-main))]">
-                                <div class="flex flex-col">
-                                    <span class="text-[10px] opacity-70 font-bold leading-tight">Developer
-                                        Portfolio</span>
-                                    <span class="text-xs font-extrabold text-[rgb(var(--c-main))] leading-tight">Atish
-                                        Ak Sharma</span>
-                                </div>
-                            </div>
-                            <a href="https://atishaksharma.com" target="_blank" rel="noopener noreferrer"
-                                class="glass-btn p-1.5 rounded-full flex items-center justify-center"
-                                title="Visit Portfolio">
-                                <i data-lucide="external-link" class="w-3.5 h-3.5 text-[rgb(var(--c-main))]"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <button id="save-settings-btn"
-                        class="w-full py-3 px-6 rounded-xl font-extrabold text-sm md:text-base text-white transition-all hover:scale-[1.02] active:scale-[0.98] duration-300"
-                        style="background-color: rgb(var(--c-main)); box-shadow: 0 4px 15px rgba(var(--c-main), 0.3);">
-                        Save & Apply
-                    </button>
-                    <p class="text-center text-[11px] font-bold opacity-50 -mt-1">&copy; <span
-                            class="settings-year"></span> Atish's Weather Station.</p>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Info/Details Modal -->
-    <div id="info-modal"
-        class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/70 backdrop-blur-md transition-opacity p-4">
-        <div class="glass modal-glass w-full max-w-lg p-6 relative flex flex-col gap-4 max-h-[90vh] overflow-y-auto"
-            style="--card-color: var(--c-main);">
-            <button id="close-info"
-                class="absolute top-4 right-4 text-secondary hover:text-primary transition-colors z-10">
-                <i data-lucide="x" class="w-6 h-6"></i>
-            </button>
-            <h2 id="info-title"
-                class="text-2xl font-extrabold flex items-center gap-2 pr-8 transition-colors duration-300">
-                <!-- Dynamically injected -->
-            </h2>
-            <div id="info-content" class="flex flex-col gap-4 mt-2">
-                <!-- Dynamically injected -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Content Area -->
-    <div id="weather-container"
-        class="w-full max-w-7xl mx-auto flex flex-col gap-4 lg:gap-6 opacity-0 transition-opacity duration-500 z-10 mb-8">
-
-        <div class="grid grid-cols-1 lg:grid-cols-[31%_1fr] gap-4 lg:gap-6 items-stretch">
-            <!-- Primary Weather Card (MAIN) - Swipeable -->
-            <div id="main-weather-card"
-                class="glass animated-outline floating w-full p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden group shrink-0 select-none"
-                style="--card-color: var(--c-main); touch-action: pan-y;">
-
-                <!-- High-End Weather Effect Layer -->
-                <div id="weather-fx-layer"
-                    class="absolute inset-0 z-0 pointer-events-none opacity-60 mix-blend-overlay weather-fx-layer">
-                </div>
-
-                <div class="absolute -top-20 -right-20 w-64 h-64 opacity-20 rounded-full blur-3xl pointer-events-none mix-blend-overlay transition-colors duration-300 z-0"
-                    style="background-color: rgb(var(--c-main));"></div>
-
-                <div class="relative z-10">
-                    <div class="flex justify-between items-start mb-6">
-                        <div class="flex flex-col max-w-[80%]">
-                            <h2 id="location-name"
-                                class="text-3xl lg:text-4xl font-extrabold mb-1 tracking-tight truncate w-full">
-                                Loading...</h2>
-                            <p id="location-region"
-                                class="text-lg font-bold text-[rgb(var(--c-main))] mb-1 transition-colors duration-300 truncate w-full">
-                            </p>
-                        </div>
-                    </div>
-
-                    <div id="main-icon-wrapper"
-                        class="flex items-center justify-center my-6 lg:my-8 transition-transform group-hover:scale-110 duration-500">
-                        <i data-lucide="loader"
-                            class="w-32 h-32 lg:w-40 lg:h-40 drop-shadow-2xl text-[rgb(var(--c-main))] transition-colors duration-300 anim-spin-slow"></i>
-                    </div>
-                </div>
-
-                <div class="relative z-10">
-                    <div class="flex items-start gap-1 mb-1">
-                        <span id="temperature"
-                            class="text-6xl lg:text-7xl font-extrabold tracking-tighter text-[rgb(var(--c-main))] drop-shadow-sm transition-colors duration-300">--</span>
-                        <span
-                            class="text-2xl lg:text-3xl font-bold mt-2 text-[rgb(var(--c-main))] temp-unit-label transition-colors duration-300">°C</span>
-                    </div>
-                    <div class="flex items-center gap-4 text-sm font-bold opacity-80 mt-2 mb-1">
-                        <span class="flex items-center gap-1" title="Rain Probability"><i data-lucide="cloud-rain"
-                                class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i>
-                            <span id="current-rain-prob">--</span>%</span>
-                        <span class="flex items-center gap-1" title="Cloud Cover"><i data-lucide="cloud"
-                                class="w-4 h-4 text-[rgb(var(--c-main))] transition-colors duration-300 anim-float"></i>
-                            <span id="current-cloud-cover">--</span>%</span>
-                    </div>
-                    <p class="text-2xl font-bold capitalize tracking-wide mb-1"><span id="condition-desc">--</span>
-                        <span class="text-lg text-[rgb(var(--c-main))] font-bold opacity-80"
-                            id="feels-like-inline">(Feels Like --)</span></p>
-                    <p id="date-time" class="text-base font-bold opacity-70 mt-2"></p>
-                </div>
-                <!-- Swipe notch indicators (shown when multiple cities) -->
-                <div id="swipe-notch-left" class="swipe-notch swipe-notch-left hidden"></div>
-                <div id="swipe-notch-right" class="swipe-notch swipe-notch-right hidden"></div>
-            </div>
-
-            <!-- Right Side: Details Grid + Forecast -->
-            <div class="w-full flex flex-col gap-3 md:gap-4 lg:gap-5 h-full">
-
-                <!-- Details Grid 1: Top 4 cards -->
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 shrink-0">
-                    <!-- UV Index (WARM) -->
-                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between panel-clickable"
-                        onclick="showInfo('uv')" style="--card-color: var(--c-warm);" title="Click for UV Table">
-                        <div
-                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
-                            <i data-lucide="sun" class="w-5 h-5 lg:w-6 lg:h-6 anim-spin-slow"></i>
-                            <span>UV Index</span>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-extrabold mb-0.5" id="uv-index">--</div>
-                            <div id="uv-desc" class="text-xs lg:text-sm font-bold opacity-80">--</div>
-                        </div>
-                    </div>
-
-                    <!-- High/Low Temp (WARM) -->
-                    <div class="glass floating floating-delay-2 p-4 flex flex-col justify-between panel-clickable"
-                        onclick="showInfo('extremes')" style="--card-color: var(--c-warm);" title="Click for details">
-                        <div
-                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
-                            <i data-lucide="thermometer-sun" class="w-5 h-5 lg:w-6 lg:h-6 anim-rock"></i>
-                            <span>Min/Max Temp</span>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <div class="flex items-center gap-2"><i data-lucide="arrow-up"
-                                    class="w-4 h-4 lg:w-5 lg:h-5 text-red-500 anim-float"></i> <span
-                                    class="text-xl lg:text-2xl font-extrabold" id="temp-high">--</span><span
-                                    class="font-bold opacity-70 temp-unit-label">°C</span></div>
-                            <div class="flex items-center gap-2"><i data-lucide="arrow-down"
-                                    class="w-4 h-4 lg:w-5 lg:h-5 text-blue-500 anim-float"></i> <span
-                                    class="text-lg lg:text-xl font-bold opacity-80" id="temp-low">--</span><span
-                                    class="font-bold opacity-50 temp-unit-label">°C</span></div>
-                        </div>
-                    </div>
-
-                    <!-- Humidity (COOL) -->
-                    <div class="glass floating p-4 flex flex-col justify-between panel-clickable"
-                        onclick="showInfo('humidity')" style="--card-color: var(--c-cool);" title="Click for details">
-                        <div
-                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-cool))] mb-2 lg:mb-3 text-sm lg:text-base">
-                            <i data-lucide="droplets" class="w-5 h-5 lg:w-6 lg:h-6 anim-pulse"></i>
-                            <span>Humidity</span>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-extrabold mb-0.5"><span id="humidity">--</span>%</div>
-                            <div id="humidity-desc" class="text-xs lg:text-sm font-bold opacity-80">--</div>
-                        </div>
-                    </div>
-
-                    <!-- Wind (COOL) -->
-                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between panel-clickable"
-                        onclick="showInfo('wind')" style="--card-color: var(--c-cool);" title="Click for details">
-                        <div
-                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-cool))] mb-2 lg:mb-3 text-sm lg:text-base">
-                            <i data-lucide="wind" class="w-5 h-5 lg:w-6 lg:h-6 anim-slide-x"></i>
-                            <span>Wind</span>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-extrabold mb-0.5"><span id="wind-speed">--</span></div>
-                            <div class="flex items-center gap-2 text-xs lg:text-sm font-bold opacity-80"><span
-                                    id="wind-unit-label">km/h</span> • <span id="wind-dir">--</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Details Grid 2: Bottom 3 cards (Equal width on LG) -->
-                <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 shrink-0">
-                    <!-- AQI (EARTH) -->
-                    <div class="glass floating floating-delay-2 p-4 flex flex-col justify-between panel-clickable"
-                        onclick="showInfo('aqi')" style="--card-color: var(--c-earth);" title="Click for AQI Table">
-                        <div
-                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-earth))] mb-2 lg:mb-3 text-sm lg:text-base">
-                            <span id="aqi-icon-wrapper"><i data-lucide="leaf"
-                                    class="w-5 h-5 lg:w-6 lg:h-6 anim-rock"></i></span>
-                            <span>AQI</span>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-extrabold mb-0.5" id="aqi">--</div>
-                            <div id="aqi-desc" class="text-xs lg:text-sm font-bold opacity-80 leading-tight mt-1">Air
-                                Quality</div>
-                        </div>
-                    </div>
-
-                    <!-- Pressure (EARTH) -->
-                    <div class="glass floating p-4 flex flex-col justify-between panel-clickable"
-                        onclick="showInfo('pressure')" style="--card-color: var(--c-earth);" title="Click for details">
-                        <div
-                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-earth))] mb-2 lg:mb-3 text-sm lg:text-base">
-                            <i data-lucide="gauge" class="w-5 h-5 lg:w-6 lg:h-6 anim-pulse"></i>
-                            <span>Pressure</span>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-extrabold mb-0.5"><span id="pressure">--</span></div>
-                            <div class="text-xs lg:text-sm font-bold opacity-80">hPa</div>
-                        </div>
-                    </div>
-
-                    <!-- Sunrise / Sunset (WARM) - centered on mobile with padding -->
-                    <div class="glass floating floating-delay-1 p-4 flex flex-col justify-between col-span-2 lg:col-span-1 panel-clickable max-w-[220px] sm:max-w-none mx-auto w-full px-6 sm:px-4"
-                        onclick="showInfo('sun')" style="--card-color: var(--c-warm);" title="Click for details">
-                        <div
-                            class="flex items-center gap-2 font-bold text-[rgb(var(--c-warm))] mb-2 lg:mb-3 text-sm lg:text-base">
-                            <i data-lucide="sun" class="w-4 h-4 lg:w-5 lg:h-5"></i>
-                            <span>Sun Cycle</span>
-                        </div>
-                        <div class="flex-grow flex flex-col justify-center gap-3 w-full mt-1 lg:px-2 mx-auto">
-                            <!-- Sunrise -->
-                            <div class="flex items-center justify-start gap-3 w-full">
-                                <div class="flex items-center gap-2 lg:gap-3 w-[75px]">
-                                    <i data-lucide="sunrise"
-                                        class="w-5 h-5 lg:w-6 lg:h-6 text-orange-400 drop-shadow-md anim-float"></i>
-                                    <span class="text-xs lg:text-sm font-bold opacity-70">Rise</span>
-                                </div>
-                                <span
-                                    class="text-sm md:text-base lg:text-lg font-extrabold leading-none whitespace-nowrap"
-                                    id="sunrise">--:--</span>
-                            </div>
-                            <!-- Sunset -->
-                            <div class="flex items-center justify-start gap-3 w-full">
-                                <div class="flex items-center gap-2 lg:gap-3 w-[75px]">
-                                    <i data-lucide="sunset"
-                                        class="w-5 h-5 lg:w-6 lg:h-6 text-orange-500 drop-shadow-md anim-float"
-                                        style="animation-delay: 1s"></i>
-                                    <span class="text-xs lg:text-sm font-bold opacity-70">Set</span>
-                                </div>
-                                <span
-                                    class="text-sm md:text-base lg:text-lg font-extrabold leading-none whitespace-nowrap"
-                                    id="sunset">--:--</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 7-Day Forecast (MAIN) -->
-                <div class="glass floating floating-delay-2 p-4 lg:p-6 w-full panel-clickable flex flex-col flex-grow"
-                    onclick="showInfo('forecast')" style="--card-color: var(--c-main);" title="Click for details">
-                    <div
-                        class="flex items-center gap-2 lg:gap-3 font-bold mb-3 lg:mb-4 text-lg lg:text-xl text-[rgb(var(--c-main))] transition-colors duration-300 shrink-0">
-                        <i data-lucide="calendar-days" class="w-5 h-5 lg:w-7 lg:h-7 anim-rock"></i>
-                        <h3>7-Day Forecast</h3>
-                    </div>
-
-                    <div id="forecast-container"
-                        class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 lg:gap-4 w-full flex-grow content-start lg:content-between pointer-events-none">
-                        <div class="flex items-center justify-center w-full col-span-full font-bold italic opacity-70">
-                            Loading forecast...</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Status & Accent End-of-Page Bar -->
-    <div class="flex flex-col items-center justify-center py-2 z-10 w-full mb-2">
-        <div
-            class="flex items-center gap-2 px-3 py-1 mb-1 rounded-full bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/10 text-[10px] font-bold opacity-80 text-[rgb(var(--c-main))] w-auto max-w-[95vw]">
-            <div class="flex items-center gap-1 shrink-0"><i data-lucide="refresh-cw" class="w-3 h-3" id="update-spinner"></i>
-                <span id="update-status-text" class="whitespace-nowrap">Updated On (--:-- + 1200s)</span></div>
-            <span class="opacity-50 shrink-0">|</span>
-            <span id="current-provider-name" class="whitespace-nowrap truncate text-ellipsis">Open-Meteo</span>
-        </div>
-        <div class="h-[4px] w-[90px] rounded-full overflow-hidden relative mt-1"
-            style="background: rgba(var(--c-main), 0.2);">
-            <div class="absolute inset-0 rounded-full"
-                style="background: rgb(var(--c-main)); animation: accentBarSlide 2s ease-in-out infinite;"></div>
-        </div>
-    </div>
-    <style>
-        @keyframes accentBarSlide {
-            0% {
-                transform: translateX(-100%);
-            }
-
-            50% {
-                transform: translateX(0%);
-            }
-
-            100% {
-                transform: translateX(100%);
-            }
-        }
-
-        /* Bottom bar spacing on mobile */
-        @media (max-width: 1023px) {
-            body.bottom-bar-active {
-                padding-bottom: 80px !important;
-            }
-        }
-    </style>
-
-    <!-- Loading State -->
-    <div id="loading-state"
-        class="fixed inset-0 backdrop-blur-2xl flex flex-col items-center justify-center z-50 hidden bg-white/20 dark:bg-black/40">
-        <div class="loader mb-4 transition-colors duration-300"></div>
-        <p
-            class="text-xl font-extrabold tracking-wide text-[rgb(var(--c-main))] drop-shadow-md transition-colors duration-300">
-            Gathering data...</p>
-    </div>
-
-    <!-- Toast Notification -->
-    <div id="toast"
-        class="glass modal-glass px-6 py-4 rounded-full flex items-center gap-3 font-bold text-md border-0 whitespace-nowrap max-w-none w-max"
-        style="--card-color: var(--c-main);">
-        <span id="toast-icon-wrapper"><i data-lucide="info"
-                class="w-6 h-6 text-[rgb(var(--c-main))] transition-colors duration-300"></i></span>
-        <span id="toast-msg">Message</span>
-    </div>
-
-    <script src="weather.js"></script>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+// Mobile menu: toggles the site nav, closes on link, outside click, Escape, or when the screen widens.
+(function(){var b=document.getElementById('menuBtn'),n=document.getElementById('menuNav');if(!b||!n)return;
+function set(o){n.classList.toggle('open',o);b.setAttribute('aria-expanded',o);}
+b.addEventListener('click',function(e){e.stopPropagation();set(!n.classList.contains('open'));});
+n.addEventListener('click',function(e){if(e.target.closest('a'))set(false);});
+document.addEventListener('click',function(e){if(!e.target.closest('.site'))set(false);});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&n.classList.contains('open')){set(false);b.focus();}});
+matchMedia('(min-width:761px)').addEventListener('change',function(e){if(e.matches)set(false);});})();
+</script>
+<script src="weather.js"></script>
 </body>
-
 </html>
