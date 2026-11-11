@@ -1,0 +1,26 @@
+# Tulip File Explorer
+
+> Tulip File Explorer is a free, open-source (MIT) desktop file manager for Windows, Linux and macOS, built with Electron and React by Atish Ak Sharma. Current version: 1.4.3-2.
+
+## Features
+
+- Light and dark themes, and eight accent colours (Ocean Blue, Royal Purple, Rose Pink, Crimson Red, Sunset Orange, Forest Green, Ocean Teal, Deep Indigo)
+- This PC view: libraries (Home, Desktop, Documents, Downloads, Pictures, Videos, Music) and every drive with a free-space bar
+- Preview pane: plays videos and shows photos in place, with size, modified date, duration, resolution and codec
+- Clickable breadcrumb path bar, back / forward / up / refresh
+- Search inside the current folder
+- Grid and list views, sorting, show or hide hidden files
+- Add cloud drives next to local disks
+
+## Download (1.4.3-2)
+
+- [Windows 10 and 11 (.zip)](https://github.com/atishsharma/Tulip-File-Explorer/releases/download/Third/Tulip.File.Explorer-1.4.3-2-win.zip)
+- [Linux, Debian/Ubuntu x64 (.deb)](https://github.com/atishsharma/Tulip-File-Explorer/releases/download/Third/Tulip-File-Explorer_1.4.3-2_amd64.deb)
+- [macOS, Apple silicon (.zip)](https://github.com/atishsharma/Tulip-File-Explorer/releases/download/Third/Tulip.File.Explorer-1.4.3-2-Mac-arm64.zip)
+
+## Links
+
+- [Website](https://atishaksharma.com/tulip/)
+- [Source code on GitHub](https://github.com/atishsharma/Tulip-File-Explorer)
+- [All releases](https://github.com/atishsharma/Tulip-File-Explorer/releases)
+- [Author: Atish Ak Sharma](https://atishaksharma.com/)
