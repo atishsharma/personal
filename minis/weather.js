@@ -192,7 +192,7 @@ function render() {
   $('#app').dataset.state = 'ready';
   document.body.dataset.sky = skyOf(c.cond.kind, c.day);
   const rgb = getComputedStyle(document.body).getPropertyValue('--b').trim(); if (rgb) $('meta[name=theme-color]').content = rgb;
-  document.title = `${T(c.temp)} ${S.name}, weather | Atish Ak Sharma`;
+  document.title = `${T(c.temp)} ${S.name}, weather | Weather Station`;
   const pinned = S.pinned.some(p => near(p));
   $('#place').textContent = S.name;
   $('#region').textContent = [S.region && S.region !== S.name ? S.region : '', S.country].filter(Boolean).join(', ');
@@ -200,6 +200,7 @@ function render() {
   $('#pin').innerHTML = ico('star');
   $('#clock').textContent = clockText();
   $('#heroIcon').innerHTML = ico(c.cond.icon);
+  heroFx();
   $('#temp').textContent = N(c.temp); $('#tunit').textContent = tu();
   $('#cond').textContent = c.cond.text;
   $('#feelsLine').textContent = `Feels like ${T(c.feels)}`;
@@ -232,9 +233,11 @@ function render() {
   // daily
   const gmin = Math.min(...d.daily.map(x => x.lo)), gmax = Math.max(...d.daily.map(x => x.hi)), span = Math.max(1, gmax - gmin);
   $('#dailyHint').textContent = `${d.daily.length}-day forecast`;
-  $('#daily').innerHTML = d.daily.map((x, i) => `<button class="day" data-day="${i}"><span class="dn">${i === 0 ? 'Today' : wd(x.key)}</span>${ico(x.cond.icon)}<span class="dp ${x.pop >= 20 ? 'on' : ''}">${x.pop >= 1 ? N(x.pop) + '%' : ''}</span><span class="lo">${T(x.lo)}</span><span class="rng"><i style="left:${(x.lo - gmin) / span * 100}%;width:${Math.max(4, (x.hi - x.lo) / span * 100)}%"></i>${i === 0 && c.temp != null ? `<b style="left:${Math.min(100, Math.max(0, (c.temp - gmin) / span * 100))}%"></b>` : ''}</span><span class="hi">${T(x.hi)}</span></button>`).join('');
+  $('#daily').innerHTML = d.daily.map((x, i) => `<button class="day" data-day="${i}"><span class="dn">${i === 0 ? 'Today' : wd(x.key)}</span>${ico(x.cond.icon)}<span class="dp ${x.pop >= 20 ? 'on' : ''}">${x.pop >= 1 ? N(x.pop) + '%' : ''}</span><span class="lo">${T(x.lo)}</span><span class="rng"><i style="${rng(x, gmin, span)}"></i>${i === 0 && c.temp != null ? `<b style="left:${Math.min(100, Math.max(0, (c.temp - gmin) / span * 100))}%"></b>` : ''}</span><span class="hi">${T(x.hi)}</span></button>`).join('');
   renderPlaces(); icons();
 }
+// the bar colour is one shared scale, so the same temperature is the same colour on every row
+const rng = (x, gmin, span) => { const l = (x.lo - gmin) / span * 100, w = Math.max(4, (x.hi - x.lo) / span * 100); return `left:${l}%;width:${w}%;background-size:${(10000 / w).toFixed(1)}% 100%;background-position:${w >= 100 ? 0 : (l / (100 - w) * 100).toFixed(1)}% 0`; };
 const near = p => Math.abs(p.lat - S.lat) < 0.02 && Math.abs(p.lon - S.lon) < 0.02;
 function tile(id, label, icon, body) { return `<button class="tile" data-info="${id}"><span class="th">${ico(icon)}${label}</span>${body}</button>`; }
 function meter(v, max, cls) { return `<span class="meter ${cls}"><i style="left:${v == null ? -10 : Math.min(100, Math.max(0, v / max * 100))}%"></i></span>`; }
@@ -245,6 +248,77 @@ function sunTile(today, c, off) {
   return `<svg class="arc" viewBox="0 0 100 44" aria-hidden="true"><path d="M8 38 A42 30 0 0 1 92 38" fill="none" stroke="currentColor" stroke-opacity=".3" stroke-width="1.5" stroke-dasharray="1 3"/><line x1="2" y1="38" x2="98" y2="38" stroke="currentColor" stroke-opacity=".4"/>${up ? `<circle cx="${x}" cy="${y}" r="4" fill="var(--accent)"/>` : ''}</svg><div class="srss"><span>${fmtTime(sr, off)}</span><span>${fmtTime(ss, off)}</span></div><p>${dur(ss - sr)} of daylight</p>`;
 }
 function clockText() { if (!D) return ''; const d = loc(nowSec(), D.off); return `${d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' })} · ${fmtTime(nowSec(), D.off)}`; }
+
+
+// ---------- hero scene: the sun and moon sit where they really are, the sky follows the weather ----------
+const rnd = i => { const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); };
+function sunPhase(today, now) {
+  const sr = today.sunrise, ss = today.sunset; if (sr == null || ss == null) return null;
+  const m = 60, f = (now - sr) / (ss - sr);
+  let phase = 'day';
+  if (now < sr - 45 * m || now > ss + 45 * m) phase = 'night';
+  else if (now < sr + 45 * m) phase = 'dawn';
+  else if (now >= ss) phase = 'dusk';
+  else if (now >= ss - 75 * m) phase = 'golden';
+  // body: where it sits on its arc, 0 to 1 (sun by day, moon by night)
+  const up = now >= sr && now <= ss;
+  const night = up ? 0 : Math.min(1, Math.max(0, now > ss ? (now - ss) / (86400 - (ss - sr)) : (now - (ss - 86400)) / (86400 - (ss - sr))));
+  return { phase, up, p: up ? Math.min(1, Math.max(0, f)) : night };
+}
+let fxAt = 0;
+function heroFx() {
+  fxAt = Date.now();
+  const fx = $('#fx'); if (!fx || !D) return;
+  const c = D.cur, today = D.daily[0], kind = c.cond.kind, sp = sunPhase(today, nowSec()) || { phase: c.day ? 'day' : 'night', up: c.day, p: .5 };
+  document.body.dataset.phase = sp.phase;
+  const rgb = getComputedStyle(document.body).getPropertyValue('--b').trim(); if (rgb) $('meta[name=theme-color]').content = rgb;
+  const wet = ['drizzle', 'rain', 'heavy', 'sleet', 'storm'].includes(kind), snow = kind === 'snow', fog = kind === 'fog';
+  const clouds = { clear: 2, partly: 4, cloudy: 8, fog: 3, drizzle: 6, rain: 8, heavy: 9, sleet: 6, snow: 6, storm: 9 }[kind] ?? 2;
+  const covered = ['cloudy', 'fog', 'drizzle', 'rain', 'heavy', 'sleet', 'snow', 'storm'].includes(kind);
+  const windKmh = Math.min(60, (c.wind || 0) * (imp() ? 1.6 : 1)), speed = 1 / (1 + windKmh / 22);   // stronger wind, faster drift
+  const W = fx.clientWidth || 900, H = fx.clientHeight || 360;
+  let o = '';
+  // the body on its arc: x runs across the card, height follows a sine, like the sun tile
+  const x = 8 + sp.p * 84, y = 76 - Math.sin(Math.PI * sp.p) * 52, warm = { dawn: 'rgba(255,170,120,.55)', golden: 'rgba(255,150,70,.55)', dusk: 'rgba(255,120,150,.45)' }[sp.phase];
+  if (sp.up) {
+    o += `<i class="glow" style="left:${x}%;top:${y}%;--gc:${warm || 'rgba(255,236,170,.5)'}"></i>`;
+    o += `<i class="sun" style="left:${x}%;top:${y}%;opacity:${covered ? .35 : 1}"></i>`;
+    if (!covered) o += `<i class="rays" style="left:${x}%;top:${y}%"></i>`;
+  } else {
+    const stars = covered ? 6 : 26;
+    for (let i = 0; i < stars; i++) o += `<i class="star" style="left:${rnd(i) * 100}%;top:${rnd(i + 50) * 70}%;animation-delay:-${(rnd(i + 9) * 3).toFixed(2)}s;animation-duration:${(2.4 + rnd(i + 3) * 2.6).toFixed(1)}s"></i>`;
+    o += `<i class="moon" style="left:${x}%;top:${y}%;opacity:${covered ? .4 : 1}"></i>`;
+    if (kind === 'clear') o += '<i class="shoot"></i>';
+  }
+  // two layers of cloud over the whole card: small slow ones low and far, big ones high and near.
+  // kept faint and tinted so white text on top stays readable.
+  let o2 = '';
+  for (let i = 0; i < clouds; i++) {
+    const far = i % 2 === 1, w = (far ? 90 + rnd(i + 20) * 90 : 170 + rnd(i + 20) * 150) * (covered ? 1.25 : 1), h = w * (far ? .3 : .34);
+    const top = far ? 46 + rnd(i + 30) * 40 : 4 + rnd(i + 30) * 44, op = (covered ? .15 + rnd(i) * .13 : .10 + rnd(i) * .09) * (far ? .8 : 1);
+    const dur = (far ? 130 + rnd(i + 40) * 80 : 80 + rnd(i + 40) * 60) * speed;
+    o2 += `<i class="cloud${far ? ' far' : ''}" style="top:${top.toFixed(0)}%;--w:${w.toFixed(0)}px;--h:${h.toFixed(0)}px;--o:${op.toFixed(2)};--d:${dur.toFixed(0)}s;--dl:-${(rnd(i + 60) * dur).toFixed(0)}s"></i>`;
+  }
+  o += o2;
+  if (fog) for (let i = 0; i < 3; i++) o += `<i class="fogb" style="top:${20 + i * 24}%;--d:${(22 + i * 7) * speed}s;--dl:-${i * 6}s"></i>`;
+  if (wet) {
+    const n = { drizzle: 16, rain: 30, heavy: 46, sleet: 26, storm: 42 }[kind], slant = -Math.round(6 + windKmh * .5);
+    for (let i = 0; i < n; i++) o += `<i class="drop" style="left:${rnd(i + 70) * 108 - 4}%;--l:${(kind === 'drizzle' ? 9 : 14) + Math.round(rnd(i) * 10)}px;--d:${((kind === 'drizzle' ? 1.3 : .7) + rnd(i + 5) * .4).toFixed(2)}s;--dl:-${(rnd(i + 8)).toFixed(2)}s;--x:${slant}px;--hh:${H}px"></i>`;
+  }
+  if (snow) for (let i = 0; i < 34; i++) o += `<i class="flake" style="left:${rnd(i + 90) * 100}%;--s:${(3 + rnd(i) * 4).toFixed(1)}px;--d:${(7 + rnd(i + 2) * 6).toFixed(1)}s;--dl:-${(rnd(i + 4) * 12).toFixed(1)}s;--hh:${H}px"></i>`;
+  if (kind === 'storm') o += '<i class="flash"></i>';
+  fx.className = 'fx' + (wet && sp.up ? ' dark' : '');
+  fx.innerHTML = o;
+  fxWatch();
+}
+// nothing moves while the card is off-screen or the tab is hidden
+let fxIO;
+function fxWatch() {
+  const fx = $('#fx'), hero = fx && fx.parentElement; if (!hero || fxIO) return;
+  const set = () => fx.classList.toggle('off', document.hidden || !fxOn);
+  let fxOn = true; fxIO = new IntersectionObserver(e => { fxOn = e[0].isIntersecting; set(); }); fxIO.observe(hero);
+  document.addEventListener('visibilitychange', set);
+}
 
 // ---------- reference tables ----------
 const UV_ROWS = [{ max: 2.99, range: '0 to 2', label: 'Low', tip: 'No protection needed on most days. Sunglasses help on bright days.', col: '#2e9e55' }, { max: 5.99, range: '3 to 5', label: 'Moderate', tip: 'Cover up and use sunscreen around midday.', col: '#c9a100' }, { max: 7.99, range: '6 to 7', label: 'High', tip: 'Hat, shade and SPF 30+ needed. Limit time in the midday sun.', col: '#e07b00' }, { max: 10.99, range: '8 to 10', label: 'Very high', tip: 'Avoid the midday sun. Skin can burn in under 20 minutes.', col: '#d33a2c' }, { max: 99, range: '11 and above', label: 'Extreme', tip: 'Stay in the shade at midday. Unprotected skin burns in minutes.', col: '#8e3fc0' }];
@@ -393,7 +467,7 @@ function init() {
   };
   $('#results').onclick = e => { const li = e.target.closest('[data-i]'); if (li) setPlace(results[+li.dataset.i]); };
   document.addEventListener('click', e => { if (!e.target.closest('.search')) $('#results').hidden = true; });
-  setInterval(() => { if (D && !document.hidden) { $('#clock').textContent = clockText(); $('#updated').textContent = `Updated ${ago(D.updated)} · ${D.sources.join(' + ')}`; } }, 30000);
+  setInterval(() => { if (D && !document.hidden) { $('#clock').textContent = clockText(); $('#updated').textContent = `Updated ${ago(D.updated)} · ${D.sources.join(' + ')}`; if (!$('#fx .off') && (Date.now() - fxAt > 300000)) heroFx(); } }, 30000);
   setInterval(() => { if (!document.hidden && D && Date.now() - D.updated > 15 * 60 * 1000) load(true); }, 60000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && D && Date.now() - D.updated > 15 * 60 * 1000) load(true); });
   (async () => { if (!S.hasLoc) await firstVisit(); load(); })();
